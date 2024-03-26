@@ -106,7 +106,34 @@ footer img.img-fluid {
     width: 100px;
 }
 
+
 .icon {
     max-width: 60%;
     height: auto;
   }
+
+    /* Custom styles */
+    .circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: yellow;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .black-circle {
+        background-color: black;
+    }
+
+    .line {
+        height: 8px;
+        background-color: yellow;
+    }
+
+    .gradient-line {
+        background: linear-gradient(to right, yellow, black);
+        color: white;
+    }
