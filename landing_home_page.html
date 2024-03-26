@@ -11,6 +11,7 @@
 </head>
 
 <body>
+  <!-- NAVBAR -->
   <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">FoodDash</a>
@@ -37,89 +38,237 @@
     </div>
   </nav>
 
-  <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1" aria-current="true"></button>
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
-    </div>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-        <div class="container">
-          <div class="carousel-caption text-start">
-            <h1>Example headline.</h1>
-            <p class="opacity-75">Some representative placeholder content for the first slide of the carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
-          </div>
+  <!-- CONTAINER DE INSERIR CODIGO POSTAL -->
+  <div class="bg-custom px-4 py-5 my-5 text-left">
+    <h1 class="display-6 fw-bold text-body-primary" style="color: white;">Peça uma entrega perto de si</h1>
+    <br>
+    <div class="row justify-content-left align-items-center mb-3">
+      <div class="col-md-3">
+        <div class="form-floating">
+          <input type="text" class="form-control form-control-sm" id="floatingInput" placeholder="XXXX-YY">
+          <label for="floatingInput">Introduza um código postal</label>
         </div>
       </div>
-      <div class="carousel-item">
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-        <div class="container">
-          <div class="carousel-caption">
-            <h1>Another example headline.</h1>
-            <p>Some representative placeholder content for the second slide of the carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-        <div class="container">
-          <div class="carousel-caption text-end">
-            <h1>One more for good measure.</h1>
-            <p>Some representative placeholder content for the third slide of this carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
-          </div>
-        </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-primary btn-lg px-4">Procurar comida</button>
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-  <div class="row">
-    <div class="col-lg-4">
-      <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-      <h2 class="fw-normal">Heading</h2>
-      <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>
-      <p><a class="btn btn-secondary" href="#">View details »</a></p>
-    </div><!-- /.col-lg-4 -->
-    <div class="col-lg-4">
-      <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-      <h2 class="fw-normal">Heading</h2>
-      <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
-      <p><a class="btn btn-secondary" href="#">View details »</a></p>
-    </div><!-- /.col-lg-4 -->
-    <div class="col-lg-4">
-      <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-      <h2 class="fw-normal">Heading</h2>
-      <p>And lastly this, the third column of representative placeholder content.</p>
-      <p><a class="btn btn-secondary" href="#">View details »</a></p>
-    </div><!-- /.col-lg-4 -->
   </div>
 
+  <hr>
 
 
+  <!-- CONTAINER COMO TRABALHAMOS -->
+  <div class="container px-4 py-5" id="featured-3">
+    <h1 class="pb-2 border-bottom" style="text-align: center; font-weight: bolder;">Como Trabalhamos</h1>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
+      <div class="feature col" style="text-align: center;">
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3" >
+          <img src="imgs/location.png" alt="Ícone de localização" width="160" height="160">
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Escolha localização</h3>
+        <p>Escolha a localização onde a sua comida será entregue.</p>
+      </div>
+      <div class="feature col" style="text-align: center;">
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3" >
+          <img src="imgs/location.png" alt="Ícone de localização" width="160" height="160">
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Escolha comida</h3>
+        <p>Escolha entre diversos tipos de restaurantes e comidas deliciosas disponíveis.</p>
+      </div>
+      <div class="feature col" style="text-align: center;">
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3" >
+          <img src="imgs/location.png" alt="Ícone de localização" width="160" height="160">
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Pague online</h3>
+        <p>Pague de maneira rápida, simples e segura. Escolha entre diversos meios de pagamento.</p>
+      </div>
+      <div class="feature col" style="text-align: center;">
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3" >
+          <img src="imgs/location.png" alt="Ícone de localização" width="160" height="160">
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Desfrute</h3>
+        <p>A comida é feita e entregue diretamente onde estás.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTRO COMO TRABALHAMOS 
+  <div class="container px-4 py-5" id="custom-cards">
+    <h1 class="pb-2 border-bottom" style="text-align: center; font-weight: bolder;">Como Trabalhamos</h1>
+    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+      <div class="col">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+          style="background-image: url('imgs/location.png'); background-repeat: no-repeat; background-position: center; background-size: contain;">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Escolha localização</h3>
+            <ul class="d-flex list-unstyled mt-auto">
+              <li class="me-auto">
+                <img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32"
+                  class="rounded-circle border border-white">
+              </li>
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#geo-fill"></use>
+                </svg>
+                <small>Earth</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#calendar3"></use>
+                </svg>
+                <small>3d</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+          style="background-image: url('unsplash-photo-2.jpg');">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Much longer title that wraps to multiple lines</h3>
+            <ul class="d-flex list-unstyled mt-auto">
+              <li class="me-auto">
+                <img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32"
+                  class="rounded-circle border border-white">
+              </li>
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#geo-fill"></use>
+                </svg>
+                <small>Pakistan</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#calendar3"></use>
+                </svg>
+                <small>4d</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+          style="background-image: url('unsplash-photo-3.jpg');">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Another longer title belongs here</h3>
+            <ul class="d-flex list-unstyled mt-auto">
+              <li class="me-auto">
+                <img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32"
+                  class="rounded-circle border border-white">
+              </li>
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#geo-fill"></use>
+                </svg>
+                <small>California</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#calendar3"></use>
+                </svg>
+                <small>5d</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+          style="background-image: url('unsplash-photo-3.jpg');">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+            <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Another longer title belongs here</h3>
+            <ul class="d-flex list-unstyled mt-auto">
+              <li class="me-auto">
+                <img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32"
+                  class="rounded-circle border border-white">
+              </li>
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#geo-fill"></use>
+                </svg>
+                <small>California</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em">
+                  <use xlink:href="#calendar3"></use>
+                </svg>
+                <small>5d</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+-->
+  <hr>
+  <hr>
+
+  <!-- FOOTER -->
+  <div class="container">
+    <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
+      <div class="col mb-3">
+        <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+          <svg class="bi me-2" width="40" height="32">
+            <use xlink:href="#bootstrap"></use>
+          </svg>
+        </a>
+        <p class="text-body-secondary">© 2024</p>
+      </div>
+
+      <div class="col mb-3">
+
+      </div>
+
+      <div class="col mb-3">
+        <h5>Section</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+        </ul>
+      </div>
+
+      <div class="col mb-3">
+        <h5>Section</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+        </ul>
+      </div>
+
+      <div class="col mb-3">
+        <h5>Section</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
 
 
   <script>
-    document.getElementById('loginBtn').addEventListener('click', function() {
+    document.getElementById('loginBtn').addEventListener('click', function () {
       window.location.href = 'login.html';
     });
   </script>
-
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-</body>
 </body>
 
 </html>

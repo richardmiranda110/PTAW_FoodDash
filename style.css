@@ -1,0 +1,8 @@
+.bg-custom {
+    background-image: url('imgs/burger_bg_landingHomePage.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 500px;
+}
