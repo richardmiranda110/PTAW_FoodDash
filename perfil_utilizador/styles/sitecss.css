@@ -105,3 +105,8 @@ button#butSingOutSidebarLeft {
 footer img.img-fluid {
     width: 100px;
 }
+
+.icon {
+    max-width: 60%;
+    height: auto;
+  }
