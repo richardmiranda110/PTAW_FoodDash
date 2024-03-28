@@ -9,34 +9,103 @@
   <title>FoodDash</title>
 </head>
 
-<body class="bg-body-tertiary">
+<body>
+  <!-- Imagem no canto superior esquerdo -->
+  <img src="FoodDash.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto;">
 
+  <!-- Formulário de registo -->
   <div class="container d-flex align-items-center justify-content-center vh-100">
-    <main class="form-signin">
-      <form>
-        <img class="mb-4" src="fooddash logo image.png" alt="" width="300"
-          height="57">
-        <h1 class="h3 mb-3 fw-normal">Login</h1>
-
-        <div class="form-floating">
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">Email address</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-          <label for="floatingPassword">Password</label>
-        </div>
-
-        <div class="checkbox mb-3">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
+    <form style="width: 30%;">
+      <h1 class="h1 mb-3" style="text-align: center;">Registar</h1><br>
+      <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="inputName" placeholder="name@example.com" required>
+        <label for="inputName">Nome</label>
+      </div>
+      <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="inputMorada" placeholder="name@example.com" required>
+        <label for="inputMorada">Morada</label>
+      </div>
+      <div class="form-floating mb-1">
+        <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com" required>
+        <label for="inputEmail">Email</label>
+      </div>
+      <div class="form-floating mb-1">
+        <input type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+        <label for="floatingPassword">Password</label>
+      </div>
+      <div class="form-floating mb-1">
+        <input type="password" class="form-control" id="inputRepetirPassword" placeholder="Password" required>
+        <label for="floatingPassword">Repetir Password</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="mostrarPasswordCheckbox">
+        <label class="form-check-label" for="flexCheckDefault">
+          Mostrar password
+        </label>
+      </div>
+      <div class="checkbox mb-3">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault">
+          <label class="form-check-label" for="flexCheckDefault">
+            Guardar email
           </label>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
-        
-      </form>
-    </main>
+      </div>
+      <button id="btnLogin" class="w-100 btn btn-lg btn-primary" type="submit">Registar</button>
+      <br><br>
+      <p style="text-align: center;">Já tem conta?<button type="button" class="btn btn-link">Login</button>
+      </p>
+    </form>
   </div>
+
+
+  <script>
+    document.querySelector("input#mostrarPasswordCheckbox").addEventListener("click", mostrarPassword)
+    function mostrarPassword() {
+      let passwordInput = document.getElementById("inputPassword");
+      let repetirPasswordInput = document.getElementById("inputRepetirPassword");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        repetirPasswordInput.type = "text"
+      } else {
+        passwordInput.type = "password";
+        repetirPasswordInput.type = "password"
+      }
+    }
+
+    document.querySelector("button#btnLogin").addEventListener("click", validarlogin)
+    function validarlogin() {
+      let nome = document.querySelector("input#inputName").value;
+      let email = document.querySelector("input#inputEmail").value;
+      let password = document.querySelector("input#inputPassword").value;
+      let repetirPassword = document.querySelector("input#inputRepetirPassword").value;
+
+      console.log(`Nome: ${nome} | Email: ${email} | Password: ${password} | Repetir Password: ${repetirPassword}`);
+
+      if (!validateEmail(email)) {
+        document.querySelector("input#inputEmail").classList.add("form-control is-invalid");
+        alert("Por favor, insira um email válido.");
+        return;
+      } else if (password.length < 6) {
+        document.querySelector("input#inputPassword").classList.add("form-control is-invalid");
+        alert("A palavra-passe deve ter pelo menos 6 caracteres.");
+        return;
+      } else if (password !== repetirPassword) {
+        document.querySelector("input#inputPassword").classList.add("form-control is-invalid");
+        document.querySelector("input#inputRepetirPassword").classList.add("form-control is-invalid");
+        alert("As palavras-passes não são iguais.")
+        return
+      }
+
+      //document.querySelector("input#inputEmail").classList.add("form-control is.valid");
+      //document.querySelector("input#inputPassword").classList.add("form-control is.valid");
+    }
+
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
