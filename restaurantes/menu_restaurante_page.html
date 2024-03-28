@@ -31,6 +31,10 @@
       width: 100%;
     }
 
+    .icon-overlay img:hover {
+      transform: scale(1.2);
+    }
+
     .container {
       max-width: 1200px;
       width: 75%;
@@ -74,7 +78,7 @@
 
     .slider-wrapper .image-list {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(20, 1fr); /*AQUI PODEMOS AJUSTAR QUANTOS ITENS CABEM NO SLIDER SEM TER DE IR PRA BAIXO*/
       gap: 18px;
       font-size: 0;
       list-style: none;
@@ -141,10 +145,8 @@
     }
 
     .slider-wrapper .image-list .image-item {
-      width: 250px;
-      /* Adjust the width as needed */
-      height: 250px;
-      /* Adjust the height as needed */
+      width: 200px;
+      height: 200px;
     }
 
     /* Styles for mobile and tablets */
@@ -205,8 +207,7 @@
   </nav>
 
   <!-- IDENTIFICAÇÃO DO RESTAURANTE -->
-  <div class="p-4 p-md-5 mb-4"
-    style="background-color: #ffffff; border-bottom: 10px ridge #febc41; border-radius: 15px;">
+  <div class="p-4 p-md-5" style="background-color: #ffffff; border-bottom: 10px ridge #febc41; border-radius: 15px;">
     <div class="container">
       <div class="row">
         <div class="col-lg-4 px-0">
@@ -323,18 +324,54 @@
       </li>
       <li>
         <a href="#" class="nav-link link-body-emphasis">
-          <text class="opcao">Carne</text>
+          <text class="opcao">Vaca</text>
         </a>
       </li>
       <li>
         <a href="#" class="nav-link link-body-emphasis">
-          <text class="opcao">Vegan</text>
+          <text class="opcao">King Jr</text>
         </a>
       </li>
+      <li>
+        <a href="#" class="nav-link link-body-emphasis">
+          <text class="opcao">Sem Gluten</text>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link link-body-emphasis">
+          <text class="opcao">Gourmet</text>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link link-body-emphasis">
+          <text class="opcao">Hamburgueres</text>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link link-body-emphasis">
+          <text class="opcao">Sobremesas</text>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link link-body-emphasis">
+          <text class="opcao">Entradas</text>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link link-body-emphasis">
+          <text class="opcao">Molhos</text>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link link-body-emphasis">
+          <text class="opcao">Bebidas</text>
+        </a>
+      </li>
+
     </ul>
   </div>
 
-
+  <!-- CARROSSEL DE ITENS -->
   <div class="container">
     <div class="slider-wrapper">
       <button id="prev-slide" class="slide-button material-symbols-rounded">
@@ -342,17 +379,225 @@
       </button>
       <ul class="image-list">
         <li>
-          <img class="image-item" src="imgs/bigKing_bk_burger.png" alt="img-1" />
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Big King</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">4,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </li>
-        <img class="image-item" src="imgs/whopper_bk_burger.png" alt="img-2" />
-        <img class="image-item" src="imgs/menu_bigKing_bk.png" alt="img-3" />
-        <img class="image-item" src="imgs/bigKing_bk_burger.png" alt="img-4" />
-        <img class="image-item" src="imgs/whopper_bk_burger.png" alt="img-5" />
-        <img class="image-item" src="imgs/menu_bigKing_bk.png" alt="img-6" />
-        <img class="image-item" src="imgs/whopper_bk_burger.png" alt="img-7" />
-        <img class="image-item" src="imgs/bigKing_bk_burger.png" alt="img-8" />
-        <img class="image-item" src="imgs/whopper_bk_burger.png" alt="img-9" />
-        <img class="image-item" src="imgs/menu_bigKing_bk.png" alt="img-10" />
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Whopper</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">6,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Menu Big King</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">6,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Big King</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">4,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Whopper</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">6,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Menu Big King</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">6,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Big King</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">4,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Whopper</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">6,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Menu Big King</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">6,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="col" style="width: 200px;">
+            <div class="card shadow-sm">
+              <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
+                <img src="imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                  style="border-radius: 5.5px;">
+                <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
+                  <img src="imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                    style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Big King</h6>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="card-text mb-0" style="font-size: 12px;">4,50€</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
       </ul>
       <button id="next-slide" class="slide-button material-symbols-rounded">
         »
