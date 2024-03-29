@@ -3,6 +3,7 @@ body{
 }
 
 .checkout-title {
+    font-size: 50px;
     text-align: center;
     margin-top: 100px;
     font-weight: bold;
@@ -23,7 +24,8 @@ body{
     width: 225px;
     height: auto;
     position: absolute;
-    left: -150px;
+    left: -220px;
+    top: 17px;
 }
 
 .left-div,
@@ -48,7 +50,32 @@ body{
     border-top: 3px solid #c7c7c7;
 }
 
-#btnMorada {
+.opcao {
+    border: 2px solid #e6e3e3;
+    border-radius: 10px;
+    padding: 4px 0px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.opcao.selected {
+    border: 2px solid black;
+}
+
+.opcaoEntrega {
+    border: 2px solid #e6e3e3;
+    border-radius: 10px;
+    padding: 4px 0px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.opcaoEntrega.selected {
+    border: 2px solid black;
+}
+
+#btnMorada,
+#btnCodigo {
     background-color: #f0f0f0;
     border: #f0f0f0;
     border-radius: 10px;
@@ -56,11 +83,37 @@ body{
     color: black;
 }
 
-#btnMorada:hover {
+#btnMorada:hover,
+#btnCodigo:hover {
     background-color: black;
     border: black;
     border-radius: 10px;
     padding: 7px 17px;
+    color: white;
+    transition: 0.3s;
+}
+
+#btnConfirmPagamento {
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: -100px;
+    margin-right: 150px;
+    background-color: #49BE63;
+    border: #49BE63;
+    border-radius: 100px;
+    padding: 15px 80px;
+    color: white;
+    transition: 0.3s;
+}
+
+#btnConfirmPagamento:hover {
+    margin-left: -100px;
+    margin-right: 150px;
+    margin-top: 20px;
+    background-color: green;
+    border: green;
+    border-radius: 100px;
     color: white;
     transition: 0.3s;
 }
