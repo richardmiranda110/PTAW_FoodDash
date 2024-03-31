@@ -1,0 +1,37 @@
+.icon {
+    max-width: 60%;
+    height: auto;
+  }
+  
+.circle {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: yellow;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+}
+
+.black-circle {
+	background-color: black;
+}
+
+.line {
+	height: 8px;
+	background-color: yellow;
+}
+
+.gradient-line {
+	background: linear-gradient(to right, yellow, black);
+	color: white;
+}
+
+.ten-percent-to-left{
+	transform: translate(-10%);
+}
+
+.ten-percent-to-right{
+	transform: translate(10%);
+}

@@ -1,0 +1,54 @@
+@media only screen and (max-width: 1205px) {
+	.mobile-element {
+	  width: 100%; /* Set the width of the element to 100% for mobile devices */
+	}
+
+	#sideBarLeft{
+		width: 100%;
+		min-height: 100%;
+	}
+	#butSingOutSidebarLeft{
+		width: 100%;
+	}
+
+	.roadmap-item{
+		font-size: 2.2vw;
+		font-weight:500;
+	}
+
+	.circle {
+		width: 8vw;
+		height: 8vw;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: bold;
+		font-size: 4vw;
+	}
+
+	.container{
+		padding:0;
+		margin:0;
+	}
+
+	.title{
+		font-size: 4vw;
+	}
+
+	.text{
+		font-size: 3vw;
+	}
+
+	.ps-3{
+		padding:0;
+	}
+
+	.py-3{
+		padding:5vw !important;
+	}
+
+	.px-5{
+		padding:0 !important;
+	}
+}
