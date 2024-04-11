@@ -62,7 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 ?>
 
 <script>
-    
+    /*Se não clicar no botão editar, 
+     - dizer que todos os inputs são "readonly", isto é são visivéis e não editáveis
+    se clicar
+    - por o botão como guardar ou disabled
+    - retirar as propriedades readonly
+    - criar botão guardar*/
 </script>
 
 <!DOCTYPE html>
