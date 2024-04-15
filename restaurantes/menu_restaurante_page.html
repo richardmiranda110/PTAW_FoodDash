@@ -152,7 +152,6 @@
       height: 200px;
     }
 
-    /* Styles for mobile and tablets */
     @media only screen and (max-width: 1023px) {
       .slider-wrapper .slide-button {
         display: none !important;
@@ -325,7 +324,7 @@
       <!-- CARROSSEL DE ITENS -->
       <h1 style="margin-top: 10px; margin-left: 50px;">Novidades</h1>
       <div class="container" style="margin-bottom: 40px;">
-        <div class="slider-wrapper">
+        <div class="slider-wrapper carousel1">
           <button id="prev-slide" class="slide-button material-symbols-rounded">
             «
           </button>
@@ -563,7 +562,7 @@
       </div>
       <h1 style="margin-top: 10px; margin-left: 50px;">Na grelha</h1>
       <div class="container" style="margin-bottom: 40px;">
-        <div class="slider-wrapper">
+        <div class="slider-wrapper carousel2">
           <button id="prev-slide" class="slide-button material-symbols-rounded">
             «
           </button>
@@ -801,7 +800,7 @@
       </div>
       <h1 style="margin-top: 10px; margin-left: 50px;">Frango</h1>
       <div class="container" style="margin-bottom: 40px;">
-        <div class="slider-wrapper">
+        <div class="slider-wrapper carousel3">
           <button id="prev-slide" class="slide-button material-symbols-rounded">
             «
           </button>
@@ -1108,11 +1107,11 @@
     }
 
 
-// Adiciona o evento de clique a todas as opções
-const links = document.querySelectorAll('.opcao');
-links.forEach(link => {
-  link.addEventListener('click', selecionarOpcao);
-});
+    // Adiciona o evento de clique a todas as opções
+    const links = document.querySelectorAll('.opcao');
+    links.forEach(link => {
+      link.addEventListener('click', selecionarOpcao);
+    });
 
     // Adiciona evento de clique a todas as opções do sidebar
     const sidebarOptions = document.querySelectorAll('.opcao');
@@ -1128,18 +1127,15 @@ links.forEach(link => {
       const scrollbarThumb = sliderScrollbar.querySelector(".scrollbar-thumb");
       const maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
 
-      // Handle scrollbar thumb drag
       scrollbarThumb.addEventListener("mousedown", (e) => {
         const startX = e.clientX;
         const thumbPosition = scrollbarThumb.offsetLeft;
         const maxThumbPosition = sliderScrollbar.getBoundingClientRect().width - scrollbarThumb.offsetWidth;
 
-        // Update thumb position on mouse move
         const handleMouseMove = (e) => {
           const deltaX = e.clientX - startX;
           const newThumbPosition = thumbPosition + deltaX;
 
-          // Ensure the scrollbar thumb stays within bounds
           const boundedPosition = Math.max(0, Math.min(maxThumbPosition, newThumbPosition));
           const scrollPosition = (boundedPosition / maxThumbPosition) * maxScrollLeft;
 
@@ -1147,13 +1143,11 @@ links.forEach(link => {
           imageList.scrollLeft = scrollPosition;
         }
 
-        // Remove event listeners on mouse up
         const handleMouseUp = () => {
           document.removeEventListener("mousemove", handleMouseMove);
           document.removeEventListener("mouseup", handleMouseUp);
         }
 
-        // Add event listeners for drag interaction
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
       });
