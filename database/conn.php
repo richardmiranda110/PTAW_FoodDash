@@ -18,4 +18,3 @@ try {
 	// Tratamento de erro
 	die('Erro de conexão: ' . $e->getMessage());
 }
-?>

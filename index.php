@@ -8,46 +8,30 @@
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
   <!-- NAVBAR -->
-  <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">FoodDash</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02"
-        aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarsExample02">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Menu</a>
-          </li>
-        </ul>
-        <button id="loginBtn" type="button" class="btn btn-primary">Login</button>
-        <button id="loginBtn" type="button" class="btn btn-secondary">Registar</button>
-      </div>
-    </div>
-  </nav>
-
+  <?php
+  include __DIR__."/includes/header.php";
+  ?>
   <!-- CONTAINER DE INSERIR MORADA -->
-  <div class="bg-custom px-4 py-5 my-5 text-left">
+  <div class="bg-custom px-4 py-5 text-left">
     <h1 class="display-6 fw-bold text-body-primary" style="color: white;">Peça uma entrega perto de si</h1>
     <br>
     <div class="row justify-content-left align-items-center mb-3">
       <div class="col-md-3">
         <div class="form-floating">
           <input type="text" class="form-control form-control-sm" id="floatingInput" placeholder="XXXX-YY">
-          <label for="floatingInput">Introduza uma morada</label>
+          <label for="floatingInput">Introduza um codigo postal</label>
         </div>
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn btn-primary btn-lg px-4">Procurar comida</button>
+        <button type="button" class="btn btn-primary btn-lg px-4">Procurar</button>
       </div>
     </div>
   </div>

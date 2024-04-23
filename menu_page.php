@@ -12,36 +12,9 @@
 
 <body>
   <!-- NAVBAR -->
-  <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">FoodDash</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02"
-        aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarsExample02">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Menu</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Contatos</a>
-          </li>
-        </ul>
-        <div class="input-group flex-nowrap">
-          <span class="input-group-text" id="addon-wrapping">&#128506</span>
-          <input type="text" class="form-control" placeholder="Inserir morada" aria-label="default input example"
-            aria-describedby="addon-wrapping" value="Rua Doutor Lourenço Peixinho, 19" style="max-width: 400px;">
-        </div>
-        <button id="loginBtn" type="button" class="btn btn-primary">Login</button>
-        <button id="loginBtn" type="button" class="btn btn-secondary">Registar</button>
-      </div>
-    </div>
-  </nav>
+  <?php
+  include __DIR__."/includes/header.php";
+  ?>
 
   <!-- BARRA DE TIPOS DE RESTAURANTES -->
   <div class="container" style="text-align: center;">
