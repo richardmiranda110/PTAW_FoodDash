@@ -1,10 +1,22 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-@import url("responsive_styles.css")
+@import url("responsive_styles.css");
+
+ html,body,div{
+    margin:0
+
+} 
+
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+     font-family: "Inter", sans-serif;
+}
 
 div#topHeader {
     margin-top: 2%;
 }
-
 
 .butAcount {
     background: #FEBB41;
@@ -34,6 +46,8 @@ div#topHeader {
     margin: 10px 2%;
 }
 
+
+
 #menuTop li.nav-item.active {
     border-bottom: solid 2px #FEBB41;
 }
@@ -58,12 +72,18 @@ div#topHeader {
 	opacity: 0.9;
 	float: left;
 	display: flex;
+    width: 13.5vw;
+    height: 94.6vh;
 }
 
 #sideBarLeft a.nav-link {
     background: none;
     color: #ffffff;
     font-weight: normal;
+}
+
+#menuTop li {
+    font-size: 0.5em;
 }
 
 #sideBarLeft a.nav-link.active {
@@ -82,20 +102,44 @@ div#topHeader {
 	margin-right: 10px;
 }
 
+#sidebar{
+    width: 100%;
+}
+
+#sideBarLeft ul {
+    margin-left:5ch;
+    margin-top: 6ch;
+}
+
+#sideBarLeft ul {
+    margin-left:3.5ch;
+    margin-top: 6ch;
+}
+
 
 button#butSingOutSidebarLeft {
-    margin: 0px 5%;
-    width: 90%;
+    font-size: 1.2rem;
+    background: 0;
+    border:0;
+    margin: 0 1vw 3.5vh 1vw;
+    font-weight: bold;
+    width: 91%;
     border-radius: 10px;
 }
 
 #contentDiv {
     float: left;
     padding: 3% 2%;
+    width:80vw;
+
 }
 
-#contentDiv, #sideBarLeft, #contentPage {
-	min-height: 80vh;
+
+
+
+#sideBarLeft, #contentPage {
+	min-height: 94vh;
+    padding: 0;
 }
 
 .cleanFloat{
@@ -105,4 +149,43 @@ button#butSingOutSidebarLeft {
 
 footer img.img-fluid {
     width: 100px;
+}
+
+
+.icon {
+    max-width: 60%;
+    height: auto;
+  }
+  
+.circle {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: yellow;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+}
+
+.black-circle {
+	background-color: black;
+}
+
+.line {
+	height: 8px;
+	background-color: yellow;
+}
+
+.gradient-line {
+	background: linear-gradient(to right, yellow, black);
+	color: white;
+}
+
+.ten-percent-to-left{
+	transform: translate(-10%);
+}
+
+.ten-percent-to-right{
+	transform: translate(10%);
 }

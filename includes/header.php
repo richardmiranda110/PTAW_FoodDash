@@ -1,7 +1,4 @@
-<?php 
-?>
-
-<nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
+<nav class="navbar navbar-expand navbar-dark bg-dark" style="padding:0;margin:0;" aria-label="Second navbar example">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
         <img src="./imgs/FoodDash.png" alt="" srcset="">
