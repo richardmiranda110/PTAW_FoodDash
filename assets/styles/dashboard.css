@@ -128,3 +128,7 @@
     text-align: center;
     margin-bottom: 4vh;
 }
+
+#infoEstatisticas .card {
+    padding: 5.15vh 2vh;
+}
