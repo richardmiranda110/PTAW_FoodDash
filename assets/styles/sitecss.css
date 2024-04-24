@@ -1,6 +1,7 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 @import url("responsive_styles.css");
 
+/*
  html,body,div{
     margin:0
 
@@ -188,4 +189,119 @@ footer img.img-fluid {
 
 .ten-percent-to-right{
 	transform: translate(10%);
+}
+*/
+
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url("responsive_styles.css")
+
+.butAcount {
+    background: #FEBB41;
+    border: none;
+	color: #ffffff;
+}
+
+.butAcount:hover{
+    background: #000000;
+    border: none;
+	color: #ffffff;
+}
+
+.butAcount svg {
+    width: 20px;
+    height: 20px;
+    margin-top: -5px;
+}
+
+#topHeader {
+    border-bottom: solid 1px #000000;
+}
+
+#menuTop li {
+    font-weight: bold;
+    color: #000000;
+    margin: 10px 2%;
+}
+
+#menuTop li.nav-item.active {
+    border-bottom: solid 2px #FEBB41;
+}
+
+#menuTop li:hover {
+    font-weight: bold;
+    color: #000000;
+    margin: 10px 2%;
+	background: #FEBB41;
+	border-radius: 10px;
+}
+
+#menuTop .navbar-nav {
+	margin: auto;
+}
+
+#sideBarLeft {
+    background: #000000;
+    padding: 3% 0px 2% 1%;
+    margin-left: calc(var(--bs-gutter-x)* .5* -1);
+    color: #ffffff;
+	opacity: 0.9;
+	float: left;
+	display: flex;
+}
+
+#sideBarLeft a.nav-link {
+    background: none;
+    color: #ffffff;
+    font-weight: normal;
+}
+
+#sideBarLeft a.nav-link.active {
+    background: none;
+    color: #FEBB41;
+    font-weight: bold;
+}
+
+#sideBarLeft a.nav-link:hover {
+    color: #000000;
+	background: #FEBB41;
+	border-radius: 10px;
+}
+
+#sideBarLeft span::before {
+	margin-right: 10px;
+}
+
+
+button#butSingOutSidebarLeft {
+    margin: 0px 5%;
+    width: 90%;
+    border-radius: 10px;
+}
+
+#contentDiv {
+    float: left;
+    padding: 3% 2%;
+}
+
+#contentDiv, #sideBarLeft, #contentPage {
+	min-height: 80vh;
+}
+
+.cleanFloat{
+	width: 100%;
+    float: none;
+}
+
+/* Footer */
+footer {
+    padding: 0px 5vw !important;
+}
+
+footer a.nav-link:hover {
+    color: #000000 !important;
+    border-bottom: solid 1px;
+}
+
+footer img.img-fluid {
+    width: 100px;
 }
