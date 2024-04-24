@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark" style="padding:0;margin:0;" aria-label="Second navbar example">
+<nav class="navbar navbar-expand navbar-dark bg-dark z-index-3" style="padding:0;margin:0;" aria-label="Second navbar example">
     <div class="container-fluid">
 	<button id="toggleSidebar" class="btn btn-primary">
 		<i class="bi bi-list"></i> <!-- Ícone de hambúrguer -->

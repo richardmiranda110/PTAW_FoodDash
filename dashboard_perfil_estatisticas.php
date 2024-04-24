@@ -84,51 +84,19 @@
 </head>
 
 <body>
+    
     <?php
-    include __DIR__."/includes/header logged in.php";
+    include __DIR__."/includes/header_logged_in.php";
     ?>
 
     <!--Zona de Conteudo -->
-    <div id="contentPage" style="min-width:100%;" class="container-xl">
-        <div id="sideBarLeft" class="col-md-2">
-            <div class="d-flex flex-column" id="sidebar">
-                <ul class="nav nav-pills flex-column mb-auto nav-item-container">
-                    <li class="nav-item" >
-                        <a href="#" class="nav-link active" aria-current="page">
-                            <span class="bi bi-speedometer">Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link">
-                            <span class = "bi-person-vcard"></span><span class="bi has-text-grey">Perfil de Utilizador</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link">
-                        <span class = "bi-card-list"></span><span class="bi has-text-grey">Pedidos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link">
-                        <span class = "bi-graph-up"></span><span class="bi has-text-grey">Estatisticas</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link">
-                        <span class = "bi-credit-card-fill"></span><span class="bi has-text-grey">Método Pagamento</span>
-                        </a>
-                    </li>
-                </ul>
-     
-
-                <button id="butSingOutSidebarLeft" class="btn btn-dark px-3" type="button">Terminar Sessão</button>
-
-            </div>
-        </div>
+    <div id="contentPage" style="min-width:100%;" class="container-xxl">
+        <?php
+        include __DIR__."/includes/sidebar_perfil.php";
+        ?>
 
         <!--Zona de Conteudo da Página -->
         <div id="contentDiv" class="col-md-10 pl-2 pt-3 pb-0">
-
             <section class="section p-0">
                 <div class="container ml-2 mb-2">
                     <div class="columns">
@@ -151,12 +119,11 @@
                                         <div class="column ">
                                             <p
                                                 class="subtitle is-6 ml-2 has-text-weight-bold has-text-grey">
-                                                Burguer king
+                                                Burguer King
                                             </p>
                                         </div>
-                                        <div class="column">
-                                            <img src="../assets/imgs/burgerKing_marca.png" alt="Imagem do Restaurante" class="image is-64x64">
-                                                
+                                        <div class="column d-flex justify-content-center">
+                                            <img src="/assets/stock_imgs/burgerKing_marca.png" alt="Imagem do Restaurante" class="image is-64x64">
                                         </div>
                                     </div>
                                 </div>

@@ -7,78 +7,18 @@
   <link rel="stylesheet" href="style.css">
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="../assets/styles/sitecss.css">
+  <link rel="stylesheet" href="/assets/styles/sitecss.css">
 </head>
 
 <body>
   <!-- NAVBAR -->
   <?php
+  //require_once __DIR__."/database/db_connection.php";
   include __DIR__."/includes/header.php";
+  include __DIR__."/includes/navbar_tipos_de_comida.php";
   ?>
 
-  <!-- BARRA DE TIPOS DE RESTAURANTES -->
-  <div class="container" style="text-align: center;">
-    <div class="d-inline-flex p-2 bd-highlight">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/pizza_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Pizza
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/fastFood_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Fast Food
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/burger_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Hamburguer
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs//sushi_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Sushi
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/churrasco_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Churrasco
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/vegan_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Vegan
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/portuguesa_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Portuguesa
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/italiana_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Italiana
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/sobremesas_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Sobremesas
-      </a>
-    </div>
-    <div class="d-inline-flex p-2 bd-highlight" style="padding: 0px 0px 0px 20px;">
-      <a class="navbar-brand" href="#">
-        <img src="../assets/imgs/bebidas_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
-        Bebidas
-      </a>
-    </div>
-  </div>
+
   <br><br>
   <!-- TÍTULO PÁGINA E PROCURAR -->
   <h1 style="text-align: center;">Restaurantes</h1><br>
@@ -95,7 +35,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -112,7 +52,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -129,7 +69,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -146,7 +86,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -163,7 +103,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -184,7 +124,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -201,7 +141,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -218,7 +158,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -235,7 +175,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -252,7 +192,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -273,7 +213,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -290,7 +230,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -307,7 +247,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -324,7 +264,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -341,7 +281,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -362,7 +302,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -379,7 +319,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -396,7 +336,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -413,7 +353,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -430,7 +370,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -451,7 +391,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -467,7 +407,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -484,7 +424,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -501,7 +441,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -518,7 +458,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -535,7 +475,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/mcdonalds_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -552,7 +492,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/kfc_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -569,7 +509,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/burgerKing_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -586,7 +526,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/pizzaHut_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -603,7 +543,7 @@
       </div>
       <div class="col">
         <div class="card shadow-sm">
-          <img src="../assets/imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
+          <img src="/assets/stock_imgs/subenshi_restaurantes.png" class="card-img-top" alt="Imagem do restaurante"
             style="border-radius: 5.5px;">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -634,40 +574,9 @@
   </div>
   <br><br>
   <!-- Footer -->
-  <div style="background-color: #202020;">
-    <div class="container">
-      <h1 style="text-align: left; font-weight: bolder; color: white;">FoodDash</h1>
-      <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-2 border-top border-bottom">
-        <div class="col mb-3">
-          <img src="../assets/imgs/fd_logo_blackWhite.png" alt="Bootstrap" width="190" height="110">
-        </div>
-        <div class="col mb-3"></div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Conta Cliente</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Login</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Registar</a></li>
-          </ul>
-        </div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Sobre</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">História</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Equipa</a></li>
-          </ul>
-        </div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Contatos</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Apoio ao cliente</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Contato empresarial</a>
-            </li>
-          </ul>
-        </div>
-      </footer>
-      <p class="text-end" style="color: white;">Todos os direitos reservados © FoodDash, 2024</p>
-    </div>
-  </div>
+  <?php
+  include __DIR__."/includes/footer_1.php";
+  ?>
 
   <!-- SCRIPT -->
   <script>

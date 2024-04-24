@@ -42,28 +42,28 @@
     <div class="row g-4 pt-5 row-cols-1 row-cols-lg-4">
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="imgs/location.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assets/imgs/location.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Escolha localização</h3>
         <p>Escolha a localização onde a sua comida será entregue.</p>
       </div>
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="imgs/escolha_comida_burger_drink.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assets/imgs/escolha_comida_burger_drink.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Escolha comida</h3>
         <p>Escolha entre diversos tipos de restaurantes e comidas deliciosas disponíveis.</p>
       </div>
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="imgs/pague_online_money_euro.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assetsimgs/pague_online_money_euro.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Pague online</h3>
         <p>Pague de maneira rápida, simples e segura. Escolha entre diversos meios de pagamento.</p>
       </div>
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="imgs/desfrute_smileFace.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assetsimgs/desfrute_smileFace.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Desfrute</h3>
         <p>A comida é feita e entregue diretamente onde estás.</p>
@@ -81,7 +81,7 @@
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Descontos nos melhores restaurantes</h3>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="me-auto">
-                <img src="imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
+                <img src="./assetsimgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
               </li>
             </ul>
           </div>
@@ -95,7 +95,7 @@
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Acompanhamento em tempo real</h3>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="me-auto">
-                <img src="imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
+                <img src="./assets/imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
               </li>
             </ul>
           </div>
@@ -109,7 +109,7 @@
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Entregas rápidas</h3>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="me-auto">
-                <img src="imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
+                <img src="./assets/imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
               </li>
             </ul>
           </div>
@@ -128,7 +128,7 @@
     </div>
     <div class="carousel-inner">
       <div class="carousel-item">
-        <img src="imgs/restaurant_img1_car_business.png" class="d-block w-100" alt="Imagem de um restaurante"
+        <img src="./assets/imgs/restaurant_img1_car_business.png" class="d-block w-100" alt="Imagem de um restaurante"
           style="height: 600px;">
         <div class="container">
           <div class="carousel-caption text-start">
@@ -140,7 +140,7 @@
         </div>
       </div>
       <div class="carousel-item active">
-        <img src="imgs/kitchen_img2_car_business.png" class="d-block w-100" alt="Imagem de uma cozinha"
+        <img src="./assets/imgs/kitchen_img2_car_business.png" class="d-block w-100" alt="Imagem de uma cozinha"
           style="height: 600px;">
         <div class="container">
           <div class="carousel-caption text-start">
@@ -151,7 +151,7 @@
         </div>
       </div>
       <div class="carousel-item">
-        <img src="imgs/deliveryGuy_img3_car_business.png" class="d-block w-100" alt="Imagem de dois homens"
+        <img src="./assets/imgs/deliveryGuy_img3_car_business.png" class="d-block w-100" alt="Imagem de dois homens"
           style="height: 600px;">
         <div class="container">
           <div class="carousel-caption">

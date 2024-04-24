@@ -1,0 +1,76 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Inter", sans-serif;
+}
+
+
+hr {
+    width: 100%;
+    text-align: left;
+    margin-left: 0;
+    color: grey;
+}
+
+.nome_marca {
+    color: black;
+    background-color: #FEBB41;
+}
+
+p {
+    text-align: justify;
+}
+
+.esquerdo {
+    float: left;
+    width: 50%;
+}
+
+.direito {
+    float: right;
+    width: 50%;
+}
+
+.centro {
+    float: left;
+    position: relative;
+    left: 10vw;
+    top:2vh
+}
+
+.sidebar {
+    position: sticky !important;
+    top: 0;
+    height: 100vh;
+    padding: 20px;
+}
+
+.perfil {
+    width: 75%;
+    padding: 5px;
+}
+
+.cinzento {
+    color: grey;
+}
+
+canvas {
+    width: 211px;
+    height: 240px;
+}
+
+.pedidos {
+    width: 100%;
+    padding-right: 10px;
+}
+
+.texto_pedido {
+    color: gray;
+    font-size: 14px;
+}
+
+.texto_pedido_negrito {
+    font-weight: bold;
+    font-size: 14px;
+}

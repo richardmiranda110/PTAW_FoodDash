@@ -8,171 +8,8 @@
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="../assets/styles/sitecss.css">
-  <link rel="stylesheet" href="../assets/styles/restaurants.css">
-  <style>
-    .opcao {
-      position: relative;
-      text-decoration: none;
-    }
-
-    .opcao::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: #000;
-      transition: width 0.5s ease;
-    }
-
-    .opcao:hover::after,
-    .opcao:focus::after,
-    .opcao:active::after {
-      width: 100%;
-    }
-
-    .icon-overlay img:hover {
-      transform: scale(1.2);
-    }
-
-    .container {
-      max-width: 1200px;
-      width: 75%;
-    }
-
-    .slider-wrapper {
-      position: relative;
-    }
-
-    .slider-wrapper .slide-button {
-      position: absolute;
-      top: 50%;
-      outline: none;
-      border: none;
-      height: 50px;
-      width: 50px;
-      z-index: 5;
-      color: #fff;
-      display: flex;
-      cursor: pointer;
-      font-size: 2.2rem;
-      background: #000;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transform: translateY(-50%);
-    }
-
-    .slider-wrapper .slide-button:hover {
-      background: #404040;
-    }
-
-    .slider-wrapper .slide-button#prev-slide {
-      left: -25px;
-      display: none;
-    }
-
-    .slider-wrapper .slide-button#next-slide {
-      right: -25px;
-    }
-
-    .slider-wrapper .image-list {
-      display: grid;
-      grid-template-columns: repeat(20, 1fr);
-      /*AQUI PODEMOS AJUSTAR QUANTOS ITENS CABEM NO SLIDER SEM TER DE IR PRA BAIXO*/
-      gap: 18px;
-      font-size: 0;
-      list-style: none;
-      margin-bottom: 30px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .slider-wrapper .image-list::-webkit-scrollbar {
-      display: none;
-    }
-
-    .slider-wrapper .image-list .image-item {
-      width: 325px;
-      height: 400px;
-      object-fit: cover;
-    }
-
-    .container .slider-scrollbar {
-      height: 24px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    .slider-scrollbar .scrollbar-track {
-      background: #ccc;
-      width: 100%;
-      height: 2px;
-      display: flex;
-      align-items: center;
-      border-radius: 4px;
-      position: relative;
-    }
-
-    .slider-scrollbar:hover .scrollbar-track {
-      height: 4px;
-    }
-
-    .slider-scrollbar .scrollbar-thumb {
-      position: absolute;
-      background: #000;
-      top: 0;
-      bottom: 0;
-      width: 50%;
-      height: 100%;
-      cursor: grab;
-      border-radius: inherit;
-    }
-
-    .slider-scrollbar .scrollbar-thumb:active {
-      cursor: grabbing;
-      height: 8px;
-      top: -2px;
-    }
-
-    .slider-scrollbar .scrollbar-thumb::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: -10px;
-      bottom: -10px;
-    }
-
-    .slider-wrapper .image-list .image-item {
-      width: 200px;
-      height: 200px;
-    }
-
-    @media only screen and (max-width: 1023px) {
-      .slider-wrapper .slide-button {
-        display: none !important;
-      }
-
-      .slider-wrapper .image-list {
-        gap: 10px;
-        margin-bottom: 15px;
-        scroll-snap-type: x mandatory;
-      }
-
-      .slider-wrapper .image-list .image-item {
-        width: 280px;
-        height: 380px;
-      }
-
-      .slider-scrollbar .scrollbar-thumb {
-        width: 20%;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/styles/sitecss.css">
+  <link rel="stylesheet" href="/assets/styles/restaurants.css">
 </head>
 
 <body>
@@ -182,7 +19,7 @@
   ?>
 
   <!-- IDENTIFICAÇÃO DO RESTAURANTE -->
-  <div class="p-4 p-md-5" style="background-color: #ffffff; border-bottom: 10px ridge #febc41; border-radius: 15px;">
+  <div class="p-4 p-md-5" style="background-color: #ffffff; border-bottom: 1vw ridge #febc41; border-radius: 15px;">
     <div class="container">
       <div class="row">
         <div class="col-lg-4 px-0">
@@ -191,7 +28,7 @@
           <p class="mb-0">Taxa de Entrega: 2,50€</p>
         </div>
         <div class="col-lg-4 text-center">
-          <img src="../assets/imgs/burgerKing_marca.png" alt="Imagem do restaurante" style="max-width: 300px;">
+          <img src="/assets/stock_imgs/burgerKing_marca.png" alt="Imagem do restaurante" style="max-width: 300px;">
         </div>
         <div class="col-lg-4 px-4">
           <div class="input-group mb-3">
@@ -206,7 +43,7 @@
 
   <div class="container d-flex justify-content-end">
     <!-- SIDEBAR CATEGORIAS -->
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 17.7vw;">
       <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
         <span class="fs-4">Categorias</span>
       </a>
@@ -277,22 +114,23 @@
     </div>
 
     <div class="">
-      <!-- VOUCHERS E DESCONTOS -->
+      <!-- VOUCHERS E DESCONTOS
       <h1 style="margin-top: 10px; margin-left: 50px;">Vouchers e descontos</h1>
-      <div class="container d-flex" style="margin-bottom: 50px;">
+      
+      <div class="container d-flex">
         <div class="row">
-          <img src="../assets/imgs/CupaoDesconto.png" style="width: 300px;">
-          <p>Insira BK17 em checkout para ganhar<br>17% de desconto no pedido</p>
+          <img src="/assets/stock_imgs/CupaoDesconto.png" class="card-discount">
+          <p style="text-align:center">Insira BK17 em checkout</p>
+        </div>
+        <div class="row" style="margin-left: 30px;cursor:pointer">
+          <img src="/assets/stock_imgs/CupaoDesconto.png" class="card-discount">
+          <p style="text-align:center">Insira BK17 em checkout</p>
         </div>
         <div class="row" style="margin-left: 30px;">
-          <img src="../assets/imgs/CupaoDesconto.png" style="width: 300px;">
-          <p>Insira BK17 em checkout para ganhar<br>17% de desconto no pedido</p>
+          <img src="/assets/stock_imgs/CupaoDesconto.png" class="card-discount">
+          <p style="text-align:center">Insira BK17 em checkout</p>
         </div>
-        <div class="row" style="margin-left: 30px;">
-          <img src="../assets/imgs/CupaoDesconto.png" style="width: 300px;">
-          <p>Insira BK17 em checkout para ganhar<br>17% de desconto no pedido</p>
-        </div>
-      </div>
+      </div> -->
 
       <!-- CARROSSEL DE ITENS -->
       <h1 style="margin-top: 10px; margin-left: 50px;">Novidades</h1>
@@ -306,10 +144,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -328,10 +166,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -350,10 +188,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -372,10 +210,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -394,10 +232,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -416,10 +254,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -438,10 +276,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -460,10 +298,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -482,10 +320,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -504,10 +342,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -544,10 +382,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -566,10 +404,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -588,10 +426,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -610,10 +448,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -632,10 +470,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -654,10 +492,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -676,10 +514,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -698,10 +536,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -720,10 +558,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -742,10 +580,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -782,10 +620,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -804,10 +642,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -826,10 +664,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -848,10 +686,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -870,10 +708,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -892,10 +730,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -914,10 +752,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -936,10 +774,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/whopper_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -958,10 +796,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/menu_bigKing_bk.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -980,10 +818,10 @@
               <div class="col" style="width: 200px;">
                 <div class="card shadow-sm">
                   <div class="image-overlay" style="position: relative; border-radius: 5.5px; overflow: hidden;">
-                    <img src="../assets/imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
+                    <img src="/assets/stock_imgs/bigKing_bk_burger.png" class="card-img-top" alt="Imagem do restaurante"
                       style="border-radius: 5.5px;">
                     <div class="icon-overlay" style="position: absolute; bottom: 10px; right: 10px;">
-                      <img src="../assets/imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
+                      <img src="/assets/stock_imgs/mais.png" id="iconAddItem" alt="Ícone de adição"
                         style="width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;">
                     </div>
                   </div>
@@ -1014,40 +852,9 @@
 
 
   <!-- Footer -->
-  <div style="background-color: #202020;">
-    <div class="container">
-      <h1 style="text-align: left; font-weight: bolder; color: white;">FoodDash</h1>
-      <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-2 border-top border-bottom">
-        <div class="col mb-3">
-          <img src="../assets/imgs/fd_logo_blackWhite.png" alt="Bootstrap" width="190" height="110">
-        </div>
-        <div class="col mb-3"></div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Conta Cliente</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Login</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Registar</a></li>
-          </ul>
-        </div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Sobre</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">História</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Equipa</a></li>
-          </ul>
-        </div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Contatos</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Apoio ao cliente</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Contato empresarial</a>
-            </li>
-          </ul>
-        </div>
-      </footer>
-      <p class="text-end" style="color: white;">Todos os direitos reservados © FoodDash, 2024</p>
-    </div>
-  </div>
+  <?php
+  include __DIR__."/includes/footer_1.php";
+  ?>
 
   <!-- SCRIPT -->
   <script>
@@ -1092,13 +899,12 @@
       option.addEventListener('click', selecionarOpcao);
     });
 
-
     const initSlider = () => {
       const imageList = document.querySelector(".slider-wrapper .image-list");
       const slideButtons = document.querySelectorAll(".slider-wrapper .slide-button");
       const sliderScrollbar = document.querySelector(".container .slider-scrollbar");
       const scrollbarThumb = sliderScrollbar.querySelector(".scrollbar-thumb");
-      const maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
+      let maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
 
       scrollbarThumb.addEventListener("mousedown", (e) => {
         const startX = e.clientX;
@@ -1110,7 +916,7 @@
           const newThumbPosition = thumbPosition + deltaX;
 
           const boundedPosition = Math.max(0, Math.min(maxThumbPosition, newThumbPosition));
-          const scrollPosition = (boundedPosition / maxThumbPosition) * maxScrollLeft;
+          const scrollPosition = (boundedPosition / maxThumbPosition) * (imageList.scrollWidth - imageList.clientWidth);
 
           scrollbarThumb.style.left = `${boundedPosition}px`;
           imageList.scrollLeft = scrollPosition;
@@ -1136,12 +942,14 @@
 
       // Show or hide slide buttons based on scroll position
       const handleSlideButtons = () => {
+        maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
         slideButtons[0].style.display = imageList.scrollLeft <= 0 ? "none" : "flex";
         slideButtons[1].style.display = imageList.scrollLeft >= maxScrollLeft ? "none" : "flex";
       }
 
       // Update scrollbar thumb position based on image scroll
       const updateScrollThumbPosition = () => {
+        maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
         const scrollPosition = imageList.scrollLeft;
         const thumbPosition = (scrollPosition / maxScrollLeft) * (sliderScrollbar.clientWidth - scrollbarThumb.offsetWidth);
         scrollbarThumb.style.left = `${thumbPosition}px`;
