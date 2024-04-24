@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark" style="padding:0;margin:0;" aria-label="Second navbar example">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <img src="./imgs/FoodDash.png" alt="" srcset="">
+        <img src="./imgs/fooddash_logo_white.png" alt="" srcset="">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02"
         aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">

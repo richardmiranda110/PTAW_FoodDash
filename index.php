@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/assets/styles/sitecss.css">
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -20,7 +20,7 @@
   include __DIR__."/includes/header.php";
   ?>
   <!-- CONTAINER DE INSERIR MORADA -->
-  <div class="bg-custom px-4 py-5 text-left">
+  <div class="bg-custom px-4 py-4 text-left">
     <h1 class="display-6 fw-bold text-body-primary" style="color: white;">Peça uma entrega perto de si</h1>
     <br>
     <div class="row justify-content-left align-items-center mb-3">
@@ -37,9 +37,9 @@
   </div>
 
   <!-- CONTAINER COMO TRABALHAMOS -->
-  <div class="container px-4 py-5" id="featured-3">
+  <div class="container px-4 pt-4" id="featured-3">
     <h1 class="pb-2 border-bottom" style="text-align: center; font-weight: bolder;">Como Trabalhamos</h1>
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-4">
+    <div class="row g-4 pt-5 row-cols-1 row-cols-lg-4">
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
           <img src="imgs/location.png" alt="Ícone de localização" width="160" height="160">
@@ -72,7 +72,7 @@
   </div>
 
   <!-- CONTAINER FUNCIONALIDADES E INFORMAÇÕES EXTRAS -->
-  <div class="container px-4 py-5" id="custom-cards">
+  <div class="container px-4 py-4" id="custom-cards">
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
       <div class="col">
         <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
@@ -176,40 +176,9 @@
   </div><br><br>
 
   <!-- FOOTER -->
-  <div style="background-color: #202020;">
-    <div class="container">
-      <h1 style="text-align: left; font-weight: bolder; color: white;">FoodDash</h1>
-      <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-2 border-top border-bottom">
-        <div class="col mb-3">
-          <img src="imgs/fd_logo_blackWhite.png" alt="Bootstrap" width="190" height="110">
-        </div>
-        <div class="col mb-3"></div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Conta Cliente</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Login</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Registar</a></li>
-          </ul>
-        </div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Sobre</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">História</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Equipa</a></li>
-          </ul>
-        </div>
-        <div class="col mb-3">
-          <h4 style="color: #FEBB41;">Contatos</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Apoio ao cliente</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link p-0" style="color: white;">Contato empresarial</a>
-            </li>
-          </ul>
-        </div>
-      </footer>
-      <p class="text-end" style="color: white;">Todos os direitos reservados © FoodDash, 2024</p>
-    </div>
-  </div>
+  <?php
+  include __DIR__."/includes/footer_1.php";
+  ?>
 
   <!-- SCRIPT -->
   <script>

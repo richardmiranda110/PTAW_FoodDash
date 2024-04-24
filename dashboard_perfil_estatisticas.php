@@ -85,7 +85,7 @@
 
 <body>
     <?php
-    include __DIR__."/includes/header.php";
+    include __DIR__."/includes/header logged in.php";
     ?>
 
     <!--Zona de Conteudo -->
@@ -239,7 +239,7 @@
 
             <!--Zona do Footer -->
             <?php
-                include __DIR__."/includes/footer.php";
+                include __DIR__."/includes/footer_2.php";
             ?>
  
 

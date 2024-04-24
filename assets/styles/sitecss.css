@@ -1,8 +1,16 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 @import url("responsive_styles.css");
 
-/*
- html,body,div{
+.bg-custom {
+    background-image: url('/../../../imgs/burger_bg_landingHomePage.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 500px;
+}
+
+html,body,div{
     margin:0
 
 } 
@@ -190,10 +198,9 @@ footer img.img-fluid {
 .ten-percent-to-right{
 	transform: translate(10%);
 }
-*/
 
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-@import url("responsive_styles.css")
+@import url("responsive_styles.css");
 
 .butAcount {
     background: #FEBB41;

@@ -20,10 +20,10 @@
         </li>
       </ul>
       <button class="btn btn-default border border-white me-2">
-        <img src="./../imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
+        <img src="./imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </button>
       <button class="btn btn-default border border-white">
-        <img src="./../imgs/carrinho-de-compras.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
+        <img src="./imgs/carrinho-de-compras.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </button>
     </div>
   </div>
