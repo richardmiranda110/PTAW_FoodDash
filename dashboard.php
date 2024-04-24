@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/styles/sitecss.css">
-    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="./assets/styles/sitecss.css">
+    <link rel="stylesheet" href="./assets/styles/dashboard_beatriz.css">
 </head>
 
 <body>
@@ -57,7 +57,7 @@
                     <button class="btn btn-outline-light" type="button">Example button</button>
                 </div>
             </div>
-            <div class="col-md-6 centro">
+            <div class="col-md-6 ">
                 <div class="h-100 p-5 bg-body-tertiary border rounded-3">
                     <h3 style="float:left">Estatísticas</h3>
                     <button class="btn btn-warning" style="float:right"> Editar </button>
