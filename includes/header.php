@@ -1,5 +1,8 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark" style="padding:0;margin:0;" aria-label="Second navbar example">
     <div class="container-fluid">
+	<button id="toggleSidebar" class="btn btn-primary">
+		<i class="bi bi-list"></i> <!-- Ícone de hambúrguer -->
+	</button>
       <a class="navbar-brand" href="#">
         <img src="./imgs/fooddash_logo_white.png" alt="" srcset="">
       </a>
