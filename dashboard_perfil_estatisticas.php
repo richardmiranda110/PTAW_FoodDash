@@ -1,3 +1,113 @@
+<?php
+// Configurações de conexão ao banco de dados
+$dbHost = 'estga-dev.ua.pt';  // Endereço do banco de dados
+$dbPort = '5432';        // Porta do banco de dados (por padrão, PostgreSQL usa 5432)
+$dbName = 'ptaw-2024-gr2';  // Nome do banco de dados
+$dbUser = 'ptaw-2024-gr2';  // Usuário do banco de dados
+$dbPass = 'Hrw4zTS$[i\D_$vI';  // Senha do banco de dados
+
+// Conexão ao banco de dados usando PDO
+try {
+    $conn = new PDO("pgsql:host=$dbHost; port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erro ao conectar ao banco de dados: " . $e->getMessage());
+}
+
+function getTotalPedidos($pdo, $clienteId)
+{
+    $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_cliente = :clienteId";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();  // Obtemos um único resultado, que é a contagem
+    return $result['total_pedidos'];  // Retorna o total de pedidos
+}
+// Função para contar pedidos por mês para um cliente específico
+function getMesPedidos($pdo, $clienteId, $mes)
+{
+    $query = "
+        SELECT COUNT(*) AS total_pedidos
+        FROM Pedidos
+        WHERE id_cliente = :clienteId
+          AND EXTRACT(MONTH FROM data) = :mes
+    ";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_pedidos'];
+}
+// Função para calcular o total de dinheiro gasto por um cliente
+function getTotalDinheiro($pdo, $clienteId)
+{
+    $query = "
+        SELECT SUM(precoTotal) AS total_dinheiro
+        FROM Pedidos
+        WHERE id_cliente = :clienteId
+    ";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_dinheiro'];
+}
+
+// Função para calcular o total de dinheiro gasto por um cliente em um mês específico
+function getMesDinheiro($pdo, $clienteId, $mes)
+{
+    $query = "
+        SELECT SUM(precoTotal) AS total_dinheiro
+        FROM Pedidos
+        WHERE id_cliente = :clienteId
+          AND EXTRACT(MONTH FROM data) = :mes
+    ";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_dinheiro'];
+}
+
+// Função para calcular a média de custo por pedido
+function getMediaCustoPedidos($pdo, $clienteId)
+{
+    $totalDinheiro = getTotalDinheiro($pdo, $clienteId);
+    $totalPedidos = getTotalPedidos($pdo, $clienteId);
+
+    if ($totalPedidos == 0) {
+        return 0;  // Para evitar divisão por zero
+    }
+
+    $media = $totalDinheiro / $totalPedidos;
+    return number_format($media, 2);
+}
+
+// Exemplo de uso
+$clienteId = 1;  // ID do cliente para o qual queremos contar os pedidos
+$totalPedidos = getTotalPedidos($conn, $clienteId);
+
+$totalDinheiro = getTotalDinheiro($conn, $clienteId);
+
+$mediaCustoPedidos = getMediaCustoPedidos($conn, $clienteId);
+
+$totalPedidosJulho = getMesPedidos($conn, $clienteId, 7);
+$totalPedidosAgosto = getMesPedidos($conn, $clienteId, 8);
+$totalPedidosSetembro = getMesPedidos($conn, $clienteId, 9);
+$totalPedidosOutubro = getMesPedidos($conn, $clienteId, 10);
+$totalPedidosNovembro = getMesPedidos($conn, $clienteId, 11);
+$totalPedidosDezembro = getMesPedidos($conn, $clienteId, 12);
+
+$totalDinheiroJulho = getMesDinheiro($conn, $clienteId, 7);
+$totalDinheiroAgosto = getMesDinheiro($conn, $clienteId, 8);
+$totalDinheiroSetembro = getMesDinheiro($conn, $clienteId, 9);
+$totalDinheiroOutubro = getMesDinheiro($conn, $clienteId, 10);
+$totalDinheiroNovembro = getMesDinheiro($conn, $clienteId, 11);
+$totalDinheiroDezembro = getMesDinheiro($conn, $clienteId, 12);
+?>
 <!doctype html>
 <html lang="en">
 
@@ -6,27 +116,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FoodDash</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/styles/sitecss.css">
     <link rel="stylesheet" href="/assets/styles/responsive_styles.css">
-    
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load("current", { packages: ['corechart'] });
+        google.charts.load("current", {
+            packages: ['corechart']
+        });
         google.charts.setOnLoadCallback(drawChart);
+
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ["Element", "Pedidos", { role: "style" }],
-                ["Jul", 19, "gold"],
-                ["Ago", 25, "gold"],
-                ["Set", 17, "gold"],
-                ["Out", 16, "gold"],
-                ["Nov", 14, "gold"],
-                ["Dez", 21, "gold"],
+                ["Jul", <?= $totalPedidosJulho ?>, "gold"],
+                ["Ago", <?= $totalPedidosAgosto ?>, "gold"],
+                ["Set", <?= $totalPedidosSetembro ?>, "gold"],
+                ["Out", <?= $totalPedidosOutubro ?>, "gold"],
+                ["Nov", <?= $totalPedidosNovembro ?>, "gold"],
+                ["Dez", <?= $totalPedidosDezembro ?>, "gold"],
             ]);
 
             var view = new google.visualization.DataView(data);
@@ -37,14 +149,19 @@
                     type: "string",
                     role: "annotation"
                 },
-                2]);
+                2
+            ]);
 
             var options = {
                 title: "Números de pedido por mês",
                 width: 800,
                 height: 390,
-                bar: { groupWidth: "12%" },
-                legend: { position: "none" },
+                bar: {
+                    groupWidth: "12%"
+                },
+                legend: {
+                    position: "none"
+                },
             };
             var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
             chart.draw(view, options);
@@ -52,18 +169,20 @@
     </script>
 
     <script type="text/javascript">
-        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Year', 'Dinheiro gasto'],
-                ['Jul', 100],
-                ['Ago', 200],
-                ['Set', 140],
-                ['Out', 220],
-                ['Nov', 180],
-                ['Dez', 300]
+                ['Jul', <?=$totalDinheiroJulho?>],
+                ['Ago', <?=$totalDinheiroAgosto?>],
+                ['Set', <?=$totalDinheiroSetembro?>],
+                ['Out', <?=$totalDinheiroOutubro?>],
+                ['Nov', <?=$totalDinheiroNovembro?>],
+                ['Dez', <?=$totalDinheiroDezembro?>]
             ]);
 
             var options = {
@@ -71,7 +190,9 @@
                 height: 300,
                 title: 'Dinheiro gasto',
                 curveType: 'function',
-                legend: { position: 'bottom' }
+                legend: {
+                    position: 'bottom'
+                }
             };
 
             var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
@@ -84,131 +205,102 @@
 </head>
 
 <body>
-    
+
     <?php
-    include __DIR__."/includes/header_logged_in.php";
+    include __DIR__ . "/includes/header_logged_in.php";
     ?>
 
     <!--Zona de Conteudo -->
     <div id="contentPage" style="min-width:100%;" class="container-xxl">
         <?php
-        include __DIR__."/includes/sidebar_perfil.php";
+        include __DIR__ . "/includes/sidebar_perfil.php";
         ?>
-
         <!--Zona de Conteudo da Página -->
         <div id="contentDiv" class="col-md-10 pl-2 pt-3 pb-0">
-            <section class="section p-0">
-                <div class="container ml-2 mb-2">
-                    <div class="columns">
-                        <div class="column is-full pb-0">
-                            <h2 class="is-size-3 title mt-2 mb-2">Estatísticas</h2>
-                            <p>Esta é a tua página de estatísticas. Aqui podes ver as estatísticas sobre a tua conta,
-                                tal como dinheiro total gasto.</p>
-                        </div>
+            <div class="container-md" style="padding: 10px;">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h1 class="display-4">Estatísticas</h1>
+                        <p>Esta é a tua página de estatísticas. Aqui podes ver as estatísticas sobre a tua conta, tal como dinheiro total gasto.</p>
                     </div>
-                    <div class="columns">
-                        <!-- Primeira Coluna: 5 Cards -->
-                        <div class="column pt-0 is-3 mr-6">
-                            <!-- Card: Restaurante Mais Pedido -->
-                            <div class="card">
-                                <div class="card-content">
-                                    <p class="title is-5 has-text-centered">
-                                        Restaurante Mais Pedido
-                                    </p>
-                                    <div class="columns is-vcentered">
-                                        <div class="column ">
-                                            <p
-                                                class="subtitle is-6 ml-2 has-text-weight-bold has-text-grey">
-                                                Burguer King
-                                            </p>
-                                        </div>
-                                        <div class="column d-flex justify-content-center">
-                                            <img src="/assets/stock_imgs/burgerKing_marca.png" alt="Imagem do Restaurante" class="image is-64x64">
-                                        </div>
+                </div>
+
+                <div class="row d-flex align-items-stretch">
+                    <!-- Primeira Coluna: 5 Cartões -->
+                    <div class="col-md-4 d-flex flex-column justify-content-between">
+                        <!-- Defina altura fixa para cada card -->
+                        <div class="card flex-grow-1" style=" overflow: auto;">
+                            <div class="card-body text-center">
+                                <p class="card-title">Restaurante Mais Pedido</p>
+                                <div class="row align-items-center">
+                                    <div class="col-8 text-center">
+                                        <p class="fw-bold text-secondary" style="max-height: 70px;">Burguer King</p>
+                                    </div>
+                                    <div class="col-4" style="max-height: 70px;">
+                                        <img src="../assets/imgs/burgerKing_marca.png" alt="Imagem do Restaurante" class="img-fluid">
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-
-                            <!-- Card: Número de Pedidos -->
-                            <div class="card">
-                                <div class="card-content px-0 pb-1">
-                                    <p class=" title is-5 has-text-centered mb-3" >
-                                        Total de pedidos realizados
-                                    </p>
-                                    <p class="subtitle is-3 has-text-centered has-text-weight-bold has-text-grey">
-                                        71
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Card: Total de Dinheiro Gasto -->
-                            <div class="card">
-                                <div class="card-content px-0 pb-1">
-                                    <p class="title is-5 has-text-centered mb-3">
-                                        Total de Dinheiro Gasto
-                                    </p>
-                                    <p class="subtitle is-3 has-text-centered has-text-weight-bold has-text-grey">
-                                        825,73€
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Card: Média do Total de Dinheiro Gasto por Pedido -->
-                            <div class="card">
-                                <div class="card-content px-0 pb-1">
-                                    <p class="title is-5 has-text-centered mb-3">
-                                        Média de Dinheiro Gasto
-                                    </p>
-                                    <p class="subtitle is-3 has-text-centered has-text-weight-bold has-text-grey">
-                                        11,63€
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Card: Tempo Médio de Entrega dos Pedidos -->
-                            <div class="card">
-                                <div class="card-content px-0 pb-0">
-                                    <p class="title is-5 has-text-centered mb-3">
-                                        Tempo Médio de Entrega
-                                    </p>
-                                    <p class="subtitle is-3 has-text-centered has-text-weight-bold has-text-grey">
-                                        00:28
-                                    </p>
-                                </div>
+                        <!-- Outros Cartões -->
+                        <div class="card flex-grow-1" style=" overflow: auto;">
+                            <div class="card-body text-center">
+                                <p class="card-title">Total de pedidos realizados</p>
+                                <p class="display-4 text-secondary" style="max-height: 70px;"><?php echo $totalPedidos; ?></p>
                             </div>
                         </div>
 
-                        <!-- Segunda Coluna: Gráficos -->
-                        <div class="column is-8 pt-0">
-                            <!-- <img src="../assets/imgs/Frame 779.png" alt="Gráfico" class="px-2"> -->
-
-                            <div class="card">
-                                <div class="card-content p-2">
-                                    <div id="curve_chart" style=""></div>
-
-                                </div>
+                        <div class="card flex-grow-1" style=" overflow: auto;">
+                            <div class="card-body text-center">
+                                <p class="card-title">Total de Dinheiro Gasto</p>
+                                <!-- Adicionar altura máxima para evitar conteúdo excessivo -->
+                                <p class="display-4 text-secondary" style="max-height: 70px; overflow: auto;">
+                                <?php echo $totalDinheiro . "€"; ?>
+                                </p>
                             </div>
+                        </div>
 
-                            <div class="card">
-                                <div class="card-content  p-2">
-                                    <div id="columnchart_values" style="width: 400px;"></div>
+                        <div class="card flex-grow-1" style="overflow: auto;">
+                            <div class="card-body text-center">
+                                <p class="card-title">Média de Dinheiro Gasto por Pedido</p>
+                                <p class="display-4 text-secondary" style="max-height: 70px;"><?php echo $mediaCustoPedidos . "€"; ?></p>
+                            </div>
+                        </div>
 
-                                </div>
+                        <div class="card flex-grow-1" style=" overflow: auto;">
+                            <div class="card-body text-center">
+                                <p a class="card-title">Tempo Médio de Entrega dos Pedidos</p>
+                                <p class="display-4 text-secondary" style="max-height: 70px;">00:28</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Segunda Coluna: Gráficos -->
+                    <div class="col-md-8 d-flex flex-column justify-content-between">
+                        <div class="card flex-grow-1" style=" overflow: auto;">
+                            <div class="card-body text-center pt-5 pb-5">
+                                <div id="curve_chart" style=""></div>
+                            </div>
+                        </div>
+
+                        <div class="card flex-grow-1" style=" overflow: auto;">
+                            <div class="card-body text-center pt-5 pb-5">
+                                <div id="columnchart_values" style=""></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+        <!--Limpa conteudo Float -->
+        <div class="cleanFloat"></div>
 
-            <!--Limpa conteudo Float -->
-            <div class="cleanFloat"></div>
-
-            <!--Zona do Footer -->
-            <?php
-                include __DIR__."/includes/footer_2.php";
-            ?>
- 
+        <!--Zona do Footer -->
+        <?php
+        include __DIR__ . "/includes/footer_2.php";
+        ?>
+    </div>
 
 </body>
 
