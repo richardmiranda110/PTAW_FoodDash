@@ -10,8 +10,8 @@
           aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">
-        <img src="/assets/imgs/fooddash_logo_white.png" alt="" srcset="">
+    <a class="navbar-brand" href="/~ptaw-2024-gr2/">
+        <img src="assets/imgs/fooddash_logo_white.png" alt="" srcset="">
     </a>
     <div class="collapse navbar-collapse" id="navbarsExample02">
       <ul class="navbar-nav me-auto">

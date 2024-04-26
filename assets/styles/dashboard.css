@@ -1,0 +1,148 @@
+/* CORES
+#FEBB41 : Amarelo logo
+
+*/
+#contentDiv {
+	    width: 95vw;
+    margin-left: 5vh;
+}
+
+#topHeader {
+    position: fixed;
+    margin-top: 0px;
+    top: 0px;
+	z-index: 999999;
+}
+
+
+.container, .container-lg, .container-md, 
+.container-sm, .container-xl, .container-xxl {
+	max-width:100% !important;
+	padding: 0px !important;
+	margin-top: 20px;
+}
+
+.icon {
+    max-width: 60%;
+    height: auto;
+  }
+  
+.circle {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: yellow;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+}
+
+.black-circle {
+	background-color: black;
+}
+
+.line {
+	height: 8px;
+	background-color: yellow;
+}
+
+.gradient-line {
+	background: linear-gradient(to right, yellow, black);
+	color: white;
+}
+
+.ten-percent-to-left{
+	transform: translate(-10%);
+}
+
+.ten-percent-to-right{
+	transform: translate(10%);
+}
+
+/* Estilo para esconder e mostrar a barra lateral */
+#sideBarLeft {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  background-color: #333; 
+  z-index: 1050;
+  transition: transform 0.3s;
+  transform: translateX(-100%);
+  padding: 5% 0px 2% 1%;
+}
+
+#sideBarLeft.active {
+  transform: translateX(0); /* Move a barra lateral para ser visível */
+}
+
+/* Estilo para o overlay */
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+}
+
+
+
+/* Botões menu top */
+#toggleSidebar {
+  background-color: black; 
+  color: white; 
+  border: none;
+  margin-right: 1vw;
+}
+
+#toggleSidebar:hover {
+  background-color: #333;
+}
+
+.loginBtn {
+    margin-left: 1vw;
+	border: none;
+    font-weight: bold;
+}
+
+#loginMenuBtn {
+    background: none;
+    color: #FEBB41;
+}
+
+#loginMenuBtn:hover {
+    background: #FEBB41;
+    color: #fff;
+}
+
+#registMenuBtn {
+    background: #000; 
+}
+
+#registMenuBtn:hover {
+    color: #FEBB41;
+}
+
+#grafEstatisticas .card,
+#infoEstatisticas .card {
+    text-align: center;
+    margin-bottom: 4vh;
+}
+
+#infoEstatisticas .card {
+    padding: 5.15vh 2vh;
+}
+
+i.bi.bi-eye {
+    font-size: 5vh;
+    color: black;
+}
+
+i.bi.bi-eye:hover {
+	color:#FEBB41;
+}

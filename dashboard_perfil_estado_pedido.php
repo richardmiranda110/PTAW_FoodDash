@@ -19,21 +19,21 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FoodDash</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../assets/styles/sitecss.css">
-	<link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="assets/styles/sitecss.css">
+	<link rel="stylesheet" href="assets/styles/dashboard.css">
     
   </head>
   <body>
   <!--Zona do Header -->
   <div id="topHeader" class="container-xxl">
     <!-- Top/Menu da Página -->
-    <?php include "./includes/header_logged_in.php"; ?>
+    <?php include "includes/header_logged_in.php"; ?>
 
   </div>
 
   <!--Zona de Conteudo -->  
   <div id="contentPage" class="container-xxl">
-  <?php include "./includes/sidebar_perfil.php"; ?>
+  <?php include "includes/sidebar_perfil.php"; ?>
 
     <!--Zona de Conteudo da Página -->
     <div id="contentDiv" class="col-md-10">
@@ -45,7 +45,9 @@ session_start();
         <div class="container ">
                 <div class="row border my-3">
                   <div class="col-sm-1 fs-1 ">
+				  <a href="dashboard_perfil_pedidos.php">
                     <i style="cursor:pointer" class="bi bi-arrow-left-short border border-2 rounded bg-light"></i>
+					</a>
                   </div>
                   <div class=" rounded-left rounded-right align-self-center py-2 fs-6">
                       <p class="title display-6 fw-bold"><span>Menu Big King</span> - (<span>13:46</span>  <span>16/03/2024</span>)</p>
@@ -90,20 +92,7 @@ session_start();
 
   <!--Zona do Footer -->
   <div class="container">
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-3 border-top">
-      <p class="col-md-4 mb-0 text-body-secondary">© 2024 FoodDash</p>
-  
-      <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-        <img src="../assets/imgs/FoodDash.png" class="img-fluid" alt="Responsive image">
-      </a>
-  
-      <ul class="nav col-md-4 justify-content-end">
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Menu</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Contatos</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Empresarial</a></li>
-      </ul>
-    </footer>
+    <?php include __DIR__."/includes/footer_2.php"; ?>
   </div>
 
   </body>

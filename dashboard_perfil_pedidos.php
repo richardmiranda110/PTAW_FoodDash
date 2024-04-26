@@ -44,7 +44,9 @@ session_start();
         </div>
         <div class="container ">
               <!-- START OF SLIDE-->
+			  
                 <div id="ticket-info" class="row border border-2 border-secondary rounded my-3">
+				
                   <div class="col-sm-1 text-center align-self-center py-2 fs-6 "><span>13:46</span><br><span>16/03/24</span></div>
                   <div class="col-sm-5 rounded-left rounded-right align-self-center py-2 px-5 fs-6">
                       <strong>Menu Big King </strong> (Burger King)<br>
@@ -55,8 +57,14 @@ session_start();
                          <span><strong>Status do pedido:</strong> Pedido em Processamento</span></small>
                   </div>
                   <div class="col-sm-1 text-center align-self-center fs-4 py-4 "><strong>9,28€</strong></div>
-                  <div class="col-sm-1 align-self-center text-center h-60"><strong><img class="img-fluid p-3" src="/assets/imgs/icon_info.jpg" alt="" srcset=""></strong></div>
-                </div>
+                  <div class="col-sm-1 align-self-center text-center h-60">
+					<a href="dashboard_perfil_estado_pedido.php">
+						<i class="bi bi-eye"></i>
+					</a>
+					</div>
+				</div>
+				
+                
         </div>
     </div>
   </div>

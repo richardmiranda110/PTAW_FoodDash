@@ -4,7 +4,7 @@
 			<div class="d-flex flex-column" id="sidebar">
 				<ul class="nav nav-pills flex-column mb-auto nav-item-container ">
 					<li class="nav-item" >
-						<a href="#" class="nav-link active" aria-current="page">
+						<a href="dashboard.php" class="nav-link active" aria-current="page">
 							<span class="bi bi-speedometer">Dashboard</span>
 						</a>
 					</li>
@@ -14,12 +14,12 @@
 						</a>
 					</li>
 					<li>
-						<a href="#" class="nav-link">
+						<a href="dashboard_perfil_pedidos.php" class="nav-link">
 						<span class = "bi-card-list"></span><span class="bi has-text-grey">Pedidos</span>
 						</a>
 					</li>
 					<li>
-						<a href="#" class="nav-link">
+						<a href="dashboard_perfil_estatisticas.php" class="nav-link">
 						<span class = "bi-graph-up"></span><span class="bi has-text-grey">Estatisticas</span>
 						</a>
 					</li>
