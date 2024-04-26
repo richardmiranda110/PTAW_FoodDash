@@ -31,31 +31,6 @@ session_start();
 
   </div>
 
-    <!--Zona de Menu -->
-    <div class="row">
-      <div id="topMenu" class="col with gy-12 gutters">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="collapse navbar-collapse" id="menuTop">
-            <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">HOME</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">MENU</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">CONTATOS</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">EMPRESARIAL</a>
-              </li>
-            </ul>
-          </div>
-        </nav>      
-      </div>
-    </div>
-  </div>
-
   <!--Zona de Conteudo -->  
   <div id="contentPage" class="container-xxl">
   <?php include "./includes/sidebar_perfil.php"; ?>
