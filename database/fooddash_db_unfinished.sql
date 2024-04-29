@@ -52,20 +52,20 @@ CREATE TABLE IF NOT EXISTS AvaliacoesItens (
 -- Tabela Empresa
 CREATE TABLE IF NOT EXISTS Empresas (
     id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(100),
-    morada TEXT,
-    telemovel VARCHAR(20),
-    email VARCHAR(100),
-    tipo VARCHAR(50),
+    nome VARCHAR(100) NOT NULL,
+    morada TEXT NOT NULL,
+    telemovel VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
     password VARCHAR(100)
 );
 
 -- Tabela Estabelecimento
 CREATE TABLE IF NOT EXISTS Estabelecimentos (
     id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(100),
-    localizacao TEXT,
-    telemovel VARCHAR(20),
+    nome VARCHAR(100) NOT NULL,
+    localizacao TEXT NOT NULL,
+    telemovel VARCHAR(20) NOT NULL,
     id_empresa INTEGER 
     REFERENCES Empresas(id)
     ON DELETE CASCADE NOT NULL
@@ -74,13 +74,14 @@ CREATE TABLE IF NOT EXISTS Estabelecimentos (
 -- Tabela Item
 CREATE TABLE IF NOT EXISTS Itens (
     id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(100),
-    preco DECIMAL(10,2),
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
     descricao TEXT,
-    disponivel BOOLEAN,
+    disponivel BOOLEAN NOT NULL,
     foto VARCHAR(255),
-    itemSozinho BOOLEAN,
-    personalizacoesAtivas BOOLEAN,
+    itemSozinho BOOLEAN NOT NULL,
+    personalizacoesAtivas BOOLEAN NOT NULL,
+    categoria INTEGER NOT NULL,
     id_estabelecimento INTEGER 
     REFERENCES Estabelecimentos(id)
     ON DELETE CASCADE NOT NULL
