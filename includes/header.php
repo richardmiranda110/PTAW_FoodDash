@@ -23,19 +23,10 @@
 </nav>
 
 <script>
-  document.getElementById('logo_fooddash').addEventListener('click', function() {
-    window.location.href = 'index.php';
-  });
-  document.getElementById('home_btn').addEventListener('click', function() {
-    window.location.href = 'index.php';
-  });
-  document.getElementById('restaurantes_btn').addEventListener('click', function() {
-    window.location.href = 'restaurantes_page.php';
-  });
   document.getElementById('login_btn').addEventListener('click', function() {
     window.location.href = 'login_register/login.php';
   });
   document.getElementById('registar_btn').addEventListener('click', function() {
-    window.location.href = 'login_register/register.html';
+    window.location.href = 'login_register/register.php';
   });
 </script>
