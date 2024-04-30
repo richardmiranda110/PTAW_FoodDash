@@ -2,9 +2,13 @@
 CREATE TABLE IF NOT EXISTS Clientes (
     id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100),
+    apelido VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
+    telemovel INT,
     morada TEXT,
-    telemovel VARCHAR(20),
+    cidade VARCHAR(25),
+    pais VARCHAR (25), 
+    CodPostal VARCHAR(25),
     password VARCHAR(100) NOT NULL
 );
 
@@ -164,3 +168,7 @@ CREATE TABLE IF NOT EXISTS Item_Menus (
     ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (id_item, id_menu)
 );
+
+-- insersão de dados de teste, para testar código
+INSERT INTO Clientes (id, nome, email, morada, telemovel, password) 
+VALUES (1, 'Nome', 'exemplo@gmail.com', 'morada', 'xxx-xxx-xxx', 'senha');

@@ -1,12 +1,14 @@
 <?php
-function criarConta($pdo, $nome, $email, $morada, $telemovel, $password) {
+function criarConta($pdo, $nome, $email, $morada, $telemovel, $password)
+{
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO Clientes (nome, email, morada, telemovel, password) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Clientes (nome, email, morada, telemovel, password)
+        VALUES (?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$nome, $email, $morada, $telemovel, $hash]);
 }
 
-function ObterUmUtilizador($ID)
+function ObterUmUtilizador($pdo, $ID)
 {
     $sql = "SELECT * FROM Clientes WHERE id = ?";
     $stmt = $pdo->prepare($sql);
@@ -23,7 +25,36 @@ function ObterUmUtilizador($ID)
     }
 }
 
-function iniciarSessao($pdo, $email, $password) {
+function EditarUtilizadores($pdo, $ID, $DadosUtilizadores)
+{
+    $sql = "UPDATE utilizadores SET Nome = ?, Apelido = ?, Email = ?, PMorada = ?, Telemovel = ?, 
+    Password = ?, Telemovel = ?, NIF = ?, Morada = ?, CodPostal = ?, Localidade = ?, 
+    Porta = ?, EstadoConta = ?";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $DadosUtilizadores['Nome'], PDO::PARAM_STR);
+    $stmt->bindValue(2, $DadosUtilizadores['Apelido'], PDO::PARAM_STR);
+    $stmt->bindValue(3, $DadosUtilizadores['Email'], PDO::PARAM_STR);
+    $stmt->bindValue(4, (int) $DadosUtilizadores['Telemovel'], PDO::PARAM_INT);
+    $stmt->bindValue(5, $DadosUtilizadores['Morada'], PDO::PARAM_STR);
+    $stmt->bindValue(6, $DadosUtilizadores['Cidade'], PDO::PARAM_STR);
+    $stmt->bindValue(7, $DadosUtilizadores['Pais'], PDO::PARAM_STR);
+    $stmt->bindValue(8, $DadosUtilizadores['CodPostal'], PDO::PARAM_STR);
+    $stmt->bindValue(9, $DadosUtilizadores['Morada'], PDO::PARAM_STR);
+    $stmt->bindValue(10, $ID, PDO::PARAM_INT);
+
+    // Executar a query e verificar que não retornou false
+    if ($stmt->execute()) {
+        // A operação foi executada com sucesso
+        $sucesso = True;
+    }
+
+    return $sucesso;
+
+}
+
+function iniciarSessao($pdo, $email, $password)
+{
     $sql = "SELECT * FROM Clientes WHERE email = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$email]);
