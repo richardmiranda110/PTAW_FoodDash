@@ -25,12 +25,12 @@
     <div class="row justify-content-left align-items-center mb-3">
       <div class="col-md-3">
         <div class="form-floating">
-          <input type="text" class="form-control form-control-sm" id="floatingInput" placeholder="XXXX-YY">
+          <input type="text" class="form-control form-control-sm" id="input_codigo_postal" placeholder="XXXX-YY">
           <label for="floatingInput">Introduza um codigo postal</label>
         </div>
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn btn-primary btn-lg px-4">Procurar</button>
+        <button type="button" class="btn btn-primary btn-lg px-4" id="btn_procurar_codigo_postal">Procurar</button>
       </div>
     </div>
   </div>
@@ -123,7 +123,7 @@
     </div>
     <div class="carousel-inner">
       <div class="carousel-item">
-        <img src="./assets/imgs/restaurant_img1_car_business.png" class="d-block w-100" alt="Imagem de um restaurante" style="height: 600px;">
+        <img src="./assets/stock_imgs/RestaurantOnlineFoodDelivery1.jpg" class="d-block w-100" alt="Imagem de um restaurante" style="height: 600px;">
         <div class="container">
           <div class="carousel-caption text-start">
             <h1>Registe o seu estabelecimento</h1>
@@ -134,7 +134,7 @@
         </div>
       </div>
       <div class="carousel-item active">
-        <img src="./assets/imgs/kitchen_img2_car_business.png" class="d-block w-100" alt="Imagem de uma cozinha" style="height: 600px;">
+        <img src="./assets/stock_imgs/FeaturedElevateYourTasteBud.jpg" class="d-block w-100" alt="Imagem de uma cozinha" style="height: 600px;">
         <div class="container">
           <div class="carousel-caption text-start">
             <h1>Receba estatísticas</h1>
@@ -144,7 +144,7 @@
         </div>
       </div>
       <div class="carousel-item">
-        <img src="./assets/imgs/deliveryGuy_img3_car_business.png" class="d-block w-100" alt="Imagem de dois homens" style="height: 600px;">
+        <img src="./assets/stock_imgs/gettyimages-1221405081.jpg" class="d-block w-100" alt="Imagem de dois homens" style="height: 600px;">
         <div class="container">
           <div class="carousel-caption">
             <h1>Não espere pelo futuro, comece a moldá-lo hoje mesmo!</h1>
@@ -173,6 +173,7 @@
   ?>
 
   <!-- SCRIPT -->
+  <script src="./assets/js/index_landing_page_script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

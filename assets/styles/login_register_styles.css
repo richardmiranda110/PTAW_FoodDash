@@ -1,0 +1,8 @@
+.fooddash_logo {
+    position: absolute;
+    top: 8%;
+    left: 4%;
+    width: 15%;
+    height: auto;
+    cursor: pointer;
+}
