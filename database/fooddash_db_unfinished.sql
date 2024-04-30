@@ -171,5 +171,5 @@ CREATE TABLE IF NOT EXISTS Item_Menus (
 );
 
 -- insersão de dados de teste, para testar código
-INSERT INTO Clientes (id, nome, email, morada, telemovel, password) 
-VALUES (1, 'Nome', 'exemplo@gmail.com', 'morada', 'xxx-xxx-xxx', 'senha');
+INSERT INTO Clientes (id, nome, apelido, email telemovel, morada, cidade, pais, CodPostal, password) 
+VALUES (1, "nome", "apelido", "email", 123456789, "morada", "cidade", "pais", "codigo-postal", "password");

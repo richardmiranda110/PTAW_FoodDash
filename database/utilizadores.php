@@ -2,13 +2,13 @@
 function criarConta($pdo, $nome, $email, $morada, $telemovel, $password)
 {
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO Clientes (nome, email, morada, telemovel, password)
-        VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Clientes (nome, apelido, email, telemovel, morada, cidade, pais, CodPostal, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$nome, $email, $morada, $telemovel, $hash]);
 }
 
-function ObterUmUtilizador($pdo, $ID)
+function ObterUmUtilizador2($pdo, $ID)
 {
     $sql = "SELECT * FROM Clientes WHERE id = ?";
     $stmt = $pdo->prepare($sql);
@@ -25,7 +25,7 @@ function ObterUmUtilizador($pdo, $ID)
     }
 }
 
-function EditarUtilizadores($pdo, $ID, $DadosUtilizadores)
+function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
 {
     $sql = "UPDATE utilizadores SET Nome = ?, Apelido = ?, Email = ?, PMorada = ?, Telemovel = ?, 
     Password = ?, Telemovel = ?, NIF = ?, Morada = ?, CodPostal = ?, Localidade = ?, 

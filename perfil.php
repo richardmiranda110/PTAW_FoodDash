@@ -2,7 +2,7 @@
 //include __DIR__ . "/database/db_connection.php";
 //$pdo = include __DIR__ . "/database/db_connection.php";
 //var_dump($pdo);
-//include __DIR__ . "/database/utilizadores.php";
+include __DIR__ . "/database/utilizadores.php";
 ?>
 
 <?php
@@ -17,7 +17,6 @@ function ObterUmUtilizador($ID)
         );
 
         //query
-
         $stmt = $pdo->prepare('SELECT * FROM Clientes WHERE id = ?');
         $stmt->bindValue(1, $ID, PDO::PARAM_INT);
         // Executar a query e verificar que não retornou false
@@ -26,8 +25,10 @@ function ObterUmUtilizador($ID)
             $registo = $stmt->fetch();
             // Retornar os dados
             return $registo;
+
         } else {
             // Se a consulta falhar, retornar null
+            echo "AAAAAAAAAAAAAA";
             return null;
         }
 
@@ -43,29 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
     $utilizador = ObterUmUtilizador(1);
     echo var_dump($utilizador);
-} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $Validacao = True;
-
-    // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
-    // retirar carateres perigosos			
-    $utilizador = array(
-        'Nome' => htmlentities(trim($_POST['Nome'])),
-        'Apelido' => htmlentities(trim($_POST['Apelido'])),
-        'Email' => htmlentities(trim($_POST['Email'])),
-        'Telemovel' => htmlentities(trim($_POST['Telemovel'])),
-        'Morada' => htmlentities(trim($_POST['Morada'])),
-        'CodPostal' => htmlentities(trim($_POST['CodPostal'])),
-        'Localidade' => htmlentities(trim($_POST['Localidade'])),
-        'Porta' => htmlentities(trim($_POST['Porta'])),
-        'NIF' => htmlentities(trim($_POST['NIF']))
-    );
-
-    // Se não ocorreram erros de validação, atualizar o produto
-    if ($Validacao) {
-        var_dump($utilizador);
-        // Atualiza os dados do utilizador
-        EditarUtilizadores(1, $utilizador);
-    }
 }
 ?>
 
@@ -110,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <div class="esquerdo" style="padding:5px">
                                 <span>Primeiro Nome</span>
                                 <div class="input-group flex-nowrap">
-                                    <input readonly type="text" class="form-control" placeholder="Nome"
-                                        aria-label="PNome" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['nome']))
+                                    <input readonly type="text" class="form-control" placeholder="Primeiro Nome"
+                                        aria-label="Primeiro Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['nome']))
                                             echo $utilizador['nome']; ?>">
                                 </div>
                                 <br>
@@ -123,16 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 </div>
                             </div>
                             <div class="direito" style="padding:5px">
-                                <span>Último Nome</span>
+                                <span>Apelido</span>
                                 <div class="input-group flex-nowrap">
-                                    <input readonly type="text" class="form-control" placeholder="Username"
-                                        aria-label="Username" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['nome']))
-                                            echo $utilizador['nome']; ?>">
+                                    <input readonly type="text" class="form-control" placeholder="Apelido"
+                                        aria-label="Apelido" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['apelido']))
+                                            echo $utilizador['apelido']; ?>">
                                 </div>
                                 <br>
                                 <span>Nº de Telemóvel</span>
                                 <div class="input-group flex-nowrap">
-                                    <input readonly type="text" class="form-control" placeholder="Telemovel"
+                                    <input readonly type="text" class="form-control" placeholder="Telemóvel"
                                         aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['telemovel']))
                                             echo $utilizador['telemovel']; ?>">
                                 </div>
@@ -155,8 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                         <span>Cidade</span>
                                         <div class="input-group flex-nowrap">
                                             <input readonly type="text" class="form-control" placeholder="Cidade"
-                                                aria-label="Cidade" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['morada']))
-                                                    echo $utilizador['morada']; ?>">
+                                                aria-label="Cidade" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['cidade']))
+                                                    echo $utilizador['cidade']; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -166,8 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                         <span>País</span>
                                         <div readonly class="input-group flex-nowrap">
                                             <input readonly type="text" class="form-control" placeholder="País"
-                                                aria-label="País" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['morada']))
-                                                    echo $utilizador['morada']; ?>">
+                                                aria-label="País" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['pais']))
+                                                    echo $utilizador['pais']; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -176,9 +154,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     <div class="col-md-12">
                                         <span>Código-Postal</span>
                                         <div class="input-group flex-nowrap">
-                                            <input readonly type="text" class="form-control" placeholder="cod-postal"
-                                                aria-label="cod-postal" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['morada']))
-                                                    echo $utilizador['morada']; ?>">
+                                            <input readonly type="text" class="form-control" placeholder="Código Postal"
+                                                aria-label="Código Postal" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['CodPostal']))
+                                                    echo $utilizador['CodPostal']; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -214,22 +192,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         // Adiciona evento de clique ao botão
         btnEditar.addEventListener("click", function () {
-            // Alterna entre modo de edição e leitura
+            // Alterar para modo de edição
             if (btnEditar.innerHTML === "Editar") {
                 btnEditar.innerHTML = "Guardar";
                 inputs.forEach(function (input) {
                     input.removeAttribute("readonly");
                 });
-            } else {
+            }
+            // Alterar para modo de leitura
+            else {
                 btnEditar.innerHTML = "Editar";
                 inputs.forEach(function (input) {
                     input.setAttribute("readonly", "readonly");
                 });
-                // Aqui você pode enviar os dados atualizados para o servidor
-                // por meio de uma solicitação AJAX para salvar as alterações
+
+                <?php
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $Validacao = True;
+
+                    // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
+                    // retirar carateres perigosos
+
+                    // Sanitize and trim user input
+                    $utilizador = array(
+                        'Nome' => $_POST['Nome'],
+                        'Apelido' => $_POST['Apelido'],
+                        'Email' => $_POST['Email'],
+                        'Telemovel' => $_POST['Telemovel'],
+                        'Morada' => $_POST['Morada'],
+                        'Cidade' => $_POST['Cidade'],
+                        'Pais' => $_POST['Pais'],
+                        'CodPostal' => $_POST['CodPostal']
+                    );
+                
+
+
+                    // Se não ocorreram erros de validação, atualizar o produto
+                    if ($Validacao) {
+                        var_dump($utilizador);
+                        // Atualiza os dados do utilizador
+                        EditarUtilizador($pdo, 1, $utilizador);
+                    }
+                    ?>
+                }
             }
         });
     });
+}
 </script>
 
 </html>
