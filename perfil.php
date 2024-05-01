@@ -6,16 +6,22 @@ include __DIR__ . "/database/utilizadores.php";
 ?>
 
 <?php
-function ObterUmUtilizador($ID)
+//conexão ao banco de dados
+$pdo = new PDO(
+    'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
+    'root',
+    ''
+);
+
+function ObterUmUtilizador($pdo, $ID)
 {
     try {
         //conexão ao banco de dados
-        $pdo = new PDO(
+        /*$pdo = new PDO(
             'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
             'root',
             ''
-        );
-
+        );*/
         //query
         $stmt = $pdo->prepare('SELECT * FROM Clientes WHERE id = ?');
         $stmt->bindValue(1, $ID, PDO::PARAM_INT);
@@ -25,7 +31,6 @@ function ObterUmUtilizador($ID)
             $registo = $stmt->fetch();
             // Retornar os dados
             return $registo;
-
         } else {
             // Se a consulta falhar, retornar null
             echo "AAAAAAAAAAAAAA";
@@ -39,12 +44,30 @@ function ObterUmUtilizador($ID)
     }
 }
 
-
+// Recebendo dados da BD
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
-    $utilizador = ObterUmUtilizador(1);
-    echo var_dump($utilizador);
+    $utilizador = ObterUmUtilizador($pdo, 1);
+    var_dump($utilizador);
 }
+
+// Enviando dados para a BD
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Sanitize and trim user input
+    $utilizador = array(
+        'Nome' => $_POST['Nome'],
+        'Apelido' => $_POST['Apelido'],
+        'Email' => $_POST['Email'],
+        'Telemovel' => $_POST['Telemovel'],
+        'Morada' => $_POST['Morada'],
+        'Cidade' => $_POST['Cidade'],
+        'Pais' => $_POST['Pais'],
+        'CodPostal' => $_POST['CodPostal']
+    );
+}
+var_dump($pdo);
+
+EditarUtilizador($pdo, 1, $utilizador);
 ?>
 
 <!DOCTYPE html>
@@ -195,24 +218,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // Alterar para modo de edição
             if (btnEditar.innerHTML === "Editar") {
                 btnEditar.innerHTML = "Guardar";
+                btnEditar.style.backgroundColor = "green";
+                btnEditar.style.color = "white";
                 inputs.forEach(function (input) {
                     input.removeAttribute("readonly");
                 });
+                btnEditar.setAttribute("type", "submit");
             }
             // Alterar para modo de leitura
             else {
                 btnEditar.innerHTML = "Editar";
                 inputs.forEach(function (input) {
+                    btnEditar.style.backgroundColor = "#FEBB41";
+                    btnEditar.style.color = "black";
                     input.setAttribute("readonly", "readonly");
+                    btnEditar.removeAttribute("type");
                 });
 
                 <?php
-                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    $Validacao = True;
+                /*if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                    // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
-                    // retirar carateres perigosos
-
+                
                     // Sanitize and trim user input
                     $utilizador = array(
                         'Nome' => $_POST['Nome'],
@@ -224,21 +250,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         'Pais' => $_POST['Pais'],
                         'CodPostal' => $_POST['CodPostal']
                     );
-                
-
-
-                    // Se não ocorreram erros de validação, atualizar o produto
-                    if ($Validacao) {
-                        var_dump($utilizador);
-                        // Atualiza os dados do utilizador
-                        EditarUtilizador($pdo, 1, $utilizador);
-                    }
-                    ?>
                 }
+
+                    EditarUtilizador($pdo, 1, $utilizador);*/
+                ?>
             }
         });
     });
-}
 </script>
 
 </html>

@@ -25,30 +25,34 @@ function ObterUmUtilizador2($pdo, $ID)
     }
 }
 
+
+// Altera os dados do utilizador, mas não a password
 function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
 {
-    $sql = "UPDATE utilizadores SET Nome = ?, Apelido = ?, Email = ?, PMorada = ?, Telemovel = ?, 
-    Password = ?, Telemovel = ?, NIF = ?, Morada = ?, CodPostal = ?, Localidade = ?, 
-    Porta = ?, EstadoConta = ?";
+    $sql = "UPDATE Clientes SET nome = ?, apelido = ?, email = ?,
+    telemovel = ?, morada = ?, cidade = ?, pais = ?, CodPostal = ?
+    WHERE id = ?";
     
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $DadosUtilizadores['Nome'], PDO::PARAM_STR);
-    $stmt->bindValue(2, $DadosUtilizadores['Apelido'], PDO::PARAM_STR);
-    $stmt->bindValue(3, $DadosUtilizadores['Email'], PDO::PARAM_STR);
-    $stmt->bindValue(4, (int) $DadosUtilizadores['Telemovel'], PDO::PARAM_INT);
-    $stmt->bindValue(5, $DadosUtilizadores['Morada'], PDO::PARAM_STR);
-    $stmt->bindValue(6, $DadosUtilizadores['Cidade'], PDO::PARAM_STR);
-    $stmt->bindValue(7, $DadosUtilizadores['Pais'], PDO::PARAM_STR);
+    $stmt->bindValue(1, $DadosUtilizadores['nome'], PDO::PARAM_STR);
+    $stmt->bindValue(2, $DadosUtilizadores['apelido'], PDO::PARAM_STR);
+    $stmt->bindValue(3, $DadosUtilizadores['email'], PDO::PARAM_STR);
+    $stmt->bindValue(4, (int) $DadosUtilizadores['telemovel'], PDO::PARAM_INT);
+    $stmt->bindValue(5, $DadosUtilizadores['morada'], PDO::PARAM_STR);
+    $stmt->bindValue(6, $DadosUtilizadores['cidade'], PDO::PARAM_STR);
+    $stmt->bindValue(7, $DadosUtilizadores['pais'], PDO::PARAM_STR);
     $stmt->bindValue(8, $DadosUtilizadores['CodPostal'], PDO::PARAM_STR);
-    $stmt->bindValue(9, $DadosUtilizadores['Morada'], PDO::PARAM_STR);
-    $stmt->bindValue(10, $ID, PDO::PARAM_INT);
+    $stmt->bindValue(9, $ID, PDO::PARAM_INT);
 
     // Executar a query e verificar que não retornou false
     if ($stmt->execute()) {
         // A operação foi executada com sucesso
         $sucesso = True;
+    } else {
+        $sucesso = False;
     }
 
+    echo $sucesso;
     return $sucesso;
 
 }
