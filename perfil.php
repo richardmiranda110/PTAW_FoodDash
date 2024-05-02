@@ -1,7 +1,6 @@
 <?php
 //include __DIR__ . "/database/db_connection.php";
 //$pdo = include __DIR__ . "/database/db_connection.php";
-//var_dump($pdo);
 include __DIR__ . "/database/utilizadores.php";
 ?>
 
@@ -13,48 +12,29 @@ $pdo = new PDO(
     ''
 );
 
-function ObterUmUtilizador($pdo, $ID)
-{
-    try {
-        //conexão ao banco de dados
-        /*$pdo = new PDO(
-            'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
-            'root',
-            ''
-        );*/
-        //query
-        $stmt = $pdo->prepare('SELECT * FROM Clientes WHERE id = ?');
-        $stmt->bindValue(1, $ID, PDO::PARAM_INT);
-        // Executar a query e verificar que não retornou false
-        if ($stmt->execute()) {
-            // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
-            $registo = $stmt->fetch();
-            // Retornar os dados
-            return $registo;
-        } else {
-            // Se a consulta falhar, retornar null
-            echo "AAAAAAAAAAAAAA";
-            return null;
-        }
-
-    } catch (Exception $e) {
-        echo "Erro na conexão à BD: " . $e->getMessage();
-        // Se ocorrer um erro, retornar null
-        return null;
-    }
-}
-
-// Recebendo dados da BD
+// Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
-    $utilizador = ObterUmUtilizador($pdo, 1);
-    var_dump($utilizador);
+    $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR O ID
+    //var_dump($utilizador);
 }
 
-// Enviando dados para a BD
+/*UPDATE Clientes
+SET nome = 'novo_nome',
+    apelido = 'novo_apelido',
+    email = 'novo_email',
+    telemovel = 987654321,
+    morada = 'nova_morada',
+    cidade = 'nova_cidade',
+    pais = 'novo_pais',
+    CodPostal = 'novo_codigo_postal',
+    password = 'nova_password'
+WHERE id = 1; */
+
+// Enviando dados para a BD, ao editar dados de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Sanitize and trim user input
-    $utilizador = array(
+    $utilizadorModificado = array(
         'Nome' => $_POST['Nome'],
         'Apelido' => $_POST['Apelido'],
         'Email' => $_POST['Email'],
@@ -64,10 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'Pais' => $_POST['Pais'],
         'CodPostal' => $_POST['CodPostal']
     );
+
+    var_dump($utilizadorModificado);
+    EditarUtilizador($pdo, 1, $utilizadorModificado);
+
 }
 var_dump($pdo);
-
-EditarUtilizador($pdo, 1, $utilizador);
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +74,7 @@ EditarUtilizador($pdo, 1, $utilizador);
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
 
-    <div class="perfil centro texto_perfil">
+    <form class="perfil centro texto_perfil form_editar">
         <h3>Perfil do Utilizador</h3>
         <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las</p>
 
@@ -102,7 +84,8 @@ EditarUtilizador($pdo, 1, $utilizador);
                     <div class="card mb-3">
                         <div class="card-header">
                             <h5 class="esquerdo">A minha conta</h5>
-                            <button id="btn_editar" class="btn btn-warning direito" style="width: auto;"> Editar
+                            <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button">
+                                Editar
                             </button>
                         </div>
                         <div class="card-body">
@@ -190,10 +173,10 @@ EditarUtilizador($pdo, 1, $utilizador);
                 </div>
             </div>
         </div>
-        <?php
-        include __DIR__ . "/includes/footer_2.php";
-        ?>
-    </div>
+    </form>
+    <?php
+    include __DIR__ . "/includes/footer_2.php";
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -201,13 +184,6 @@ EditarUtilizador($pdo, 1, $utilizador);
 </body>
 
 <script>
-    /*Se não clicar no botão editar,
-     - dizer que todos os inputs são "readonly", isto é são visivéis e não editáveis
-    se clicar
-    - por o botão como guardar ou disabled
-    - retirar as propriedades readonly
-    - criar botão guardar*/
-
     document.addEventListener("DOMContentLoaded", function () {
         // Obtém os elementos
         var btnEditar = document.getElementById("btn_editar");
@@ -223,7 +199,7 @@ EditarUtilizador($pdo, 1, $utilizador);
                 inputs.forEach(function (input) {
                     input.removeAttribute("readonly");
                 });
-                btnEditar.setAttribute("type", "submit");
+                btnEditar.removeAttribute("disabled");
             }
             // Alterar para modo de leitura
             else {
@@ -232,30 +208,32 @@ EditarUtilizador($pdo, 1, $utilizador);
                     btnEditar.style.backgroundColor = "#FEBB41";
                     btnEditar.style.color = "black";
                     input.setAttribute("readonly", "readonly");
-                    btnEditar.removeAttribute("type");
+                    btnEditar.removeAttribute("disabled", "disabled");
                 });
-
-                <?php
-                /*if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-                
-                    // Sanitize and trim user input
-                    $utilizador = array(
-                        'Nome' => $_POST['Nome'],
-                        'Apelido' => $_POST['Apelido'],
-                        'Email' => $_POST['Email'],
-                        'Telemovel' => $_POST['Telemovel'],
-                        'Morada' => $_POST['Morada'],
-                        'Cidade' => $_POST['Cidade'],
-                        'Pais' => $_POST['Pais'],
-                        'CodPostal' => $_POST['CodPostal']
-                    );
-                }
-
-                    EditarUtilizador($pdo, 1, $utilizador);*/
-                ?>
             }
         });
+
+
+        // Função para exibir mensagem de pop-up
+        /*function exibirMensagem(mensagem) {
+            alert(mensagem);
+        }
+
+        // Submeter o formulário
+        document.getElementById("form_editar").addEventListener("submit", function (event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Realizar a submissão dos dados via AJAX ou fetch
+
+            // Simular uma mensagem de sucesso ou erro
+            var sucesso = true; // Altere para false para simular um erro
+
+            if (sucesso) {
+                exibirMensagem("Dados alterados com sucesso!");
+            } else {
+                exibirMensagem("Ocorreu um erro ao alterar os dados. Por favor, tente novamente.");
+            }
+        });*/
     });
 </script>
 
