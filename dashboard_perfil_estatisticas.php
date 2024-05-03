@@ -1,5 +1,5 @@
 <?php
-require_once './init.php';
+require_once './database/db_connection.php';
 
 function getTotalPedidos($conn, $clienteId)
 {
