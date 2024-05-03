@@ -83,8 +83,8 @@ CREATE TABLE IF NOT EXISTS Itens (
     descricao TEXT,
     disponivel BOOLEAN NOT NULL,
     foto VARCHAR(255),
-    itemSozinho BOOLEAN NOT NULL,
-    personalizacoesAtivas BOOLEAN NOT NULL,
+    itemSozinho BOOLEAN DEFAULT 0,
+    personalizacoesAtivas BOOLEAN DEFAULT 0,
     categoria INTEGER NOT NULL,
     id_estabelecimento INTEGER 
     REFERENCES Estabelecimentos(id)
