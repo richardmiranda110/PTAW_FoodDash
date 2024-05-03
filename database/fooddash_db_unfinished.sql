@@ -70,9 +70,17 @@ CREATE TABLE IF NOT EXISTS Estabelecimentos (
     nome VARCHAR(100) NOT NULL,
     localizacao TEXT NOT NULL,
     telemovel VARCHAR(20) NOT NULL,
-    id_empresa INTEGER 
+    taxa_entrega DECIMAL NOT NULL,
+    tempo_medio_entrega TIME NOT NULL,
+    id_empresa INTEGER
     REFERENCES Empresas(id)
     ON DELETE CASCADE NOT NULL
+);
+
+-- Tabela Categoria
+CREATE TABLE IF NOT EXISTS Categorias (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(100)
 );
 
 -- Tabela Item
@@ -83,9 +91,9 @@ CREATE TABLE IF NOT EXISTS Itens (
     descricao TEXT,
     disponivel BOOLEAN NOT NULL,
     foto VARCHAR(255),
-    itemSozinho BOOLEAN DEFAULT 0,
-    personalizacoesAtivas BOOLEAN DEFAULT 0,
-    categoria INTEGER NOT NULL,
+    itemSozinho BOOLEAN DEFAULT FALSE,
+    personalizacoesAtivas BOOLEAN DEFAULT FALSE,
+    id_categoria INTEGER NOT NULL REFERENCES Categorias(id) ON DELETE CASCADE NOT NULL,
     id_estabelecimento INTEGER 
     REFERENCES Estabelecimentos(id)
     ON DELETE CASCADE NOT NULL
@@ -106,12 +114,6 @@ CREATE TABLE IF NOT EXISTS Personalizacoes (
     ON DELETE CASCADE,
     id_item INTEGER REFERENCES Itens(id)
     ON DELETE CASCADE NOT NULL
-);
-
--- Tabela Categoria
-CREATE TABLE IF NOT EXISTS Categorias (
-    id BIGSERIAL PRIMARY KEY,
-    nome VARCHAR(100)
 );
 
 -- Tabela Menu
