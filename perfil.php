@@ -1,16 +1,9 @@
 <?php
 //include __DIR__ . "/database/db_connection.php";
 //$pdo = include __DIR__ . "/database/db_connection.php";
-include __DIR__ . "/database/utilizadores.php";
-?>
 
-<?php
-//conexão ao banco de dados
-$pdo = new PDO(
-    'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
-    'root',
-    ''
-);
+require_once './database/db_connection.php';
+include __DIR__ . "/database/utilizadores.php";
 
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {

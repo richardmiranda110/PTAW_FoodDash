@@ -1,24 +1,10 @@
 <?php
-// Configurações de conexão ao banco de dados
-$dbHost = 'estga-dev.ua.pt';  // Endereço do banco de dados
-$dbPort = '5432';        // Porta do banco de dados (por padrão, PostgreSQL usa 5432)
-$dbName = 'ptaw-2024-gr2';  // Nome do banco de dados
-$dbUser = 'ptaw-2024-gr2';  // Usuário do banco de dados
-$dbPass = 'Hrw4zTS$[i\D_$vI';  // Senha do banco de dados
+require_once './init.php';
 
-// Conexão ao banco de dados usando PDO
-try {
-    $conn = new PDO("pgsql:host=$dbHost; port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
-    // set the PDO error mode to exception
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erro ao conectar ao banco de dados: " . $e->getMessage());
-}
-
-function getTotalPedidos($pdo, $clienteId)
+function getTotalPedidos($conn, $clienteId)
 {
     $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_cliente = :clienteId";
-    $stmt = $pdo->prepare($query);
+    $stmt = $conn->prepare($query);
     $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();  // Obtemos um único resultado, que é a contagem
@@ -88,25 +74,25 @@ function getMediaCustoPedidos($pdo, $clienteId)
 
 // Exemplo de uso
 $clienteId = 1;  // ID do cliente para o qual queremos contar os pedidos
-$totalPedidos = getTotalPedidos($conn, $clienteId);
+$totalPedidos = getTotalPedidos($pdo, $clienteId);
 
-$totalDinheiro = getTotalDinheiro($conn, $clienteId);
+$totalDinheiro = getTotalDinheiro($pdo, $clienteId);
 
-$mediaCustoPedidos = getMediaCustoPedidos($conn, $clienteId);
+$mediaCustoPedidos = getMediaCustoPedidos($pdo, $clienteId);
 
-$totalPedidosJulho = getMesPedidos($conn, $clienteId, 7);
-$totalPedidosAgosto = getMesPedidos($conn, $clienteId, 8);
-$totalPedidosSetembro = getMesPedidos($conn, $clienteId, 9);
-$totalPedidosOutubro = getMesPedidos($conn, $clienteId, 10);
-$totalPedidosNovembro = getMesPedidos($conn, $clienteId, 11);
-$totalPedidosDezembro = getMesPedidos($conn, $clienteId, 12);
+$totalPedidosJulho = getMesPedidos($pdo, $clienteId, 7);
+$totalPedidosAgosto = getMesPedidos($pdo, $clienteId, 8);
+$totalPedidosSetembro = getMesPedidos($pdo, $clienteId, 9);
+$totalPedidosOutubro = getMesPedidos($pdo, $clienteId, 10);
+$totalPedidosNovembro = getMesPedidos($pdo, $clienteId, 11);
+$totalPedidosDezembro = getMesPedidos($pdo, $clienteId, 12);
 
-$totalDinheiroJulho = getMesDinheiro($conn, $clienteId, 7);
-$totalDinheiroAgosto = getMesDinheiro($conn, $clienteId, 8);
-$totalDinheiroSetembro = getMesDinheiro($conn, $clienteId, 9);
-$totalDinheiroOutubro = getMesDinheiro($conn, $clienteId, 10);
-$totalDinheiroNovembro = getMesDinheiro($conn, $clienteId, 11);
-$totalDinheiroDezembro = getMesDinheiro($conn, $clienteId, 12);
+$totalDinheiroJulho = getMesDinheiro($pdo, $clienteId, 7);
+$totalDinheiroAgosto = getMesDinheiro($pdo, $clienteId, 8);
+$totalDinheiroSetembro = getMesDinheiro($pdo, $clienteId, 9);
+$totalDinheiroOutubro = getMesDinheiro($pdo, $clienteId, 10);
+$totalDinheiroNovembro = getMesDinheiro($pdo, $clienteId, 11);
+$totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
 ?>
 <!doctype html>
 <html lang="en">
