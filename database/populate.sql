@@ -3,7 +3,17 @@ INSERT INTO Clientes (nome, email, morada, telemovel, password) VALUES
         ('Maria Santos', 'maria@ua.com', 'Avenida B, Porto', '987654321', 'abcde123'),
         ('Richard Miranda', 'richard@ua.com', 'Rua ABCS, Aveiro', '916713732', 'richardfood');
 
-INSERT INTO Pedidos () VALUES (), ();
+INSERT INTO Pedidos (estado, precoTotal, id_cliente, id_entregador, id_estabelecimento) VALUES 
+("EFETUADO", 5.59, 1, 1, 1),  -- MCDOnalds
+("EFETUADO", 5.99, 1, 2, 2),  -- Burger King
+("EFETUADO", 14.99, 2, 3, 3),  -- Subenshi
+("EFETUADO", 19.99, 2, 4, 4),  -- Pizza Hut
+("EFETUADO", 19.99, 3, 5, 4),  -- Pizza Hut
+("EFETUADO", 10.00, 3, 6, 5);  -- KFC
+
+-- configurar tabela item_pedido
+
+
 
 INSERT INTO Entregadores (nome, veiculo) VALUES
         ('Entregador 1', 'Motocicleta'),
@@ -16,6 +26,8 @@ INSERT INTO Empresas (nome, morada, telemovel, email, tipo, password) VALUES
         ('Pizza Hut', 'Fórum Aveiro, Aveiro', '997374851', 'pizzahut@gmail.com', 'Pizza', 'jkjdf342'),
         ('KFC', 'Glicinias, Porto', '935672132', 'kfc@gmail.com', 'Fast Food', 'omga2sd456');
 
+
+-- falta as taxas de entrega
 INSERT INTO Estabelecimentos (nome, localizacao, telemovel, id_empresa) VALUES
         ("McDonald's Aveiro Pingo Doce", 'Pingo Doce Aveiro', '111111111', 1),
         ("McDonald's Aveiro Glicinias Plazaz", 'Glicinias Plaza', '222222222', 1),
@@ -46,7 +58,7 @@ INSERT INTO Itens (nome, preco, descricao, disponivel, foto, itemSozinho, person
         ('Menu Big Mac', 5.59, 'Um hambúrguer clássico com alface, tomate e molho especial.', TRUE, 'big_mac.jpg', FALSE, TRUE, 4, 1),
         ('Pizza Margherita', 19.99, 'Uma deliciosa pizza Margherita com molho de tomate e mozzarela.', TRUE, 'pizza_margherita.jpg', TRUE, TRUE, 5, 4),
         ("Sushis de Todos os Tipos", 14.99, "Uma embalagem de sushis aleatórios." TRUE, "random_sushi.jpg", TRUE, FALSE, 7, 3),
-        ("Bucket of Hot Wings", 10, "Balde de asas de frango picantes HOT HOT HOT", TRUE, "wings_bucket.jpg", TRUE, FALSE, 8, 5);
+        ("Bucket of Hot Wings", 10.00, "Balde de asas de frango picantes HOT HOT HOT", TRUE, "wings_bucket.jpg", TRUE, FALSE, 8, 5);
 
 INSERT INTO Personalizacoes (nome, id_item) VALUES 
         ("Bebida", 1),

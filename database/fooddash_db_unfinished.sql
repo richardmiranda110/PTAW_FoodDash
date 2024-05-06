@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS Pedidos (
     cancelado BOOLEAN DEFAULT FALSE,
     precoTotal DECIMAL(10,2) NOT NULL,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
-    id_entregador INTEGER NOT NULL,
-    id_estabelecimento INTEGER NOT NULL
+    id_entregador INTEGER REFERENCES Entregadores(id_entregador) ON DELETE CASCADE NOT NULL,
+    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
 );
 
 -- Tabela Entregador
