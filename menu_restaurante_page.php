@@ -40,7 +40,7 @@
   </div>
 
 
-  <div class="container d-flex justify-content-start">
+  <div class="container d-flex justify-content-start" style="margin: 0; padding: 0">
     <!-- SIDEBAR CATEGORIAS -->
     <div class="d-flex flex-column p-3 bg-body-tertiary" style="width: 17.7vw;">
       <a class="d-flex align-items-center me-md-auto link-body-emphasis text-decoration-none">
@@ -113,27 +113,10 @@
     </div>
 
     <div class="">
-      <!-- VOUCHERS E DESCONTOS
-      <h1 style="margin-top: 10px; margin-left: 50px;">Vouchers e descontos</h1>
-      
-      <div class="container d-flex">
-        <div class="row">
-          <img src="/assets/stock_imgs/CupaoDesconto.png" class="card-discount">
-          <p style="text-align:center">Insira BK17 em checkout</p>
-        </div>
-        <div class="row" style="margin-left: 30px;cursor:pointer">
-          <img src="/assets/stock_imgs/CupaoDesconto.png" class="card-discount">
-          <p style="text-align:center">Insira BK17 em checkout</p>
-        </div>
-        <div class="row" style="margin-left: 30px;">
-          <img src="/assets/stock_imgs/CupaoDesconto.png" class="card-discount">
-          <p style="text-align:center">Insira BK17 em checkout</p>
-        </div>
-      </div> -->
 
       <!-- CARROSSEL DE ITENS -->
       <h1 style="margin-top: 10px; margin-left: 50px;">Novidades</h1>
-      <div class="container" style="margin-bottom: 40px;">
+      <div class="container" style="margin-bottom: 40px; width: 100vw">
         <div class="slider-wrapper carousel1">
           <button id="prev-slide" class="slide-button material-symbols-rounded">
             «
