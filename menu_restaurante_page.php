@@ -113,10 +113,9 @@
     </div>
 
     <div class="">
-
       <!-- CARROSSEL DE ITENS -->
       <h1 style="margin-top: 10px; margin-left: 50px;">Novidades</h1>
-      <div class="container" style="margin-bottom: 40px; width: 100vw">
+      <div class="container" style="margin-bottom: 40px;">
         <div class="slider-wrapper carousel1">
           <button id="prev-slide" class="slide-button material-symbols-rounded">
             «
