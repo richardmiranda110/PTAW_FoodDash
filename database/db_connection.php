@@ -1,5 +1,5 @@
 <?php
-require_once './credentials.php';
+require_once 'credentials.php';
 
 // Conexão ao banco de dados usando PDO
 try {

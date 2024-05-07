@@ -1,14 +1,7 @@
 <?php
-//include __DIR__ . "/database/db_connection.php";
-//$pdo = include __DIR__ . "/database/db_connection.php";
+include __DIR__ . "/database/db_connection.php";
+$pdo = include __DIR__ . "/database/db_connection.php";
 include __DIR__ . "/database/utilizadores.php";
-
-//conexão ao banco de dados
-$pdo = new PDO(
-    'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
-    'root',
-    ''
-);
 
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -33,18 +26,36 @@ WHERE id = 1; */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Sanitize and trim user input
     $utilizadorModificado = array(
-        'Nome' => $_POST['Nome'],
+        /*'Nome' => $_POST['Nome'],
         'Apelido' => $_POST['Apelido'],
         'Email' => $_POST['Email'],
         'Telemovel' => $_POST['Telemovel'],
         'Morada' => $_POST['Morada'],
         'Cidade' => $_POST['Cidade'],
         'Pais' => $_POST['Pais'],
-        'CodPostal' => $_POST['CodPostal']
+        'CodPostal' => $_POST['CodPostal']*/
+        'Nome' => htmlentities(trim($_POST['Nome'])),
+        'Apelido' => htmlentities(trim($_POST['Apelido'])),
+        'Email' => htmlentities(trim($_POST['Email'])),
+        'Telemovel' => htmlentities(trim($_POST['Telemovel'])),
+        'Morada' => htmlentities(trim($_POST['Morada'])),
+        'Cidade' => htmlentities(trim($_POST['Cidade'])),
+        'Pais' => htmlentities(trim($_POST['Pais'])),
+        'CodPostal' => htmlentities(trim($_POST['CodPostal']))
     );
 
-    var_dump($utilizadorModificado);
-    EditarUtilizador($pdo, 1, $utilizadorModificado);
+    //EditarUtilizador($pdo, 1, $utilizadorModificado);
+    // Editar o usuário no banco de dados
+    $resultado = EditarUtilizador($pdo, 1, $utilizadorModificado);
+
+    // Verificar se a edição foi bem-sucedida
+    if ($resultado) {
+        echo "SUCESSO";
+        // Redirecionar o usuário para outra página ou exibir outra mensagem de sucesso
+    } else {
+        echo "ERRO";
+        // Exibir uma mensagem de erro ou redirecionar o usuário para outra página
+    }
 }
 ?>
 
@@ -197,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Alterar para modo de edição
                 if (btnEditar.innerHTML == "Editar") {
                     btnEditar.innerHTML = "Guardar";
-                    //btnEditar.setAttribute("type", "submit");
+                    btnEditar.setAttribute("type", "button");
                     btnEditar.style.backgroundColor = "green";
                     btnEditar.style.color = "white";
                     inputs.forEach(function (input) {
@@ -207,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Alterar para modo de leitura
                 else {
                     btnEditar.innerHTML = "Editar";
-                    btnEditar.setAttribute("type", "button");
+                    btnEditar.setAttribute("type", "submit");
                     btnEditar.style.backgroundColor = "#FEBB41";
                     btnEditar.style.color = "black";
                     inputs.forEach(function (input) {
