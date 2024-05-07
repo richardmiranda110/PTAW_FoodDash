@@ -2,8 +2,8 @@
 function criarConta($pdo, $nome, $email, $morada, $telemovel, $password)
 {
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO Clientes (nome, apelido, email, telemovel, morada, cidade, pais, CodPostal, password)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Clientes (nome, apelido, email, telemovel, morada, password)
+        VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$nome, $email, $morada, $telemovel, $hash]);
 }
@@ -31,7 +31,6 @@ function ObterUmUtilizador($pdo, $ID)
         return null;
     }
 }
-
 
 // Altera os dados do utilizador, mas não a password
 function EditarUtilizador($pdo, $ID, $DadosUtilizadores)

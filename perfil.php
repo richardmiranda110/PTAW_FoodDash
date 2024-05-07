@@ -1,9 +1,14 @@
 <?php
 //include __DIR__ . "/database/db_connection.php";
 //$pdo = include __DIR__ . "/database/db_connection.php";
-
-require_once './database/db_connection.php';
 include __DIR__ . "/database/utilizadores.php";
+
+//conexão ao banco de dados
+$pdo = new PDO(
+    'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
+    'root',
+    ''
+);
 
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -40,9 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     var_dump($utilizadorModificado);
     EditarUtilizador($pdo, 1, $utilizadorModificado);
-
 }
-var_dump($pdo);
 ?>
 
 <!DOCTYPE html>
@@ -71,15 +74,15 @@ var_dump($pdo);
         <h3>Perfil do Utilizador</h3>
         <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las</p>
 
+
         <div class="pedidos">
             <div class="align-items-md-stretch">
                 <div>
                     <div class="card mb-3">
                         <div class="card-header">
                             <h5 class="esquerdo">A minha conta</h5>
-                            <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button">
-                                Editar
-                            </button>
+                            <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
+                                value="Editar">Editar</button>
                         </div>
                         <div class="card-body">
 
@@ -87,14 +90,15 @@ var_dump($pdo);
                             <div class="esquerdo" style="padding:5px">
                                 <span>Primeiro Nome</span>
                                 <div class="input-group flex-nowrap">
-                                    <input readonly type="text" class="form-control" placeholder="Primeiro Nome"
-                                        aria-label="Primeiro Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['nome']))
+                                    <input name="nome" readonly type="text" class="form-control"
+                                        placeholder="Primeiro Nome" aria-label="Primeiro Nome"
+                                        aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['nome']))
                                             echo $utilizador['nome']; ?>">
                                 </div>
                                 <br>
                                 <span>Email</span>
                                 <div class="input-group flex-nowrap">
-                                    <input readonly type="text" class="form-control" placeholder="Email"
+                                    <input name="email" readonly type="text" class="form-control" placeholder="Email"
                                         aria-label="Email" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['email']))
                                             echo $utilizador['email']; ?>">
                                 </div>
@@ -102,15 +106,17 @@ var_dump($pdo);
                             <div class="direito" style="padding:5px">
                                 <span>Apelido</span>
                                 <div class="input-group flex-nowrap">
-                                    <input readonly type="text" class="form-control" placeholder="Apelido"
-                                        aria-label="Apelido" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['apelido']))
+                                    <input name="apelido" readonly type="text" class="form-control"
+                                        placeholder="Apelido" aria-label="Apelido" aria-describedby="addon-wrapping"
+                                        value="<?php if (!empty($utilizador['apelido']))
                                             echo $utilizador['apelido']; ?>">
                                 </div>
                                 <br>
                                 <span>Nº de Telemóvel</span>
                                 <div class="input-group flex-nowrap">
-                                    <input readonly type="text" class="form-control" placeholder="Telemóvel"
-                                        aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['telemovel']))
+                                    <input name="telemovel" readonly type="text" class="form-control"
+                                        placeholder="Telemóvel" aria-label="Telemovel" aria-describedby="addon-wrapping"
+                                        value="<?php if (!empty($utilizador['telemovel']))
                                             echo $utilizador['telemovel']; ?>">
                                 </div>
                             </div>
@@ -121,7 +127,7 @@ var_dump($pdo);
                             <p class="cinzento">Morada</p>
                             <span>Morada</span>
                             <div class="input-group flex-nowrap">
-                                <input readonly type="text" class="form-control" placeholder="Morada"
+                                <input name="morada" readonly type="text" class="form-control" placeholder="Morada"
                                     aria-label="Morada" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['morada']))
                                         echo $utilizador['morada']; ?>">
                             </div>
@@ -131,8 +137,9 @@ var_dump($pdo);
                                     <div class="col-md-12 esquerdo">
                                         <span>Cidade</span>
                                         <div class="input-group flex-nowrap">
-                                            <input readonly type="text" class="form-control" placeholder="Cidade"
-                                                aria-label="Cidade" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['cidade']))
+                                            <input name="cidade" readonly type="text" class="form-control"
+                                                placeholder="Cidade" aria-label="Cidade"
+                                                aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['cidade']))
                                                     echo $utilizador['cidade']; ?>">
                                         </div>
                                     </div>
@@ -141,9 +148,10 @@ var_dump($pdo);
                                 <div class="col-md-4">
                                     <div class="col-md-12">
                                         <span>País</span>
-                                        <div readonly class="input-group flex-nowrap">
-                                            <input readonly type="text" class="form-control" placeholder="País"
-                                                aria-label="País" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['pais']))
+                                        <div class="input-group flex-nowrap">
+                                            <input name="pais" readonly type="text" class="form-control"
+                                                placeholder="País" aria-label="País" aria-describedby="addon-wrapping"
+                                                value="<?php if (!empty($utilizador['pais']))
                                                     echo $utilizador['pais']; ?>">
                                         </div>
                                     </div>
@@ -153,8 +161,9 @@ var_dump($pdo);
                                     <div class="col-md-12">
                                         <span>Código-Postal</span>
                                         <div class="input-group flex-nowrap">
-                                            <input readonly type="text" class="form-control" placeholder="Código Postal"
-                                                aria-label="Código Postal" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['CodPostal']))
+                                            <input name="CodPostal" readonly type="text" class="form-control"
+                                                placeholder="Código Postal" aria-label="Código Postal"
+                                                aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['CodPostal']))
                                                     echo $utilizador['CodPostal']; ?>">
                                         </div>
                                     </div>
@@ -174,60 +183,61 @@ var_dump($pdo);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-</body>
+    <!--<script src="C:\xampp\htdocs\PTAW_FoodDash\assets\js\perfil.php"></script>-->
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Obtém os elementos
-        var btnEditar = document.getElementById("btn_editar");
-        var inputs = document.querySelectorAll(".form-control");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtém os elementos
+            var btnEditar = document.getElementById("btn_editar");
+            var inputs = document.querySelectorAll(".form-control");
+            var form = document.querySelector(".form_editar");
 
-        // Adiciona evento de clique ao botão
-        btnEditar.addEventListener("click", function () {
-            // Alterar para modo de edição
-            if (btnEditar.innerHTML === "Editar") {
-                btnEditar.innerHTML = "Guardar";
-                btnEditar.style.backgroundColor = "green";
-                btnEditar.style.color = "white";
-                inputs.forEach(function (input) {
-                    input.removeAttribute("readonly");
-                });
-                btnEditar.removeAttribute("disabled");
-            }
-            // Alterar para modo de leitura
-            else {
-                btnEditar.innerHTML = "Editar";
-                inputs.forEach(function (input) {
+            // Adiciona evento de clique ao botão
+            btnEditar.addEventListener("click", function () {
+                // Alterar para modo de edição
+                if (btnEditar.innerHTML == "Editar") {
+                    btnEditar.innerHTML = "Guardar";
+                    //btnEditar.setAttribute("type", "submit");
+                    btnEditar.style.backgroundColor = "green";
+                    btnEditar.style.color = "white";
+                    inputs.forEach(function (input) {
+                        input.removeAttribute("readonly");
+                    });
+                }
+                // Alterar para modo de leitura
+                else {
+                    btnEditar.innerHTML = "Editar";
+                    btnEditar.setAttribute("type", "button");
                     btnEditar.style.backgroundColor = "#FEBB41";
                     btnEditar.style.color = "black";
-                    input.setAttribute("readonly", "readonly");
-                    btnEditar.removeAttribute("disabled", "disabled");
-                });
+                    inputs.forEach(function (input) {
+                        input.setAttribute("readonly", "readonly");
+                    });
+                }
+            });
+
+
+            // Função para exibir mensagem de pop-up
+            /*function exibirMensagem(mensagem) {
+                alert(mensagem);
             }
+    
+            // Submeter o formulário
+            document.getElementById("form_editar").addEventListener("submit", function (event) {
+                event.preventDefault(); // Impede o envio padrão do formulário
+    
+                // Realizar a submissão dos dados via AJAX ou fetch
+    
+                // Simular uma mensagem de sucesso ou erro
+                var sucesso = true; // Altere para false para simular um erro
+    
+                if (sucesso) {
+                    exibirMensagem("Dados alterados com sucesso!");
+                } else {
+                    exibirMensagem("Ocorreu um erro ao alterar os dados. Por favor, tente novamente.");
+                }
+            });*/
         });
-
-
-        // Função para exibir mensagem de pop-up
-        /*function exibirMensagem(mensagem) {
-            alert(mensagem);
-        }
-
-        // Submeter o formulário
-        document.getElementById("form_editar").addEventListener("submit", function (event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
-
-            // Realizar a submissão dos dados via AJAX ou fetch
-
-            // Simular uma mensagem de sucesso ou erro
-            var sucesso = true; // Altere para false para simular um erro
-
-            if (sucesso) {
-                exibirMensagem("Dados alterados com sucesso!");
-            } else {
-                exibirMensagem("Ocorreu um erro ao alterar os dados. Por favor, tente novamente.");
-            }
-        });*/
-    });
-</script>
+    </script>
 
 </html>
