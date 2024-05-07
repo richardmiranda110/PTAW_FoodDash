@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS Opcoes (
 
 /* -- Tabela Menu
 CREATE TABLE IF NOT EXISTS Menus (
-    id BIGSERIAL PRIMARY KEY,
+    id_menu BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100),
     horarioInicial TIME,
     horarioFinal TIME,
@@ -138,23 +138,23 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
 
 -- Tabela Pedido_Item
 CREATE TABLE IF NOT EXISTS Pedido_Itens (
-    id_pedido INTEGER REFERENCES Pedidos(id) ON DELETE CASCADE NOT NULL,
-    id_item INTEGER REFERENCES Itens(id) ON DELETE CASCADE NOT NULL,
+    id_pedido INTEGER REFERENCES Pedidos(id_pedido) ON DELETE CASCADE NOT NULL,
+    id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (id_pedido, id_item)
 );
 
 -- Tabela Item_Categoria
 CREATE TABLE IF NOT EXISTS Item_Categorias (
-    id_item INTEGER REFERENCES Itens(id) ON DELETE CASCADE NOT NULL,
-    id_categoria INTEGER REFERENCES Categorias(id) ON DELETE CASCADE NOT NULL,
+    id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
+    id_categoria INTEGER REFERENCES Categorias(id_categoria) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (id_item, id_categoria)
 );
 
 /* -- Tabela Item_Menu
 CREATE TABLE IF NOT EXISTS Item_Menus (
-    id_item INTEGER REFERENCES Itens(id)
+    id_item INTEGER REFERENCES Itens(id_item)
     ON DELETE CASCADE NOT NULL,
-    id_menu INTEGER REFERENCES Menus(id) 
+    id_menu INTEGER REFERENCES Menus(id_menu) 
     ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (id_item, id_menu)
 ); */
