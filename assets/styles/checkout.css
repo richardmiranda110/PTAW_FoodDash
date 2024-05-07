@@ -3,117 +3,117 @@ body{
 }
 
 .checkout-title {
-    font-size: 50px;
+    font-size: 2.5vw;
     text-align: center;
-    margin-top: 100px;
+    margin-top: 6vw;
     font-weight: bold;
 }
 
 .burger-king-title {
-    margin-left: 20px;
+    margin-left: 1.3vw;
     font-weight: bold;
     white-space: nowrap;
 }
 
 #logo-row {
-    position: relative;
-    margin-top: 25px;
+    margin-top: 1.7vw;
+    margin-left: 3vw;
+    height: auto;
+    position: absolute;
+    top: 1vw;
 }
 
 #logo {
-    width: 225px;
-    height: auto;
-    position: absolute;
-    left: -220px;
-    top: 17px;
+    width: 11vw;
 }
 
 .left-div,
 .right-div {
-    margin-top: 20px;
+    margin-top: 1vw;
     background-color: white;
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 0.8vw;
+    padding: 1.2vw;
 }
 
+/*
 .left-div {
-    margin-right: -100px;
-    margin-left: 150px;
+    margin-right: -4vw;
+    margin-left: 13vw;
 }
 
 .right-div {
-    margin-left: -100px;
-    margin-right: 150px;
+    margin-right: 13vw;
+    margin-left: -4vw;
 }
+*/
 
 .linha {
-    border-top: 3px solid #c7c7c7;
+    border-top: 0.2vw solid #c7c7c7;
 }
 
 .opcao {
-    border: 2px solid #e6e3e3;
-    border-radius: 10px;
-    padding: 4px 0px;
-    margin-top: 15px;
+    border: 0.12vw solid #e6e3e3;
+    border-radius: 0.5vw;
+    padding: 0.25vw 0vh;
     cursor: pointer;
 }
 
 .opcao.selected {
-    border: 2px solid black;
+    border: 0.12vw solid black;
 }
 
 .opcaoEntrega {
-    border: 2px solid #e6e3e3;
-    border-radius: 10px;
-    padding: 4px 0px;
-    margin-top: 15px;
+    border: 0.12vw solid #e6e3e3;
+    border-radius: 0.5vw;
+    padding: 0.25vw 0vh;
     cursor: pointer;
 }
 
 .opcaoEntrega.selected {
-    border: 2px solid black;
+    border: 0.12vw solid black;
 }
 
 #btnMorada,
 #btnCodigo {
     background-color: #f0f0f0;
     border: #f0f0f0;
-    border-radius: 10px;
-    padding: 7px 17px;
+    border-radius: 0.5vw;
+    padding: 0.4vw 2vh;
     color: black;
+    font-size: 0.9vw;
 }
 
 #btnMorada:hover,
 #btnCodigo:hover {
     background-color: black;
     border: black;
-    border-radius: 10px;
-    padding: 7px 17px;
+    border-radius: 0.5vw;
+    padding: 0.4vw 2vh;
     color: white;
     transition: 0.3s;
 }
 
 #btnConfirmPagamento {
-    font-size: 19px;
+    font-size: 1vw;
     font-weight: bold;
-    margin-top: 20px;
-    margin-left: -100px;
-    margin-right: 150px;
+    margin-top: 1vw;
+    /*margin-right: 13vw;
+    margin-left: -4vw;*/
     background-color: #49BE63;
     border: #49BE63;
-    border-radius: 100px;
-    padding: 15px 80px;
+    border-radius: 20vw;
+    padding: 0.8vw 4vw;
     color: white;
     transition: 0.3s;
 }
 
 #btnConfirmPagamento:hover {
-    margin-left: -100px;
-    margin-right: 150px;
-    margin-top: 20px;
+    /*margin-right: 13vw;
+    margin-left: -4vw;*/
+    margin-top: 1vw;
     background-color: green;
     border: green;
-    border-radius: 100px;
+    border-radius: 20vw;
     color: white;
     transition: 0.3s;
 }
