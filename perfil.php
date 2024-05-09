@@ -21,34 +21,33 @@ $pdo = new PDO(
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
-    $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR O ID
+    $utilizador = ObterUmUtilizador($pdo, 4); // ALTERAR O ID
 }
 
 // Enviando dados para a BD, ao editar dados de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Sanitize and trim user input
     $utilizadorModificado = array(
-        'Nome' => htmlentities(trim($_POST['Nome'])),
-        'Apelido' => htmlentities(trim($_POST['Apelido'])),
-        'Email' => htmlentities(trim($_POST['Email'])),
-        'Telemovel' => htmlentities(trim($_POST['Telemovel'])),
-        'Morada' => htmlentities(trim($_POST['Morada'])),
-        'Cidade' => htmlentities(trim($_POST['Cidade'])),
-        'Pais' => htmlentities(trim($_POST['Pais'])),
+        'nome' => htmlentities(trim($_POST['nome'])),
+        'apelido' => htmlentities(trim($_POST['apelido'])),
+        'email' => htmlentities(trim($_POST['email'])),
+        'telemovel' => htmlentities(trim($_POST['telemovel'])),
+        'morada' => htmlentities(trim($_POST['morada'])),
+        'cidade' => htmlentities(trim($_POST['cidade'])),
+        'pais' => htmlentities(trim($_POST['pais'])),
         'CodPostal' => htmlentities(trim($_POST['CodPostal']))
     );
 
     // Editar o usuário no banco de dados
-    $resultado = EditarUtilizador($pdo, 1, $utilizadorModificado);
-    if (EditarUtilizador($pdo, 1, $utilizadorModificado)) {
-        echo "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-remove'></span>&nbsp;<strong>SucessoF!</strong></div>";
+    if (EditarUtilizador($pdo, 4, $utilizadorModificado)) {
+        echo "<div class='alert alert-danger' role='alert'>
+        <span class='glyphicon glyphicon-remove'></span>&nbsp;
+        <strong>Sucesso!</strong></div>";
     } else {
-        echo "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-remove'></span>&nbsp;<strong>Ocorreu um erro ao tentar atualizar o produto!</strong></div>";
-        //var_dump($resultado); 
+        echo "<div class='alert alert-danger' role='alert'>
+        <span class='glyphicon glyphicon-remove'></span>&nbsp;
+        <strong>Ocorreu um erro ao tentar atualizar o produto!</strong></div>";
     }
-
-    //var_dump(EditarUtilizador($pdo, 1, $utilizadorModificado));
-    //var_dump($resultado);    
 }
 ?>
 
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
 
-    <form class="perfil centro texto_perfil form_editar">
+    <form class="perfil centro texto_perfil form_editar" method="POST" action="perfil.php">
         <h3>Perfil do Utilizador</h3>
         <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las</p>
 
@@ -88,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <h5 class="esquerdo">A minha conta</h5>
                             <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
-                                method="POST" action="perfil.php" value="Editar">Editar</button>
+                                value="Editar">Editar</button>
                         </div>
                         <div class="card-body">
 
@@ -221,28 +220,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     });
                 }
             });
-
-
-            // Função para exibir mensagem de pop-up
-            /*function exibirMensagem(mensagem) {
-                alert(mensagem);
-            }
-    
-            // Submeter o formulário
-            document.getElementById("form_editar").addEventListener("submit", function (event) {
-                event.preventDefault(); // Impede o envio padrão do formulário
-    
-                // Realizar a submissão dos dados via AJAX ou fetch
-    
-                // Simular uma mensagem de sucesso ou erro
-                var sucesso = true; // Altere para false para simular um erro
-    
-                if (sucesso) {
-                    exibirMensagem("Dados alterados com sucesso!");
-                } else {
-                    exibirMensagem("Ocorreu um erro ao alterar os dados. Por favor, tente novamente.");
-                }
-            });*/
         });
     </script>
 
