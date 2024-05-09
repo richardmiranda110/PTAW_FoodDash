@@ -1,6 +1,6 @@
 -- Tabela Cliente
 CREATE TABLE IF NOT EXISTS Clientes (
-    id_cliente BIGSERIAL PRIMARY KEY,
+    id_cliente SERIAL PRIMARY KEY,
     nome VARCHAR(100),
     apelido VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Clientes (
 
 -- Tabela Pedido
 CREATE TABLE IF NOT EXISTS Pedidos (
-    id_pedido BIGSERIAL PRIMARY KEY,
+    id_pedido SERIAL PRIMARY KEY,
     data DATE DEFAULT NOW(),
     estado VARCHAR(50) DEFAULT 'EFETUADO'
     CHECK(estado IN ('EFETUADO','EM PREPARACAO','A CAMINHO','FINALIZADO')),
@@ -27,14 +27,14 @@ CREATE TABLE IF NOT EXISTS Pedidos (
 
 -- Tabela Entregador
 CREATE TABLE IF NOT EXISTS Entregadores (
-    id_entregador BIGSERIAL PRIMARY KEY,
+    id_entregador SERIAL PRIMARY KEY,
     nome VARCHAR(100),
     veiculo VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS ACTION_LOGGER 
 (
-    id BIGSERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     AFFECTED_ID INT NOT NULL,
     AFFECTED_NOTE INT,
     ACTION_TYPE VARCHAR(30) NOT NULL CHECK(ACTION_TYPE IN ('UPDATE NOTE','DELETE NOTE','DELETE USER')),
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS ACTION_LOGGER
 
 -- Tabela AvaliacaoItem
 CREATE TABLE IF NOT EXISTS AvaliacoesItens (
-    id_avaliacaoItem BIGSERIAL PRIMARY KEY,
+    id_avaliacaoItem SERIAL PRIMARY KEY,
     classificacao INTEGER,
     autor VARCHAR(100),
     data DATE,
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS AvaliacoesItens (
 
 -- Tabela Empresa
 CREATE TABLE IF NOT EXISTS Empresas (
-    id_empresa BIGSERIAL PRIMARY KEY,
+    id_empresa SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     morada TEXT NOT NULL,
     telemovel VARCHAR(20) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Empresas (
 
 -- Tabela Estabelecimento
 CREATE TABLE IF NOT EXISTS Estabelecimentos (
-    id_estabelecimento BIGSERIAL PRIMARY KEY,
+    id_estabelecimento SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     localizacao TEXT NOT NULL,
     telemovel VARCHAR(20) NOT NULL,
@@ -76,14 +76,14 @@ CREATE TABLE IF NOT EXISTS Estabelecimentos (
 
 -- Tabela Categoria
 CREATE TABLE IF NOT EXISTS Categorias (
-    id_categoria BIGSERIAL PRIMARY KEY,
+    id_categoria SERIAL PRIMARY KEY,
     nome VARCHAR(100),
     id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 
 -- Tabela Item
 CREATE TABLE IF NOT EXISTS Itens (
-    id_item BIGSERIAL PRIMARY KEY,
+    id_item SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
     descricao TEXT,
@@ -97,14 +97,14 @@ CREATE TABLE IF NOT EXISTS Itens (
 
 -- Tabela Personalizacao
 CREATE TABLE IF NOT EXISTS Personalizacoes (
-    id_personalizacao BIGSERIAL PRIMARY KEY,
+    id_personalizacao SERIAL PRIMARY KEY,
     nome VARCHAR(255),
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL
 );
 
 -- Tabela Opcao
 CREATE TABLE IF NOT EXISTS Opcoes (
-    id_opcao BIGSERIAL PRIMARY KEY,
+    id_opcao SERIAL PRIMARY KEY,
     nome VARCHAR(255),
     quantidade INTEGER,
     id_personalizacao INTEGER REFERENCES Personalizacoes(id_personalizacao) ON DELETE CASCADE NOT NULL
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS Opcoes (
 
 /* -- Tabela Menu
 CREATE TABLE IF NOT EXISTS Menus (
-    id_menu BIGSERIAL PRIMARY KEY,
+    id_menu SERIAL PRIMARY KEY,
     nome VARCHAR(100),
     horarioInicial TIME,
     horarioFinal TIME,
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS Menus (
 
 -- Tabela Avaliacao
 CREATE TABLE IF NOT EXISTS Avaliacoes (
-    id_avaliacao BIGSERIAL PRIMARY KEY,
+    id_avaliacao SERIAL PRIMARY KEY,
     classificacao INTEGER,
     autor VARCHAR(100),
     data DATE,
