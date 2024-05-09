@@ -4,26 +4,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="../assets/styles/sitecss.css">
-  <link rel="stylesheet" href="../assets/styles/login_register_styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link rel="stylesheet" href="../assets/styles/sitecss.css">
   <title>FoodDash</title>
 </head>
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" class="fooddash_logo" id="fooddash_logo">
+  <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto;">
 
   <!-- Formulário de login -->
   <div class="container d-flex align-items-center justify-content-center vh-100">
-    <form style="width: 25vw;">
+    <form action="loginValidation.php" method="POST" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center;">Login</h1><br>
       <div class="form-floating mb-1">
-        <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com" required>
+        <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" required>
         <label for="inputEmail">Email</label>
       </div>
       <div class="form-floating mb-1">
-        <input type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+        <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password" required>
         <label for="inputPassword">Password</label>
 
         <div class="form-check">
@@ -43,23 +43,28 @@
       </div>
       <button id="btnLogin" class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
       <br><br>
-      <p style="text-align: center;">Ainda não tem conta?<button type="button" class="btn btn-link" id="btn_go_registar_page">Registe-se</button>
+      <p style="text-align: center;">Ainda não tem conta?<a type="button" class="btn btn-link" href="register.php">Registe-se</a>
       </p>
+
+      <?php
+        session_start();
+        if(isset($_SESSION['error_message'])) {
+            echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
+            unset($_SESSION['error_message']);
+        }
+
+        if(isset($_SESSION['success_message'])) {
+          echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
+          unset($_SESSION['success_message']);
+        }
+      ?>
+      
     </form>
   </div>
 
 
   <script>
-    document.getElementById('fooddash_logo').addEventListener('click', function() {
-      window.location.href = './../index.php';
-    });
-    document.getElementById('btn_go_registar_page').addEventListener('click', function() {
-      window.location.href = 'register.php';
-    });
-
-
     document.querySelector("input#mostrarPasswordCheckbox").addEventListener("click", mostrarPassword)
-
     function mostrarPassword() {
       let passwordInput = document.getElementById("inputPassword");
       if (passwordInput.type === "password") {
@@ -99,7 +104,10 @@
     }
   </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="loginScript.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>
