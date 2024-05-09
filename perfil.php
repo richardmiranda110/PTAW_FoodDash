@@ -4,17 +4,20 @@
 include __DIR__ . "/database/utilizadores.php";
 
 //conexão ao banco de dados
-define("DBHOST","localhost");
-define("DBPORT","5432");
-define("DBNAME","ptaw");
-define("DBUSER","postgres");
-define("DBPASS","test");
+define("DBHOST", "localhost");
+define("DBPORT", "5432");
+define("DBNAME", "ptaw");
+define("DBUSER", "postgres");
+define("DBPASS", "test");
 
-$pdo = new PDO("pgsql:host=".DBHOST.
-                    "; port=".DBPORT.
-                    ";dbname=".DBNAME,
-                    DBUSER, DBPASS);
-                    
+$pdo = new PDO(
+    "pgsql:host=" . DBHOST .
+    "; port=" . DBPORT .
+    ";dbname=" . DBNAME,
+    DBUSER,
+    DBPASS
+);
+
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
@@ -85,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="card-header">
                             <h5 class="esquerdo">A minha conta</h5>
                             <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
-                                value="Editar">Editar</button>
+                                method="POST" action="perfil.php" value="Editar">Editar</button>
                         </div>
                         <div class="card-body">
 
