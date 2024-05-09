@@ -20,7 +20,7 @@ html,body,div{
     padding: 0;
     border: 0;
     box-sizing: border-box;
-     font-family: "Inter", sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .butAcount {
@@ -136,9 +136,6 @@ button#butSingOutSidebarLeft {
     width:80vw;
 
 }
-
-
-
 
 #sideBarLeft, #contentPage {
 	min-height: 94vh;
