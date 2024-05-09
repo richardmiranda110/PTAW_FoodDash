@@ -1,39 +1,30 @@
 <?php
-include __DIR__ . "/database/db_connection.php";
-$pdo = include __DIR__ . "/database/db_connection.php";
+//include __DIR__ . "/database/db_connection.php";
+//$pdo = include __DIR__ . "/database/db_connection.php";
 include __DIR__ . "/database/utilizadores.php";
 
+//conexão ao banco de dados
+define("DBHOST","localhost");
+define("DBPORT","5432");
+define("DBNAME","ptaw");
+define("DBUSER","postgres");
+define("DBPASS","test");
+
+$pdo = new PDO("pgsql:host=".DBHOST.
+                    "; port=".DBPORT.
+                    ";dbname=".DBNAME,
+                    DBUSER, DBPASS);
+                    
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
     $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR O ID
-    //var_dump($utilizador);
 }
-
-/*UPDATE Clientes
-SET nome = 'novo_nome',
-    apelido = 'novo_apelido',
-    email = 'novo_email',
-    telemovel = 987654321,
-    morada = 'nova_morada',
-    cidade = 'nova_cidade',
-    pais = 'novo_pais',
-    CodPostal = 'novo_codigo_postal',
-    password = 'nova_password'
-WHERE id = 1; */
 
 // Enviando dados para a BD, ao editar dados de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Sanitize and trim user input
     $utilizadorModificado = array(
-        /*'Nome' => $_POST['Nome'],
-        'Apelido' => $_POST['Apelido'],
-        'Email' => $_POST['Email'],
-        'Telemovel' => $_POST['Telemovel'],
-        'Morada' => $_POST['Morada'],
-        'Cidade' => $_POST['Cidade'],
-        'Pais' => $_POST['Pais'],
-        'CodPostal' => $_POST['CodPostal']*/
         'Nome' => htmlentities(trim($_POST['Nome'])),
         'Apelido' => htmlentities(trim($_POST['Apelido'])),
         'Email' => htmlentities(trim($_POST['Email'])),
@@ -44,20 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'CodPostal' => htmlentities(trim($_POST['CodPostal']))
     );
 
-    //EditarUtilizador($pdo, 1, $utilizadorModificado);
     // Editar o usuário no banco de dados
     $resultado = EditarUtilizador($pdo, 1, $utilizadorModificado);
-
-    // Verificar se a edição foi bem-sucedida
-    if ($resultado) {
-        echo "SUCESSO";
-        // Redirecionar o usuário para outra página ou exibir outra mensagem de sucesso
+    if (EditarUtilizador($pdo, 1, $utilizadorModificado)) {
+        echo "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-remove'></span>&nbsp;<strong>SucessoF!</strong></div>";
     } else {
-        echo "ERRO";
-        // Exibir uma mensagem de erro ou redirecionar o usuário para outra página
+        echo "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-remove'></span>&nbsp;<strong>Ocorreu um erro ao tentar atualizar o produto!</strong></div>";
+        //var_dump($resultado); 
     }
+
+    //var_dump(EditarUtilizador($pdo, 1, $utilizadorModificado));
+    //var_dump($resultado);    
 }
 ?>
+
+<script>console.log($resultado);</script>
 
 <!DOCTYPE html>
 <html>

@@ -11,7 +11,7 @@ function criarConta($pdo, $nome, $email, $morada, $telemovel, $password)
 function ObterUmUtilizador($pdo, $ID)
 {
     try {
-        $sql = "SELECT * FROM Clientes WHERE id = ?";
+        $sql = "SELECT * FROM Clientes WHERE id_cliente = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $ID, PDO::PARAM_INT);
         // Executar a query e verificar que não retornou false
@@ -37,7 +37,7 @@ function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
 {
     $sql = "UPDATE Clientes SET nome = ?, apelido = ?, email = ?,
     telemovel = ?, morada = ?, cidade = ?, pais = ?, CodPostal = ?
-    WHERE id = ?";
+    WHERE id_cliente = ?";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $DadosUtilizadores['nome'], PDO::PARAM_STR);
@@ -55,12 +55,11 @@ function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
         // A operação foi executada com sucesso
         $sucesso = True;
     } else {
+        // A operação foi executada sem sucesso
         $sucesso = False;
     }
 
-    echo $sucesso;
     return $sucesso;
-
 }
 
 function iniciarSessao($pdo, $email, $password)
