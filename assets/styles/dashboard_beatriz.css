@@ -38,12 +38,17 @@ p {
     font-size: 14px;
 }
 
-/* por em footer_2.php, para obrigar a ir para baixo*/
-.footer2 {
-    position: fixed;
-    bottom: 0;
+.perfil {
+    width: 75%;
+    padding: 5px;
+}
+
+.dashboard {
     width: 100%;
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-top: 1px solid #ccc;
+    padding: 5px;
+}
+
+.pedidos {
+    padding-top: 10px;
+    width: 100%;
 }

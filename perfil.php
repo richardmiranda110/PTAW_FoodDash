@@ -41,43 +41,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Editar o usuário no banco de dados
     if (EditarUtilizador($pdo, 4, $utilizadorModificado)) {
         $utilizador = ObterUmUtilizador($pdo, 4);
-        echo "<div class='modal' tabindex='-1' role='dialog'>
-        <div class='modal-dialog' role='document'>
-          <div class='modal-content'>
-            <div class='modal-header'>
-              <h5 class='modal-title'>Editar Utilizador</h5>
-              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                <span aria-hidden='true'>&times;</span>
-              </button>
-            </div>
-            <div class='modal-body'>
-              <p>O utilizador foi alterado com sucesso!</p>
-            </div>
-            <div class='modal-footer'>
-              <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
-            </div>
-          </div>
-        </div>
-      </div>";
+        echo "<script>
+            $(document).ready(function(){
+                $('#modal_sucesso').modal('show');
+            });
+        </script>";
     } else {
-        echo "<div class='modal' tabindex='-1' role='dialog'>
-        <div class='modal-dialog' role='document'>
-          <div class='modal-content'>
-            <div class='modal-header'>
-              <h5 class='modal-title'>Editar Utilizador</h5>
-              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                <span aria-hidden='true'>&times;</span>
-              </button>
-            </div>
-            <div class='modal-body'>
-              <p>Ocorreu um erro a editar o utilizador</p>
-            </div>
-            <div class='modal-footer'>
-              <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
-            </div>
-          </div>
-        </div>
-      </div>";
+        echo "<script>
+            $(document).ready(function(){
+                $('#modal_erro').modal('show');
+            });
+        </script>";
     }
 }
 ?>
@@ -103,6 +77,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
+    <!-- Modal de Sucesso -->
+    <div class="modal fade" id="modal_sucesso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Sucesso!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    O utilizador foi alterado com sucesso!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Erro -->
+    <div class="modal fade" id="modal_erro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Erro!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Ocorreu um erro ao editar o utilizador.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <form class="centro esquerdo form_editar" method="GET">
         <h3>Perfil do Utilizador</h3>
@@ -204,6 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </form>
+
     <?php
     include __DIR__ . "/includes/footer_2.php";
     ?>

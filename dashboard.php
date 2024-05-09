@@ -20,12 +20,6 @@ $pdo = new PDO(
 function ObterUmUtilizador($pdo, $ID)
 {
 	try {
-		//conexão ao banco de dados
-		/*$pdo = new PDO(
-			'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
-			'root',
-			''
-		);*/
 		//query
 		$stmt = $pdo->prepare('SELECT * FROM Clientes WHERE id = ?');
 		$stmt->bindValue(1, $ID, PDO::PARAM_INT);
@@ -86,166 +80,163 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		<!--Zona de Conteudo da Página -->
 		<div id="contentDiv" class="col-md-12">
 			<div class="container ps-3 py-3">
-				<div class="row">
+				<div class="dashboard  texto_perfil">
+					<h3>Olá Maria!</h3>
+					<p>Esta é a tua página de perfil. Aqui podes ver as tuas informções pessoais, ver estatísticas,
+						sobre a tua
+						conta, ver os teus pedidos e acompanhar o estado dos teus pedidos em tempo real</p>
 
-					<div class="perfil  texto_perfil">
-						<h3>Olá Maria!</h3>
-						<p>Esta é a tua página de perfil. Aqui podes ver as tuas informções pessoais, ver estatísticas,
-							sobre a tua
-							conta, ver os teus pedidos e acompanhar o estado dos teus pedidos em tempo real</p>
-
-						<div class="row align-items-md-stretch">
-							<div class="col-md-6">
-								<div class=" p-5 bg-body-tertiary border rounded-3">
-									<h3 style="float:left">Perfil do utilizador</h3>
-									<button class="btn btn-warning" style="float:right"> Visualizar </button>
-									<br><br>
-									<div class="esquerdo">
-										<span class="dados">Nome:</span>
-										<span class="dados_utilizador">
-											<?php if (!empty($utilizador['nome']))
-												echo $utilizador['nome']; ?>
-											<?php if (!empty($utilizador['apelido']))
-												echo $utilizador['apelido']; ?>
-										</span>
-										<br>
-										<span class="dados">Email:</span>
-										<span class="dados_utilizador">
-											<?php if (!empty($utilizador['email']))
-												echo $utilizador['email']; ?>
-										</span>
-										<br>
-										<span class="dados">Nº de Telemóvel:</span>
-										<span class="dados_utilizador"><span class="dados_utilizador">
+					<div class="row align-items-md-stretch">
+						<div class="col-md-6">
+							<div class=" p-5 bg-body-tertiary border rounded-3">
+								<h3 style="float:left">Perfil do utilizador</h3>
+								<button class="btn btn-warning" style="float:right"> Visualizar </button>
+								<br><br>
+								<div class="esquerdo">
+									<span class="dados">Nome:</span>
+									<span class="dados_utilizador">
+										<?php if (!empty($utilizador['nome']))
+											echo $utilizador['nome']; ?>
+										<?php if (!empty($utilizador['apelido']))
+											echo $utilizador['apelido']; ?>
+									</span>
+									<br>
+									<span class="dados">Email:</span>
+									<span class="dados_utilizador">
+										<?php if (!empty($utilizador['email']))
+											echo $utilizador['email']; ?>
+									</span>
+									<br>
+									<span class="dados">Nº de Telemóvel:</span>
+									<span class="dados_utilizador"><span class="dados_utilizador">
 											<?php if (!empty($utilizador['telemovel']))
 												echo $utilizador['telemovel']; ?>
 										</span>
-									</div>
-									<div class="direito">
-										<span class="dados">Morada:</span>
-										<span class="dados_utilizador">
-											<?php if (!empty($utilizador['morada']))
-												echo $utilizador['morada']; ?>
-										</span>
-										<br>
-										<span class="dados">Cidade:</span>
-										<span class="dados_utilizador">
-											<?php if (!empty($utilizador['cidade']))
-												echo $utilizador['cidade']; ?>
-										</span>
-										<br>
-										<span class="dados">Código Postal:</span>
-										<span class="dados_utilizador">
-											<?php if (!empty($utilizador['CodPostal']))
-												echo $utilizador['CodPostal']; ?>
-										</span>
-									</div>
-									<button class="btn btn-outline-light" type="button">Example button</button>
 								</div>
-							</div>
-							<div class="col-md-6 ">
-								<div class="h-100 p-5 bg-body-tertiary border rounded-3">
-									<h3 style="float:left">Estatísticas</h3>
-									<button class="btn btn-warning" style="float:right"> Editar </button>
-									<br><br>
-									<div class="esquerdo">
-										<span class="dados">Dinheiro Total Gasto:</span>
-										<span class="dados_utilizador">489,27€</span>
-										<br>
-										<span class="dados">Total de Pedidos Realizados:</span>
-										<span class="dados_utilizador">71</span>
-										<br>
-										<span class="dados">Restaurante Mais Pedido:</span>
-										<span class="dados_utilizador">McDonald's</span>
-									</div>
-									<div class="direito">
-										<canvas id="lineChart"></canvas>
-
-
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="pedidos">
-						<div class="align-items-md-stretch">
-							<div class="h-100 p-5 bg-body-tertiary border rounded-3">
-								<h2 class="esquerdo">Pedidos</h2>
-								<button class="btn btn-warning" style="float:right"> Visualizar </button>
-								<br><br>
-								<div>
-									<div class="card mb-3">
-										<div class="card-body">
-											<div class="esquerdo">
-												<div class="esquerdo" style="width:25%">
-													<p class="texto_pedido" style="text-align: center;">13:46</p>
-													<p class="texto_pedido" style="text-align: center;">16/03/2024</p>
-												</div>
-												<div class="direito" style="width:75%">
-													<h6>Menu Big King<span>(Burger King)</span></h6>
-													<p class="texto_pedido">(Big King + Batatas Médias + Ice Tea Manga)
-													</p>
-												</div>
-											</div>
-											<div class="direito">
-												<div class="esquerdo" style="width: 75%">
-													<span class="texto_pedido_negrito">Método de Pagamento:</span>
-													<span class="texto_pedido">VISA 102*********************</span>
-													<br>
-													<span class="texto_pedido_negrito">Status de Pedido:</span>
-													<span class="texto_pedido">Entrgue</span>
-												</div>
-												<div class="direito" style="width: 25%; text-align: center;">
-													<h6>9,28€</h6>
-												</div>
-											</div>
-										</div>
-									</div>
+								<div class="direito">
+									<span class="dados">Morada:</span>
+									<span class="dados_utilizador">
+										<?php if (!empty($utilizador['morada']))
+											echo $utilizador['morada']; ?>
+									</span>
+									<br>
+									<span class="dados">Cidade:</span>
+									<span class="dados_utilizador">
+										<?php if (!empty($utilizador['cidade']))
+											echo $utilizador['cidade']; ?>
+									</span>
+									<br>
+									<span class="dados">Código Postal:</span>
+									<span class="dados_utilizador">
+										<?php if (!empty($utilizador['CodPostal']))
+											echo $utilizador['CodPostal']; ?>
+									</span>
 								</div>
 								<button class="btn btn-outline-light" type="button">Example button</button>
 							</div>
 						</div>
+						<div class="col-md-6 ">
+							<div class="h-100 p-5 bg-body-tertiary border rounded-3">
+								<h3 style="float:left">Estatísticas</h3>
+								<button class="btn btn-warning" style="float:right"> Editar </button>
+								<br><br>
+								<div class="esquerdo">
+									<span class="dados">Dinheiro Total Gasto:</span>
+									<span class="dados_utilizador">489,27€</span>
+									<br>
+									<span class="dados">Total de Pedidos Realizados:</span>
+									<span class="dados_utilizador">71</span>
+									<br>
+									<span class="dados">Restaurante Mais Pedido:</span>
+									<span class="dados_utilizador">McDonald's</span>
+								</div>
+								<div class="direito">
+									<canvas id="lineChart"></canvas>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="pedidos">
+					<div class="align-items-md-stretch">
+						<div class="h-100 p-5 bg-body-tertiary border rounded-3">
+							<h2 class="esquerdo">Pedidos</h2>
+							<button class="btn btn-warning" style="float:right"> Visualizar </button>
+							<br><br>
+							<div>
+								<div class="card mb-3">
+									<div class="card-body">
+										<div class="esquerdo">
+											<div class="esquerdo" style="width:25%">
+												<p class="texto_pedido" style="text-align: center;">13:46</p>
+												<p class="texto_pedido" style="text-align: center;">16/03/2024</p>
+											</div>
+											<div class="direito" style="width:75%">
+												<h6>Menu Big King<span>(Burger King)</span></h6>
+												<p class="texto_pedido">(Big King + Batatas Médias + Ice Tea Manga)
+												</p>
+											</div>
+										</div>
+										<div class="direito">
+											<div class="esquerdo" style="width: 75%">
+												<span class="texto_pedido_negrito">Método de Pagamento:</span>
+												<span class="texto_pedido">VISA 102*********************</span>
+												<br>
+												<span class="texto_pedido_negrito">Status de Pedido:</span>
+												<span class="texto_pedido">Entrgue</span>
+											</div>
+											<div class="direito" style="width: 25%; text-align: center;">
+												<h6>9,28€</h6>
+											</div>
+										</div>
+									</div>
+								</div>
+							<button class="btn btn-outline-light" type="button">Example button</button>
+						</div>
 					</div>
 				</div>
 			</div>
-			<?php
-			include __DIR__ . "/includes/footer_2.php";
-			?>
+		</div>
+		<?php
+		include __DIR__ . "/includes/footer_2.php";
+		?>
 
-			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-				integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-				crossorigin="anonymous"></script>
-			<script>
-				var ctx = document.getElementById('lineChart').getContext('2d');
-				var myChart = new Chart(ctx, {
-					type: 'line',
-					data: {
-						labels: ["Dez", "Jan", "Fev", "Mar"],
-						datasets: [{
-							label: 'Total de Pedidos',
-							data: [12, 18, 24, 30],
-							backgroundColor: 'transparent',
-							borderColor: '#d1c217',
-							borderWidth: 2
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"></script>
+		<script>
+			var ctx = document.getElementById('lineChart').getContext('2d');
+			var myChart = new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: ["Dez", "Jan", "Fev", "Mar"],
+					datasets: [{
+						label: 'Total de Pedidos',
+						data: [12, 18, 24, 30],
+						backgroundColor: 'transparent',
+						borderColor: '#d1c217',
+						borderWidth: 2
+					}]
+				},
+				options: {
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: true,
+								suggestedMax: 30
+							}
 						}]
 					},
-					options: {
-						scales: {
-							yAxes: [{
-								ticks: {
-									beginAtZero: true,
-									suggestedMax: 30
-								}
-							}]
-						},
-						title: {
-							display: true,
-							text: 'Total de Pedidos'
-						}
+					title: {
+						display: true,
+						text: 'Total de Pedidos'
 					}
-				});
-			</script>
+				}
+			});
+		</script>
 </body>
 
 </html>
