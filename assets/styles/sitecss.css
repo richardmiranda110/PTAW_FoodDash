@@ -139,7 +139,7 @@ button#butSingOutSidebarLeft {
 
 #sideBarLeft, #contentPage {
 	min-height: 94vh;
-    padding: 0;
+	padding: 0;
 }
 
 .cleanFloat{
@@ -242,9 +242,9 @@ footer img.img-fluid {
     padding: 3% 0px 2% 1%;
     margin-left: calc(var(--bs-gutter-x)* .5* -1);
     color: #ffffff;
-	opacity: 0.9;
-	float: left;
-	display: flex;
+    opacity: 0.9;
+    float: left;
+    display: flex;
 }
 
 #sideBarLeft a.nav-link {

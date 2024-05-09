@@ -1,10 +1,3 @@
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: "Inter", sans-serif;
-}
-
 hr {
     width: 100%;
     text-align: left;
@@ -27,14 +20,14 @@ p {
 .form_editar {
     width: 75%;
     padding: 5px;
-    /*position: relative;*/
-    /*left: 10vw;
-    top:2vh;*/
+    position: relative;
+    left: 20vw;
 }
 
 .cinzento {
     color: grey;
 }
+
 .texto_pedido {
     color: gray;
     font-size: 14px;
@@ -43,4 +36,14 @@ p {
 .texto_pedido_negrito {
     font-weight: bold;
     font-size: 14px;
+}
+
+/* por em footer_2.php, para obrigar a ir para baixo*/
+.footer2 {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-top: 1px solid #ccc;
 }
