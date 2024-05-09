@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Editar o usuário no banco de dados
     if (EditarUtilizador($pdo, 4, $utilizadorModificado)) {
+        $utilizador = ObterUmUtilizador($pdo, 4);
         echo "<div class='alert alert-success' role='alert'>
         <span class='glyphicon glyphicon-remove'></span>&nbsp;
         <strong>Sucesso!</strong></div>";
@@ -73,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
 
-    <form class="perfil centro texto_perfil form_editar" >
+    <form class="perfil centro texto_perfil form_editar" method="GET">
         <h3>Perfil do Utilizador</h3>
         <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las</p>
 
@@ -206,8 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     inputs.forEach(function (input) {
                         input.removeAttribute("readonly");
                     });
-            // Define o action do formulário para o arquivo PHP atual
-            form.setAttribute("action", "");
+                    form.method = 'GET';
+                    form.removeAttribute("action");
                 }
                 // Alterar para modo de leitura
                 else {
@@ -218,8 +219,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     inputs.forEach(function (input) {
                         input.setAttribute("readonly", "readonly");
                     });
-            // Remove o action do formulário
-            form.removeAttribute("action");
+                    form.method = 'POST';
+                    form.setAttribute("action", "perfil.php");
                 }
             });
         });
