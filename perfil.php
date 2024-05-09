@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Editar o usuário no banco de dados
     if (EditarUtilizador($pdo, 4, $utilizadorModificado)) {
-        echo "<div class='alert alert-danger' role='alert'>
+        echo "<div class='alert alert-success' role='alert'>
         <span class='glyphicon glyphicon-remove'></span>&nbsp;
         <strong>Sucesso!</strong></div>";
     } else {
@@ -50,8 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
-<script>console.log($resultado);</script>
 
 <!DOCTYPE html>
 <html>
@@ -75,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
 
-    <form class="perfil centro texto_perfil form_editar" method="POST" action="perfil.php">
+    <form class="perfil centro texto_perfil form_editar" >
         <h3>Perfil do Utilizador</h3>
         <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las</p>
 
@@ -208,6 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     inputs.forEach(function (input) {
                         input.removeAttribute("readonly");
                     });
+            // Define o action do formulário para o arquivo PHP atual
+            form.setAttribute("action", "");
                 }
                 // Alterar para modo de leitura
                 else {
@@ -218,6 +218,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     inputs.forEach(function (input) {
                         input.setAttribute("readonly", "readonly");
                     });
+            // Remove o action do formulário
+            form.removeAttribute("action");
                 }
             });
         });
