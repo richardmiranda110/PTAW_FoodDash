@@ -8,21 +8,8 @@ CREATE TABLE IF NOT EXISTS Clientes (
     morada TEXT,
     cidade VARCHAR(25),
     pais VARCHAR (25), 
-    CodPostal VARCHAR(25),
-    password VARCHAR(100) NOT NULL
-);
-
--- Tabela Pedido
-CREATE TABLE IF NOT EXISTS Pedidos (
-    id_pedido SERIAL PRIMARY KEY,
-    data DATE DEFAULT NOW(),
-    estado VARCHAR(50) DEFAULT 'EFETUADO'
-    CHECK(estado IN ('EFETUADO','EM PREPARACAO','A CAMINHO','FINALIZADO')),
-    cancelado BOOLEAN DEFAULT FALSE,
-    precoTotal DECIMAL(10,2) NOT NULL,
-    id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
-    id_entregador INTEGER REFERENCES Entregadores(id_entregador) ON DELETE CASCADE NOT NULL,
-    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
+    CodPostal VARCHAR(10),
+    password VARCHAR(255) NOT NULL
 );
 
 -- Tabela Entregador
@@ -45,8 +32,8 @@ CREATE TABLE IF NOT EXISTS ACTION_LOGGER
 CREATE TABLE IF NOT EXISTS AvaliacoesItens (
     id_avaliacaoItem SERIAL PRIMARY KEY,
     classificacao INTEGER,
-    autor VARCHAR(100),
-    data DATE,
+    autor VARCHAR(100) DEFAULT 'anonymous',
+    data DATE DEFAULT NOW(),
     descricao TEXT,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
     id_item INTEGER NOT NULL
@@ -60,7 +47,7 @@ CREATE TABLE IF NOT EXISTS Empresas (
     telemovel VARCHAR(20) NOT NULL,
     email VARCHAR(100) NOT NULL,
     tipo VARCHAR(50) NOT NULL,
-    password VARCHAR(100)
+    password VARCHAR(255)
 );
 
 -- Tabela Estabelecimento
@@ -72,6 +59,19 @@ CREATE TABLE IF NOT EXISTS Estabelecimentos (
     taxa_entrega DECIMAL NOT NULL,
     tempo_medio_entrega TIME NOT NULL,
     id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
+);
+
+-- Tabela Pedido
+CREATE TABLE IF NOT EXISTS Pedidos (
+    id_pedido SERIAL PRIMARY KEY,
+    data DATE DEFAULT NOW(),
+    estado VARCHAR(50) DEFAULT 'EFETUADO'
+    CHECK(estado IN ('EFETUADO','EM PREPARACAO','A CAMINHO','FINALIZADO')),
+    cancelado BOOLEAN DEFAULT FALSE,
+    precoTotal DECIMAL(10,2) NOT NULL,
+    id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
+    id_entregador INTEGER REFERENCES Entregadores(id_entregador) ON DELETE CASCADE NOT NULL,
+    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
 );
 
 -- Tabela Categoria
@@ -139,9 +139,11 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
 -- Tabela Pedido_Item
 CREATE TABLE IF NOT EXISTS Pedido_Itens (
     id_pedido INTEGER REFERENCES Pedidos(id_pedido) ON DELETE CASCADE NOT NULL,
-    id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
-    PRIMARY KEY (id_pedido, id_item)
+    id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL
 );
+--cria um índice na tabela Pedido_Itens para facilitar as consultas
+CREATE INDEX idx_pedido_itens_id_pedido_id_item ON Pedido_Itens (id_pedido, id_item);
+
 
 -- Tabela Item_Categoria
 CREATE TABLE IF NOT EXISTS Item_Categorias (
@@ -158,3 +160,25 @@ CREATE TABLE IF NOT EXISTS Item_Menus (
     ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (id_item, id_menu)
 ); */
+
+
+-- TRIGGERS
+CREATE OR REPLACE FUNCTION verificaPersonalizacoesAtivas() RETURNS TRIGGER AS $$
+BEGIN
+    --verifica se o item tem personalizacoesAtivas igual a TRUE
+    IF EXISTS (
+        SELECT 1 FROM Itens i WHERE NEW.id_item = i.id_item AND i.personalizacoesAtivas = TRUE
+    ) THEN
+        --se sim, não faz nada
+        RETURN NEW;
+    ELSE
+        --se não, lança um erro
+        RAISE EXCEPTION 'O item não tem personalizações ativas';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_verifica_personalizacoes
+BEFORE INSERT ON Personalizacoes
+FOR EACH ROW
+EXECUTE FUNCTION verificaPersonalizacoesAtivas();
