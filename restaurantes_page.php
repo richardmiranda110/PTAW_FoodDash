@@ -1,91 +1,3 @@
-<?php
-//PESQUISAR RESTAURANTE
-/*
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $restaurante = $_POST["input_pesquisar_restaurante"];
-
-  try {
-    if (!empty($restaurante)) {
-      $q = "SELECT nome, imagem, avaliacao, taxa_entrega, tempo_medio_entrega FROM restaurantes WHERE nome LIKE ?";
-      $statement = $pdo->prepare($q);
-      $statement->execute(array("%$restaurante%"));
-
-      if ($statement) {
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($result) {
-          foreach ($result as $row) {
-            echo '<div class="col">
-                  <div class="card shadow-sm">
-                    <img src="' . $row["imagem"] . '" class="card-img-top" alt="Imagem do restaurante" style="border-radius: 5.5px;">
-                    <div class="card-body">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">' . $row["nome"] . '</h5>
-                        <p class="mb-0">' . $row["avaliacao"] . '★</p>
-                      </div>
-
-                      <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text mb-0" style="font-size: 12px;">Taxa de Entrega: ' . $row["taxa_entrega"] . '€</p>
-                        <small class="text-body-secondary mb-0" style="font-size: 12px;">' . $row["tempo_medio_entrega"] . ' mins</small>
-                      </div>
-                    </div>
-                  </div>
-                </div>';
-          }
-        } else {
-          echo "Restaurante não encontrado :(";
-        }
-      } else {
-        echo "Erro ao executar a consulta.";
-      }
-    }
-  } catch (Exception $e) {
-    echo "Erro na conexão à BD: " . $e->getMessage();
-  }
-}*/
-?>
-
-<?php
-//POPULAR PÁGINA COM OS RESTAURANTES DA BASE DE DADOS
-/*
-try {
-
-  $q = "SELECT nome, imagem, avaliacao, taxa_entrega, tempo_medio_entrega FROM restaurantes;";
-  $statement = $pdo->prepare($q);
-  $statement->execute();
-
-  if ($statement) {
-    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    if ($result) {
-      foreach ($result as $row) {
-        echo '<div class="col">
-                <div class="card shadow-sm">
-                  <img src="' . $row["imagem"] . '" class="card-img-top" alt="Imagem do restaurante" style="border-radius: 5.5px;">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <h5 class="mb-0">' . $row["nome"] . '</h5>
-                      <p class="mb-0">' . $row["avaliacao"] . '★</p>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <p class="card-text mb-0" style="font-size: 12px;">Taxa de Entrega: ' . $row["taxa_entrega"] . '€</p>
-                      <small class="text-body-secondary mb-0" style="font-size: 12px;">' . $row["tempo_medio_entrega"] . ' mins</small>
-                    </div>
-                  </div>
-                </div>
-              </div>';
-      }
-    }
-  } else {
-    echo "Nenhum restaurante encontrado :(";
-  }
-} catch (Exception $e) {
-  echo "Erro na conexão à BD: " . $e->getMessage();
-}*/
-?>
-
-
-
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -133,14 +45,26 @@ $offset = ($pagAtual - 1) * $itemPorPagina;
 try {
     $query = "SELECT est.id_estabelecimento, est.nome, est.localizacao, est.telemovel, 
           est.taxa_entrega, est.tempo_medio_entrega, est.logotipo, emp.nome AS empresa,
-		  COALESCE ((select sum(classificacao)/count(classificacao) from avaliacoes where avaliacoes.id_estabelecimento=est.id_estabelecimento),0) as avaliacao
+          COALESCE ((select sum(classificacao)/count(classificacao) from avaliacoes where avaliacoes.id_estabelecimento=est.id_estabelecimento),0) as avaliacao
           FROM estabelecimentos AS est
           INNER JOIN empresas AS emp ON emp.id_empresa = est.id_empresa";
-	$params = [];
 
-	if ($_SERVER["REQUEST_METHOD"] == "GET" && !empty($_GET["restaurante"])) {
-		$query .= " WHERE lower(est.nome) LIKE ?";
-		$params[] = "%" . $_GET['restaurante'] . "%";
+	$params = [];
+	$conditions = [];
+
+	if ($_SERVER["REQUEST_METHOD"] == "GET") {
+		if (!empty($_GET["restaurante"])) {
+			$conditions[] = "lower(est.nome) LIKE ?";
+			$params[] = "%" . strtolower($_GET['restaurante']) . "%";
+		}
+		if (!empty($_GET["categoria"])) {
+			$conditions[] = "lower(replace(emp.tipo,' ','')) = ?";
+			$params[] = $_GET['categoria'];
+		}
+	}
+
+	if (count($conditions) > 0) {
+		$query .= " WHERE " . implode(" AND ", $conditions);
 	}
 
 	// Contar total de registros para a paginação
@@ -158,7 +82,15 @@ try {
 
 	echo "
     <div class='container'>
-		<h2 id='txt_categoria'>". (empty($_GET['restaurante']) ? 'Todos' : 'Pesquisa por: '.$_GET['restaurante'] )."</h2>
+		<h2 id='txt_categoria'>";
+		
+		if (empty($_GET['restaurante']) and empty($_GET['categoria']) ){
+			echo 'Todos';
+		}
+		else {
+			echo 'Pesquisa por: '.$_GET['restaurante']. ' ' .$_GET['categoria']. ' ';
+		}
+	echo "</h2>
 		<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3'>
     ";
 	
@@ -168,8 +100,8 @@ try {
         <div class='card shadow-sm'>
             <img src='./assets/stock_imgs/" . $row['logotipo'] . "' class='card-img-top' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
             <div class='card-body'>
-                <div class='d-flex justify-content-between align-items-center'>
-                    <h5 class='mb-0'>" . $row['nome'] . "</h5>
+                <div class='justify-content-between align-items-center'>
+                    <h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>
                     <p class='mb-0'>". $row['avaliacao']." ★</p>
                 </div>
                 <div class='d-flex justify-content-between align-items-center'>
