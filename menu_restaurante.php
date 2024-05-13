@@ -108,7 +108,8 @@ try {
 ?>
     </ul>
     </div>
-    <div class="">
+	
+    <div class="p-3">
     <!-- CARROSSEL DE ITENS -->
 
 <?php	  
@@ -129,12 +130,12 @@ try {
 			$produtos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
 
 
-			echo "<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3'> ";
-			foreach ($stmt as $row) {
+			echo "<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3 p-3 mb-3'> ";
+			foreach ($produtos as $rowProd) {
+				$imagemPath = getImagePath($rowProd['foto']);
 				echo "
 				<div class='col'>
 				<div class='card shadow-sm' id='" . $row['nome'] . "'>
-					<img src='./assets/stock_imgs/" . $row['logotipo'] . "' class='card-img-top' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
 					<div class='card-body'>
 						<div class='image-overlay' style='position: relative; border-radius: 5.5px; overflow: hidden;'>
 							<img src='".$imagemPath."' class='card-img-top' alt='".$rowProd['nome']."'
