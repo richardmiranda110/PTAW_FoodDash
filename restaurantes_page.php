@@ -90,30 +90,38 @@ try {
 		else {
 			echo 'Pesquisa por: '.$_GET['restaurante']. ' ' .$_GET['categoria']. ' ';
 		}
-	echo "</h2>
-		<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3'>
-    ";
-	
-    foreach ($stmt as $row) {
-        echo "
-        <div class='col'>
-        <div class='card shadow-sm'>
-            <img src='./assets/stock_imgs/" . $row['logotipo'] . "' class='card-img-top' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
-            <div class='card-body'>
-                <div class='justify-content-between align-items-center'>
-                    <h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>
-                    <p class='mb-0'>". $row['avaliacao']." ★</p>
-                </div>
-                <div class='d-flex justify-content-between align-items-center'>
-                    <p class='card-text mb-0' style='font-size: 12px;'>Taxa de Entrega: " . $row['taxa_entrega'] . " €</p>
-                    <small class='text-body-secondary mb-0' style='font-size: 12px;'>" . $row['tempo_medio_entrega'] . " mins</small>
-                </div>
-            </div>
-        </div>
-        </div>
-        ";
-    }
-	echo "</div>";
+	echo "</h2>    ";
+	if ($nRegistos == 0) {
+		echo "
+		<br>
+		<h2>
+			<i style='color:#c3c3c3';>Não foram encontrados restaurantes para a pesquisa indicada..</i>
+		</h2>
+		";
+	}
+	else {
+		echo "<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3'> ";
+		foreach ($stmt as $row) {
+			echo "
+			<div class='col grid_restaurantes_btn'>
+			<div class='card shadow-sm' id='" . $row['nome'] . "'>
+				<img src='./assets/stock_imgs/" . $row['logotipo'] . "' class='card-img-top' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
+				<div class='card-body'>
+					<div class='justify-content-between align-items-center'>
+						<h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>
+						<p class='mb-0'>". $row['avaliacao']." ★</p>
+					</div>
+					<div class='d-flex justify-content-between align-items-center'>
+						<p class='card-text mb-0' style='font-size: 12px;'>Taxa de Entrega: " . $row['taxa_entrega'] . " €</p>
+						<small class='text-body-secondary mb-0' style='font-size: 12px;'>" . $row['tempo_medio_entrega'] . " mins</small>
+					</div>
+				</div>
+			</div>
+			</div>
+			";
+		}
+		echo "</div>";
+	}
 	
     // Links de paginação
     echo "<nav aria-label='Page navigation example'>
@@ -150,6 +158,26 @@ try {
 	  var form = document.querySelector("form");
 	  form.submit();
 	});
+	
+	// Seleciona todos os elementos com a classe 'grid_restaurantes_btn'
+var buttons = document.querySelectorAll('.grid_restaurantes_btn');
+
+// Adiciona um evento de clique a cada botão
+buttons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        // Encontra o elemento .card mais próximo do botão clicado
+        var parentElement = event.target.closest('.card');
+
+        // Verifica se o elemento .card foi encontrado e obtém o ID
+        var childElementId = parentElement ? parentElement.id : '';
+
+        // Remove todos os espaços em branco do ID
+        var sanitizedId = childElementId.replace(/\s+/g, '');
+
+        // Redireciona para a página desejada, passando o ID como parâmetro na URL
+        window.location.href = 'menu_restaurante.php?restaurante=' + sanitizedId;
+    });
+});
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
