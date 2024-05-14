@@ -108,65 +108,89 @@ try {
 ?>
     </ul>
     </div>
-	
-    <div class="p-3">
-    <!-- CARROSSEL DE ITENS -->
 
-<?php	  
-	try {
-        foreach ($categorias as $categoria) {
-			$fCategoria = htmlspecialchars($categoria['nome']);
-			echo "<h3>".$fCategoria."</h3>";
-			
-			$queryProd = "select itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto 
-						from itens 
-						inner join estabelecimentos on estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
-						inner join categorias on categorias.id_categoria = itens.id_categoria 
-						WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') like ? ";
-			
-			$fCat = "%" . strtolower(str_replace(' ', '', $fCategoria)) . "%";			
-			$stmtProd = $pdo->prepare($queryProd);
-			$stmtProd->execute([$fRestaurante, $fCat]);
-			$produtos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
+	<div class="p-3" style="width: 82.3vw;">
+		<!-- CARROSSEL DE ITENS -->
+<?php
+try{	
+	foreach ($categorias as $categoria) {
+		$fCategoria = htmlspecialchars($categoria['nome']);
+		echo "<h3>".$fCategoria."</h3>";
+		
+		$queryProd = "select itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto 
+					from itens 
+					inner join estabelecimentos on estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
+					inner join categorias on categorias.id_categoria = itens.id_categoria 
+					WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') like ? ";
+		
+		$fCat = "%" . strtolower(str_replace(' ', '', $fCategoria)) . "%";			
+		$stmtProd = $pdo->prepare($queryProd);
+		$stmtProd->execute([$fRestaurante, $fCat]);
+		$produtos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
+		
+		$chunks = array_chunk($produtos, 5); // Divide os artigos em grupos de 5
+		$isActive = true; // Para definir o primeiro grupo como ativo
+?>
+	<div class="container mt-5">
+        <div id="articlesCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+<?php
 
-
-			echo "<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3 p-3 mb-3'> ";
-			foreach ($produtos as $rowProd) {
-				$imagemPath = getImagePath($rowProd['foto']);
-				echo "
-				<div class='col'>
-				<div class='card shadow-sm' id='" . $row['nome'] . "'>
-					<div class='card-body'>
-						<div class='image-overlay' style='position: relative; border-radius: 5.5px; overflow: hidden;'>
-							<img src='".$imagemPath."' class='card-img-top' alt='".$rowProd['nome']."'
-							  style='border-radius: 5.5px;'>
-							<div class='icon-overlay' style='position: absolute; bottom: 10px; right: 10px;'>
-							  <img src='./assets/stock_imgs/mais.png' id='iconAddItem' alt='Ícone de adição'
-								style='width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;'>
-							</div>
-						  </div>
-						  <div class='card-body'>
-							<div class='d-flex justify-content-between align-items-center'>
-							  <h6 class='mb-0'>".$rowProd['nome']."</h6>
-							</div>
-							<div class='d-flex justify-content-between align-items-center'>
-							  <p class='card-text mb-0' style='font-size: 12px;'>".$rowProd['preco']."'</p>
-							</div>
-						  </div>
-					</div>
-				</div>
-				</div>
+		foreach ($chunks as $listProd) {
+			$classActive = "";
+			if ($isActive) { $classActive = 'active'; $isActive = false; }
+			echo "<div class='carousel-item ".$classActive."' style='margin-left: 15px;'>
+					<div class='row'>
 				";
-			}
-			echo "</div>";
-        }
-    } catch (PDOException $e) {
-        echo "Erro na conexão: " . $e->getMessage();
-    }
- ?>
-  </div>
+			foreach ($listProd as $rowProd) {
+				$imagemPath = getImagePath($rowProd['foto']);
+				echo "<div class='card shadow-sm' id='" . $row['nome'] . "' style='width:18%; margin: 0px 0.5% 1% 0.5%;'>
+						<div class='card-body'>
+							<div class='image-overlay' style='position: relative; border-radius: 5.5px; overflow: hidden;'>
+								<img src='".$imagemPath."' class='card-img-top' alt='".$rowProd['nome']."'
+								  style='border-radius: 5.5px;'>
+								<div class='icon-overlay' style='position: absolute; bottom: 10px; right: 10px;'>
+								  <img src='./assets/stock_imgs/mais.png' id='iconAddItem' alt='Ícone de adição'
+									style='width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;'>
+								</div>
+							</div>
+							<div class='card-body'>
+								<div class='d-flex justify-content-between align-items-center'>
+									<h6 class='mb-0'>".$rowProd['nome']."</h6>
+								</div>
+								<div class='d-flex justify-content-between align-items-center'>
+									<p class='card-text mb-0' style='font-size: 12px;'>".$rowProd['preco']."€'</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				";
+			} 
+
+			echo "</div>
+				</div>
+			";
+		}
+?>
+			</div>
+		</div>
+		<a class="carousel-control-prev" href="#articlesCarousel" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only"></span>
+		</a>
+		<a class="carousel-control-next" href="#articlesCarousel" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only"></span>
+		</a>
+<?php } 
+} catch (PDOException $e) {
+	echo "Erro na conexão: " . $e->getMessage();
+}
+?>
+        </div>
     </div>
-  </div>
+</div>
+</div>
 
 
   <!-- Footer -->
@@ -174,7 +198,34 @@ try {
   include __DIR__."/includes/footer_1.php";
   ?>
 
-  <!-- SCRIPT -->
+<style>
+.carousel-control-prev-icon, 
+.carousel-control-next-icon {
+    filter: brightness(0.5);
+}
+
+a.carousel-control-next {
+    margin-top: -125px !important;
+	margin-bottom: 125px !important;
+}
+
+a.carousel-control-prev {
+    margin-top: -175px !important;
+	margin-bottom: 175px !important;
+}
+
+a.carousel-control-next,	
+a.carousel-control-prev { 
+	margin-left: -90px !important;
+    position: relative !important;
+}
+
+</style>
+<!-- SCRIPT -->
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     document.querySelector("button#buttonPesquisarRestaurante").addEventListener("click", procurarRestaurante)
 
