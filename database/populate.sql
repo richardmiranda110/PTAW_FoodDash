@@ -3,25 +3,25 @@ INSERT INTO Clientes (nome, apelido, email, telemovel, morada, cidade, pais, cod
 ('Maria', 'Santos', 'maria@ua.com', '987654321', 'R. de Antero de Quental 557', 'Porto', 'Portugal', '4200-065', crypt('abcde123', gen_salt('bf'))),
 ('Richard', 'Miranda', 'richard@ua.com', '916713732', 'R. de Dr. Manuel das Neves 5', 'Aveiro', 'Portugal', '3810-164', crypt('richard123', gen_salt('bf')));
 
-INSERT INTO Empresas (nome, morada, telemovel, email, tipo, password) VALUES
-('McDonalds', 'Rua X, Lisboa', '123456789', 'mcdonaldsgmail.com', 'Fast Food', crypt('mac1277', gen_salt('bf')) ),
-('Burger King', 'Avenida Y, Porto', '987654321', 'burgerking@gmail.com', 'Fast Food', crypt('poiuer456', gen_salt('bf'))),
-('Subenshi', 'Praça Aundff, Porto', '917988321', 'subenshi@gmail.com', 'Sushi', crypt('sushi44201', gen_salt('bf'))),
-('Pizza Hut', 'Fórum Aveiro, Aveiro', '997374851', 'pizzahut@gmail.com', 'Pizza',  crypt('jkjdf342', gen_salt('bf'))),
-('KFC', 'Glicinias, Porto', '935672132', 'kfc@gmail.com', 'Fast Food', crypt('omga2sd456', gen_salt('bf')));
+INSERT INTO Empresas (nome, morada, telemovel, email, tipo, logotipo, password) VALUES
+('McDonalds', 'Rua X, Lisboa', '123456789', 'mcdonaldsgmail.com', 'Fast Food', 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/1200px-McDonald%27s_Golden_Arches.svg.png', crypt('mac1277', gen_salt('bf')) ),
+('Burger King', 'Avenida Y, Porto', '987654321', 'burgerking@gmail.com', 'Fast Food', 'https://logodownload.org/wp-content/uploads/2021/01/burguer-king-logo-0.png', crypt('poiuer456', gen_salt('bf'))),
+('Subenshi', 'Praça Aundff, Porto', '917988321', 'subenshi@gmail.com', 'Sushi', 'https://www.subenshi.pt/img/logos/LOGO_SUBENSHI-1-300x277.png', crypt('sushi44201', gen_salt('bf'))),
+('Pizza Hut', 'Fórum Aveiro, Aveiro', '997374851', 'pizzahut@gmail.com', 'Pizza', 'https://upload.wikimedia.org/wikipedia/sco/thumb/d/d2/Pizza_Hut_logo.svg/1200px-Pizza_Hut_logo.svg.png', crypt('jkjdf342', gen_salt('bf'))),
+('KFC', 'Glicinias, Porto', '935672132', 'kfc@gmail.com', 'Fast Food', 'https://media-cdn.tripadvisor.com/media/photo-s/26/c8/30/69/kfc-logo.jpg', crypt('omga2sd456', gen_salt('bf')));
 
-INSERT INTO Estabelecimentos (nome, localizacao, telemovel, taxa_entrega, tempo_medio_entrega, id_empresa) VALUES
-('McDonalds Aveiro Pingo Doce', 'Pingo Doce Aveiro', '111111111', 5.50, '00:20:00', 1),
-('McDonalds Aveiro Glicinias Plaza', 'Glicinias Plaza', '222222222', 3.00, '00:10:00', 1),
-('McDonalds Aveiro Universidade', 'Rua da Universidade de Aveiro', '333333333', 2.50, '00:15:00', 1),
-('McDonalds Porto Norte Shopping', 'Norte Shopping', '444444444', 4.49, '00:10:00', 1),
-('Burger King Aveiro Verdemilho', 'Avenida Verde, Verdemilho, Aveiro', '777333555', 2.00, '00:25:00', 2),
-('Burger King Aveiro Center', 'Aveiro Center, Rua da AAAA, Aveiro', '777444555', 3.00, '00:30:00', 2),
-('Subenshi Aveiro', 'R. Carlos Aleluia 4 17, 3810-077 Aveiro', '888333555', 5.00, '00:40:00', 3),
-('Pizza Hut Forum Aveiro', 'R. do Batalhão de Caçadores 10 2.07, 3810-064 Aveiro', '936689709', 4.50, '00:35:00', 4),
-('Pizza Hut Cais Gaia', 'Empreendimento Douro Cais, Lj 320, Av. de Ramos Pinto, 4400-161 Vila Nova de Gaia', '222444333', 6.00, '00:20:00', 4),
-('KFC Arrábida Shopping', 'Centro Comercial Arrábida Shopping, PCT de Henrique Moreira 244 piso 2 loja 450, 4400-346 Vila Nova de Gaia', '932110887', 3.00, '00:10:00', 5),
-('KFC Aveiro', 'Centro Glicínias Plaza, R. Dom Manuel Barbuda e Vasconcelos 2 10, 3810-498 Aveiro', '932016660', 1.50, '00:20:00', 5);
+INSERT INTO Estabelecimentos (nome, localizacao, telemovel, taxa_entrega, tempo_medio_entrega, imagem, id_empresa) VALUES
+('McDonalds Aveiro Pingo Doce', 'Pingo Doce Aveiro', '111111111', 5.50, '00:20:00', 'https://lh3.googleusercontent.com/p/AF1QipM6gay0MMm-yE3Y2XVF7VftLPm8Oz_ART2jnH83=s1360-w1360-h1020', 1),
+('McDonalds Aveiro Glicinias Plaza', 'Glicinias Plaza', '222222222', 3.00, '00:10:00', 'https://lh3.googleusercontent.com/p/AF1QipMxa7xgD2YoIMvbEeQIqDGijI2jo-XCba2VDcR2=s1360-w1360-h1020', 1),
+('McDonalds Aveiro Universidade', 'Rua da Universidade de Aveiro', '333333333', 2.50, '00:15:00', 'https://lh3.googleusercontent.com/p/AF1QipPAFsHbJO3gfu71n59ljjhWNoQBJqc9ykikc8Ke=s1360-w1360-h1020', 1),
+('McDonalds Porto NorteShopping', 'Norte Shopping', '444444444', 4.49, '00:10:00', 'https://www.mcdonalds.pt/media/5196/norteshopping-5.png?center=0.4911242603550296,0.033222591362126248&mode=crop&width=1920&height=1080&rnd=132412012040000000', 1),
+('Burger King Aveiro Verdemilho', 'Avenida Verde, Verdemilho, Aveiro', '777333555', 2.00, '00:25:00', 'https://lh3.googleusercontent.com/p/AF1QipNL3G6RC8tOkN5Px17o2Pz_IGm7SJiZxG6vNnew=s1360-w1360-h1020', 2),
+('Burger King Aveiro Center', 'Aveiro Center, Rua da AAAA, Aveiro', '777444555', 3.00, '00:30:00', 'https://lh3.googleusercontent.com/p/AF1QipMb6hv1vqOzAdjm3ZnhfZzQhgbeUaS6SDEbPCkL=s1360-w1360-h1020', 2),
+('Subenshi Aveiro', 'R. Carlos Aleluia 4 17, 3810-077 Aveiro', '888333555', 5.00, '00:40:00', 'https://lh3.googleusercontent.com/p/AF1QipPM7YkY9ge6DtQoCkDe847pW6UvLLkyrASxdkob=s1360-w1360-h1020', 3),
+('Pizza Hut Forum Aveiro', 'R. do Batalhão de Caçadores 10 2.07, 3810-064 Aveiro', '936689709', 4.50, '00:35:00', 'https://lh3.googleusercontent.com/p/AF1QipO2qLIZOyo22woZyeUjF82Riq-JSZO6JQssrx7Y=s1360-w1360-h1020', 4),
+('Pizza Hut Cais Gaia', 'Empreendimento Douro Cais, Lj 320, Av. de Ramos Pinto, 4400-161 Vila Nova de Gaia', '222444333', 6.00, '00:20:00', 'https://lh3.googleusercontent.com/p/AF1QipPonG2HoqZP_-8EVWCGqgxvoXRWmd-qJr4a98t5=s1360-w1360-h1020', 4),
+('KFC Arrábida Shopping', 'Centro Comercial Arrábida Shopping, PCT de Henrique Moreira 244 piso 2 loja 450, 4400-346 Vila Nova de Gaia', '932110887', 3.00, '00:10:00', 'https://lh3.googleusercontent.com/p/AF1QipOYQ-3yW21KUUYLCAW4nVz7JaA_o1ntqVoQJLQU=s1360-w1360-h1020', 5),
+('KFC Aveiro', 'Centro Glicínias Plaza, R. Dom Manuel Barbuda e Vasconcelos 2 10, 3810-498 Aveiro', '932016660', 1.50, '00:20:00', 'https://lh3.googleusercontent.com/p/AF1QipO7mSiByNi0nExQnIU-a27DnmmNepwLGcc0C9N7=s1360-w1360-h1020', 5);
 
 INSERT INTO Entregadores (nome, veiculo) VALUES
 ('Entregador Zé 1', 'Moto'),
@@ -50,19 +50,21 @@ INSERT INTO Itens (nome, preco, descricao, disponivel, foto, itemSozinho, person
 ('Sushis de Todos os Tipos', 14.99, 'Uma embalagem de sushis aleatórios.', TRUE, 'random_sushi.jpg', TRUE, FALSE, 7, 3),
 ('Bucket of Hot Chicken Wings', 10.00, 'Balde de asas de frango picantes HOT HOT HOT', TRUE, 'wings_bucket.jpg', TRUE, FALSE, 8, 5);
 
-INSERT INTO Personalizacoes (nome, id_item) VALUES 
+/* INSERT INTO Personalizacoes (nome, id_item) VALUES 
 ('Bebida', 1),
 ('Acompanhamento', 1),
 ('Bebida', 4),
 ('Acompanhamento', 4),
-('Extras', 5);
+('Extras', 5); */
 
-INSERT INTO Opcoes (nome, quantidade, id_personalizacao) VALUES 
+INSERT INTO Opcoes (nome, preco, id_item) VALUES 
 ('Gelo', 0, 1), 
-('Sal', 1, 2),
-('Gelo', 1, 3),
+('Sal', 0, 2),
+('Gelo', 0, 4),
 ('Sal', 0, 4),
-('Extra Queijo', 0, 5);
+('Extra Queijo', 0.60, 5),
+('Extra Molho Shoyu', 0.20, 6),
+('Extra Picante', 0.30, 7);
 
 INSERT INTO Item_Categorias (id_item, id_categoria) VALUES 
 (1, 1),
@@ -79,20 +81,28 @@ INSERT INTO Pedidos (estado, precoTotal, id_cliente, id_entregador, id_estabelec
 ('EFETUADO', 14.99, 2, 3, 3),  -- Subenshi
 ('EFETUADO', 19.99, 2, 4, 4),  -- Pizza Hut
 ('EFETUADO', 19.99, 3, 4, 4),  -- Pizza Hut
-('EFETUADO', 10.00, 3, 5, 5),  -- KFC
+('EFETUADO', 20.00, 3, 5, 5),  -- KFC
 ('EFETUADO', 1.59, 2, 6, 1);  -- MCDonalds
 
-INSERT INTO Pedido_Itens (id_pedido, id_item) VALUES 
-(1, 4), 
-(1, 4), --dois big macs no mesmo pedido
-(2, 1),
-(2, 2),
-(3, 6),
-(4, 5),
-(5, 5),
-(6, 7),
-(7, 3);
+INSERT INTO Pedido_Itens (id_pedido, id_item, quantidade) VALUES 
+(1, 4, 2),
+(2, 1, 1),
+(2, 2, 1),
+(3, 6, 1),
+(4, 5, 1),
+(5, 5, 1),
+(6, 7, 2),
+(7, 3, 1);
 
+INSERT INTO Pedido_Item_Opcoes (id_pedido_item, id_opcao, quantidade) VALUES 
+(1, 3, 0),
+(2, 1, 1),
+(3, 2, 1),
+(4, 6, 1),
+(5, 5, 1),
+(6, 5, 1),
+(7, 7, 0),
+(7, 7, 1);
 
 
 
@@ -111,5 +121,6 @@ item_categorias,
 itens,
 opcoes,
 pedido_itens,
+pedido_item_opcoes,
 pedidos,
 personalizacoes CASCADE;*/

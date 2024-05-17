@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS Clientes (
     nome VARCHAR(100),
     apelido VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
-    telemovel INT,
+    telemovel INTEGER,
     morada TEXT,
     cidade VARCHAR(25),
     pais VARCHAR (25), 
@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS Empresas (
     telemovel VARCHAR(20) NOT NULL,
     email VARCHAR(100) NOT NULL,
     tipo VARCHAR(50) NOT NULL,
+    logotipo VARCHAR(255),
     password VARCHAR(255)
 );
 
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS Estabelecimentos (
     telemovel VARCHAR(20) NOT NULL,
     taxa_entrega DECIMAL NOT NULL,
     tempo_medio_entrega TIME NOT NULL,
+    imagem VARCHAR(255),
     id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 
@@ -95,24 +97,26 @@ CREATE TABLE IF NOT EXISTS Itens (
     id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
 );
 
--- Tabela Personalizacao
+
+/*-- Tabela Personalizacao
 CREATE TABLE IF NOT EXISTS Personalizacoes (
     id_personalizacao SERIAL PRIMARY KEY,
     nome VARCHAR(255),
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL
 );
+*/
 
 -- Tabela Opcao
 CREATE TABLE IF NOT EXISTS Opcoes (
     id_opcao SERIAL PRIMARY KEY,
     nome VARCHAR(255),
-    quantidade INTEGER,
-    id_personalizacao INTEGER REFERENCES Personalizacoes(id_personalizacao) ON DELETE CASCADE NOT NULL
+    max_quantidade INTEGER DEFAULT 1,
+    preco REAL,
+    /*id_personalizacao INTEGER REFERENCES Personalizacoes(id_personalizacao) ON DELETE CASCADE NOT NULL,*/
+    id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL
 );
 
-
-
-/* -- Tabela Menu
+/* -- Tabela Menu/Cardápio
 CREATE TABLE IF NOT EXISTS Menus (
     id_menu SERIAL PRIMARY KEY,
     nome VARCHAR(100),
@@ -122,6 +126,7 @@ CREATE TABLE IF NOT EXISTS Menus (
     REFERENCES Estabelecimentos(id)
     ON DELETE CASCADE NOT NULL
 ); */
+
 
 -- Tabela Avaliacao
 CREATE TABLE IF NOT EXISTS Avaliacoes (
@@ -138,12 +143,18 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
 
 -- Tabela Pedido_Item
 CREATE TABLE IF NOT EXISTS Pedido_Itens (
+    id_pedido_item SERIAL PRIMARY KEY,
     id_pedido INTEGER REFERENCES Pedidos(id_pedido) ON DELETE CASCADE NOT NULL,
-    id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL
+    id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
+    quantidade INTEGER DEFAULT 1
 );
---cria um índice na tabela Pedido_Itens para facilitar as consultas
-CREATE INDEX idx_pedido_itens_id_pedido_id_item ON Pedido_Itens (id_pedido, id_item);
 
+CREATE TABLE IF NOT EXISTS Pedido_Item_Opcoes (
+    id_pedido_item_opcao SERIAL PRIMARY KEY,
+    id_pedido_item INTEGER REFERENCES Pedido_Itens(id_pedido_item) ON DELETE CASCADE NOT NULL,
+    id_opcao INTEGER REFERENCES Opcoes(id_opcao) ON DELETE CASCADE,
+    quantidade INTEGER DEFAULT 1
+);
 
 -- Tabela Item_Categoria
 CREATE TABLE IF NOT EXISTS Item_Categorias (
@@ -162,7 +173,7 @@ CREATE TABLE IF NOT EXISTS Item_Menus (
 ); */
 
 
--- TRIGGERS
+/* -- TRIGGERS
 CREATE OR REPLACE FUNCTION verificaPersonalizacoesAtivas() RETURNS TRIGGER AS $$
 BEGIN
     --verifica se o item tem personalizacoesAtivas igual a TRUE
@@ -181,4 +192,4 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trigger_verifica_personalizacoes
 BEFORE INSERT ON Personalizacoes
 FOR EACH ROW
-EXECUTE FUNCTION verificaPersonalizacoesAtivas();
+EXECUTE FUNCTION verificaPersonalizacoesAtivas(); */

@@ -19,7 +19,7 @@
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#">Menu</a>
+          <a class="nav-link" aria-current="page" href="#">Restaurantes</a>
         </li>
       </ul>
       <button class="btn btn-default border border-white me-2">
@@ -31,3 +31,15 @@
     </div>
   </div>
 </nav>
+
+<script>
+  document.getElementById('logo_fooddash').addEventListener('click', function() {
+    window.location.href = 'index.php';
+  });
+  document.getElementById('home_btn').addEventListener('click', function() {
+    window.location.href = 'index.php';
+  });
+  document.getElementById('restaurantes_btn').addEventListener('click', function() {
+    window.location.href = 'restaurantes_page.php';
+  });
+</script>
