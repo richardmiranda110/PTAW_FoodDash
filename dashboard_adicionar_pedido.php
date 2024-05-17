@@ -40,32 +40,74 @@ session_start();
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link nav" href="#">Home</a>
+                <a class="nav-link nav" href="#">Overview</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav" href="#">Sobre</a>
+                <a class="nav-link nav" href="#">Menus</a>
             </li>
             <li class="nav-item"> <!-- não me digas nada sobre o style, o css não gosta dele -->
-                <a class="nav-link nav " style="border-bottom: 1vh solid black;" href="#">Serviços</a>
+                <a class="nav-link nav " style="border-bottom: 1vh solid black;" href="#">Categorias</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link nav" href="#">Contato</a>
             </li>
         </ul>
-    </div>
-</nav>
+  </div>
+  </nav>
     
-
-
-  <!--Zona do Footer -->
   <div class="container">
-    <p class="mx-4 h2 font-weight-bold ">Novo Item</p>
-    <div class="w-25">
-      <p class="font-weight-bold">Nome</p>
+    <p class="mx-4 my-4 h2 fw-bold ">Novo Item</p>
+    <div class="w-25 mb-5">
+      <p class="fw-bold">Nome</p>
       <input placeholder="Menu Big Mac"type="text">
     </div>
-    <?php include __DIR__."/includes/footer_2.php"; ?>
   </div>
+
+  <div class="container ">
+    <p class="fw-bold mb-1 purple-text">Foto</p>
+    <div class="container mb-5">
+     <form action="imageup.php" method="post" enctype="multipart/form-data">
+      <div class="upload-box">
+        <input type="file" class="form-control-file" id="exampleFormControlFile1" name="banner" accept="image/*">
+        <div>
+          <p>Arraste uma imagem para fazer upload</p>
+          <p>ou</p>
+          <a href="#">Procurar ficheiro</a>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <div class="container">
+    <div class="w-25 mb-5">
+      <label for="descricaoForm1 " class="fw-bold purple-text">Descrição</label>
+      <div class="form-group w-100">
+        <textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricaoForm1" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mb-5">
+    <p class="m fw-bold purple-text ">Vendendo Item Sozinho?</p>
+    <div class="w-25 mb-5">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="inlineRadio2" name="inlineRadioOptions" value="option1" checked>
+        <label class="form-check-label" for="inlineCheckbox2">Sim</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="inlineRadio1" name="inlineRadioOptions" value="option2" >
+        <label class="form-check-label" for="inlineCheckbox1">Não</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-left">
+    <input type="submit" value="GUARDAR" class="btn-xl btn btn-success w-25 h-25 btn-primary mt-3">
+  </div>
+  
+  <!--Zona do Footer -->
+  <?php include __DIR__."/includes/footer_2.php"; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>

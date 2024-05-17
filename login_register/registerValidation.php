@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-//require_once './database/db_connection.php';
+require_once '../database/db_connection.php';
 
 $name = $_POST['inputName'];
 $morada = $_POST['inputMorada'];
