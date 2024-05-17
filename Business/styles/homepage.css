@@ -1,0 +1,47 @@
+#imgEmpresas {
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+}
+
+#btnLogin {
+    font-weight: 500;
+    padding: 1vh 1.5vw;
+    background-color: black;
+    color: white;
+    border: solid 0.11vw black;
+    border-radius: 1.5vw;
+    font-size: 2vw;
+    transition: 300ms;
+}
+
+#btnRegisto, #btnRegisto2 {
+    font-weight: 500;
+    padding: 1vh 1.5vw;
+    background-color: white;
+    color: black;
+    border: solid 0.11vw black;
+    border-radius: 1.5vw;
+    font-size: 2vw;
+    transition: 300ms;
+}
+
+#btnLogin:hover {
+    background-color: white;
+    color: black;
+    transition: 300ms;
+}
+
+#btnRegisto:hover {
+    background-color: black;
+    color: white;
+    transition: 300ms;
+}
+
+#btnRegisto2:hover {
+    background-color: black;
+    color: white;
+    transition: 300ms;
+}

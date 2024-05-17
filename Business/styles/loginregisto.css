@@ -1,0 +1,19 @@
+body {
+    background-color: black;
+}
+
+#btnLogin {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    border: solid 1px white;
+    transition: 500ms;
+}
+
+#btnLogin:hover {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    border: solid 1px white;
+    transition: 300ms;
+}
