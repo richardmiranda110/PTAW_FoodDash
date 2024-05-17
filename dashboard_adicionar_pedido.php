@@ -55,55 +55,50 @@ session_start();
   </div>
   </nav>
     
-  <div class="container">
-    <p class="mx-4 my-4 h2 fw-bold ">Novo Item</p>
-    <div class="w-25 mb-5">
-      <p class="fw-bold">Nome</p>
-      <input placeholder="Menu Big Mac"type="text">
-    </div>
-  </div>
-
-  <div class="container ">
-    <p class="fw-bold mb-1 purple-text">Foto</p>
-    <div class="container mb-5">
-     <form action="imageup.php" method="post" enctype="multipart/form-data">
-      <div class="upload-box">
-        <input type="file" class="form-control-file" id="exampleFormControlFile1" name="banner" accept="image/*">
-        <div>
-          <p>Arraste uma imagem para fazer upload</p>
-          <p>ou</p>
-          <a href="#">Procurar ficheiro</a>
+	
+	
+   <div class="container mt-5">
+      <h2 class="w-25 mb-4">Adicionar Novo Item</h2>
+	  
+	  <?php include __DIR__."/includes/uploadFotosItens.php"; ?>
+	  
+      <form action="" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="nome" class="form-label">Nome</label>
+          <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do item" required>
         </div>
-      </div>
-    </form>
-  </div>
-  
-  <div class="container">
-    <div class="w-25 mb-5">
-      <label for="descricaoForm1 " class="fw-bold purple-text">Descrição</label>
-      <div class="form-group w-100">
-        <textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricaoForm1" rows="3"></textarea>
-      </div>
+		
+        <div class="mb-3">
+          <label for="foto" class="form-label">Foto</label>
+          <input type="file" class="form-control" id="file" name="file" accept="image/*" required>
+        </div>
+        
+		<div class="mb-5">
+		  <label for="descricaoForm1 " class="fw-bold purple-text">Descrição</label>
+		  <div class="form-group w-100">
+			<textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricaoForm1" rows="3"></textarea>
+		  </div>
+		</div>
+		
+		<div class="mb-3">
+			<p class="m fw-bold purple-text ">Vendendo Item Sozinho?</p>
+			<div class="w-25 mb-5">
+			  <div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" id="inlineRadio2" name="inlineRadioOptions" value="option1" checked>
+				<label class="form-check-label" for="inlineCheckbox2">Sim</label>
+			  </div>
+			  <div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" id="inlineRadio1" name="inlineRadioOptions" value="option2" >
+				<label class="form-check-label" for="inlineCheckbox1">Não</label>
+			  </div>
+			</div>
+		</div>
+		
+        <button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
+		
+		
+      </form>
     </div>
-  </div>
-
-  <div class="container mb-5">
-    <p class="m fw-bold purple-text ">Vendendo Item Sozinho?</p>
-    <div class="w-25 mb-5">
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" id="inlineRadio2" name="inlineRadioOptions" value="option1" checked>
-        <label class="form-check-label" for="inlineCheckbox2">Sim</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" id="inlineRadio1" name="inlineRadioOptions" value="option2" >
-        <label class="form-check-label" for="inlineCheckbox1">Não</label>
-      </div>
-    </div>
-  </div>
-
-  <div class="text-left">
-    <input type="submit" value="GUARDAR" class="btn-xl btn btn-success w-25 h-25 btn-primary mt-3">
-  </div>
   
   <!--Zona do Footer -->
   <?php include __DIR__."/includes/footer_2.php"; ?>
