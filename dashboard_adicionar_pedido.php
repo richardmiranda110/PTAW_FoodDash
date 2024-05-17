@@ -55,14 +55,28 @@ session_start();
   </div>
   </nav>
     
+<?php
+/*
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+	if (!empty($_GET["idEmpresa"])) {
+		$idestabelecimento[] = $_GET['idEmpresa'];
+	};
 	
+	$idEmpresa = 1;
+}
+*/
+$idEmpresa = 1;
+?>	
 	
    <div class="container mt-5">
-      <h2 class="w-25 mb-4">Adicionar Novo Item</h2>
+      <h2 class="mb-4">Adicionar Novo Item</h2>
 	  
 	  <?php include __DIR__."/includes/uploadFotosItens.php"; ?>
 	  
       <form action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa); ?>">
+
+
         <div class="mb-3">
           <label for="nome" class="form-label">Nome</label>
           <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do item" required>
@@ -70,25 +84,88 @@ session_start();
 		
         <div class="mb-3">
           <label for="foto" class="form-label">Foto</label>
-          <input type="file" class="form-control" id="file" name="file" accept="image/*" required>
+          <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
         </div>
         
-		<div class="mb-5">
-		  <label for="descricaoForm1 " class="fw-bold purple-text">Descrição</label>
+		<div class="mb-3">
+		  <label for="descricaoForm1 " class="purple-text">Descrição</label>
 		  <div class="form-group w-100">
-			<textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricaoForm1" rows="3"></textarea>
+			<textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricao" name="descricao" rows="3"></textarea>
 		  </div>
 		</div>
 		
 		<div class="mb-3">
-			<p class="m fw-bold purple-text ">Vendendo Item Sozinho?</p>
+          <label for="nome" class="form-label">Preço</label>
+          <input type="number" class="form-control" id="preco" name="preco" placeholder="Digite um número" step="0.01" required>
+        </div>
+		
+<?php
+require_once "database/credentials.php";
+require_once "database/db_connection.php";
+
+try {
+
+	$stmt = $pdo->prepare("select id_categoria, nome from categorias where id_empresa = ? ");
+	$stmt->execute([$idEmpresa]);
+	$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+	echo "
+		<div class='mb-3'>
+			<p class='m fw-bold purple-text '>Categoria</p>
+			<select class='mb-5 form-select' name='idcategoria' id='idcategoria'>
+				<option value=''>Selecione Categoria</option>";
+
+	foreach ($stmt as $row) {
+	  echo 		'<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
+	}
+
+	echo "</select>
+		</div>";
+
+
+} catch(PDOException $e) {
+	echo "Erro ao inserir registro: " . $e->getMessage();
+}
+?>
+		
+		<div class="mb-3">
+			<p class="m fw-bold purple-text ">Vende-se Item Sozinho?</p>
 			<div class="w-25 mb-5">
 			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio2" name="inlineRadioOptions" value="option1" checked>
+				<input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="true" checked>
 				<label class="form-check-label" for="inlineCheckbox2">Sim</label>
 			  </div>
 			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio1" name="inlineRadioOptions" value="option2" >
+				<input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="false" >
+				<label class="form-check-label" for="inlineCheckbox1">Não</label>
+			  </div>
+			</div>
+		</div>
+		
+		<div class="mb-3">
+			<p class="m fw-bold purple-text ">Personalizações Ativas?</p>
+			<div class="w-25 mb-5">
+			  <div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" id="inlineRadio2" name="personalizacoesativas" value="true" checked>
+				<label class="form-check-label" for="inlineCheckbox2">Sim</label>
+			  </div>
+			  <div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" id="inlineRadio1" name="personalizacoesativas" value="false" >
+				<label class="form-check-label" for="inlineCheckbox1">Não</label>
+			  </div>
+			</div>
+		</div>
+		
+		<div class="mb-3">
+			<p class="m fw-bold purple-text ">Artigo Disponível?</p>
+			<div class="w-25 mb-5">
+			  <div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" id="inlineRadio2" name="disponivel" value="true" checked>
+				<label class="form-check-label" for="inlineCheckbox2">Sim</label>
+			  </div>
+			  <div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" id="inlineRadio1" name="disponivel" value="false" >
 				<label class="form-check-label" for="inlineCheckbox1">Não</label>
 			  </div>
 			</div>
