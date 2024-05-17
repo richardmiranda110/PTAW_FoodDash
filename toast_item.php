@@ -11,11 +11,6 @@
 </head>
 
 <body>
-  <!-- NAVBAR -->
-  <?php
-  include __DIR__ . "/includes/header_restaurantes_selected.php";
-  ?>
-
   <!-- IDENTIFICAÇÃO DO RESTAURANTE -->
   <div class="p-4 p-md-5" style="background-color: #ffffff; border-bottom: 1vw ridge #febc41; border-radius: 15px;">
     <div class="container">
@@ -42,7 +37,7 @@
 
   <div>
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" style="width: 30vw;">
+      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" style="width: 40vw; max-height: 95vh; overflow-y: auto;">
         <div class="toast-header">
           <img src="./assets/stock_imgs/burgerKing_marca.png" class="rounded me-2" alt="logotipo" style="width: 1.5vw;">
           <strong class="me-auto">Menu Big King</strong>
@@ -50,15 +45,15 @@
         </div>
         <div class="toast-body">
           <div id="txt_item_title_price_description">
-            <h2>Menu Big King</h2>
-            <h4>5,79€</h4>
+            <h3>Menu Big King</h3>
+            <h5>5,79€</h5>
             <p>Duplo contraste e duplo sabor, queijo derretido, alface, picles e cebola regados com o delicioso molho Big King entre dois pães de sésamo crocante. Será possível pedir mais?</p>
           </div>
           <hr>
           <div>
-            <h4>Complemento</h4>
+            <h5>Complemento</h5>
             <div class="form-check form-check-reverse">
-              <input class="form-check-input" type="radio" name="flexRadioDefault1" id="flexRadioDefault1">
+              <input class="form-check-input" type="radio" name="flexRadioDefault1" id="flexRadioDefault1" checked>
               <label class="form-check-label d-flex justify-content-start" for="flexRadioDefault1">Batatas Fritas Clássicas</label>
             </div>
             <div class="form-check form-check-reverse">
@@ -76,34 +71,55 @@
           </div>
           <br>
           <div>
-            <h4>Bebida</h4>
+            <h5>Bebida</h5>
             <div class="form-check form-check-reverse">
-              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2">
+              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2" checked>
               <label class="form-check-label d-flex justify-content-start" for="flexRadioDefault2">Coca-Cola</label>
             </div>
             <div class="form-check form-check-reverse">
-              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2" checked>
+              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2">
               <label class="form-check-label d-flex justify-content-start" for="flexRadioDefault2">Coca-Cola Zero</label>
             </div>
             <div class="form-check form-check-reverse">
-              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2" checked>
+              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2">
               <label class="form-check-label d-flex justify-content-start" for="flexRadioDefault2">Fanta Laranja</label>
             </div>
             <div class="form-check form-check-reverse">
-              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2" checked>
+              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2">
               <label class="form-check-label d-flex justify-content-start" for="flexRadioDefault2">Nestea Manga</label>
             </div>
             <div class="form-check form-check-reverse">
-              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2" checked>
+              <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault2">
               <label class="form-check-label d-flex justify-content-start" for="flexRadioDefault2">Água Mineral</label>
             </div>
+          </div>
+          <br>
+          <div>
+            <h5>Adiciona extras ao teu Menu Big King</h5>
+            <div class="form-check form-check-reverse">
+              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <label class="form-check-label d-flex justify-content-start" for="defaultCheck1">Gelo</label>
+            </div>
+            <div class="form-check form-check-reverse">
+              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <label class="form-check-label d-flex justify-content-start" for="defaultCheck1">Extra Carne</label>
+            </div>
+            <div class="form-check form-check-reverse">
+              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <label class="form-check-label d-flex justify-content-start" for="defaultCheck1">Extra Queijo</label>
+            </div>
+            <div class="form-check form-check-reverse">
+              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <label class="form-check-label d-flex justify-content-start" for="defaultCheck1">Extra Bacon</label>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-2">
+            <input class="btn btn-primary btn-lg" type="submit" value="Adicionar ao carrinho • 7,70€">
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
 
   <!-- SCRIPT -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
