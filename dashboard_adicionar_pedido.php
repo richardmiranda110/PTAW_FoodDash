@@ -20,7 +20,7 @@ session_start();
     <title>FoodDash</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/styles/sitecss.css">
-	  <link rel="stylesheet" href="assets/styles/dashboard.css">
+	<link rel="stylesheet" href="assets/styles/dashboard.css">
   </head>
   <body>
   <!--Zona do Header -->
@@ -129,49 +129,127 @@ try {
 }
 ?>
 		
-		<div class="mb-3">
-			<p class="m fw-bold purple-text ">Vende-se Item Sozinho?</p>
-			<div class="w-25 mb-5">
-			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="true" checked>
-				<label class="form-check-label" for="inlineCheckbox2">Sim</label>
-			  </div>
-			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="false" >
-				<label class="form-check-label" for="inlineCheckbox1">Não</label>
-			  </div>
+	<div class="mb-3">
+		<p class=" fw-bold purple-text">Vende-se Item Sozinho?</p>
+		<div class="w-25 mb-4" id="itemsozinho-form">
+			<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="true" checked>
+			<label class="form-check-label" for="inlineCheckbox2">Não</label>
+			</div>
+			<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="false" >
+			<label class="form-check-label" for="inlineCheckbox1">Sim</label>
 			</div>
 		</div>
+
 		
-		<div class="mb-3">
-			<p class="m fw-bold purple-text ">Personalizações Ativas?</p>
-			<div class="w-25 mb-5">
-			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio2" name="personalizacoesativas" value="true" checked>
-				<label class="form-check-label" for="inlineCheckbox2">Sim</label>
-			  </div>
-			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio1" name="personalizacoesativas" value="false" >
-				<label class="form-check-label" for="inlineCheckbox1">Não</label>
-			  </div>
+		<div class="container mb-5" id="complement-section">
+    <p class="h5 fw-bold">Acompanhamento</p>
+      <button class="btn btn-custom text-left">+ Novo Complemento</button>
+			<div class="complement-section">
+				<div class="complement-header mb-0">
+					<p class="fw-bold m-0">Bebida</p>
+					<button class="btn btn-custom">+ Nova Opção</button>
+				</div>
+				<hr class="mt-0">
+				<ul class="list-unstyled">
+					<li>Coca-Cola</li>
+					<li>Ice Tea Manga</li>
+					<li>Fanta Uva</li>
+					<li>Sumol Laranja</li>
+					<li>Água Mineral</li>
+				</ul>
+			</div>
+
+			<div class="complement-section">
+				<div class="complement-header mb-0">
+          <p class="fw-bold m-0">Acompanhamento</p>
+					<button class="btn btn-custom">+ Nova Opção</button>
+				</div>
+
+				<hr class="mt-0">
+				<ul class="list-unstyled">
+					<li>Batatas médias</li>
+					<li>Sopa de ervilhas</li>
+					<li>Batatas rústicas</li>
+					<li>5 nuggets</li>
+				</ul>
 			</div>
 		</div>
-		
-		<div class="mb-3">
-			<p class="m fw-bold purple-text ">Artigo Disponível?</p>
-			<div class="w-25 mb-5">
-			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio2" name="disponivel" value="true" checked>
-				<label class="form-check-label" for="inlineCheckbox2">Sim</label>
-			  </div>
-			  <div class="form-check form-check-inline">
-				<input class="form-check-input" type="radio" id="inlineRadio1" name="disponivel" value="false" >
-				<label class="form-check-label" for="inlineCheckbox1">Não</label>
-			  </div>
+	
+
+	<div>
+		<p class="m fw-bold purple-text ">Personalizações Ativas?</p>
+		<div class="w-25" id="personalizacoes-ativas-form">
+			<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" id="inlineRadio2" name="personalizacoesativas" value="true" checked>
+			<label class="form-check-label" for="inlineCheckbox2">Sim</label>
+			</div>
+			<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" id="inlineRadio1" name="personalizacoesativas" value="false" >
+			<label class="form-check-label" for="inlineCheckbox1">Não</label>
 			</div>
 		</div>
+	</div>
+
+	<div class="container" id="personalizations-section">
+    <p class="fw-bold purple-text ">Personalizações</p>
+    <div class="section-title">
+    <p class="h5 fw-bold ">Hamburguer</p>
+    </div>
+    <button type="button" class="btn btn-custom">+ Nova Opção</button>
+    <hr>
+    <div class="option-list">
+      <div class="option-row">
+        <span>Queijo</span>
+        <div class="option-actions">
+          <button type="button" class="btn btn-light btn-sm">✕</button>
+          <span class="mr-2">Max.:</span>
+          <input type="number" min="0" class="form-control form-control-sm" style="width: 50px;">
+        </div>
+      </div>
+      <div class="option-row">
+        <span>Cebola</span>
+        <div class="option-actions">
+          <button type="button" class="btn btn-light btn-sm">✕</button>
+          <span class="mr-2">Max.:</span>
+          <input type="number" min="0" class="form-control form-control-sm" style="width: 50px;">
+        </div>
+      </div>
+      <div class="option-row">
+        <span>Picles</span>
+        <div class="option-actions">
+          <button type="button" class="btn btn-light btn-sm">✕</button>
+          <span class="mr-2">Max.:</span>
+          <input type="number"  min="0" class="form-control form-control-sm" style="width: 50px;">
+        </div>
+      </div>
+      <div class="option-row">
+        <span>Molho</span>
+        <div class="option-actions">
+          <button type="button" class="btn btn-light btn-sm">✕</button>
+          <span class="mr-2">Max.:</span>
+          <input type="number" min="0" class="form-control form-control-sm" style="width: 50px;">
+        </div>
+      </div>
+    </div>
+  </div>
+	
+	<div class="my-3">
+		<p class="m fw-bold purple-text ">Artigo Disponível?</p>
+		<div class="w-25 mb-5">
+			<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" id="inlineRadio2" name="disponivel" value="true" checked>
+			<label class="form-check-label" for="inlineCheckbox2">Sim</label>
+			</div>
+			<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" id="inlineRadio1" name="disponivel" value="false" >
+			<label class="form-check-label" for="inlineCheckbox1">Não</label>
+			</div>
+		</div>
+	</div>
 		
-        <button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
+	<button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
 		
 		
       </form>
@@ -179,7 +257,7 @@ try {
   
   <!--Zona do Footer -->
   <?php include __DIR__."/includes/footer_2.php"; ?>
-
+  <script src="./assets/js/adicionar_pedido.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
