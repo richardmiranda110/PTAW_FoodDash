@@ -149,7 +149,9 @@ try {
 			<div class="complement-section">
 				<div class="complement-header mb-0">
 					<p class="fw-bold m-0">Bebida</p>
-					<button class="btn btn-custom modal_event">+ Nova Opção</button>
+					<button class="btn btn-custom modal_event" style="margin-left: auto;">+ Nova Opção</button>
+          <span style="margin-left: 0.5vw;margin-right:0.5vw"> ou </span>
+          <button class="btn btn-custom">Importar Existente</button>
 				</div>
 				<hr class="mt-0">
 				<ul class="list-unstyled">
@@ -164,7 +166,9 @@ try {
 			<div class="complement-section">
 				<div class="complement-header mb-0">
           <p class="fw-bold m-0">Acompanhamento</p>
-					<button class="btn btn-custom modal_event">+ Nova Opção</button>
+					<button class="btn btn-custom modal_event" style="margin-left: auto;">+ Nova Opção</button>
+          <span style="margin-left: 0.5vw;margin-right:0.5vw"> ou </span>
+          <button class="btn btn-custom">Importar Existente</button>
 				</div>
 
 				<hr class="mt-0">
