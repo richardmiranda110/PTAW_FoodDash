@@ -36,7 +36,7 @@ session_start();
     <!--Zona de Conteudo da Página -->
     <div id="contentDiv" class="col-md-12">
 
-    <nav style="font-size:1.4rem; z-index: 1;" class="navbar navbar-expand-lg gray-navbar navbar-light bg-light ">
+    <nav style="font-size:1.4rem; z-index: 1;" class="navbar navbar-expand-lg gray-navbar navbar-light ">
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -133,23 +133,23 @@ try {
 		<p class=" fw-bold purple-text">Vende-se Item Sozinho?</p>
 		<div class="w-25 mb-4" id="itemsozinho-form">
 			<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="true" checked>
-			<label class="form-check-label" for="inlineCheckbox2">Não</label>
+			<input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="false" checked>
+			<label class="form-check-label" for="inlineCheckbox2">Sim</label>
 			</div>
 			<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="false" >
-			<label class="form-check-label" for="inlineCheckbox1">Sim</label>
+			<input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="true" >
+			<label class="form-check-label" for="inlineCheckbox1">Não</label>
 			</div>
 		</div>
 
 		
 		<div class="container mb-5" id="complement-section">
     <p class="h5 fw-bold">Acompanhamento</p>
-      <button class="btn btn-custom text-left">+ Novo Complemento</button>
+      <button class="btn btn-custom text-left" id="novoComplementoBtn">+ Novo Complemento</button>
 			<div class="complement-section">
 				<div class="complement-header mb-0">
 					<p class="fw-bold m-0">Bebida</p>
-					<button class="btn btn-custom">+ Nova Opção</button>
+					<button class="btn btn-custom modal_event">+ Nova Opção</button>
 				</div>
 				<hr class="mt-0">
 				<ul class="list-unstyled">
@@ -164,7 +164,7 @@ try {
 			<div class="complement-section">
 				<div class="complement-header mb-0">
           <p class="fw-bold m-0">Acompanhamento</p>
-					<button class="btn btn-custom">+ Nova Opção</button>
+					<button class="btn btn-custom modal_event">+ Nova Opção</button>
 				</div>
 
 				<hr class="mt-0">
@@ -197,7 +197,7 @@ try {
     <div class="section-title">
     <p class="h5 fw-bold ">Hamburguer</p>
     </div>
-    <button type="button" class="btn btn-custom">+ Nova Opção</button>
+    <button type="button" class="btn btn-custom modal_event" >+ Nova Opção</button>
     <hr>
     <div class="option-list">
       <div class="option-row">
@@ -236,7 +236,7 @@ try {
   </div>
 	
 	<div class="my-3">
-		<p class="m fw-bold purple-text ">Artigo Disponível?</p>
+		<p class="fw-bold purple-text ">Artigo Disponível?</p>
 		<div class="w-25 mb-5">
 			<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" id="inlineRadio2" name="disponivel" value="true" checked>
@@ -248,13 +248,20 @@ try {
 			</div>
 		</div>
 	</div>
-		
 	<button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
-		
-		
-      </form>
-    </div>
+  </form>
+</div>
   
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p class="fw-bold mt-1 mb-2" id="modal-text">a culpa é do richard</p>
+    <input type="text" id="novoItemInput" placeholder="Digite o novo item">
+    <button id="adicionarBtn">Adicionar</button>
+  </div>
+</div>
+
   <!--Zona do Footer -->
   <?php include __DIR__."/includes/footer_2.php"; ?>
   <script src="./assets/js/adicionar_pedido.js"></script>
