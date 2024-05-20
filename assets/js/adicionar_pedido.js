@@ -42,7 +42,6 @@ let dableAcompanhamento = new Dable();
 const form = document.querySelector("#dataForm");
 
 form.submit = () => console.log("hi");
-
 // colunas das tabelas
 let columns = [ 'Nome','' ];
 // Bebidas, não alterem este array, usem dable.AddRow ou dable.RemoveRow para alterarem os dados
