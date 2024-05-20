@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/*https://www.youtube.com/watch?v=q1xhbc-oKnc*/
+
+.toast-body {
+    height: 30vh;
+    display: flex;
+    flex-direction: column; /* a */
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #ffd195, #ffb288);
+    
+}
+
+.rating-box {
+    position: relative;
+    background: white;
+    padding: 1vh 2vw 2vh;
+    border-radius: 1vw;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    margin-bottom: 1vh;
+}
+
+.rating-box header {
+    font-size: 1vw;
+    color: #000000;
+    margin-bottom: 1vh;
+    text-align: center;
+}
+
+.rating-box .stars {
+    display: flex;
+    align-items: center;
+    gap: 1.1vw;
+}
+
+.stars i {
+    color: #e6e6e6;
+    font-size: 1.4vw;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.stars i.active {
+    color: #ffd11a;
+}

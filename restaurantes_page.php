@@ -44,7 +44,7 @@ $offset = ($pagAtual - 1) * $itemPorPagina;
 
 try {
     $query = "SELECT est.id_estabelecimento, est.nome, est.localizacao, est.telemovel, 
-          est.taxa_entrega, est.tempo_medio_entrega, est.logotipo, emp.nome AS empresa,
+          est.taxa_entrega, est.tempo_medio_entrega, est.imagem, emp.nome AS empresa,
           COALESCE ((select sum(classificacao)/count(classificacao) from avaliacoes where avaliacoes.id_estabelecimento=est.id_estabelecimento),0) as avaliacao
           FROM estabelecimentos AS est
           INNER JOIN empresas AS emp ON emp.id_empresa = est.id_empresa";
@@ -105,7 +105,7 @@ try {
 			echo "
 			<div class='col grid_restaurantes_btn'>
 			<div class='card shadow-sm' id='" . $row['nome'] . "'>
-				<img src='./assets/stock_imgs/" . $row['logotipo'] . "' class='card-img-top' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
+				<img src='./assets/stock_imgs/" . $row['imagem'] . "' class='card-img-top' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
 				<div class='card-body'>
 					<div class='justify-content-between align-items-center'>
 						<h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>

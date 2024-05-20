@@ -5,62 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="../assets/styles/sitecss.css">
+  <!-- <link rel="stylesheet" href="../assets/styles/sitecss.css"> -->
+  <link rel="stylesheet" href="./assets/styles/team_page.css">
   <title>FoodDash</title>
-  <style>
-    .content_our_story {
-      width: 80vw;
-      position: relative;
-      top: 4vw;
-      left: 10vw;
-    }
 
-    .fooddash_logo {
-      position: absolute;
-      right: 0;
-      width: 17.5vw;
-      height: auto;
-    }
-
-    .conteudo {
-      display: flex;
-      align-items: center;
-    }
-
-    .team_photo {
-      width: 47vw;
-      border-radius: 1vw;
-    }
-
-    .texto {
-      width: 25vw;
-      flex: 1;
-    }
-
-    .table_content {
-      width: 30vw;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    td,
-    th {
-      border: 1px solid #ddd;
-      padding: 0.2vw;
-    }
-
-    tr:nth-child(even) {
-      background-color: #ECEBEB;
-    }
-
-    tr:not(:first-child):hover {
-      background-color: #fbb753;
-      color: white;
-    }
-  </style>
 </head>
 
 <body>

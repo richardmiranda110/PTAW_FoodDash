@@ -1,0 +1,59 @@
+.content_our_story {
+    width: 80vw;
+    position: relative;
+    top: 4vw;
+    left: 10vw;
+}
+
+.fooddash_logo {
+    position: absolute;
+    right: 0;
+    width: 17.5vw;
+    height: auto;
+}
+
+.conteudo {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.team_photo {
+    width: 47vw;
+    border-radius: 1vw;
+}
+
+@media screen and (max-width: 950px) {
+    .conteudo {
+      flex-direction: column;
+    }
+}
+
+.texto {
+    width: 25vw;
+    flex: 1;
+}
+
+.table_content {
+    width: 30vw;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 0.2vw;
+}
+
+tr:nth-child(even) {
+    background-color: #ECEBEB;
+}
+
+tr:not(:first-child):hover {
+    background-color: #fbb753;
+    color: white;
+}
