@@ -1,0 +1,12 @@
+
+.gray-navbar::after{
+    content: '';
+    position: absolute;
+    margin: 0;
+    bottom: 0.9vh; 
+    left: 0;
+    width: 95%;
+    border-bottom: 1vh solid #8E8E8E;
+    z-index: -1;
+}
+

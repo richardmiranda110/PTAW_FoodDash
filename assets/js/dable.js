@@ -16,7 +16,7 @@
 				columnData: [],
 				pageNumber: 0,
 				pageSize: 10,
-				pageSizes: [10, 25, 50, 100],
+				pageSizes: [5, 10, 15, 20],
 				pagerSize: 0,
 				pagerIncludeFirstAndLast: false,
 				async: false,
@@ -644,6 +644,9 @@
 						else if (style.toLowerCase() == 'bootstrap') {
 							$export.ApplyBootstrapStyles(tableDiv);
 						}
+						else if (style.toLowerCase() == 'culpadorichard') {
+							$export.ApplyFoodDashStyles(tableDiv);
+						}
 					}
 				}
 			};
@@ -711,16 +714,7 @@
 					table.setAttribute('class', $export.tableClass);
 				}
 				
-				var oddRows = tableDiv.querySelectorAll('.' + $export.oddRowClass);
-				for (var i = 0; i < oddRows.length; ++i) {
-					oddRows[i].setAttribute('style', 'background-color: ' +
-						$export.oddRowColor);
-				}
-				var evenRows = tableDiv.querySelectorAll('.' + $export.evenRowClass);
-				for (var i = 0; i < evenRows.length; ++i) {
-					evenRows[i].setAttribute('style', 'background-color: ' +
-						$export.evenRowColor);
-				}
+			
 				var cells = tableDiv.querySelectorAll('tbody td');
 				for (var i = 0; i < cells.length; ++i) {
 					cells[i].setAttribute('style', 'padding: 5px;');
@@ -728,7 +722,7 @@
 
 				var headCells = tableDiv.querySelectorAll('th');
 				for (var i = 0; i < headCells.length; ++i) {
-					headCells[i].setAttribute('style', 'padding: 5px;');
+					headCells[i].setAttribute('style', 'padding: 5px;font-weight:bold;border-bottom:1px solid');
 					var headCellLeft = headCells[i].children[0];
 					headCellLeft.setAttribute('style', 'float: left');
 					if ($export.columnData[i].CustomSortFunc !== false) {
@@ -736,13 +730,7 @@
 						headCellRight.setAttribute('style', 'float: right');
 						var headCellClear = headCells[i].children[2];
 						headCellClear.setAttribute('style', 'clear: both;');
-						
-						headCells[i].onmouseover = function () {
-							this.setAttribute('style', 'padding: 5px; cursor: pointer');
-						};
-						headCells[i].onmouseout = function () {
-							this.setAttribute('style', 'padding: 5px; cursor: default');
-						};
+
 					}
 					else {
 						var headCellClear = headCells[i].children[1];
@@ -780,6 +768,92 @@
 						'display: inline; margin-right: 5px;');
 				}
 			}
+
+			$export.ApplyFoodDashStyles = function (tableDiv) {
+				if (!tableDiv) {
+					return false;
+				}
+				var div = document.createElement('div');
+				var span = document.createElement('span');
+				var header = tableDiv.querySelector('#' + $export.id + '_header');
+				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
+				var table = tableDiv.querySelector('table');
+				table.setAttribute('class', ' ');
+				table.setAttribute('style', 'width: 95%; margin-bottom: 0;');
+				header.setAttribute('class', 'panel-heading');
+				footer.setAttribute('class', 'panel-footer');
+				tableDiv.setAttribute('class', 'panel panel-info');
+				tableDiv.setAttribute('style', 'margin-bottom: 0;');
+
+				var tableHeads = table.querySelectorAll('thead tr');
+				for (var i = 0; i < tableHeads.length; ++i) {    //remove manual striping
+					tableHeads[i].removeAttribute('style');
+				}
+
+				var headCells = table.querySelectorAll('th');
+				for (var i = 0; i < headCells.length; ++i) {
+					var sort = headCells[i].querySelector('.' + $export.sortClass);
+					if (sort) {
+						if (sort.innerText.charCodeAt(0) == 9660) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-down');
+						}
+						else if (sort.innerText.charCodeAt(0) == 9650) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-up');
+						}
+						sort.innerHTML = '';
+					}
+				}
+
+				var pageClass = 'btn btn-default ' + $export.pagerButtonsClass;
+				var pageLeft = footer.querySelector('#' + $export.id + '_page_prev');
+				var pageRight = footer.querySelector('#' + $export.id + '_page_next');
+				var pageParent = pageLeft.parentElement;
+				
+				var pagerItems = footer.querySelectorAll('li');
+				for (var i = 0; i < pagerItems.length; ++i) {
+					RemoveStyle(pagerItems[i]);
+				}
+				
+				pageParent.setAttribute('class', 'btn-group');
+
+				pageLeft.innerHTML = '';
+				var pageLeftSpan = span.cloneNode(false);
+				pageLeftSpan.setAttribute('class', 'glyphicon glyphicon-arrow-left');
+				pageLeft.appendChild(pageLeftSpan);
+				
+				pageRight.innerHTML = '';
+				var pageRightSpan = span.cloneNode(false);
+				pageRightSpan.setAttribute('class', 'glyphicon glyphicon-arrow-right');
+				pageRight.appendChild(pageRightSpan);
+
+				if ($export.pagerIncludeFirstAndLast) {
+					var pageFirst = footer.querySelector('#' + $export.id +
+						'_page_first');
+					var pageLast = footer.querySelector('#' + $export.id +
+						'_page_last');
+					pageFirst.innerHTML = '';
+					var pageFirstSpan = span.cloneNode(false);
+					pageFirstSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-backward');
+					pageFirst.appendChild(pageFirstSpan);
+					pageLast.innerHTML = '';
+					var pageLastSpan = span.cloneNode(false);
+					pageLastSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-forward');
+					pageLast.appendChild(pageLastSpan);
+				}
+
+				var pageButtons = footer.querySelectorAll('.' +
+					$export.pagerButtonsClass);
+				for (var i = 0; i < pageButtons.length; ++i) {
+						pageButtons[i].setAttribute('class', pageClass);
+				}
+			};
+
 			$export.ApplyJqueryUIStyles = function (tableDiv) {
 				if (!tableDiv) {
 					return false;
@@ -1150,7 +1224,8 @@
 
 				var right = div.cloneNode(false);
 				var search = span.cloneNode(false);
-				search.innerHTML = 'Search ';
+				search.innerHTML = 'Procurar: ';
+				input.placeholder ="Termo";
 				right.appendChild(search);
 				var inputSearch = input.cloneNode(false);
 				inputSearch.setAttribute('id', $export.id + '_search');

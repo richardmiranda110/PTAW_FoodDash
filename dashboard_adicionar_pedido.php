@@ -38,24 +38,7 @@ session_start();
     <!--Zona de Conteudo da Página -->
     <div id="contentDiv" class="col-md-12">
 
-    <nav style="font-size:1.4rem; z-index: 1;" class="navbar navbar-expand-lg gray-navbar navbar-light ">
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link nav" href="#">Overview</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link nav" href="#">Menus</a>
-            </li>
-            <li class="nav-item"> <!-- não me digas nada sobre o style, o css não gosta dele -->
-                <a class="nav-link nav " href="#">Categorias</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link nav" style="border-bottom: 1vh solid black;" href="#">Itens</a>
-            </li>
-        </ul>
-  </div>
-  </nav>
+    <?php include __DIR__."../includes/navbar_business.php"; ?>
     
 <?php
 /*

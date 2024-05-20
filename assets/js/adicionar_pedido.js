@@ -117,10 +117,10 @@ window.onclick = event => {
 function configurarDable(dable,containerElement,rowArray,columnArray){
   // Configura tabelas Dable para bebida
   dable.SetDataAsRows(rowArray);
-  dable.style = 'bootstrap';	//set the style
+  dable.style = 'CulpaDoRichard';	//set the style
   dable.SetColumnNames(columnArray);
   dable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button type="button" id="'+containerElement+'" class="deleteRow" data-rownumber="' + rowNumber + '">✕</button>';
+    return '<button type="button" id="'+containerElement+'" class="deleteRow" style="background:white;" data-rownumber="' + rowNumber + '">✕</button>';
   };
   dable.BuildAll(containerElement);
 }

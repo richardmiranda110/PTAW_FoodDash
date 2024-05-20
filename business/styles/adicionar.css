@@ -54,8 +54,9 @@ border-radius: 10px;
   .btn-custom {
     background-color: black;
     color: white;
-    border-radius: 20px;
-    padding: 5px 15px;
+    border-radius: 15px;
+    margin-bottom: 1px;
+    padding: 3px 15px;
     border: none;
   }
   .btn-custom:hover {
