@@ -47,10 +47,10 @@ session_start();
                 <a class="nav-link nav" href="#">Menus</a>
             </li>
             <li class="nav-item"> <!-- não me digas nada sobre o style, o css não gosta dele -->
-                <a class="nav-link nav " style="border-bottom: 1vh solid black;" href="#">Categorias</a>
+                <a class="nav-link nav " href="#">Categorias</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav" href="#">Contato</a>
+                <a class="nav-link nav" style="border-bottom: 1vh solid black;" href="#">Itens</a>
             </li>
         </ul>
   </div>
