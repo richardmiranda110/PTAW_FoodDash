@@ -21,12 +21,22 @@ $pdo = new PDO(
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
-    $utilizador = ObterUmUtilizador($pdo, 4); // ALTERAR O ID
+    $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR O ID
 }
 
 // Enviando dados para a BD, ao editar dados de um determinado utilizador
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Sanitize and trim user input
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $Validacao = True;
+
+    // Verificar que os campos obrigatórios estão preenchidos
+    // Campo Email
+    if (empty($_POST['email'])) {
+        $ErroEmail = "Preenchimento obrigatório";
+        $Validacao = False;
+    }
+
+    // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
+    // retirar carateres perigosos
     $utilizadorModificado = array(
         'nome' => htmlentities(trim($_POST['nome'])),
         'apelido' => htmlentities(trim($_POST['apelido'])),
@@ -38,20 +48,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'CodPostal' => htmlentities(trim($_POST['CodPostal']))
     );
 
-    // Editar o usuário no banco de dados
-    if (EditarUtilizador($pdo, 4, $utilizadorModificado)) {
-        $utilizador = ObterUmUtilizador($pdo, 4);
-        echo "<script>
+    // Verificar que os campos numéricos apenas contêm números
+    // Telemovel
+    if ((!empty($_POST['Telemovel'])) && (!is_numeric($utilizador['Telemovel']))) {
+        $ErroTelemovel = "Apenas pode conter números";
+        $Validacao = False;
+    }
+
+    // Se não ocorreram erros de validação, atualizar o produto
+    if ($Validacao == true) {
+        // Editar o usuário no banco de dados
+        if (EditarUtilizador($pdo, 1, $utilizadorModificado)) { // ALTERAR ID
+            $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR ID
+            echo "<script>
             $(document).ready(function(){
                 $('#modal_sucesso').modal('show');
             });
         </script>";
-    } else {
-        echo "<script>
+        } else {
+            echo "<script>
             $(document).ready(function(){
                 $('#modal_erro').modal('show');
             });
         </script>";
+        }
     }
 }
 ?>
@@ -67,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="./assets/styles/dashboard_beatriz.css">
     <link rel="stylesheet" href="./assets/styles/sitecss.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
@@ -134,7 +155,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="card-body">
 
                         <p class="cinzento" style="padding:5px">Informação do Utilizador</p>
+
+                        <!-- Informação da existência de campos obrigatórios -->
+                        <div class="alert" role="alert">
+                            <i class="fas fa-info-circle" style="font-size:24px"></i>
+                            <strong>Campos marcados com <span style='color:#ff0000'>*</span> são obrigatórios</strong>
+                        </div>
                         <div class="esquerdo" style="padding:5px">
+                            <!-- Nome -->
                             <span>Primeiro Nome</span>
                             <div class="input-group flex-nowrap">
                                 <input name="nome" readonly type="text" class="form-control" placeholder="Primeiro Nome"
@@ -142,14 +170,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         echo $utilizador['nome']; ?>">
                             </div>
                             <br>
-                            <span>Email</span>
-                            <div class="input-group flex-nowrap">
+
+                            <!-- Email -->
+                            <span>Email<span style='color:#ff0000'> *</span></span>
+                            <div class="input-group flex-nowrap <?php if (!empty($ErroEmail)) { ?>has-error<?php } ?>">
                                 <input name="email" readonly type="text" class="form-control" placeholder="Email"
                                     aria-label="Email" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['email']))
                                         echo $utilizador['email']; ?>">
+                                <br>
+                                <?php if (!empty($ErroEmail)) { ?>
+                                    <span class="help-inline small" style="color:#ff0000"><?php echo $ErroEmail; ?></span>
+                                <?php } ?>
                             </div>
                         </div>
                         <div class="direito" style="padding:5px">
+                            <!-- Apelido -->
                             <span>Apelido</span>
                             <div class="input-group flex-nowrap">
                                 <input name="apelido" readonly type="text" class="form-control" placeholder="Apelido"
@@ -157,7 +192,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         echo $utilizador['apelido']; ?>">
                             </div>
                             <br>
-                            <span>Nº de Telemóvel</span>
+                            <!-- Telemóvel -->
+                            <span>Telemóvel</span>
                             <div class="input-group flex-nowrap">
                                 <input name="telemovel" readonly type="text" class="form-control"
                                     placeholder="Telemóvel" aria-label="Telemovel" aria-describedby="addon-wrapping"
@@ -169,6 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         &emsp;
                         <hr>&emsp;
 
+                        <!-- Morada -->
                         <p class="cinzento">Morada</p>
                         <span>Morada</span>
                         <div class="input-group flex-nowrap">
@@ -180,6 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="col-md-12 esquerdo">
+                                    <!-- Cidade -->
                                     <span>Cidade</span>
                                     <div class="input-group flex-nowrap">
                                         <input name="cidade" readonly type="text" class="form-control"
@@ -192,6 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                             <div class="col-md-4">
                                 <div class="col-md-12">
+                                    <!-- País -->
                                     <span>País</span>
                                     <div class="input-group flex-nowrap">
                                         <input name="pais" readonly type="text" class="form-control" placeholder="País"
@@ -203,6 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                             <div class="col-md-4">
                                 <div class="col-md-12">
+                                    <!-- Código Postal -->
                                     <span>Código-Postal</span>
                                     <div class="input-group flex-nowrap">
                                         <input name="CodPostal" readonly type="text" class="form-control"
@@ -213,7 +253,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -234,6 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             var btnEditar = document.getElementById("btn_editar");
             var inputs = document.querySelectorAll(".form-control");
             var form = document.querySelector(".form_editar");
+            var validacao = <?php echo json_encode($Validacao); ?>;
 
             // Adiciona evento de clique ao botão
             btnEditar.addEventListener("click", function () {
@@ -251,15 +291,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 // Alterar para modo de leitura
                 else {
-                    btnEditar.innerHTML = "Editar";
-                    btnEditar.setAttribute("type", "submit");
-                    btnEditar.classList.remove("btn-success");
-                    btnEditar.classList.add("btn-warning");
-                    inputs.forEach(function (input) {
-                        input.setAttribute("readonly", "readonly");
-                    });
-                    form.method = 'POST';
-                    form.setAttribute("action", "perfil.php");
+                    // se não houver erros no formulário, mudar para modo de leitura
+                    if (validacao == true) {
+                        btnEditar.innerHTML = "Editar";
+                        btnEditar.setAttribute("type", "submit");
+                        btnEditar.classList.remove("btn-success");
+                        btnEditar.classList.add("btn-warning");
+                        inputs.forEach(function (input) {
+                            input.setAttribute("readonly", "readonly");
+                        });
+                        form.method = 'POST';
+                        form.setAttribute("action", "perfil.php");
+                    }
                 }
             });
         });
