@@ -104,6 +104,41 @@ INSERT INTO Pedido_Item_Opcoes (id_pedido_item, id_opcao, quantidade) VALUES
 (7, 7, 0),
 (7, 7, 1);
 
+INSERT INTO Avaliacoes (classificacao, descricao, id_cliente, id_estabelecimento) VALUES 
+(5, 'Excelente serviço e comida deliciosa.', 1, 1),
+(4, 'Ambiente agradável e atendimento bom.', 2, 1),
+(3, 'Comida boa, mas o atendimento pode melhorar.', 3, 1),
+(4, 'O local é bonito. A comida estava fria.', 1, 2),
+(1, 'Experiência decepcionante, não recomendo.', 2, 2),
+(5, 'Gostei do lugar, voltarei com certeza!', 3, 2),
+(5, 'Bom custo-benefício e atendimento rápido.', 1, 3),
+(3, 'Comida ok, nada de especial.', 2, 3),
+(3, 'Esperava mais pelo preço cobrado.', 3, 3),
+(2, 'Não gostei.', 1, 4),
+(5, 'Uma experiência incrível! A comida estava divina e o serviço impecável. Recomendo a todos!', 2, 4),
+(5, 'Ambiente aconchegante e atendimento muito bom. Uma noite para lembrar!', 3, 4),
+(3, 'A comida era boa, mas o atendimento deixou a desejar. Pode melhorar.', 1, 5),
+(3, 'O lugar é lindo, mas a comida estava fria. Fiquei desapontada.', 2, 5),
+(1, 'Que decepção! O serviço foi péssimo e a comida não estava boa. Não recomendo.', 3, 5),
+(5, 'Simplesmente maravilhoso! Adorei cada detalhe e com certeza voltarei!', 1, 6),
+(4, 'A comida estava decente.', 2, 6),
+(5, 'Ótimo custo-benefício e o atendimento foi rápido e eficiente. Vale a pena!', 3, 6),
+(2, 'Esperava mais pelo preço que paguei. Foi um pouco decepcionante.', 1, 7),
+(1, 'Mau serviço e comida abaixo do esperado.', 2, 7),
+(4, 'Ótimo custo-benefício.', 3, 7),
+(5, 'Uma experiência fantástica! A comida estava sublime e o serviço foi impecável.', 1, 8),
+(5, 'Ambiente acolhedor e atendimento excelente. Uma noite inesquecível!', 2, 8),
+(5, 'Simplesmente maravilhoso! Amei cada pormenor e vou voltar com certeza!', 3, 8),
+(5, 'Ótima relação qualidade-preço e o atendimento foi rápido e eficiente.', 1, 9),
+(4, 'A comida estava aceitável, nada de especial, mas o ambiente era agradável.', 2, 9),
+(5, 'Uma noite perfeita, desde a entrada até à sobremesa. Parabéns ao chef!', 3, 9),
+(5, 'O atendimento foi impecável e a comida deliciosa.', 1, 10),
+(3, 'O ambiente é ótimo, mas a comida não me impressionou. Há opções melhores.', 2, 10),
+(4, 'Fiquei satisfeito com a comida.', 3, 10),
+(4, 'A comida estava excelente, mas o serviço foi um pouco lento. Precisa de melhorias.', 1, 11),
+(5, 'Gostei do ambiente e a comida estava deliciosa. Vou recomendar aos meus amigos!', 2, 11),
+(4, 'Serviço amigável e comida saborosa. Uma boa escolha para um jantar descontraído.', 3, 11);
+
 
 
 

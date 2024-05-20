@@ -28,16 +28,16 @@ CREATE TABLE IF NOT EXISTS ACTION_LOGGER
     ACTION_DATE TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tabela AvaliacaoItem
+/* -- Tabela AvaliacaoItem
 CREATE TABLE IF NOT EXISTS AvaliacoesItens (
     id_avaliacaoItem SERIAL PRIMARY KEY,
-    classificacao INTEGER,
+    classificacao INTEGER CHECK (classificacao BETWEEN 1 AND 5),
     autor VARCHAR(100) DEFAULT 'anonymous',
     data DATE DEFAULT NOW(),
     descricao TEXT,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
     id_item INTEGER NOT NULL
-);
+); */
 
 -- Tabela Empresa
 CREATE TABLE IF NOT EXISTS Empresas (
@@ -127,13 +127,12 @@ CREATE TABLE IF NOT EXISTS Menus (
     ON DELETE CASCADE NOT NULL
 ); */
 
-
 -- Tabela Avaliacao
 CREATE TABLE IF NOT EXISTS Avaliacoes (
     id_avaliacao SERIAL PRIMARY KEY,
-    classificacao INTEGER,
-    autor VARCHAR(100),
-    data DATE,
+    classificacao INTEGER CHECK (classificacao BETWEEN 1 AND 5),
+    /* autor VARCHAR(100), */
+    data DATE DEFAULT NOW(),
     descricao TEXT,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
     id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
@@ -171,6 +170,30 @@ CREATE TABLE IF NOT EXISTS Item_Menus (
     ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (id_item, id_menu)
 ); */
+
+-- trigger para verificar se já existe uma avaliação do mesmo cliente para o mesmo estabelecimento, porque um cliente só pode avaliar um estabelecimento uma vez
+CREATE OR REPLACE FUNCTION verificar_avaliacao_duplicada()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM Avaliacoes 
+        WHERE id_cliente = NEW.id_cliente 
+          AND id_estabelecimento = NEW.id_estabelecimento
+    ) THEN
+        RAISE EXCEPTION 'Cliente já avaliou este estabelecimento.';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_verificar_avaliacao_duplicada
+BEFORE INSERT ON Avaliacoes
+FOR EACH ROW
+EXECUTE FUNCTION verificar_avaliacao_duplicada();
+
+
 
 
 /* -- TRIGGERS
