@@ -86,10 +86,10 @@ CREATE TABLE IF NOT EXISTS Categorias (
 -- Tabela Item
 CREATE TABLE IF NOT EXISTS Itens (
     id_item SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
+    nome VARCHAR(40) NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
     descricao TEXT,
-    disponivel BOOLEAN NOT NULL,
+    disponivel BOOLEAN NOT NULL DEFAULT TRUE,
     foto VARCHAR(255),
     itemSozinho BOOLEAN DEFAULT FALSE,
     personalizacoesAtivas BOOLEAN DEFAULT FALSE,
@@ -97,6 +97,27 @@ CREATE TABLE IF NOT EXISTS Itens (
     id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
 );
 
+ -- Tabela Menu
+CREATE TABLE IF NOT EXISTS Menus (
+    id_menu SERIAL PRIMARY KEY,
+    nome VARCHAR(40) NOT NULL,
+    preco REAL NOT NULL,
+    descricao VARCHAR(100) DEFAULT 'Nenhuma descrição.',
+    disponivel boolean DEFAULT TRUE,
+    foto VARCHAR(255),
+    id_estabelecimento INTEGER
+    REFERENCES Estabelecimentos(id)
+    ON DELETE CASCADE NOT NULL
+); 
+
+-- Tabela Item Menus
+CREATE TABLE IF NOT EXISTS Item_Menus (
+    id_item INTEGER REFERENCES Itens(id_item)
+    ON DELETE CASCADE NOT NULL,
+    id_menu INTEGER REFERENCES Menus(id_menu) 
+    ON DELETE CASCADE NOT NULL,
+    PRIMARY KEY (id_item, id_menu)
+);
 
 /*-- Tabela Personalizacao
 CREATE TABLE IF NOT EXISTS Personalizacoes (
@@ -116,9 +137,9 @@ CREATE TABLE IF NOT EXISTS Opcoes (
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL
 );
 
-/* -- Tabela Menu/Cardápio
-CREATE TABLE IF NOT EXISTS Menus (
-    id_menu SERIAL PRIMARY KEY,
+/* -- Tabela HoraCardápio
+CREATE TABLE IF NOT EXISTS HoraCardapio (
+    id_hora_cardapio SERIAL PRIMARY KEY,
     nome VARCHAR(100),
     horarioInicial TIME,
     horarioFinal TIME,
@@ -162,6 +183,15 @@ CREATE TABLE IF NOT EXISTS Item_Categorias (
     PRIMARY KEY (id_item, id_categoria)
 );
 
+-- Tabela Item Menus Opções
+CREATE TABLE IF NOT EXISTS Item_Menus_Opcoes (
+    id_opcao_menu SERIAL PRIMARY KEY,
+    id_menu_item INTEGER REFERENCES Item_Menus(id_item_menu) ON DELETE CASCADE NOT NULL,
+    id_opcao INTEGER REFERENCES Opcoes(id_opcao) ON DELETE CASCADE,
+    quantidade INTEGER DEFAULT 1
+);
+
+
 /* -- Tabela Item_Menu
 CREATE TABLE IF NOT EXISTS Item_Menus (
     id_item INTEGER REFERENCES Itens(id_item)
@@ -192,8 +222,6 @@ CREATE TRIGGER trigger_verificar_avaliacao_duplicada
 BEFORE INSERT ON Avaliacoes
 FOR EACH ROW
 EXECUTE FUNCTION verificar_avaliacao_duplicada();
-
-
 
 
 /* -- TRIGGERS
