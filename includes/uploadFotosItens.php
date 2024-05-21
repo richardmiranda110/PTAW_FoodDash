@@ -3,7 +3,7 @@ require_once 'database/credentials.php';
 require_once 'database/db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $target_dir = "/home/ptaw-2024-gr2/public_html/assets/stock_imgs/";
+    $target_dir = ".";
     $imageFileType = strtolower(pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION));
     $timestamp = time();
     $target_file = $target_dir . $timestamp . '_' . basename($_FILES["foto"]["name"]);
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
             echo "<br><div class='alert alert-success' role='alert'> O item " . htmlspecialchars(basename($_FILES["foto"]["name"])) . " foi carregado.</div>";
-
+            echo "<script>alert(1)</script>";   
         } else {
             echo "<br><div class='alert alert-danger' role='alert'> Ocorreu um erro a carregar o ficheiro.</div>";
         }

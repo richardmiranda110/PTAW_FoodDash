@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS Menus (
     disponivel boolean DEFAULT TRUE,
     foto VARCHAR(255),
     id_estabelecimento INTEGER
-    REFERENCES Estabelecimentos(id)
+    REFERENCES Estabelecimentos(id_estabelecimento)
     ON DELETE CASCADE NOT NULL
 ); 
 
@@ -191,15 +191,14 @@ CREATE TABLE IF NOT EXISTS Item_Menus_Opcoes (
     quantidade INTEGER DEFAULT 1
 );
 
-
-/* -- Tabela Item_Menu
+ -- Tabela Item_Menu
 CREATE TABLE IF NOT EXISTS Item_Menus (
+    id_item_menu SERIAL PRIMARY KEY,
     id_item INTEGER REFERENCES Itens(id_item)
     ON DELETE CASCADE NOT NULL,
     id_menu INTEGER REFERENCES Menus(id_menu) 
     ON DELETE CASCADE NOT NULL,
-    PRIMARY KEY (id_item, id_menu)
-); */
+);
 
 -- trigger para verificar se já existe uma avaliação do mesmo cliente para o mesmo estabelecimento, porque um cliente só pode avaliar um estabelecimento uma vez
 CREATE OR REPLACE FUNCTION verificar_avaliacao_duplicada()
