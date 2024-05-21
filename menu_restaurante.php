@@ -170,6 +170,7 @@
       <div class="accordion p-3" id="listProds" style="width: 82.3vw;">
         <?php
         try {
+          $dados = [];
           foreach ($categorias as $categoria) {
             $fCategoria = htmlspecialchars($categoria['nome']);
 
@@ -195,15 +196,18 @@
 
             echo "<div id='collapse" . $idCategoria . "' class='accordion-collapse collapse show' aria-labelledby='heading" . $idCategoria . "' data-bs-parent='#listProds'>
               <div class='accordion-body'>";
+              
 
             foreach ($produtos as $rowProd) {
+			 
               $imagemPath = getImagePath($rowProd['foto']);
               $idProd = str_replace(' ', '', htmlspecialchars($rowProd['nome']));
-              echo "<div class='card shadow-sm' id='" . $idProd . "' style='width:18%; margin: 0px 0.5% 1% 0.5%;'>
+              echo "<div>
+                    <div class='card shadow-sm' id='" . $idProd . "' style='width:18%; margin: 0px 0.5% 1% 0.5%;'>
                     <div class='card-body'>
                         <div class='image-overlay' style='position: relative; border-radius: 5.5px; overflow: hidden;'>
                             <img src='" . $imagemPath . "' class='card-img-top' alt='" . $idProd . "' style='border-radius: 5.5px;'>
-                            <div class='icon-overlay' style='position: absolute; bottom: 10px; right: 10px;'>
+                            <div class='icon-overlay' id='liveToastBtn_" .$idProd. "' style='position: absolute; bottom: 10px; right: 10px;'>
                                 <img src='./assets/stock_imgs/mais.png' id='iconAddItem' alt='Ícone de adição' style='width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;'>
                             </div>
                         </div>
@@ -217,12 +221,94 @@
                         </div>
                     </div>
                 </div>";
+                
+                $dados[]  = ['id' => $rowProd['id_item'] , 'trigger' => 'liveToastBtn_'.$idProd, 'toast' => 'liveToast_'.$idProd];
+
+				echo "
+				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
+					<div id='liveToast_" .$idProd. "' class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-bs-autohide='false' style='width: 40vw; max-height: 95vh; overflow-y: auto;'>
+					<div class='toast-header'>
+						<img src='./assets/stock_imgs/burgerKing_marca.png' class='rounded me-2' alt='logotipo' style='width: 1.5vw;'>
+						<strong class='me-auto'>" . htmlspecialchars($rowProd['nome']) . "</strong>
+						<button type='button' class='btn-close' data-bs-dismiss='toast' aria-label='Close'></button>
+					</div>
+					<div class='toast-body'>
+						<div id='txt_item_title_price_description'>
+						<h3>" . htmlspecialchars($rowProd['nome']) . "</h3>
+						<h5>" . $rowProd['preco'] . "€</h5>
+						<p>" . htmlspecialchars($rowProd['descricao']) . "</p>
+						</div>
+						<hr>
+						<div>
+							<h5>Complemento</h5>
+						";
+
+                    $queryComp = "SELECT id_opcao, nome FROM opcoes ";
+                    $stmtComp = $pdo->prepare($queryComp);
+                    $stmtComp->execute();
+                    $complementos = $stmtComp->fetchAll(PDO::FETCH_ASSOC); 
+                 
+                    foreach ($complementos as $rowComp) {
+						echo "<div class='form-check form-check-reverse'>
+								<input class='form-check-input' type='radio' name='complementos' id='complementos' value='".$rowComp['id_opcao']."' checked>
+								<label class='form-check-label d-flex justify-content-start' for='complementos'>".$rowComp['nome']."</label>
+							</div>
+							";
+					}
+    
+					echo "</div>
+						<br>
+						<div>
+						<h5>Bebida</h5>
+						";
+
+					$queryBeb = "select id_opcao, nome from opcoes ";
+
+					$stmtBeb= $pdo->prepare($queryBeb);
+					$stmtBeb->execute();
+					$bebidas = $stmtBeb->fetchAll(PDO::FETCH_ASSOC);
+
+					foreach ($bebidas as $rowBeb) {
+						echo"<div class='form-check form-check-reverse'>
+							<input class='form-check-input' type='radio' name='bebidas' id='bebidas' value='".$rowBeb['id_opcao']."' checked>
+							<label class='form-check-label d-flex justify-content-start' for='bebidas'>".$rowBeb['nome']."</label>
+						</div>
+						";
+					}
+					echo "</div>
+						<br>
+						<div>
+						<h5>Adiciona extras ao teu " . htmlspecialchars($rowProd['nome']) . "</h5>
+						";
+
+					$queryExt = "select * from opcoes ";
+
+					$stmtExt= $pdo->prepare($queryExt);
+					$stmtExt->execute();
+					$extras = $stmtExt->fetchAll(PDO::FETCH_ASSOC);
+
+					foreach ($extras as $rowExt) {
+						echo"<div class='form-check form-check-reverse'>
+								<input class='form-check-input' type='radio' name='extras' id='extras' value='".$rowExt['id_opcao']."' checked>
+								<label class='form-check-label d-flex justify-content-start' for='extras'>".$rowExt['nome']."</label>
+							</div>
+							";
+					}
+					echo "</div>
+						<div class='d-flex justify-content-center mt-2'>
+						<input class='btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho • " . $rowProd['preco'] . "€'>
+						</div>
+					</div>
+					</div>
+				</div>
+				";
             }
 
             echo "  </div>
             </div>
         </div>";
-          }
+            }
+
         } catch (PDOException $e) {
           echo "Erro na conexão: " . $e->getMessage();
         }
@@ -252,6 +338,21 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
   <script>
+
+        <?php foreach ($dados as $dado): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toastTrigger<?php echo $dado['id']; ?> = document.getElementById('<?php echo $dado['trigger']; ?>');
+            const toastLiveExample<?php echo $dado['id']; ?> = document.getElementById('<?php echo $dado['toast']; ?>');
+            
+            if (toastTrigger<?php echo $dado['id']; ?>) {
+                const toastBootstrap<?php echo $dado['id']; ?> = bootstrap.Toast.getOrCreateInstance(toastLiveExample<?php echo $dado['id']; ?>);
+                toastTrigger<?php echo $dado['id']; ?>.addEventListener('click', () => {
+                    toastBootstrap<?php echo $dado['id']; ?>.show();
+                });
+            }
+        });
+        <?php endforeach; ?>
+
     document.querySelector("button#buttonPesquisarRestaurante").addEventListener("click", procurarRestaurante)
 
     function procurarRestaurante() {
@@ -318,81 +419,6 @@
       console.log("Comentário: " + comentario);
 
     }
-
-
-
-
-
-
-    /*     // ISTO É DO SLIDER QUE PROVAVELMENTE NÃO VAMOS USAR MAIS
-      const initSlider = () => {
-        const imageList = document.querySelector(".slider-wrapper .image-list");
-        const slideButtons = document.querySelectorAll(".slider-wrapper .slide-button");
-        const sliderScrollbar = document.querySelector(".container .slider-scrollbar");
-        const scrollbarThumb = sliderScrollbar.querySelector(".scrollbar-thumb");
-        let maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
-
-        scrollbarThumb.addEventListener("mousedown", (e) => {
-          const startX = e.clientX;
-          const thumbPosition = scrollbarThumb.offsetLeft;
-          const maxThumbPosition = sliderScrollbar.getBoundingClientRect().width - scrollbarThumb.offsetWidth;
-
-          const handleMouseMove = (e) => {
-            const deltaX = e.clientX - startX;
-            const newThumbPosition = thumbPosition + deltaX;
-
-            const boundedPosition = Math.max(0, Math.min(maxThumbPosition, newThumbPosition));
-            const scrollPosition = (boundedPosition / maxThumbPosition) * (imageList.scrollWidth - imageList.clientWidth);
-
-            scrollbarThumb.style.left = `${boundedPosition}px`;
-            imageList.scrollLeft = scrollPosition;
-          }
-
-          const handleMouseUp = () => {
-            document.removeEventListener("mousemove", handleMouseMove);
-            document.removeEventListener("mouseup", handleMouseUp);
-          }
-
-          document.addEventListener("mousemove", handleMouseMove);
-          document.addEventListener("mouseup", handleMouseUp);
-        });
-
-        // Slide images according to the slide button clicks
-        slideButtons.forEach(button => {
-          button.addEventListener("click", () => {
-            const direction = button.id === "prev-slide" ? -1 : 1;
-            const scrollAmount = imageList.clientWidth * direction;
-            imageList.scrollBy({
-              left: scrollAmount,
-              behavior: "smooth"
-            });
-          });
-        });
-
-        // Show or hide slide buttons based on scroll position
-        const handleSlideButtons = () => {
-          maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
-          slideButtons[0].style.display = imageList.scrollLeft <= 0 ? "none" : "flex";
-          slideButtons[1].style.display = imageList.scrollLeft >= maxScrollLeft ? "none" : "flex";
-        }
-
-        // Update scrollbar thumb position based on image scroll
-        const updateScrollThumbPosition = () => {
-          maxScrollLeft = imageList.scrollWidth - imageList.clientWidth;
-          const scrollPosition = imageList.scrollLeft;
-          const thumbPosition = (scrollPosition / maxScrollLeft) * (sliderScrollbar.clientWidth - scrollbarThumb.offsetWidth);
-          scrollbarThumb.style.left = `${thumbPosition}px`;
-        }
-
-        // Call these two functions when image list scrolls
-        imageList.addEventListener("scroll", () => {
-          updateScrollThumbPosition();
-          handleSlideButtons();
-        });
-      }
-
-      window.addEventListener("resize", initSlider);
-      window.addEventListener("load", initSlider); */
   </script>
 
   <script src="./assets/js/toast.js"></script>
