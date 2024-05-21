@@ -78,11 +78,7 @@ $idEmpresa = 1;
         </div>
       </div>
       
-      <div class="mb-3">
-            <label for="nome" class="form-label">Preço</label>
-            <input type="number" class="form-control" id="preco" name="preco" placeholder="Digite um número" step="0.01" required>
-          </div>
-		
+
 <?php
 require_once "database/credentials.php";
 require_once "database/db_connection.php";
@@ -113,19 +109,19 @@ try {
 ?>
 		
 	<div class="mb-3">
-		<p class=" fw-bold purple-text">Vende-se Item Sozinho?</p>
+		<p class=" fw-bold purple-text">Menu</p>
 		<div class="w-25 mb-4" id="itemsozinho-form">
 			<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="false" >
+			<input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="true" checked>
 			<label class="form-check-label" for="inlineCheckbox2">Sim</label>
 			</div>
 			<div class="form-check form-check-inline">
-			<input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="true" checked>
+			<input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="false" >
 			<label class="form-check-label" for="inlineCheckbox1">Não</label>
 			</div>
 		</div>
 
-		<div class="container mb-5" id="complement-section">
+		<div class="container mb-3" id="complement-section">
       <p class="h5 fw-bold">Complemento</p>
       <button class="btn btn-custom text-left" id="novoComplementoBtn">+ Novo Complemento</button>
 			<div class="complement-section">
@@ -154,7 +150,7 @@ try {
   </div>
 	
 	<div>
-		<p class="m fw-bold purple-text ">Personalizações Ativas?</p>
+		<p class=" fw-bold purple-text ">Personalizações</p>
 		<div class="w-25" id="personalizacoes-ativas-form">
 			<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" id="inlineRadio2" name="personalizacoesativas" value="true" checked>
@@ -210,9 +206,9 @@ try {
     </div>
   </div>
 	
-	<div class="my-3">
+	<div class="my-3 mt-5">
 		<p class="fw-bold purple-text ">Artigo Disponível?</p>
-		<div class="w-25 mb-5">
+		<div class="w-25 my-3">
 			<div class="form-check form-check-inline">
 			<input class="form-check-input" type="radio" id="inlineRadio2" name="disponivel" value="true" checked>
 			<label class="form-check-label" for="inlineCheckbox2">Sim</label>
@@ -222,9 +218,21 @@ try {
 			<label class="form-check-label" for="inlineCheckbox1">Não</label>
 			</div>
 		</div>
-	</div>
+
+    <div class="">
+</div>
+		
+  <div class="form-group row mb-3">
+    <div class="col-sm-2">
+      <label for="nome" class="form-label purple-text fw-bold">Preço</label>
+      <input type="number" min="0" class="form-control" id="preco" name="preco" placeholder="Digite um número" step="0.10" min="0" required>  
+      </div>
+    </div>
+  </div>
+
 	<button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
 </div>
+
 </form>
   
 <!-- Modal -->
@@ -232,7 +240,7 @@ try {
   <div class="modal-content">
     <span class="close">&times;</span>
     <p class="fw-bold mt-1 mb-2" id="modal-text">a culpa é do richard</p>
-    <input type="text" id="novoItemInput" placeholder="Digite o novo item">
+    <input class="form-control" type="text" class="" id="novoItemInput" placeholder="Digite o novo item">
     <button id="adicionarBtn">Adicionar</button>
   </div>
 </div>
