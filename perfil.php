@@ -81,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="card mb-3">
                         <div class="card-header">
                             <h5 class="esquerdo">A minha conta</h5>
-                            <button id="btn_editar" class="btn btn-warning direito" style="width: auto;"
-                                type="button" value="Editar">Editar</button>
+                            <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
+                                value="Editar">Editar</button>
                         </div>
                         <div class="card-body">
 
@@ -183,60 +183,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-</body>
+    <!--<script src="C:\xampp\htdocs\PTAW_FoodDash\assets\js\perfil.php"></script>-->
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Obtém os elementos
-        var btnEditar = document.getElementById("btn_editar");
-        var inputs = document.querySelectorAll(".form-control");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtém os elementos
+            var btnEditar = document.getElementById("btn_editar");
+            var inputs = document.querySelectorAll(".form-control");
+            var form = document.querySelector(".form_editar");
 
-        // Adiciona evento de clique ao botão
-        btnEditar.addEventListener("click", function () {
-            // Alterar para modo de edição
-            if (btnEditar.innerHTML == "Editar") {
-                btnEditar.innerHTML = "Guardar";
-                btnEditar.setAttribute("type", "submit");
-                btnEditar.style.backgroundColor = "green";
-                btnEditar.style.color = "white";
-                inputs.forEach(function (input) {
-                    input.removeAttribute("readonly");
-                });
+            // Adiciona evento de clique ao botão
+            btnEditar.addEventListener("click", function () {
+                // Alterar para modo de edição
+                if (btnEditar.innerHTML == "Editar") {
+                    btnEditar.innerHTML = "Guardar";
+                    //btnEditar.setAttribute("type", "submit");
+                    btnEditar.style.backgroundColor = "green";
+                    btnEditar.style.color = "white";
+                    inputs.forEach(function (input) {
+                        input.removeAttribute("readonly");
+                    });
+                }
+                // Alterar para modo de leitura
+                else {
+                    btnEditar.innerHTML = "Editar";
+                    btnEditar.setAttribute("type", "button");
+                    btnEditar.style.backgroundColor = "#FEBB41";
+                    btnEditar.style.color = "black";
+                    inputs.forEach(function (input) {
+                        input.setAttribute("readonly", "readonly");
+                    });
+                }
+            });
+
+
+            // Função para exibir mensagem de pop-up
+            /*function exibirMensagem(mensagem) {
+                alert(mensagem);
             }
-            // Alterar para modo de leitura
-            else {
-                btnEditar.innerHTML = "Editar";
-                btnEditar.setAttribute("type", "button");
-                btnEditar.style.backgroundColor = "#FEBB41";
-                btnEditar.style.color = "black";
-                inputs.forEach(function (input) {
-                    input.setAttribute("readonly", "readonly");
-                });
-            }
+    
+            // Submeter o formulário
+            document.getElementById("form_editar").addEventListener("submit", function (event) {
+                event.preventDefault(); // Impede o envio padrão do formulário
+    
+                // Realizar a submissão dos dados via AJAX ou fetch
+    
+                // Simular uma mensagem de sucesso ou erro
+                var sucesso = true; // Altere para false para simular um erro
+    
+                if (sucesso) {
+                    exibirMensagem("Dados alterados com sucesso!");
+                } else {
+                    exibirMensagem("Ocorreu um erro ao alterar os dados. Por favor, tente novamente.");
+                }
+            });*/
         });
-
-
-        // Função para exibir mensagem de pop-up
-        /*function exibirMensagem(mensagem) {
-            alert(mensagem);
-        }
- 
-        // Submeter o formulário
-        document.getElementById("form_editar").addEventListener("submit", function (event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
- 
-            // Realizar a submissão dos dados via AJAX ou fetch
- 
-            // Simular uma mensagem de sucesso ou erro
-            var sucesso = true; // Altere para false para simular um erro
- 
-            if (sucesso) {
-                exibirMensagem("Dados alterados com sucesso!");
-            } else {
-                exibirMensagem("Ocorreu um erro ao alterar os dados. Por favor, tente novamente.");
-            }
-        });*/
-    });
-</script>
+    </script>
 
 </html>
