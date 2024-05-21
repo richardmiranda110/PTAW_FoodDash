@@ -18,21 +18,21 @@ $pdo = new PDO(
     DBPASS
 );
 
+// cria o o atributo $Validacao com o valor true, pois não existem falhas
+$Validacao = true;
+
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
     $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR O ID
 }
-
 // Enviando dados para a BD, ao editar dados de um determinado utilizador
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $Validacao = True;
-
     // Verificar que os campos obrigatórios estão preenchidos
     // Campo Email
     if (empty($_POST['email'])) {
         $ErroEmail = "Preenchimento obrigatório";
-        $Validacao = False;
+        $Validacao = false;
     }
 
     // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
@@ -50,9 +50,9 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Verificar que os campos numéricos apenas contêm números
     // Telemovel
-    if ((!empty($_POST['Telemovel'])) && (!is_numeric($utilizador['Telemovel']))) {
+    if ((!empty($_POST['telemovel'])) && (!is_numeric($_POST['telemovel']))) {
         $ErroTelemovel = "Apenas pode conter números";
-        $Validacao = False;
+        $Validacao = false;
     }
 
     // Se não ocorreram erros de validação, atualizar o produto
@@ -60,18 +60,20 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Editar o usuário no banco de dados
         if (EditarUtilizador($pdo, 1, $utilizadorModificado)) { // ALTERAR ID
             $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR ID
-            echo "<script>
+            /*echo "<script>
             $(document).ready(function(){
                 $('#modal_sucesso').modal('show');
             });
-        </script>";
+        </script>";*/
         } else {
-            echo "<script>
-            $(document).ready(function(){
-                $('#modal_erro').modal('show');
-            });
-        </script>";
+            /* echo "<script>
+             $(document).ready(function(){
+                 $('#modal_erro').modal('show');
+             });
+         </script>"; */
         }
+    } else {
+        $utilizador = ObterUmUtilizador($pdo, 1);
     }
 }
 ?>
@@ -98,47 +100,30 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
-    <!-- Modal de Sucesso -->
-    <div class="modal fade" id="modal_sucesso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Sucesso!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    O utilizador foi alterado com sucesso!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal de Erro -->
-    <div class="modal fade" id="modal_erro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Erro!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Ocorreu um erro ao editar o utilizador.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+    <!-- The Modal -->
+    <!--<div id="modal" class="modal1">
+        <div class="modal-content1">
+            <div class="modal-header1">
+                <span class="close1">&times;</span>
+                <h2>Iniciar Sessão</h2>
             </div>
-        </div>
-    </div>
+            <div class="modal-body1">
+                <p>
+                    <?php
+                    /*if (isset($_SESSION["mensagem"])) {
+                        echo $_SESSION["mensagem"];
+                    } else if (isset($_SESSION["erro"])) {
+                        echo $_SESSION["erro"];
+                    }*/
+                    ?>
+                </p>
+            </div>
+        </div>-->
+
+    <!-- Div element where PHP value is set -->
+    <div id="valid" style="display: none;"><?php echo var_export($Validacao);
+    //var_dump($Validacao); ?></div>
 
     <form class="centro esquerdo form_editar" method="GET">
         <h3>Perfil do Utilizador</h3>
@@ -159,7 +144,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert" role="alert">
                             <i class="fas fa-info-circle" style="font-size:24px"></i>
-                            <strong>Campos marcados com <span style='color:#ff0000'>*</span> são obrigatórios</strong>
+                            <strong>Campos marcados com <span style='color:#ff0000'>*</span> são
+                                obrigatórios</strong>
                         </div>
                         <div class="esquerdo" style="padding:5px">
                             <!-- Nome -->
@@ -177,7 +163,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input name="email" readonly type="text" class="form-control" placeholder="Email"
                                     aria-label="Email" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['email']))
                                         echo $utilizador['email']; ?>">
-                                <br>
+                                <br><br>
                                 <?php if (!empty($ErroEmail)) { ?>
                                     <span class="help-inline small" style="color:#ff0000"><?php echo $ErroEmail; ?></span>
                                 <?php } ?>
@@ -266,15 +252,20 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Obtém os elementos
-            var btnEditar = document.getElementById("btn_editar");
-            var inputs = document.querySelectorAll(".form-control");
-            var form = document.querySelector(".form_editar");
-            var validacao = <?php echo json_encode($Validacao); ?>;
+        // Obtém os elementos
+        var btnEditar = document.getElementById("btn_editar");
+        var inputs = document.querySelectorAll(".form-control");
+        var form = document.querySelector(".form_editar");
+        // Obter modal
+        var modal = document.getElementById("modal");
 
+        var validacao = document.getElementById('valid').innerText.trim().toLowerCase() === 'true';
+        console.log(validacao);
+
+        // Obter o elemento <span> que fecha o modal
+        var span = document.getElementsByClassName("close1")[0];
+        document.addEventListener("DOMContentLoaded", function () {
             // Adiciona evento de clique ao botão
             btnEditar.addEventListener("click", function () {
                 // Alterar para modo de edição
@@ -304,8 +295,9 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         form.setAttribute("action", "perfil.php");
                     }
                 }
-            });
+            })
         });
     </script>
+</body>
 
 </html>
