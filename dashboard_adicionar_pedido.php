@@ -127,9 +127,7 @@ try {
 			<div class="complement-section">
 				<div class="complement-header mb-0">
 					<p class="fw-bold m-0">Bebida</p>
-					<button class="btn btn-custom modal_event" style="margin-left: auto;" id="add-drink-btn">+ Nova Opção</button>
-          <span style="margin-left: 0.5vw;margin-right:0.5vw"> ou </span>
-          <button class="btn btn-custom" id="import-drink-btn">Importar Existente</button>
+					<button class="btn btn-custom modal_event" style="margin-left: auto;" id="add-drink-btn">Importar Existente</button>
 				</div>
 				<hr class="mt-0">
         <div id="add-drink-dable-container"></div>
@@ -138,9 +136,7 @@ try {
     <div class="complement-section">
       <div class="complement-header mb-0">
         <p class="fw-bold m-0">Acompanhamento</p>
-        <button class="btn btn-custom modal_event" style="margin-left: auto;" id="add-acompanhamento-btn">+ Nova Opção</button>
-        <span style="margin-left: 0.5vw;margin-right:0.5vw"> ou </span>
-        <button class="btn btn-custom">Importar Existente</button>
+        <button class="btn btn-custom modal_event" style="margin-left: auto;" id="add-acompanhamento-btn">Importar Existente</button>
       </div>
 
       <hr class="mt-0">
@@ -240,14 +236,13 @@ try {
   <div class="modal-content">
     <span class="close">&times;</span>
     <p class="fw-bold mt-1 mb-2" id="modal-text">a culpa é do richard</p>
-    <input class="form-control" type="text" class="" id="novoItemInput" placeholder="Digite o novo item">
+    <div id="DefaultDable" ></div>
     <button id="adicionarBtn">Adicionar</button>
   </div>
 </div>
 
   <!--Zona do Footer -->
-  <?php include __DIR__."/includes/footer_2.php"; ?>
-
+  <?php include __DIR__."/includes/footer_2.php"; ?>  
   <script src="./assets/js/adicionar_pedido.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>

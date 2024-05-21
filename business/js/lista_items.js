@@ -1,6 +1,6 @@
 var dable = new Dable();
 var rows = [];
-var columns = [ 'Foto', 'Nome', 'Preço','Menus','Categorias','','' ];
+var list_columns = [ 'Foto', 'Nome', 'Preço','Menus','Categorias','','' ];
 var items = [];
 const response = fetch('http://localhost/business/lista_items.php?idEstabelecimento=31')
   .then(response => response.json())
@@ -14,7 +14,7 @@ const response = fetch('http://localhost/business/lista_items.php?idEstabelecime
   .then( _ =>{
     dable.SetDataAsRows(rows)
     dable.style = 'CulpaDoRichard';
-	  dable.SetColumnNames(columns);
+	  dable.SetColumnNames(list_columns);
     dable.columnData[0].CustomRendering = function(cellValue, rowNumber) {
 			return '<img src="../../assets/stock_imgs/icon_info.jpg" alt="'+cellValue+'" width="60" height="60"  data-rownumber="' + rowNumber + '">';
 		};

@@ -782,11 +782,11 @@
 				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
 				var table = tableDiv.querySelector('table');
 				table.setAttribute('class', ' ');
-				table.setAttribute('style', 'width: 95%; margin-bottom: 0;');
+				table.setAttribute('style', 'width: 96%; margin-bottom: 0;');
 				header.setAttribute('class', 'panel-heading');
-				header.setAttribute('style','width:86.3vw;margin-top:5px');
+				header.setAttribute('style','width:96%;margin-top:5px');
+				footer.setAttribute('style','width:96%;margin-top:5px');
 				footer.setAttribute('class', 'panel-footer');
-				footer.setAttribute('style','width:86.3vw;margin-top:5px');
 				tableDiv.setAttribute('class', 'panel panel-info');
 				tableDiv.setAttribute('style', 'margin-bottom: 0;');
 
