@@ -595,16 +595,16 @@
 				var showing = footer.querySelector('#' + $export.id + '_showing');
 				if (showing) {
 					if ($export.RowCount() == 0) {
-						showing.innerHTML = "There are no entries";
+						showing.innerHTML = "Não existe dados para mostrar";
 					} else if ($export.VisibleRowCount() == 0) {
-						showing.innerHTML = "Showing 0 entries";
+						showing.innerHTML = "Mostrando 0 entradas";
 					} else {
-						showing.innerHTML = "Showing " + start + " to " + end + " of " +
-							($export.VisibleRowCount()) + " entries";
+						showing.innerHTML = "A mostrar " + start + " - " + end + " de " +
+							($export.VisibleRowCount()) + " entradas";
 					}
 					if ($export.VisibleRowCount() != $export.RowCount()) {
-						showing.innerHTML += " (filtered from " + ($export.RowCount()) +
-							" total entries)";
+						showing.innerHTML += " (filtrado de " + ($export.RowCount()) +
+							" total entradas)";
 					}
 				}
 				var right = footer.querySelector('#' + $export.id +
@@ -717,7 +717,7 @@
 			
 				var cells = tableDiv.querySelectorAll('tbody td');
 				for (var i = 0; i < cells.length; ++i) {
-					cells[i].setAttribute('style', 'padding: 5px;');
+					cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:fit-content;font-weight:bold;font-size:1.2em');
 				}
 
 				var headCells = tableDiv.querySelectorAll('th');
@@ -766,6 +766,9 @@
 					footRightItems[i].setAttribute(
 						'style',
 						'display: inline; margin-right: 5px;');
+					footRightItems[i].setAttribute(
+						'class',
+						'action-button btn');
 				}
 			}
 
@@ -781,7 +784,9 @@
 				table.setAttribute('class', ' ');
 				table.setAttribute('style', 'width: 95%; margin-bottom: 0;');
 				header.setAttribute('class', 'panel-heading');
+				header.setAttribute('style','width:86.3vw;margin-top:5px');
 				footer.setAttribute('class', 'panel-footer');
+				footer.setAttribute('style','width:86.3vw;margin-top:5px');
 				tableDiv.setAttribute('class', 'panel panel-info');
 				tableDiv.setAttribute('style', 'margin-bottom: 0;');
 
@@ -806,9 +811,10 @@
 					}
 				}
 
-				var pageClass = 'btn btn-default ' + $export.pagerButtonsClass;
+				var pageClass = 'btn btn-default w-75' + $export.pagerButtonsClass;
 				var pageLeft = footer.querySelector('#' + $export.id + '_page_prev');
 				var pageRight = footer.querySelector('#' + $export.id + '_page_next');
+				
 				var pageParent = pageLeft.parentElement;
 				
 				var pagerItems = footer.querySelectorAll('li');
@@ -820,12 +826,12 @@
 
 				pageLeft.innerHTML = '';
 				var pageLeftSpan = span.cloneNode(false);
-				pageLeftSpan.setAttribute('class', 'glyphicon glyphicon-arrow-left');
+				pageLeftSpan.setAttribute('class', 'h5 bi bi-arrow-left');
 				pageLeft.appendChild(pageLeftSpan);
 				
 				pageRight.innerHTML = '';
 				var pageRightSpan = span.cloneNode(false);
-				pageRightSpan.setAttribute('class', 'glyphicon glyphicon-arrow-right');
+				pageRightSpan.setAttribute('class', 'h5 bi bi-arrow-right');
 				pageRight.appendChild(pageRightSpan);
 
 				if ($export.pagerIncludeFirstAndLast) {
@@ -1196,7 +1202,7 @@
 
 				var left = div.cloneNode(false);
 				var show = span.cloneNode(false);
-				show.innerHTML = 'Show ';
+				show.innerHTML = 'Mostrando ';
 				left.appendChild(show);
 				var entryCount = select.cloneNode(false);
 				for (var i = 0; i < $export.pageSizes.length; ++i) {

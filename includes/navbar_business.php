@@ -1,5 +1,5 @@
 <nav style="font-size:1.4rem; z-index: 1; text-align: center;" class="navbar navbar-expand-lg gray-navbar navbar-light fw-bold ">
-    <div class="collapse navbar-collapse" style="width: 9vw;" id="navbarNav">
+    <div class="collapse navbar-collapse" style="width: 15vw;" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link nav" href="#">Overview</a>
