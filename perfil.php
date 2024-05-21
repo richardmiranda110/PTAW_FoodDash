@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verificar que os campos obrigatórios estão preenchidos
     // Campo Email
-    if (empty($_POST['email'])) {
+    /*if (empty($_POST['email'])) {
         $ErroEmail = "Preenchimento obrigatório";
         $Validacao = false;
-    }
+    }*/
 
     // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
     // retirar carateres perigosos
@@ -50,10 +50,10 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Verificar que os campos numéricos apenas contêm números
     // Telemovel
-    if ((!empty($_POST['telemovel'])) && (!is_numeric($_POST['telemovel']))) {
+    /* if ((!empty($_POST['telemovel'])) && (!is_numeric($_POST['telemovel']))) {
         $ErroTelemovel = "Apenas pode conter números";
         $Validacao = false;
-    }
+    }*/
 
     // Se não ocorreram erros de validação, atualizar o produto
     if ($Validacao == true) {
@@ -163,10 +163,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input name="email" readonly type="text" class="form-control" placeholder="Email"
                                     aria-label="Email" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['email']))
                                         echo $utilizador['email']; ?>">
-                                <br><br>
-                                <?php if (!empty($ErroEmail)) { ?>
-                                    <span class="help-inline small" style="color:#ff0000"><?php echo $ErroEmail; ?></span>
-                                <?php } ?>
+                                <span id="erroEmail" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                         </div>
                         <div class="direito" style="padding:5px">
@@ -185,6 +182,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     placeholder="Telemóvel" aria-label="Telemovel" aria-describedby="addon-wrapping"
                                     value="<?php if (!empty($utilizador['telemovel']))
                                         echo $utilizador['telemovel']; ?>">
+                                <span id="erroTelemovel" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                         </div>
 
@@ -257,21 +255,44 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         var btnEditar = document.getElementById("btn_editar");
         var inputs = document.querySelectorAll(".form-control");
         var form = document.querySelector(".form_editar");
+        var emailInput = document.querySelector("[name='email']");
+        var telefoneInput = document.querySelector("[name='telemovel']");
+        var erroEmail = document.getElementById("erroEmail");
+        var erroTelemovel = document.getElementById("erroTelemovel");
         // Obter modal
         var modal = document.getElementById("modal");
 
-        var validacao = document.getElementById('valid').innerText.trim().toLowerCase() === 'true';
-        console.log(validacao);
+        var validacao = true;
+
+        // Função para validar o formulário
+        function validarFormulario() {
+            validacao = true; // resetar a validação
+            erroEmail.textContent = ""; // limpar mensagem de erro
+            erroTelemovel.textContent = ""; // limpar mensagem de erro
+
+            // Verificar se o campo de e-mail está preenchido e não vazio
+            if (emailInput.value.trim() === "") {
+                erroEmail.textContent = "Campo obrigatório";
+                validacao = false; // marcar validação como falsa
+            }
+
+            // Verificar se o campo de telefone contém exatamente 9 números
+            var telefone = telefoneInput.value.trim();
+            if (!(/^\d+$/.test(telefone)) || telefone.length !== 9) {
+                erroTelemovel.textContent = "O campo só pode conter números.";
+                validacao = false; // marcar validação como falsa
+            }
+        }
 
         // Obter o elemento <span> que fecha o modal
         var span = document.getElementsByClassName("close1")[0];
         document.addEventListener("DOMContentLoaded", function () {
             // Adiciona evento de clique ao botão
             btnEditar.addEventListener("click", function () {
-                // Alterar para modo de edição
+                // Altera para modo de edição
                 if (btnEditar.innerHTML == "Editar") {
                     btnEditar.innerHTML = "Guardar";
-                    btnEditar.setAttribute("type", "button");
+                    btnEditar.setAttribute("type", "button"); // tipo: botão
                     btnEditar.classList.remove("btn-warning");
                     btnEditar.classList.add("btn-success");
                     inputs.forEach(function (input) {
@@ -280,13 +301,20 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     form.method = 'GET';
                     form.removeAttribute("action");
                 }
-                // Alterar para modo de leitura
+                // Altera para modo de leitura
                 else {
-                    // se não houver erros no formulário, mudar para modo de leitura
+                    // Validar o formulário ao clicar em "Guardar"
+                    validarFormulario();
+                    console.log(validacao);
+
+                    // caso não haja erros, o formulário é submetido
                     if (validacao == true) {
+                        validacao = true; // resetar a validação
+                        erroEmail.textContent = ""; // limpar mensagem de erro
+                        erroTelemovel.textContent = ""; // limpar mensagem de erro
                         btnEditar.innerHTML = "Editar";
                         btnEditar.setAttribute("type", "submit");
-                        btnEditar.classList.remove("btn-success");
+                        btnEditar.classList.remove("btn-success"); // tipo: submissão
                         btnEditar.classList.add("btn-warning");
                         inputs.forEach(function (input) {
                             input.setAttribute("readonly", "readonly");
