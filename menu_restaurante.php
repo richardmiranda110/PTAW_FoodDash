@@ -13,8 +13,13 @@
 </head>
 
 <body>
+<?php include __DIR__."/includes/insertAvaliationRestaurant.php"; ?>
+
   <!-- NAVBAR -->
   <?php
+  ///validar id cliente por sessiom
+  $idCliente=1;
+  
   if (!isset($_GET['restaurante'])) {
     if (!empty($_SERVER['HTTP_REFERER'])) {
       header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -59,6 +64,7 @@
       <div class="row">
         <div class="col-lg-4 px-0">
           <?php
+		  $idEstabelecimento = $infoRest['id_estabelecimento'] ;
           echo "<h3 class='display-6' style='font-weight: bolder;'>" . $infoRest['nome'] . "</h3>
           <h5 class='mb-0'>" . $infoRest['avaliacao'] . "★</h5>
           <p class='mb-0'>Taxa de Entrega: " . $infoRest['taxa_entrega'] . "€</p>
@@ -76,29 +82,52 @@
 
             <!-- TOAST --->
             <button type="button" class="btn btn-primary" id="liveToastBtn">Avaliar Estabelecimento</button>
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
-              <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-                <div class="toast-header">
-                  <img src="./assets/imgs/estrela_ilustrativa.png" class="rounded me-2" alt="star" style="width: 1.5vw;">
-                  <strong class="me-auto">Avaliar Estabelecimento</strong>
-                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                  <div class="rating-box">
-                    <header>Como foi a sua experiência?</header>
-                    <div class="stars">
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                    </div>
-                  </div>
-                  <textarea rows="4" cols="50" maxlength="100" id="input_text_comentario" placeholder="Insira um comentário (opcional) ..." style="margin-bottom: 1vh; width: 80%;"></textarea>
-                  <input class="btn btn-primary" type="submit" id="btn_enviar_avaliacao" value="Enviar">
-                </div>
-              </div>
-            </div>
+			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+			  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+				<div class="toast-header">
+				  <img src="./assets/imgs/estrela_ilustrativa.png" class="rounded me-2" alt="star" style="width: 1.5vw;">
+				  <strong class="me-auto">Avaliar Estabelecimento</strong>
+				  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+				<div class="toast-body">
+				  <form id="ratingForm" method="POST"  enctype="multipart/form-data" action="">
+					<div class="rating-box">
+					  <header>Como foi a sua experiência?</header>
+					  <div class="stars">
+						<i class="fa-solid fa-star" data-value="1"></i>
+						<i class="fa-solid fa-star" data-value="2"></i>
+						<i class="fa-solid fa-star" data-value="3"></i>
+						<i class="fa-solid fa-star" data-value="4"></i>
+						<i class="fa-solid fa-star" data-value="5"></i>
+					  </div>
+					</div>
+					<input type="hidden" name="idEstabelecimento" id="idEstabelecimento" value="<?php echo $idEstabelecimento; ?>">
+					<input type="hidden" name="idCliente" id="idCliente" value="<?php echo $idCliente; ?>">
+					<input type="hidden" name="estrelas" id="ratingValue">
+					<textarea rows="4" cols="50" maxlength="100" name="input_text_comentario" id="input_text_comentario" placeholder="Insira um comentário (opcional) ..." style="margin-bottom: 1vh; width: 80%;"></textarea>
+					<input class="btn btn-primary" type="submit" id="btn_enviar_avaliacao" value="Enviar">
+				  </form>
+				</div>
+			  </div>
+			</div>
+
+			<script>
+			  document.querySelectorAll('.stars i').forEach(star => {
+				star.addEventListener('click', function() {
+				  let rating = this.getAttribute('data-value');
+				  document.getElementById('ratingValue').value = rating;
+				});
+			  });
+
+			  document.getElementById('ratingForm').addEventListener('submit', function(event) {
+				let estrelas = document.getElementById('ratingValue').value;
+				if (!estrelas) {
+				  event.preventDefault();
+				  alert('Por favor, selecione uma classificação.');
+				}
+			  });
+			</script>
+
           </div>
 
         </div>
