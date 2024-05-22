@@ -8,13 +8,19 @@ session_start();
 //}
 
 // Exibir nome de usuário
-//echo "Welcome, " . $_SESSION['username'];
-
 //conexão ao banco de dados
+define("DBHOST", "localhost");
+define("DBPORT", "5432");
+define("DBNAME", "ptaw");
+define("DBUSER", "postgres");
+define("DBPASS", "test");
+
 $pdo = new PDO(
-	'mysql:host=localhost;port=3306;dbname=bd_ptaw_2024;charset=utf8',
-	'root',
-	''
+    "pgsql:host=" . DBHOST .
+    "; port=" . DBPORT .
+    ";dbname=" . DBNAME,
+    DBUSER,
+    DBPASS
 );
 
 function ObterUmUtilizador($pdo, $ID)

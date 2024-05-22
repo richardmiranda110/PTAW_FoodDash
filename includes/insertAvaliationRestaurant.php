@@ -3,7 +3,6 @@ require_once 'database/credentials.php';
 require_once 'database/db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    sdasawfafefef
     // Obtém os dados do formulário
     $estrelas = intval($_POST['estrelas']);
     $comentario = $conn->real_escape_string($_POST['comentario']);
