@@ -17,7 +17,7 @@
     <!--Zona do Header -->
     <div id="topHeader" class="container-xxl">
         <!-- Top/Menu da Página -->
-        <?php //include __DIR__ . "/includes/header_logged_in.php"; ?>
+        <?php include __DIR__ . "/includes/header_business.php"; ?>
     </div>
 
     <!--Zona de Conteudo -->
@@ -25,26 +25,43 @@
         <?php //include __DIR__ . "/includes/sidebar_perfil.php"; ?>
 
         <!--Zona de Conteudo da Página -->
-        <!--
-// v0 by Vercel.
-// https://v0.dev/t/AvTz6p9cvzC
--->
+        <p>Olá!</p>
+        <h3><strong>Sumário de Hoje</strong></h3>
 
-        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col space-y-6">
-            <div class="grid grid-cols-3 gap-4">
-                <div class="flex flex-col items-center justify-center py-4 px-6 bg-[#F9FAFB] rounded-lg">
-                    <span class="text-sm text-gray-500">Vendas</span>
-                    <span class="text-2xl font-semibold">469,70€</span>
-                </div>
-                <div class="flex flex-col items-center justify-center py-4 px-6 bg-[#F9FAFB] rounded-lg">
-                    <span class="text-sm text-gray-500">Pedidos</span>
-                    <span class="text-2xl font-semibold">40</span>
-                </div>
-                <div class="flex flex-col items-center justify-center py-4 px-6 bg-[#F9FAFB] rounded-lg">
-                    <span class="text-sm text-gray-500">Preço Médio dos Pedidos</span>
-                    <span class="text-2xl font-semibold">11,74€</span>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Vendas -->
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Vendas</h5>
+                        <p class="card-text">469,70€</p>
+                    </div>
                 </div>
             </div>
+
+            <!-- Pedidos -->
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Pedidos</h5>
+                        <p class="card-text">40</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preço Médio de Pedidos-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Preço Médio de Pedidos</h5>
+                        <p class="card-text">11,74€</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md flex flex-col space-y-6">
+            <!-- Gráfico -->
             <div>
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold">Vendas</h2>
@@ -264,47 +281,63 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Ações rápidas -->
             <div>
                 <h2 class="text-xl font-semibold mb-4">Ações Rápidas</h2>
-                <div class="space-y-2">
-                    <a class="flex items-center justify-between text-sm font-medium text-gray-600 hover:text-gray-800"
-                        href="#" rel="ugc">
-                        Ver informações{" "}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="h-4 w-4">
-                            <path d="m9 18 6-6-6-6"></path>
+                <div class="list-group list-group-flush">
+                    <!-- Ver todo o estabelecimento -->
+                    <button type="button" class="list-group-item list-group-item-action" aria-current="true">
+                        Ver todo o estabelecimento
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                         </svg>
-                    </a>
-                    <a class="flex items-center justify-between text-sm font-medium text-gray-600 hover:text-gray-800"
-                        href="#" rel="ugc">
-                        Ver pedidos{" "}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="h-4 w-4">
-                            <path d="m9 18 6-6-6-6"></path>
+                    </button>
+
+                    <!-- Ver Itens -->
+                    <button type="button" class="list-group-item list-group-item-action
+">
+                        Ver Itens
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                         </svg>
-                    </a>
-                    <a class="flex items-center justify-between text-sm font-medium text-gray-600 hover:text-gray-800"
-                        href="#" rel="ugc">
-                        Ver avaliações{" "}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="h-4 w-4">
-                            <path d="m9 18 6-6-6-6"></path>
+                    </button>
+
+                    <!-- Ver pedidos -->
+                    <button type="button" class="list-group-item list-group-item-action">
+                        Ver pedidos
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                         </svg>
-                    </a>
+                    </button>
+
+                    <!-- Ver avalições -->
+                    <button type="button" class="list-group-item list-group-item-action">
+                        Ver avalições
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
         <!--Fim do conteúdo de página-->
         <?php
-        //include __DIR__ . "/includes/footer_2.php";
+        include __DIR__ . "/includes/footer_business.php";
         ?>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
+
 </body>
 
 </html>
