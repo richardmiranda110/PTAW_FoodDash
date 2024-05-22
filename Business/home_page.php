@@ -15,14 +15,14 @@
 <body>
   <!-- NAVBAR -->
   <?php
-    include __DIR__ . "/includes/header_business.php";
+  include __DIR__ . "/includes/header_business.php";
   ?>
 
   <!-- IMAGEM COM BTN LOGIN E REGISTO -->
   <div class="d-flex" style="max-width: 100%; padding: 0vw 0vh; height: 85vh;">
     <img id="imgEmpresas" src="./imagens/empresas.png" class="w-100">
     <div class="col-12 overlay">
-      <h1 style="margin-top: 5vh; margin-left: 5vw; font-size: 2.1vw;">Faça crescer o seu negócio com a FoodDash</h1>
+      <h1 style="margin-top: 5vh; margin-left: 5vw; font-size: 2.1vw; font-weight: bold;">Faça crescer o seu negócio com a <span style="color: #FEBB41;">Food</span>Dash</h1>
       <div class="text-center" style="margin-top: 17vh;">
         <div class="flex-row">
           <button class="btn btn-lg" id="btnLogin" type="button">Iniciar Sessão</button>
@@ -37,7 +37,9 @@
   <!-- DIV DE FUNDO DOURADO -->
   <div class="d-flex align-items-center justify-content-center" style="max-width: 100%; padding: 0vw 0vh; height: 40vh; background-color: rgb(255, 184, 0);">
     <div class="d-flex align-items-center justify-content-center" style="width: 35%;">
-      <h1 style="text-align: center; font-weight: bold; font-size: 2.1vw;">Expanda o seu negócio com o poder da plataforma FoodDash</h1>
+      <h1 style="text-align: center; font-weight: bold; font-size: 2.1vw;">
+        Expanda o seu negócio com o poder da plataforma FoodDash</h1>
+
     </div>
   </div>
 
@@ -67,8 +69,8 @@
     </div>
     <div class="row align-items-center justify-content-center" style="padding: 0vw 0vh; margin: 0vw; margin-top: 2vh;">
       <div class="" style="max-width: 70%;">
-        <h1 style="text-align: center; font-size: 1.2vw; color: white; margin-top: 5vh;">Ainda não realiza entregas no seu restaurante? 
-        Registe o seu estabelecimento ou rede de restaurantes e comece já a efetuar entregas online, enquanto recebe estatísticas detalhadas sobre as suas vendas.</h1>
+        <h1 style="text-align: center; font-size: 1.2vw; color: white; margin-top: 5vh;">Ainda não realiza entregas no seu restaurante?
+          Registe o seu estabelecimento ou rede de restaurantes e comece já a efetuar entregas online, enquanto recebe estatísticas detalhadas sobre as suas vendas.</h1>
         <h1 style="text-align: center; font-size: 1.2vw; color: white;">Não espere pelo futuro, comece a moldá-lo hoje mesmo!</h1>
       </div>
     </div>
@@ -82,10 +84,10 @@
     </div>
   </div>
 
-  
+
   <!-- FOOTER -->
   <?php
-    include __DIR__ . "/includes/footer_business.php";
+  include __DIR__ . "/includes/footer_business.php";
   ?>
 
   <script>
@@ -100,4 +102,5 @@
     });
   </script>
 </body>
+
 </html>

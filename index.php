@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
@@ -19,21 +18,24 @@
   include __DIR__ . "/includes/header.php";
   ?>
   <!-- CONTAINER DE INSERIR MORADA -->
-  <div class="bg-custom px-4 py-4 text-left">
-    <h1 class="display-6 fw-bold text-body-primary" style="color: white;">Peça uma entrega perto de si</h1>
-    <br>
-    <div class="row justify-content-left align-items-center mb-3">
-      <div class="col-md-3">
-        <div class="form-floating">
-          <input type="text" class="form-control form-control-sm" id="input_codigo_postal" placeholder="XXXX-YY">
-          <label for="floatingInput">Introduza um codigo postal</label>
+  <div class="main_land_image" style="background-image: url('./assets/stock_imgs/burger_bg_landingHomePage.png'); background-size: cover; background-repeat: no-repeat; background-position: center; width: 100%; height: 500px;">
+    <div class="bg-custom px-4 py-5 text-left">
+      <h1 class="display-6 fw-bold text-body-primary" style="color: white;">Peça uma entrega perto de si</h1>
+      <br>
+      <div class="row justify-content-left align-items-center">
+        <div class="col-md-3">
+          <div class="form-floating">
+            <input type="text" class="form-control form-control-sm" id="input_codigo_postal" placeholder="XXXX-YY">
+            <label for="floatingInput">Introduza um codigo postal</label>
+          </div>
         </div>
-      </div>
-      <div class="col-md-2">
-        <button type="button" class="btn btn-primary btn-lg px-4" id="btn_procurar_codigo_postal">Procurar</button>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-primary btn-lg px-3" id="btn_procurar_codigo_postal">Procurar</button>
+        </div>
       </div>
     </div>
   </div>
+
 
   <!-- CONTAINER COMO TRABALHAMOS -->
   <div class="container px-4 pt-4" id="featured-3">
