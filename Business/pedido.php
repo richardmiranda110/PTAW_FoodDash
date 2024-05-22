@@ -23,7 +23,7 @@ session_start();
     <link rel="stylesheet" href="../../business/styles/adicionar.css">
     <link rel="stylesheet" href="../../assets/styles/sitecss.css">
     <link rel="stylesheet" href="../../assets/styles/dashboard.css">
-    <link rel="stylesheet" href="./styles/pedido_page.css">
+    <link rel="stylesheet" href="./assets/styles/pedido_page.css">
     <script src="../../assets/js/dable.js"></script>
 </head>
 
