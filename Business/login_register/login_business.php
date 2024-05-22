@@ -8,6 +8,17 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link rel="stylesheet" href="../assets/styles/loginregisto.css">
   <title>FoodDash</title>
+  <style>
+    #mostrarPasswordCheckbox, #mostrarPasswordCheckbox:focus{
+      border-color: white;
+      box-shadow: none;
+    }
+
+    #flexCheckDefault, #flexCheckDefault:focus{
+      border-color: white;
+      box-shadow: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -15,8 +26,8 @@
   <img src="../assets/imgs/logo.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto;">
 
   <!-- Formulário de login -->
-  <div class="container d-flex align-items-center justify-content-center vh-100">
-    <form action="loginValidation.php" method="POST" style="width: 30%;">
+  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 25vh;">
+    <form action="loginValidationB.php" method="POST" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center; color: white;">Login</h1><br>
       <div class="form-floating mb-1">
         <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" required>
@@ -26,17 +37,17 @@
         <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password" required>
         <label for="inputPassword">Password</label>
 
-        <div class="form-check" style="color: grey;">
-          <input class="form-check-input" type="checkbox" value="" id="mostrarPasswordCheckbox">
-          <label class="form-check-label" for="flexCheckDefault">
+        <div class="form-check" style="margin-top: 1vh;">
+          <input class="form-check-input" type="checkbox" value="" id="mostrarPasswordCheckbox" style="background-color: black;">
+          <label class="form-check-label" for="flexCheckDefault" style="color: grey;">
             Mostrar password
           </label>
         </div>
       </div>
       <div class="checkbox mb-3">
-        <div class="form-check" style="color: grey;">
-          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault">
-          <label class="form-check-label" for="flexCheckDefault">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault" style="background-color: black;">
+          <label class="form-check-label" for="flexCheckDefault" style="color: grey;">
             Guardar email
           </label>
         </div>
@@ -56,6 +67,14 @@
         if(isset($_SESSION['success_message'])) {
           echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
           unset($_SESSION['success_message']);
+        }
+
+        if(empty($_SESSION["authenticatedB"]) || $_SESSION["authenticatedB"] != 'true') {
+
+        } else {
+          echo "<div class='form-floating mb-1'>";
+          echo "<a id='btnLogout' class='w-100 btn btn-lg btn-primary' type='submit' href='logoutB.php'>Logout</a>";
+          echo "</div>";
         }
       ?>
       

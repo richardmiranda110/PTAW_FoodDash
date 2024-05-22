@@ -7,8 +7,18 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="../assets/styles/loginregisto.css">
-
   <title>FoodDash</title>
+  <style>
+    #mostrarPasswordCheckbox, #mostrarPasswordCheckbox:focus{
+      border-color: white;
+      box-shadow: none;
+    }
+
+    #flexCheckDefault, #flexCheckDefault:focus{
+      border-color: white;
+      box-shadow: none;
+    }
+  </style>
 </head>
 
 <?php
@@ -20,8 +30,8 @@ session_start();
   <img src="../assets/imgs/logo.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto;">
 
   <!-- Formulário de registo -->
-  <div class="container d-flex align-items-center justify-content-center vh-100">
-    <form action="registerValidation.php" method="POST" id="registoForm" style="width: 30%;">
+  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 15vh;">
+    <form action="registerValidationB.php" method="POST" id="registoForm" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center; color: white;">Registar</h1><br>
       <div class="form-floating mb-1">
         <input type="text" class="form-control" id="inputNomeEstab" name="inputNomeEstab" placeholder="name@example.com" required>
@@ -40,8 +50,8 @@ session_start();
         <label class="form-label" for="inputTel">Telemovel</label>
       </div>
       <div class="form-floating mb-1">
-        <select id="tipo" class="form-select" style="padding-top: 1.1vh;" required>
-          <option selected>Tipo</option>
+        <select id="tipo" name="tipo" class="form-select" style="padding-top: 1.1vh;" required>
+          <option value="" selected>Tipo</option>
           <option value="pizza">Pizza</option>
           <option value="fastfood">Fast Food</option>
           <option value="hamburger">Hamburger</option>
@@ -63,15 +73,15 @@ session_start();
         <label for="inputRepetirPassword">Repetir Password</label>
       </div>
       <div class="form-check" style="color: grey;">
-        <input class="form-check-input" type="checkbox" value="" id="mostrarPasswordCheckbox">
-        <label class="form-check-label" for="flexCheckDefault">
+        <input class="form-check-input" type="checkbox" value="" id="mostrarPasswordCheckbox" style="background-color: black;">
+        <label class="form-check-label" for="flexCheckDefault" style="color: grey;">
           Mostrar password
         </label>
       </div>
       <div class="checkbox mb-3">
         <div class="form-check" style="color: grey;">
-          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault">
-          <label class="form-check-label" for="flexCheckDefault">
+          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault" style="background-color: black;">
+          <label class="form-check-label" for="flexCheckDefault" style="color: grey;">
             Guardar email
           </label>
         </div>
@@ -97,6 +107,8 @@ session_start();
     </form>
   </div>
 
+  <script src="loginScriptB.js"></script>
+  <script src="../assets/js/script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
