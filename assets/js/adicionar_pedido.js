@@ -117,7 +117,7 @@ var Importdable = new Dable();
 var rows = [];
 var list_columns = [ 'Nome','Categoria', 'Preço','Disponivel','',];
 var items = [];
-const response = fetch('http://localhost/business/lista_items.php?idEstabelecimento=2')
+const response = fetch('http://localhost/PTAW_FoodDash/business/lista_items.php?idEstabelecimento=1')
   .then(response => response.json())
   .then(data => {
     for(let item of data){
@@ -133,7 +133,7 @@ const response = fetch('http://localhost/business/lista_items.php?idEstabelecime
     Importdable.style = 'CulpaDoRichard';
 	  Importdable.SetColumnNames(list_columns);
     Importdable.columnData[4].CustomRendering = function (_cellValue, rowNumber) {
-      return '<button> <img width="30" class="bg-white editRow" src="../business/imagens/add.png" data-rownumber="' + rowNumber + '" /></button>';
+      return '<button> <img width="30" class="bg-white editRow" src="../Business/assets/imgs/add.png" data-rownumber="' + rowNumber + '" /></button>';
     };
     Importdable.BuildAll("DefaultDable"); 
   }).catch((error) => console.error('Error:', error));
