@@ -16,7 +16,7 @@
   <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto;">
 
   <!-- Formulário de registo -->
-  <div class="container d-flex align-items-center justify-content-center vh-100">
+  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 20vh;">
     <form action="registerValidation.php" method="POST" id="registoForm" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center;">Registar</h1><br>
       <div class="form-floating mb-1">

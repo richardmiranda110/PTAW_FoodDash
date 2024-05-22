@@ -1,6 +1,6 @@
 <?php
     session_start();
-    session_destroy();
+    unset($_SESSION["authenticated"]); 
 
     // Alterar depois
     header('location: ../index.php');

@@ -21,7 +21,7 @@ try {
         exit();
     }
 
-    $stmt = $pdo->prepare("INSERT INTO clientes (nome, email, morada, palavrachave) VALUES (:nome, :email, :morada, :palavrachave)");
+    $stmt = $pdo->prepare("INSERT INTO clientes (nome, email, morada, password) VALUES (:nome, :email, :morada, :palavrachave)");
     $stmt->bindParam(':nome', $name);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':morada', $morada);
@@ -31,6 +31,6 @@ try {
     $_SESSION['success_message'] = "Registado com sucesso!";
     header('Location: ' . $_SERVER['HTTP_REFERER']);
 } catch(PDOException $e) {
-    echo "Erro ao inserir registro: " . $e->getMessage();
+    echo "Erro ao inserir registo: " . $e->getMessage();
 }
 ?>

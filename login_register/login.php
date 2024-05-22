@@ -15,7 +15,7 @@
   <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto;">
 
   <!-- Formulário de login -->
-  <div class="container d-flex align-items-center justify-content-center vh-100">
+  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 25vh;">
     <form action="loginValidation.php" method="POST" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center;">Login</h1><br>
       <div class="form-floating mb-1">
@@ -57,9 +57,18 @@
           echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
           unset($_SESSION['success_message']);
         }
+
+        if(empty($_SESSION["authenticated"]) || $_SESSION["authenticated"] != 'true') {
+
+        } else {
+          echo "<div class='form-floating mb-1'>";
+          echo "<a id='btnLogout' class='w-100 btn btn-lg btn-primary' type='submit' href='logout.php'>Logout</a>";
+          echo "</div>";
+        }
       ?>
       
     </form>
+    
   </div>
 
 
