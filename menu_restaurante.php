@@ -13,7 +13,10 @@
 </head>
 
 <body>
-<?php include __DIR__."/includes/insertAvaliationRestaurant.php"; ?>
+<?php 
+include __DIR__."/includes/insertAvaliationRestaurant.php"; 
+include __DIR__."/includes/insertPedido.php"; 
+?>
 
   <!-- NAVBAR -->
   <?php
@@ -89,8 +92,9 @@
 				  <strong class="me-auto">Avaliar Estabelecimento</strong>
 				  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 				</div>
-				<div class="toast-body">
+				<div class="toast-body" style="height: auto;">
 				  <form id="ratingForm" method="POST"  enctype="multipart/form-data" action="">
+					
 					<div class="rating-box">
 					  <header>Como foi a sua experiência?</header>
 					  <div class="stars">
@@ -101,6 +105,7 @@
 						<i class="fa-solid fa-star" data-value="5"></i>
 					  </div>
 					</div>
+					<input type="hidden" name="idForm" id="idForm" value="insertAvaliation">
 					<input type="hidden" name="idEstabelecimento" id="idEstabelecimento" value="<?php echo $idEstabelecimento; ?>">
 					<input type="hidden" name="idCliente" id="idCliente" value="<?php echo $idCliente; ?>">
 					<input type="hidden" name="estrelas" id="ratingValue">
@@ -174,7 +179,7 @@
           foreach ($categorias as $categoria) {
             $fCategoria = htmlspecialchars($categoria['nome']);
 
-            echo "<div class='accordion-item'>
+            echo "<div class='accordion-item' style='border:none;'>
 				<h3 class='accordion-header' id='heading" . $fCategoria . "'>
 					<button class='accordion-button bg-dark' type='button' data-bs-toggle='collapse' data-bs-target='#collapse" . $fCategoria . "' aria-expanded='true' aria-controls='collapse" . $fCategoria . "' style='color: white;'>
 							" . $categoria['nome'] . "
@@ -203,7 +208,7 @@
               $imagemPath = getImagePath($rowProd['foto']);
               $idProd = str_replace(' ', '', htmlspecialchars($rowProd['nome']));
               echo "<div>
-                    <div class='card shadow-sm' id='" . $idProd . "' style='width:18%; margin: 0px 0.5% 1% 0.5%;'>
+                    <div class='card shadow-sm' id='" . $idProd . "' style='width:18%; margin: 0px 0.5% 1% 0.5%; float:left;'>
                     <div class='card-body'>
                         <div class='image-overlay' style='position: relative; border-radius: 5.5px; overflow: hidden;'>
                             <img src='" . $imagemPath . "' class='card-img-top' alt='" . $idProd . "' style='border-radius: 5.5px;'>
@@ -226,13 +231,21 @@
 
 				echo "
 				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
+				<form method='POST'  enctype='multipart/form-data' action=''>
+					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEstabelecimento."'>
+					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
+					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_item']."'>
+					<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>
+					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
+					<input type='hidden' name='idForm' id='idForm' value='insertPedido'>
+					
 					<div id='liveToast_" .$idProd. "' class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-bs-autohide='false' style='width: 40vw; max-height: 95vh; overflow-y: auto;'>
 					<div class='toast-header'>
 						<img src='./assets/stock_imgs/burgerKing_marca.png' class='rounded me-2' alt='logotipo' style='width: 1.5vw;'>
 						<strong class='me-auto'>" . htmlspecialchars($rowProd['nome']) . "</strong>
 						<button type='button' class='btn-close' data-bs-dismiss='toast' aria-label='Close'></button>
 					</div>
-					<div class='toast-body'>
+					<div class='toast-body' style='height: auto; align-items: unset;'>
 						<div id='txt_item_title_price_description'>
 						<h3>" . htmlspecialchars($rowProd['nome']) . "</h3>
 						<h5>" . $rowProd['preco'] . "€</h5>
@@ -250,8 +263,8 @@
                  
                     foreach ($complementos as $rowComp) {
 						echo "<div class='form-check form-check-reverse'>
-								<input class='form-check-input' type='radio' name='complementos' id='complementos' value='".$rowComp['id_opcao']."' checked>
-								<label class='form-check-label d-flex justify-content-start' for='complementos'>".$rowComp['nome']."</label>
+								<input class='form-check-input' type='radio' name='complemento' id='complemento' value='".$rowComp['id_opcao']."' checked>
+								<label class='form-check-label d-flex justify-content-start' for='complemento'>".$rowComp['nome']."</label>
 							</div>
 							";
 					}
@@ -270,8 +283,8 @@
 
 					foreach ($bebidas as $rowBeb) {
 						echo"<div class='form-check form-check-reverse'>
-							<input class='form-check-input' type='radio' name='bebidas' id='bebidas' value='".$rowBeb['id_opcao']."' checked>
-							<label class='form-check-label d-flex justify-content-start' for='bebidas'>".$rowBeb['nome']."</label>
+							<input class='form-check-input' type='radio' name='bebida' id='bebida' value='".$rowBeb['id_opcao']."' checked>
+							<label class='form-check-label d-flex justify-content-start' for='bebida'>".$rowBeb['nome']."</label>
 						</div>
 						";
 					}
@@ -289,8 +302,8 @@
 
 					foreach ($extras as $rowExt) {
 						echo"<div class='form-check form-check-reverse'>
-								<input class='form-check-input' type='radio' name='extras' id='extras' value='".$rowExt['id_opcao']."' checked>
-								<label class='form-check-label d-flex justify-content-start' for='extras'>".$rowExt['nome']."</label>
+								<input class='form-check-input' type='radio' name='extra' id='extra' value='".$rowExt['id_opcao']."' checked>
+								<label class='form-check-label d-flex justify-content-start' for='extra'>".$rowExt['nome']."</label>
 							</div>
 							";
 					}
@@ -305,6 +318,7 @@
             }
 
             echo "  </div>
+			</form>
             </div>
         </div>";
             }
