@@ -30,6 +30,10 @@ const spanBotaoX = document.querySelectorAll(".close")[0];
 const novoInput = document.querySelector("#novoItemInput");
 // Input para nome de alimento
 const nomeInput = document.querySelector("#nome");
+// input da caixa de preço
+const inputPreco = document.querySelector("#preco");
+// input da caixa de descrição
+const inputDescricao = document.querySelector("#descricao");
 // label de personalizações
 const itemName = document.querySelector("#item-name-label");
 // select tag ao adicionar categoria
@@ -455,4 +459,52 @@ async function fetchData(categoria = null){
   }
 
   return response.json();
+}
+/**
+ * 		
+ *  id_estabelecimento: int
+		itemsozinho: boolean, false
+		personalizações ativas : boolean, false
+		dados: {
+			nome: String,
+			preco: double,
+			descricao: String,
+			disponivel: boolean
+			foto: String,
+			categoria: int?
+			itens: [ 
+				{ID: int}
+				{ID: int}
+			]
+		}
+ * 
+ */
+
+function createFromJson(foto_url){
+  const result = { 
+    idEstabelecimento: 0,
+    itemsozinho: getCheckboxValue("itemsozinho").value,
+    personalizacoesAtivas: getCheckboxValue("personalizacoesativas").value,
+    dados: {
+      nome: nomeInput.textContent,
+      preco: parseFloat(inputPreco.value),
+      descricao: inputDescricao.value,
+      disponivel: getCheckboxValue("disponivel").value,
+      foto: foto_url,
+      categoria:  parseInt(categoriaSelector.options[categoriaSelector.selectedIndex].value),
+      itens : getItems()
+    }
+    
+  }
+  return result;
+}
+
+function getItems(){
+  let arr = [];
+
+  dableProductTables.forEach(element => {
+    const re = element.rowObjects.slice(1);
+    arr.push({"items":re[0].Row[1]});
+  });
+  return arr[0].items;
 }
