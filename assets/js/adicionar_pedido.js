@@ -47,6 +47,12 @@ const btnImportarAcompanhamento = document.querySelector("#import-drink-btn");
 // Adicionar bebida
 const btnNovaBebida = document.querySelector("#add-drink-btn");
 const btnNovaOpcao = document.querySelector("#nova-personalizacao-btn");
+const btnSubmit = document.querySelector("#submit-btn");
+
+const form = document.querySelector('form');
+form.addEventListener('submit', handleSubmit);
+
+const imageInput = document.querySelector("#foto");
 
 // Associar botão com tabela usando Map
 const buttonDableMap = new Map();
@@ -68,7 +74,6 @@ importDable.style = 'CulpaDoRichard';
 
 // tabela de personalizar item
 var costumizationDable = new Dable();
-
 
 itemSozinhoForm.onclick = _ => {
     // Pegar na radiobox que esteja selecionada
@@ -241,6 +246,8 @@ document.addEventListener('click', event => {
     performDelete(event.target);
   }
 });
+
+btnSubmit.onclick = () => submitJsonData();
 
 // Ao clicar no x do modal, esconder interface de caixa
 spanBotaoX.onclick = hideModal;
@@ -468,9 +475,10 @@ async function fetchData(categoria = null){
 function submitJsonData(foto_url){
   let itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
   let isPersonalized = getCheckboxValue("personalizacoesativas").value;
+  itemType += isPersonalized ? "-personalizado" : "";
 
   const itemFactory = new ItemFactory();
-  try{
+  //try{
     const item = itemFactory.createItem(itemType,isPersonalized,foto_url);
 
     let result = { 
@@ -480,9 +488,9 @@ function submitJsonData(foto_url){
     }
 
     return result;
-  }catch(error){
-    alert("OH OH");
-  }
+  // }catch(error){
+  //   alert(error);
+  // }
   return undefined;
 }
 
@@ -500,7 +508,7 @@ function getItems(){
     }
 
     elementos.forEach(item => {
-        resultado.items.push({item:item[1]})
+        resultado.items.push(item[1])
     })
   });
   return [resultado];
@@ -517,7 +525,7 @@ function getOptions(){
 
 class ItemFactory{
     dados = {
-      nome: nomeInput.textContent,
+      nome: nomeInput.value,
       preco: parseFloat(inputPreco.value),
       descricao: inputDescricao.value,
       disponivel: getCheckboxValue("disponivel").value,
@@ -528,11 +536,11 @@ class ItemFactory{
   
   createItem(tipo,isPersonalized,foto_url){
     
-    // if(this.isDataValid(tipo,isPersonalized) == false)
-    //   throw new Error("Input is not valid");
+     if(this.isDataValid(tipo,isPersonalized) == false)
+       throw new Error("Input is not valid");
 
     switch(tipo){
-      case "item":
+      case "item-personalizado":
         if(isPersonalized == "true"){
           return new MenuItemWithOptions(
             this.dados.nome,this.dados.preco,
@@ -549,13 +557,16 @@ class ItemFactory{
         return new ItemBundle(
           this.dados.nome,this.dados.preco,
           this.dados.descricao,this.dados.disponivel,
-          foto_url  ,this.dados.categoria,this.dados.items)
+          foto_url,this.dados.categoria,this.dados.itens)
+      default:
+          throw new Error("Item invalido");
     }
+    
   }
 
   isDataValid(tipo,isPersonalized){
     if(this.dados.nome === '' || this.dados.preco === NaN || 
-       this.dados.preco <= 0 || (items.length == 1 && tipo == 'menu') ||
+       this.dados.preco <= 0 ||
        this.categoria == NaN){
       return false;
     }
@@ -596,4 +607,29 @@ class MenuItemWithOptions extends MenuItem{
     super(nome,preco,descricao,disponivel,foto,categoria)
     this.opcoes = opcoes;
   }
+}
+
+/** @param {Event} event */
+function handleSubmit(event) {
+event.preventDefault();
+
+  const files = imageInput.files;
+  if(files.length == 0){
+      alert("Por favor man, imagem :bruh:");
+  }
+
+  let formdata = new FormData();
+  formdata.append("foto",files[0]);
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      // Typical action to be performed when the document is ready:
+      const result = JSON.parse(xhttp.responseText);
+      if(result.status != "error")
+        console.log(JSON.stringify(submitJsonData(result.url)))
+      }
+  };
+  xhttp.open("POST", "uploadFile.php", true);
+  xhttp.send(formdata);
 }

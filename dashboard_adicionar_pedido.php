@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
       <div class="container mt-5">
         <h2 class="mb-4">Adicionar Novo Item</h2>
 
-        <?php include __DIR__ . "/includes/uploadFotosItens.php"; ?>
+        <?php// include __DIR__ . "/includes/uploadFotosItens.php"; ?>
 
         <form action="" method="post" enctype="multipart/form-data" id="dataForm">
             <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa); ?>">
@@ -85,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
 
             <?php
-            require_once "database/credentials.php";
-            require_once "database/db_connection.php";
+            require_once "./database/credentials.php";
+            require_once "./database/db_connection.php";
 
             try {
 
@@ -186,7 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
+    <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
   </div>
 
 </form>
