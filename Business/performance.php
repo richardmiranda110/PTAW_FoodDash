@@ -1,5 +1,10 @@
 <?php
 
+require_once __DIR__."/../database/credentials.php";
+require_once __DIR__."/../database/db_connection.php";
+
+$idEstabelecimento = $_GET['idEstabelecimento'];
+
 function getPedidosDiarios($pdo, $estabelecimentoId, $dia)
 {
     $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
@@ -231,32 +236,30 @@ function getTempoMedio($pdo, $estabelecimentoId)
     return $result['tempo_medio'];
 }
 
-$estabelecimentoId = 1;
-
 $diaAtual = date("j");
 $mesAtual = date("n");
 
-$itemMaisPedidoDia = getItemMaisPedidoDiario($pdo, $estabelecimentoId, $diaAtual);
+$itemMaisPedidoDia = getItemMaisPedidoDiario($pdo, $idEstabelecimento, $diaAtual);
 
-$itemMaisPedidoMes = getItemMaisPedidoMensal($pdo, $estabelecimentoId, $mesAtual);
+$itemMaisPedidoMes = getItemMaisPedidoMensal($pdo, $idEstabelecimento, $mesAtual);
 
-$avaliacaoMediaDiaria = getAvaliacaoMediaDiaria($pdo, $estabelecimentoId, $diaAtual);
+$avaliacaoMediaDiaria = getAvaliacaoMediaDiaria($pdo, $idEstabelecimento, $diaAtual);
 
-$avaliacaoMediaMensal = getAvaliacaoMediaMensal($pdo, $estabelecimentoId, $mesAtual);
+$avaliacaoMediaMensal = getAvaliacaoMediaMensal($pdo, $idEstabelecimento, $mesAtual);
 
-$vendasDiarias = getVendasDiarias($pdo, $estabelecimentoId, $diaAtual);
+$vendasDiarias = getVendasDiarias($pdo, $idEstabelecimento, $diaAtual);
 
-$vendasMensais = getVendasMensais($pdo, $estabelecimentoId, $mesAtual);
+$vendasMensais = getVendasMensais($pdo, $idEstabelecimento, $mesAtual);
 
-$pedidosDiarios = getPedidosDiarios($pdo, $estabelecimentoId, $diaAtual);
+$pedidosDiarios = getPedidosDiarios($pdo, $idEstabelecimento, $diaAtual);
 
-$pedidosMensais = getPedidosMensais($pdo, $estabelecimentoId, $mesAtual);
+$pedidosMensais = getPedidosMensais($pdo, $idEstabelecimento, $mesAtual);
 
-$precoMedioDiario = getPrecoMedioDiario($pdo, $estabelecimentoId, $diaAtual);
+$precoMedioDiario = getPrecoMedioDiario($pdo, $idEstabelecimento, $diaAtual);
 
-$precoMedioMensal = getPrecoMedioMensal($pdo, $estabelecimentoId, $mesAtual);
+$precoMedioMensal = getPrecoMedioMensal($pdo, $idEstabelecimento, $mesAtual);
 
-$tempoMedioEntrega = getTempoMedio($pdo, $estabelecimentoId);
+$tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
 
 ?>
 <!DOCTYPE html>
