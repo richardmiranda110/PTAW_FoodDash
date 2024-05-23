@@ -20,27 +20,29 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="./Business/assets/styles/adicionar.css">
   <link rel="stylesheet" href="./assets/styles/sitecss.css">
   <link rel="stylesheet" href="./assets/styles/dashboard.css">
+  <link rel="stylesheet" href="./assets/styles/responsive_styles.css">
   <script src="./assets/js/dable.js"></script>
 </head>
 
 <body>
   <!--Zona do Header -->
-  <div id="topHeader" class="container-xxl">
-    <!-- Top/Menu da Página -->
-    <?php include __DIR__ . "/includes/header_logged_in.php"; ?>
-  </div>
+    <div id="topHeader" class="container-xxl">
+        <!-- Top/Menu da Página -->
+        <?php include __DIR__ . "/Business/includes/header_business.php"; ?>
+        
+    </div>
 
-  <!--Zona de Conteudo -->
-  <div id="contentPage" class="container-xxl">
-    <?php include __DIR__ . "/includes/sidebar_perfil.php"; ?>
+    <!--Zona de Conteudo -->
+    <div id="contentPage" class="container-xxl">
+	<?php include __DIR__ . "/Business/includes/sidebar_business.php"; ?>
+ 
 
     <!--Zona de Conteudo da Página -->
     <div id="contentDiv" class="col-md-12">
 
-      <?php include __DIR__ . "../includes/navbar_business.php"; ?>
+      
 
       <?php
       /*
@@ -187,7 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
   </div>
 
 </form>
-  
+</div>  
 <!-- Modal -->
 <div id="modal" class="modal d-none">
   <div class="modal-content" id="modal-content">
@@ -196,8 +198,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
   </div>
 </div>
 
-<!--Zona do Footer -->
-<?php include __DIR__ . "/includes/footer_2.php"; ?>
+  <!--Limpa conteudo Float -->
+  <div class="cleanFloat"></div>
+
+  <!--Zona do Footer -->
+  <div class="container">
+    <?php include __DIR__."/includes/footer_2.php"; ?>
+  </div>
+  
+  
 <script src="./assets/js/adicionar_pedido.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
