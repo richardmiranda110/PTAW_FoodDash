@@ -61,190 +61,145 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         <?php include __DIR__ . "/includes/uploadFotosItens.php"; ?>
 
         <form action="" method="post" enctype="multipart/form-data" id="dataForm">
-          <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa); ?>">
+            <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa); ?>">
 
-          <div class="mb-3">
-            <label for="nome" class="form-label">Nome</label>
-            <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do item" required>
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome</label>
+              <input type="text" class="form-control " id="nome" name="nome" placeholder="Nome do item" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="foto" class="form-label">Foto</label>
+              <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="descricaoForm1 " class="purple-text">Descrição</label>
+              <div class="form-group w-100">
+                <textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricao" name="descricao" rows="3"></textarea>
+              </div>
+            </div>
+
+
+            <?php
+            require_once "database/credentials.php";
+            require_once "database/db_connection.php";
+
+            try {
+
+              $stmt = $pdo->prepare("select id_categoria, nome from categorias where id_empresa = ? ");
+              $stmt->execute([$idEmpresa]);
+              $stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo "
+      <div class='mb-3' id='categoria-container'>
+        <p class='m fw-bold purple-text'>Categoria</p>
+        <select class='mb-5 form-select' name='idcategoria' id='idcategoria'>";
+
+              foreach ($stmt as $row) {
+                echo     '<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
+              }
+
+              echo "</select>
+      </div>";
+
+
+  } catch(PDOException $e) {
+    echo "Erro ao inserir registro: " . $e->getMessage();
+  }
+  ?>
+      
+    <div class="mb-3">
+      <div id="menu-container">
+        <p class=" fw-bold purple-text">Menu</p>
+        <div class="w-25 mb-4" id="itemsozinho-form">
+          <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="true" >
+          <label class="form-check-label" for="inlineCheckbox2">Sim</label>
           </div>
-
-          <div class="mb-3">
-            <label for="foto" class="form-label">Foto</label>
-            <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="descricaoForm1 " class="purple-text">Descrição</label>
-            <div class="form-group w-100">
-              <textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricao" name="descricao" rows="3"></textarea>
-            </div>
-          </div>
-
-
-          <?php
-          require_once "database/credentials.php";
-          require_once "database/db_connection.php";
-
-          try {
-
-            $stmt = $pdo->prepare("select id_categoria, nome from categorias where id_empresa = ? ");
-            $stmt->execute([$idEmpresa]);
-            $stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            echo "
-		<div class='mb-3'>
-			<p class='m fw-bold purple-text '>Categoria</p>
-			<select class='mb-5 form-select' name='idcategoria' id='idcategoria'>
-				<option value=''>Selecione Categoria</option>";
-
-            foreach ($stmt as $row) {
-              echo     '<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
-            }
-
-            echo "</select>
-		</div>";
-          } catch (PDOException $e) {
-            echo "Erro ao inserir registro: " . $e->getMessage();
-          }
-          ?>
-
-          <div class="mb-3">
-            <p class=" fw-bold purple-text">Menu</p>
-            <div class="w-25 mb-4" id="itemsozinho-form">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="inlineRadio2" name="itemsozinho" value="true" checked>
-                <label class="form-check-label" for="inlineCheckbox2">Sim</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="false">
-                <label class="form-check-label" for="inlineCheckbox1">Não</label>
-              </div>
-            </div>
-
-            <div class="container mb-3" id="complement-section">
-              <p class="h5 fw-bold">Complemento</p>
-              <button class="btn btn-custom text-left" id="novoComplementoBtn">+ Novo Complemento</button>
-              <div class="complement-section">
-                <div class="complement-header mb-0">
-                  <p class="fw-bold m-0">Bebida</p>
-                  <button class="btn btn-custom modal_event" style="margin-left: auto;" id="add-drink-btn">Importar Existente</button>
-                </div>
-                <hr class="mt-0">
-                <div id="add-drink-dable-container"></div>
-              </div>
-
-              <div class="complement-section">
-                <div class="complement-header mb-0">
-                  <p class="fw-bold m-0">Acompanhamento</p>
-                  <button class="btn btn-custom modal_event" style="margin-left: auto;" id="add-acompanhamento-btn">Importar Existente</button>
-                </div>
-
-                <hr class="mt-0">
-                <div id="add-personalization-dable-container"></div>
-
-              </div>
-            </div>
-
-            <div>
-              <p class=" fw-bold purple-text ">Personalizações</p>
-              <div class="w-25" id="personalizacoes-ativas-form">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" id="inlineRadio2" name="personalizacoesativas" value="true" checked>
-                  <label class="form-check-label" for="inlineCheckbox2">Sim</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" id="inlineRadio1" name="personalizacoesativas" value="false">
-                  <label class="form-check-label" for="inlineCheckbox1">Não</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="container" id="personalizations-section">
-              <p class="fw-bold purple-text ">Personalizações</p>
-              <div class="section-title">
-                <p class="h5 fw-bold ">Hamburguer</p>
-              </div>
-              <button type="button" class="btn btn-custom modal_event" id="nova-personalizacao-btn">+ Nova Opção</button>
-              <hr>
-              <div class="option-list">
-                <div class="option-row">
-                  <span>Queijo</span>
-                  <div class="option-actions">
-                    <button type="button" class="btn btn-light btn-sm">✕</button>
-                    <span class="mr-2">Max.:</span>
-                    <input type="number" min="0" class="form-control form-control-sm" style="width: 50px;">
-                  </div>
-                </div>
-                <div class="option-row">
-                  <span>Cebola</span>
-                  <div class="option-actions">
-                    <button type="button" class="btn btn-light btn-sm">✕</button>
-                    <span class="mr-2">Max.:</span>
-                    <input type="number" min="0" class="form-control form-control-sm" style="width: 50px;">
-                  </div>
-                </div>
-                <div class="option-row">
-                  <span>Picles</span>
-                  <div class="option-actions">
-                    <button type="button" class="btn btn-light btn-sm">✕</button>
-                    <span class="mr-2">Max.:</span>
-                    <input type="number" min="0" class="form-control form-control-sm" style="width: 50px;">
-                  </div>
-                </div>
-                <div class="option-row">
-                  <span>Molho</span>
-                  <div class="option-actions">
-                    <button type="button" class="btn btn-light btn-sm">✕</button>
-                    <span class="mr-2">Max.:</span>
-                    <input type="number" min="0" class="form-control form-control-sm" style="width: 50px;">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="my-3 mt-5">
-              <p class="fw-bold purple-text ">Artigo Disponível?</p>
-              <div class="w-25 my-3">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" id="inlineRadio2" name="disponivel" value="true" checked>
-                  <label class="form-check-label" for="inlineCheckbox2">Sim</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" id="inlineRadio1" name="disponivel" value="false">
-                  <label class="form-check-label" for="inlineCheckbox1">Não</label>
-                </div>
-              </div>
-
-              <div class="">
-              </div>
-
-              <div class="form-group row mb-3">
-                <div class="col-sm-2">
-                  <label for="nome" class="form-label purple-text fw-bold">Preço</label>
-                  <input type="number" min="0" class="form-control" id="preco" name="preco" placeholder="Digite um número" step="0.10" min="0" required>
-                </div>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
-          </div>
-
-        </form>
-
-        <!-- Modal -->
-        <div id="modal" class="modal d-none">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <p class="fw-bold mt-1 mb-2" id="modal-text">a culpa é do richard</p>
-            <div id="DefaultDable"></div>
-            <button id="adicionarBtn">Adicionar</button>
+          <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="inlineRadio1" name="itemsozinho" value="false" checked>
+          <label class="form-check-label" for="inlineCheckbox1">Não</label>
           </div>
         </div>
+      </div>
+        <div class="container mb-5" style="display:none" id="complement-section">
+          <p class="h5 fw-bold">Produtos</p>
+          <button class="btn btn-custom text-left" id="btnNovoItemCategoria">+ Nova Categoria</button>
+          <div class="complement-section" id="categoria-produtos-container">
+      
+        </div>  
+      </div>
+    
+    <div id="personalizacoes-container">
+      <p class=" fw-bold purple-text ">Personalizações</p>
+      <div class="w-25" id="personalizacoes-ativas-form">
+        <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="inlineRadio2" name="personalizacoesativas" value="true" >
+        <label class="form-check-label" for="inlineCheckbox2">Sim</label>
+        </div>
+        <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="inlineRadio1" name="personalizacoesativas" value="false" checked>
+        <label class="form-check-label" for="inlineCheckbox1">Não</label>
+        </div>
+      </div>
+    </div>
 
-        <!--Zona do Footer -->
-        <?php include __DIR__ . "/includes/footer_2.php"; ?>
-        <script src="./assets/js/adicionar_pedido.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <div class="container" id="personalizations-section" style="display:none">
+      <p class="fw-bold purple-text ">Personalizações</p>
+      <div class="complement-header m-0">
+      <p class="h5 m-0 fw-bold " id="item-name-label">Nome do Item</p>
+      <button type="button" class="btn btn-custom modal_event" id="nova-personalizacao-btn">+ Nova Opção</button>
+      </div>
+      <hr class="m-0">
+      <div class="option-list">
+      <div id="costumization-dable" class="w-50"></div>
+  </div>
+
+      </div>
+    </div>
+    
+    <div class="my-3 mt-5">
+      <p class="fw-bold purple-text ">Artigo Disponível?</p>
+      <div class="w-25 my-3">
+        <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="inlineRadio2" name="disponivel" value="true" checked>
+        <label class="form-check-label" for="inlineCheckbox2">Sim</label>
+        </div>
+        <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="inlineRadio1" name="disponivel" value="false" >
+        <label class="form-check-label" for="inlineCheckbox1">Não</label>
+        </div>
+      </div>
+
+      <div class="">
+  </div>
+      
+    <div class="form-group row mb-3">
+      <div class="col-sm-2">
+        <label for="nome" class="form-label purple-text fw-bold">Preço</label>
+        <input type="number" min="0" class="form-control" id="preco" name="preco" placeholder="Introduza um valor (€)" step="0.10" min="0" required>  
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
+  </div>
+
+</form>
+  
+<!-- Modal -->
+<div id="modal" class="modal d-none">
+  <div class="modal-content" id="modal-content">
+    <span class="close">&times;</span>
+    <p class="fw-bold mt-1 mb-2" id="modal-text"></p>
+  </div>
+</div>
+
+<!--Zona do Footer -->
+<?php include __DIR__ . "/includes/footer_2.php"; ?>
+<script src="./assets/js/adicionar_pedido.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>

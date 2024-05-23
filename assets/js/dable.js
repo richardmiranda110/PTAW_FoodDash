@@ -647,6 +647,9 @@
 						else if (style.toLowerCase() == 'culpadorichard') {
 							$export.ApplyFoodDashStyles(tableDiv);
 						}
+						else if (style.toLowerCase() == 'fooddash') {
+							$export.ApplyFoodDash2Styles(tableDiv);
+						}
 					}
 				}
 			};
@@ -717,8 +720,8 @@
 			
 				var cells = tableDiv.querySelectorAll('tbody td');
 				for (var i = 0; i < cells.length; ++i) {
-					cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:fit-content;font-weight:bold;font-size:1.2em');
-				}
+					cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:fit-content;font-size:1.15em');
+				} 	
 
 				var headCells = tableDiv.querySelectorAll('th');
 				for (var i = 0; i < headCells.length; ++i) {
@@ -859,6 +862,76 @@
 						pageButtons[i].setAttribute('class', pageClass);
 				}
 			};
+
+			$export.ApplyFoodDash2Styles = function (tableDiv) {
+				if (!tableDiv) {
+					return false;
+				}
+				var div = document.createElement('div');
+				var span = document.createElement('span');
+				var header = tableDiv.querySelector('#' + $export.id + '_header');
+				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
+				var table = tableDiv.querySelector('table');
+				table.setAttribute('class', ' ');
+				table.setAttribute('style', 'width: 96%; margin-bottom: 0;');
+				header.setAttribute('class', 'panel-heading');
+				header.setAttribute('style','width:96%;margin-top:5px');
+
+				tableDiv.setAttribute('class', 'panel panel-info');
+				tableDiv.setAttribute('style', 'margin-bottom: 0;');
+
+				var headCells = table.querySelectorAll('th');
+				for (var i = 0; i < headCells.length; ++i) {
+					var sort = headCells[i].querySelector('.' + $export.sortClass);
+					if (sort) {
+						if (sort.innerText.charCodeAt(0) == 9660) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-down');
+						}
+						else if (sort.innerText.charCodeAt(0) == 9650) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-up');
+						}
+						sort.innerHTML = '';
+					}
+				}
+
+				var pageClass = 'btn btn-default' + $export.pagerButtonsClass;
+				var pageLeft = footer.querySelector('#' + $export.id + '_page_prev');
+
+				
+				var pagerItems = footer.querySelectorAll('li');
+				for (var i = 0; i < pagerItems.length; ++i) {
+					RemoveStyle(pagerItems[i]);
+				}
+				
+
+				if ($export.pagerIncludeFirstAndLast) {
+					var pageFirst = footer.querySelector('#' + $export.id +
+						'_page_first');
+					var pageLast = footer.querySelector('#' + $export.id +
+						'_page_last');
+					pageFirst.innerHTML = '';
+					var pageFirstSpan = span.cloneNode(false);
+					pageFirstSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-backward');
+					pageFirst.appendChild(pageFirstSpan);
+					pageLast.innerHTML = '';
+					var pageLastSpan = span.cloneNode(false);
+					pageLastSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-forward');
+					pageLast.appendChild(pageLastSpan);
+				}
+
+				var pageButtons = footer.querySelectorAll('.' +
+					$export.pagerButtonsClass);
+				for (var i = 0; i < pageButtons.length; ++i) {
+						pageButtons[i].setAttribute('class', pageClass);
+				}
+			};
+
 
 			$export.ApplyJqueryUIStyles = function (tableDiv) {
 				if (!tableDiv) {
