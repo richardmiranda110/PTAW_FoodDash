@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
             echo "<br><div class='alert alert-success' role='alert'> O item " . htmlspecialchars(basename($_FILES["foto"]["name"])) . " foi carregado.</div>";
-            echo "<script>alert(1)</script>";   
+            echo "<script>submitJsonData(".$target_file.")</script>";   
         } else {
             echo "<br><div class='alert alert-danger' role='alert'> Ocorreu um erro a carregar o ficheiro.</div>";
         }

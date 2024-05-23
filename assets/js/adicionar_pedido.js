@@ -94,6 +94,11 @@ btnNovaOpcao.onclick = _ => {
 btnAdicionarCategoria.onclick = _ => {
   showCategoryModal("Adicionar uma Categoria");
 }
+
+nomeInput.onchange = () => {
+  itemName.innerHTML = String(nomeInput.value);
+}
+
 /**
  * 
  * @param {*} parent 
@@ -269,7 +274,7 @@ function configureProductDable(dable,rowArray,columnArray){
     return '<button> <img width="30" class="bg-white deleteRow" dable-id='+dable.id+' src="../business/assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 }
-var costumizationColumns = [ 'Nome', 'Qtd'];
+var costumizationColumns = [ 'Nome', ''];
 var costumizationRows = [[]];
 function configureCostimizationDable(){
   // Configura tabelas
@@ -279,7 +284,7 @@ function configureCostimizationDable(){
 
 
   costumizationDable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return ' <div class="col-xs-2 w-25 mx-3s float-end "><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light btn-sm deleteOption">✕</button><input id="personalization-input" class="w-25 text-center float-end border" type="number" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span></div';
+    return ' <div class="col-xs-2 w-25 mx-3s float-end "><input class="w-25 text-center float-end border option-amount" type="number" value="1" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light float-end btn-sm deleteOption">✕</button></div>';
   };
 
   costumizationDable.BuildAll("costumization-dable");
@@ -426,7 +431,6 @@ function showTextModal(text){
   }
 }
 
-
 function setupModal(headerText){
   // <p class="fw-bold mt-1 mb-2"></p>
   modalText.textContent = `${headerText}`;
@@ -460,51 +464,136 @@ async function fetchData(categoria = null){
 
   return response.json();
 }
-/**
- * 		
- *  id_estabelecimento: int
-		itemsozinho: boolean, false
-		personalizações ativas : boolean, false
-		dados: {
-			nome: String,
-			preco: double,
-			descricao: String,
-			disponivel: boolean
-			foto: String,
-			categoria: int?
-			itens: [ 
-				{ID: int}
-				{ID: int}
-			]
-		}
- * 
- */
 
-function createFromJson(foto_url){
-  const result = { 
-    idEstabelecimento: 0,
-    itemsozinho: getCheckboxValue("itemsozinho").value,
-    personalizacoesAtivas: getCheckboxValue("personalizacoesativas").value,
-    dados: {
+function submitJsonData(foto_url){
+  let itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
+  let isPersonalized = getCheckboxValue("personalizacoesativas").value;
+
+  const itemFactory = new ItemFactory();
+  try{
+    const item = itemFactory.createItem(itemType,isPersonalized,foto_url);
+
+    let result = { 
+      idEstabelecimento: 0,
+      tipo:itemType,
+      dados: item
+    }
+
+    return result;
+  }catch(error){
+    alert("OH OH");
+  }
+  return undefined;
+}
+
+function getItems(){
+  let resultado = {};
+  dableProductTables.forEach(element => {
+    const elementos = element.rows.slice(1);
+
+    if(elementos.length == 0){
+      return;
+    }
+    resultado = {
+        categoria: elementos[0][1].categoria,
+        items: []
+    }
+
+    elementos.forEach(item => {
+        resultado.items.push({item:item[1]})
+    })
+  });
+  return [resultado];
+}
+
+function getOptions(){
+  const json = []
+  costumizationDable.rows.slice(1).forEach((element,i) => {
+    const options = document.querySelectorAll(".option-amount");
+    json.push({nome:element[0],max_quantidade: parseInt(options[i].value)});
+  })
+  return json;
+}
+
+class ItemFactory{
+    dados = {
       nome: nomeInput.textContent,
       preco: parseFloat(inputPreco.value),
       descricao: inputDescricao.value,
       disponivel: getCheckboxValue("disponivel").value,
-      foto: foto_url,
       categoria:  parseInt(categoriaSelector.options[categoriaSelector.selectedIndex].value),
-      itens : getItems()
+      itens : getItems(),
+      opcoes: getOptions()
     }
+  
+  createItem(tipo,isPersonalized,foto_url){
     
+    if(this.isDataValid(tipo,isPersonalized) == false)
+      throw new Error("Input is not valid");
+
+    switch(tipo){
+      case "item":
+        if(isPersonalized){
+          return new MenuItemWithOptions(
+            this.dados.nome,this.dados.preco,
+            this.dados.descricao,this.dados.disponivel,
+            foto_url,this.dados.categoria,
+            this.dados.opcoes)
+        }else{
+          return new MenuItem(
+            this.dados.nome,this.dados.preco,
+            this.dados.descricao,this.dados.disponivel,
+            foto_url,this.dados.categoria)
+        }
+      case "menu":
+        return new ItemBundle(
+          this.dados.nome,this.dados.preco,
+          this.dados.descricao,this.dados.disponivel,
+          foto_url  ,this.dados.categoria,this.dados.items)
+    }
   }
-  return result;
+
+  isDataValid(tipo,isPersonalized){
+    if(this.dados.nome === '' || this.dados.preco === NaN || 
+       this.dados.preco <= 0 || (items.length == 1 && tipo == 'menu') ||
+       this.categoria == NaN){
+      return false;
+    }
+    return true;
+  }
 }
 
-function getItems(){
-  let arr = [];
+class MenuItem{
+  constructor(nome,preco,descricao,disponivel,foto,categoria) {
+    this.nome = nome;
+    this.preco = preco;
+    this.descricao = descricao;
+    this.disponivel = disponivel;
+    this.foto = foto;
+    this.categoria = categoria;
+  }
 
-  dableProductTables.forEach(element => {
-    const re = element.rowObjects.slice(1);
-    arr.push({"items":re[0].Row[1]});
-  });
-  return arr[0].items;
+  toJson(){
+    return JSON.stringify(this);
+  }
+}
+
+class ItemBundle extends MenuItem {
+  constructor(nome,preco,descricao,disponivel,foto,categoria,items){
+    super(nome,preco,descricao,disponivel,foto,categoria)
+    this.items = items;
+  }
+}
+
+class SingleMenuItem extends MenuItem{
+  constructor(nome,preco,descricao,disponivel,foto,categoria){
+    super(nome,preco,descricao,disponivel,foto,categoria)
+  }
+}
+
+class MenuItemWithOptions extends MenuItem{
+  constructor(nome,preco,descricao,disponivel,foto,categoria,opcoes){
+    super(nome,preco,descricao,disponivel,foto,categoria)
+    this.opcoes = opcoes;
+  }
 }

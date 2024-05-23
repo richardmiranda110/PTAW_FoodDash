@@ -23,6 +23,7 @@ session_start();
   <link rel="stylesheet" href="./assets/styles/sitecss.css">
   <link rel="stylesheet" href="./assets/styles/dashboard.css">
   <link rel="stylesheet" href="./assets/styles/responsive_styles.css">
+  <link rel="stylesheet" href="./Business/assets/styles/adicionar.css">
   <script src="./assets/js/dable.js"></script>
 </head>
 
