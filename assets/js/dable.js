@@ -632,6 +632,9 @@
 				if (style.toLowerCase() != 'clear') {
 				  //base styles for 'none', the other styles sometimes build on these
 					//so we apply them beforehand
+				if(style.toLowerCase() == 'fooddash_categorias')
+					$export.ApplyBaseFoodDashCategoriesStyles(tableDiv);
+				else
 				  $export.ApplyBaseStyles(tableDiv);
 
 				  if (style.toLowerCase() == 'none') {
@@ -649,6 +652,9 @@
 						}
 						else if (style.toLowerCase() == 'fooddash') {
 							$export.ApplyFoodDash2Styles(tableDiv);
+						}
+						else if (style.toLowerCase() == 'fooddash_categorias') {
+							$export.ApplyFoodDashCategoryStyles(tableDiv);
 						}
 					}
 				}
@@ -705,8 +711,82 @@
 				children[1].removeAttribute('style');
 				RemoveStyle(children[2]);
 				RemoveStyle(thead);
+
 				RemoveStyle(tbody);
 			}
+
+			$export.ApplyBaseFoodDashCategoriesStyles = function (tableDiv) {
+				if ($export.dableClass) {
+					tableDiv.setAttribute('class', $export.dableClass);
+				}
+				var table = tableDiv.querySelector('table');
+				table.setAttribute('style', 'width: 100%;');
+				if ($export.tableClass) {
+					table.setAttribute('class', $export.tableClass);
+				}
+				
+			
+				var cells = tableDiv.querySelectorAll('tbody td');
+				for (var i = 0; i < cells.length; ++i) {
+					if(i % 2 == 0)
+					cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:50%;color:#FEBB41;font-weight:bold;font-size:1em');
+					else{
+						cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:50%;font-weight:bold;font-size:1em');
+					}
+				} 	
+
+				var headCells = tableDiv.querySelectorAll('th');
+				for (var i = 0; i < headCells.length; ++i) {
+					headCells[i].setAttribute('style', 'padding: 5px;font-size:1.3em;font-weight:bold;border-bottom:1px solid');
+					var headCellLeft = headCells[i].children[0];
+					headCellLeft.setAttribute('style', 'float: left');
+					if ($export.columnData[i].CustomSortFunc !== false) {
+						var headCellRight = headCells[i].children[1];
+						headCellRight.setAttribute('style', 'float: right');
+						var headCellClear = headCells[i].children[2];
+						headCellClear.setAttribute('style', 'clear: both;');
+
+					}
+					else {
+						var headCellClear = headCells[i].children[1];
+						headCellClear.setAttribute('style', 'clear: both;');
+					}
+				}
+
+				var header = tableDiv.querySelector('#' + $export.id + '_header');
+				header.setAttribute('style', 'padding: 5px;');
+				if ($export.headerClass) {
+					header.setAttribute('class', $export.headerClass);
+				}
+				var headLeft = header.children[0];
+				headLeft.setAttribute('style', 'display:none;');
+				var headRight = header.children[1];
+				headRight.setAttribute('style', 'display:none;');
+				var headClear = header.children[2];
+				headClear.setAttribute('style', 'clear: both;');
+
+				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
+				footer.setAttribute('style', 'padding: 5px;');
+				if ($export.footerClass) {
+					footer.setAttribute('class', $export.footerClass);
+				}
+				var footLeft = footer.children[0];
+				footLeft.setAttribute('style', 'display:none;');
+				var footClear = footer.children[2];
+				footClear.setAttribute('style', 'clear: both;');
+				var footRight = footer.children[1];
+				footRight.setAttribute('style', 'display:none');
+				var footRightItems = footRight.querySelectorAll('li');
+				for (var i = 0; i < footRightItems.length; ++i) {
+					footRightItems[i].setAttribute(
+						'style',
+						'display: inline; margin-right: 5px;');
+					footRightItems[i].setAttribute(
+						'class',
+						'action-button btn');
+				}
+			}
+
 			$export.ApplyBaseStyles = function (tableDiv) {
 				if ($export.dableClass) {
 					tableDiv.setAttribute('class', $export.dableClass);
@@ -905,6 +985,252 @@
 					RemoveStyle(pagerItems[i]);
 				}
 				
+
+				if ($export.pagerIncludeFirstAndLast) {
+					var pageFirst = footer.querySelector('#' + $export.id +
+						'_page_first');
+					var pageLast = footer.querySelector('#' + $export.id +
+						'_page_last');
+					pageFirst.innerHTML = '';
+					var pageFirstSpan = span.cloneNode(false);
+					pageFirstSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-backward');
+					pageFirst.appendChild(pageFirstSpan);
+					pageLast.innerHTML = '';
+					var pageLastSpan = span.cloneNode(false);
+					pageLastSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-forward');
+					pageLast.appendChild(pageLastSpan);
+				}
+
+				var pageButtons = footer.querySelectorAll('.' +
+					$export.pagerButtonsClass);
+				for (var i = 0; i < pageButtons.length; ++i) {
+						pageButtons[i].setAttribute('class', pageClass);
+				}
+			};
+
+			$export.ApplyFoodDashStyles = function (tableDiv) {
+				if (!tableDiv) {
+					return false;
+				}
+				var div = document.createElement('div');
+				var span = document.createElement('span');
+				var header = tableDiv.querySelector('#' + $export.id + '_header');
+				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
+				var table = tableDiv.querySelector('table');
+				table.setAttribute('class', ' ');
+				table.setAttribute('style', 'width: 96%; margin-bottom: 0;');
+				header.setAttribute('class', 'panel-heading');
+				header.setAttribute('style','width:96%;margin-top:5px');
+				footer.setAttribute('style','width:96%;margin-top:5px');
+				footer.setAttribute('class', 'panel-footer');
+				tableDiv.setAttribute('class', 'panel panel-info');
+				tableDiv.setAttribute('style', 'margin-bottom: 0;');
+
+				var tableHeads = table.querySelectorAll('thead tr');
+				for (var i = 0; i < tableHeads.length; ++i) {    //remove manual striping
+					tableHeads[i].removeAttribute('style');
+				}
+
+
+				var headCells = table.querySelectorAll('th');
+				for (var i = 0; i < headCells.length; ++i) {
+					var sort = headCells[i].querySelector('.' + $export.sortClass);
+					if (sort) {
+						if (sort.innerText.charCodeAt(0) == 9660) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-down');
+						}
+						else if (sort.innerText.charCodeAt(0) == 9650) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-up');
+						}
+						sort.innerHTML = '';
+					}
+				}
+
+				var pageClass = 'btn btn-default w-75' + $export.pagerButtonsClass;
+				var pageLeft = footer.querySelector('#' + $export.id + '_page_prev');
+				var pageRight = footer.querySelector('#' + $export.id + '_page_next');
+				
+				var pageParent = pageLeft.parentElement;
+				
+				var pagerItems = footer.querySelectorAll('li');
+				for (var i = 0; i < pagerItems.length; ++i) {
+					RemoveStyle(pagerItems[i]);
+				}
+				
+				pageParent.setAttribute('class', 'btn-group');
+
+				pageLeft.innerHTML = '';
+				var pageLeftSpan = span.cloneNode(false);
+				pageLeftSpan.setAttribute('class', 'h5 bi bi-arrow-left');
+				pageLeft.appendChild(pageLeftSpan);
+				
+				pageRight.innerHTML = '';
+				var pageRightSpan = span.cloneNode(false);
+				pageRightSpan.setAttribute('class', 'h5 bi bi-arrow-right');
+				pageRight.appendChild(pageRightSpan);
+
+				if ($export.pagerIncludeFirstAndLast) {
+					var pageFirst = footer.querySelector('#' + $export.id +
+						'_page_first');
+					var pageLast = footer.querySelector('#' + $export.id +
+						'_page_last');
+					pageFirst.innerHTML = '';
+					var pageFirstSpan = span.cloneNode(false);
+					pageFirstSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-backward');
+					pageFirst.appendChild(pageFirstSpan);
+					pageLast.innerHTML = '';
+					var pageLastSpan = span.cloneNode(false);
+					pageLastSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-forward');
+					pageLast.appendChild(pageLastSpan);
+				}
+
+				var pageButtons = footer.querySelectorAll('.' +
+					$export.pagerButtonsClass);
+				for (var i = 0; i < pageButtons.length; ++i) {
+						pageButtons[i].setAttribute('class', pageClass);
+				}
+			};
+
+			$export.ApplyFoodDashCategoryStyles = function (tableDiv) {
+				if (!tableDiv) {
+					return false;
+				}
+				var div = document.createElement('div');
+				var span = document.createElement('span');
+				var header = tableDiv.querySelector('#' + $export.id + '_header');
+				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
+				var table = tableDiv.querySelector('table');
+				table.setAttribute('class', ' ');
+				table.setAttribute('style', 'width: 96%; margin-bottom: 0;');
+				header.setAttribute('class', 'panel-heading');
+				header.setAttribute('style','width:96%;margin-top:5px');
+
+				tableDiv.setAttribute('class', 'panel panel-info');
+				tableDiv.setAttribute('style', 'margin-bottom: 0;');
+
+				var headCells = table.querySelectorAll('th');
+				for (var i = 0; i < headCells.length; ++i) {
+					var sort = headCells[i].querySelector('.' + $export.sortClass);
+					if (sort) {
+						if (sort.innerText.charCodeAt(0) == 9660) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-down');
+						}
+						else if (sort.innerText.charCodeAt(0) == 9650) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-up');
+						}
+						sort.innerHTML = '';
+					}
+				}
+
+				var pageClass = 'btn btn-default' + $export.pagerButtonsClass;
+				var pageLeft = footer.querySelector('#' + $export.id + '_page_prev');
+
+				
+				var pagerItems = footer.querySelectorAll('li');
+				for (var i = 0; i < pagerItems.length; ++i) {
+					RemoveStyle(pagerItems[i]);
+				}
+				
+
+				if ($export.pagerIncludeFirstAndLast) {
+					var pageFirst = footer.querySelector('#' + $export.id +
+						'_page_first');
+					var pageLast = footer.querySelector('#' + $export.id +
+						'_page_last');
+					pageFirst.innerHTML = '';
+					var pageFirstSpan = span.cloneNode(false);
+					pageFirstSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-backward');
+					pageFirst.appendChild(pageFirstSpan);
+					pageLast.innerHTML = '';
+					var pageLastSpan = span.cloneNode(false);
+					pageLastSpan.setAttribute(
+						'class',
+						'glyphicon glyphicon-fast-forward');
+					pageLast.appendChild(pageLastSpan);
+				}
+
+				var pageButtons = footer.querySelectorAll('.' +
+					$export.pagerButtonsClass);
+				for (var i = 0; i < pageButtons.length; ++i) {
+						pageButtons[i].setAttribute('class', pageClass);
+				}
+			};
+
+			$export.ApplyFoodDashStyles = function (tableDiv) {
+				if (!tableDiv) {
+					return false;
+				}
+				var div = document.createElement('div');
+				var span = document.createElement('span');
+				var header = tableDiv.querySelector('#' + $export.id + '_header');
+				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
+				var table = tableDiv.querySelector('table');
+				table.setAttribute('class', ' ');
+				table.setAttribute('style', 'width: 96%; margin-bottom: 0;');
+				header.setAttribute('class', 'panel-heading');
+				header.setAttribute('style','width:96%;margin-top:5px');
+				footer.setAttribute('style','width:96%;margin-top:5px');
+				footer.setAttribute('class', 'panel-footer');
+				tableDiv.setAttribute('class', 'panel panel-info');
+				tableDiv.setAttribute('style', 'margin-bottom: 0;');
+
+				var tableHeads = table.querySelectorAll('thead tr');
+				for (var i = 0; i < tableHeads.length; ++i) {    //remove manual striping
+					tableHeads[i].removeAttribute('style');
+				}
+
+				var headCells = table.querySelectorAll('th');
+				for (var i = 0; i < headCells.length; ++i) {
+					var sort = headCells[i].querySelector('.' + $export.sortClass);
+					if (sort) {
+						if (sort.innerText.charCodeAt(0) == 9660) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-down');
+						}
+						else if (sort.innerText.charCodeAt(0) == 9650) {
+							sort.setAttribute('class', $export.sortClass +
+								' glyphicon glyphicon-chevron-up');
+						}
+						sort.innerHTML = '';
+					}
+				}
+
+				var pageClass = 'btn btn-default w-75' + $export.pagerButtonsClass;
+				var pageLeft = footer.querySelector('#' + $export.id + '_page_prev');
+				var pageRight = footer.querySelector('#' + $export.id + '_page_next');
+				
+				var pageParent = pageLeft.parentElement;
+				
+				var pagerItems = footer.querySelectorAll('li');
+				for (var i = 0; i < pagerItems.length; ++i) {
+					RemoveStyle(pagerItems[i]);
+				}
+				
+				pageParent.setAttribute('class', 'btn-group');
+
+				pageLeft.innerHTML = '';
+				var pageLeftSpan = span.cloneNode(false);
+				pageLeftSpan.setAttribute('class', 'h5 bi bi-arrow-left');
+				pageLeft.appendChild(pageLeftSpan);
+				
+				pageRight.innerHTML = '';
+				var pageRightSpan = span.cloneNode(false);
+				pageRightSpan.setAttribute('class', 'h5 bi bi-arrow-right');
+				pageRight.appendChild(pageRightSpan);
 
 				if ($export.pagerIncludeFirstAndLast) {
 					var pageFirst = footer.querySelector('#' + $export.id +

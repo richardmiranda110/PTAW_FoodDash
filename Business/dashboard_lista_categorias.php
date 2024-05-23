@@ -48,17 +48,16 @@ session_start();
                 <a class="nav-link nav" href="#">Menus</a>
             </li>
             <li class="nav-item"> <!-- não me digas nada sobre o style, o css não gosta dele -->
-                <a class="nav-link nav "  href="http://localhost/business/dashboard_lista_categorias.php#">Categorias</a>
+                <a class="nav-link nav " style="border-bottom: 1vh solid black;" href="http://localhost/business/dashboard_lista_categorias.php#">Categorias</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav" style="border-bottom: 1vh solid black;"  href="http://localhost/business/dashboard_lista_items.php#">Itens</a>
+                <a class="nav-link nav"  href="http://localhost/business/dashboard_lista_items.php#">Itens</a>
             </li>
         </ul>
   </div>
   </nav>
     
-
-  <span class="float:left fw-bold h2 m-3 text-left">Items</span> 
+  <span class="float:left fw-bold h2 m-3 mb-2 mt-3 text-left">Categorias</span> 
   <button class="float-end btn btn-custom fw-bold mt-1 " style="margin-right:4.5vw" onclick="window.open('../dashboard_adicionar_pedido.php')">+ Novo Item</button>
   <div id="DefaultDable" ></div>
 
@@ -87,10 +86,6 @@ try {
 	$stmt->execute([$idEmpresa]);
 	$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-	foreach ($stmt as $row) {
-	  echo 		'<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
-	}
-
 	echo "</select>
 		</div>";
 
@@ -102,7 +97,7 @@ try {
 </div>
   <!--Zona do Footer -->
   <?php include __DIR__."../../business/includes/footer_business.php"; ?>
-  <script src="./assets/js/lista_items.js"></script>
+  <script src="./assets/js/lista_categorias.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>

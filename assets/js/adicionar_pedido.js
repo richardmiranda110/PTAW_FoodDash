@@ -528,12 +528,12 @@ class ItemFactory{
   
   createItem(tipo,isPersonalized,foto_url){
     
-    if(this.isDataValid(tipo,isPersonalized) == false)
-      throw new Error("Input is not valid");
+    // if(this.isDataValid(tipo,isPersonalized) == false)
+    //   throw new Error("Input is not valid");
 
     switch(tipo){
       case "item":
-        if(isPersonalized){
+        if(isPersonalized == "true"){
           return new MenuItemWithOptions(
             this.dados.nome,this.dados.preco,
             this.dados.descricao,this.dados.disponivel,
