@@ -20,6 +20,7 @@ $pdo = new PDO(
 
 // cria o o atributo $Validacao com o valor true, pois não existem falhas
 $Validacao = true;
+$utilizadorModificado = null;
 
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -28,13 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 // Enviando dados para a BD, ao editar dados de um determinado utilizador
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Verificar que os campos obrigatórios estão preenchidos
-    // Campo Email
-    /*if (empty($_POST['email'])) {
-        $ErroEmail = "Preenchimento obrigatório";
-        $Validacao = false;
-    }*/
-
     // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
     // retirar carateres perigosos
     $utilizadorModificado = array(
@@ -47,34 +41,23 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'pais' => htmlentities(trim($_POST['pais'])),
         'CodPostal' => htmlentities(trim($_POST['CodPostal']))
     );
+}
 
-    // Verificar que os campos numéricos apenas contêm números
-    // Telemovel
-    /* if ((!empty($_POST['telemovel'])) && (!is_numeric($_POST['telemovel']))) {
-        $ErroTelemovel = "Apenas pode conter números";
-        $Validacao = false;
-    }*/
-
-    // Se não ocorreram erros de validação, atualizar o produto
-    if ($Validacao == true) {
-        // Editar o usuário no banco de dados
-        if (EditarUtilizador($pdo, 1, $utilizadorModificado)) { // ALTERAR ID
-            $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR ID
-            /*echo "<script>
-            $(document).ready(function(){
-                $('#modal_sucesso').modal('show');
-            });
-        </script>";*/
-        } else {
-            /* echo "<script>
-             $(document).ready(function(){
-                 $('#modal_erro').modal('show');
-             });
-         </script>"; */
-        }
+// Se não ocorreram erros de validação, atualizar o produto
+if ($Validacao == true && $utilizadorModificado !== null) {
+    // Editar o usuário no banco de dados
+    if (EditarUtilizador($pdo, 1, $utilizadorModificado)) { // ALTERAR ID
+        $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR ID
+        echo "<div class='alert alert-success' role='alert'>
+            Dados alterados com sucesso
+        </div>";
     } else {
-        $utilizador = ObterUmUtilizador($pdo, 1);
+        echo "<div class='alert alert-danger' role='alert'>
+            Ocorreu um erro ao alterar dados! Por favor, tente novamente.
+        </div>";
     }
+} else {
+    $utilizador = ObterUmUtilizador($pdo, 1);
 }
 ?>
 
@@ -87,6 +70,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/styles/dashboard_beatriz.css">
+    <link rel="stylesheet" href="./assets/styles/responsive_styles.css">
     <link rel="stylesheet" href="./assets/styles/sitecss.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -100,26 +84,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
-
-    <!-- The Modal -->
-    <!--<div id="modal" class="modal1">
-        <div class="modal-content1">
-            <div class="modal-header1">
-                <span class="close1">&times;</span>
-                <h2>Iniciar Sessão</h2>
-            </div>
-            <div class="modal-body1">
-                <p>
-                    <?php
-                    /*if (isset($_SESSION["mensagem"])) {
-                        echo $_SESSION["mensagem"];
-                    } else if (isset($_SESSION["erro"])) {
-                        echo $_SESSION["erro"];
-                    }*/
-                    ?>
-                </p>
-            </div>
-        </div>-->
 
     <!-- Div element where PHP value is set -->
     <div id="valid" style="display: none;"><?php echo var_export($Validacao);
