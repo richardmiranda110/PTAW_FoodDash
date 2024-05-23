@@ -2,7 +2,7 @@
 ?>
 <div id="sideBarLeft" class="col-md-2 z-index-n1">
 	<div class="d-flex flex-column" id="sidebar">
-		<ul class="nav nav-pills flex-column mb-auto nav-item-container ">
+		<ul class="nav nav-pills flex-column mb-auto nav-item-container">
 			<!-- Home -->
 			<li class="nav-item">
 				<a href="#" class="nav-link active" aria-current="page">
@@ -15,7 +15,6 @@
 			<!-- Loja -->
 			<li>
 				<a href="#" class="nav-link">
-					<span class="bi-person-vcard"></span>
 					<span class="bi bi-shop">
 						Loja
 					</span>
@@ -65,9 +64,9 @@
 			<!-- Menu -->
 			<li>
 				<a href="#" class="nav-link">
-					<span class=""></span>
+					<span class="bi bi-egg-fill"></span>
 					<span class="bi has-text-grey">
-						Menu
+						Menus
 					</span>
 				</a>
 			</li>
