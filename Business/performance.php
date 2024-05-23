@@ -1,5 +1,263 @@
 <?php
 
+function getPedidosDiarios($pdo, $estabelecimentoId, $dia)
+{
+    $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_pedidos'];
+}
+function getPedidosMensais($pdo, $estabelecimentoId, $mes)
+{
+    $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_pedidos'];
+}
+
+function getVendasDiarias($pdo, $estabelecimentoId, $dia)
+{
+    $query = "SELECT SUM(precoTotal) AS total_dinheiro
+        FROM Pedidos
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_dinheiro'];
+}
+
+
+function getVendasMensais($pdo, $estabelecimentoId, $mes)
+{
+    $query = "SELECT SUM(precoTotal) AS total_dinheiro
+        FROM Pedidos
+        WHERE id_estabelecimento = :estabelecimentoId
+          AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_dinheiro'];
+}
+
+//Preço médio diário
+
+function getPrecoMedioDiario($pdo, $estabelecimentoId, $dia)
+{
+    $totalVendas = getVendasDiarias($pdo, $estabelecimentoId, $dia);
+    $totalPedidos = getPedidosDiarios($pdo, $estabelecimentoId, $dia);
+
+    if ($totalPedidos == 0) {
+        return 0;
+    }
+
+    $media = $totalVendas / $totalPedidos;
+    return number_format($media, 2);
+}
+
+//Preço médio mensal
+
+function getPrecoMedioMensal($pdo, $estabelecimentoId, $mes)
+{
+    $totalVendas = getVendasMensais($pdo, $estabelecimentoId, $mes);
+    $totalPedidos = getPedidosMensais($pdo, $estabelecimentoId, $mes);
+
+    if ($totalPedidos == 0) {
+        return 0;
+    }
+
+    $media = $totalVendas / $totalPedidos;
+    return number_format($media, 2);
+}
+
+function getItemMaisPedidoDiario($pdo, $estabelecimentoId, $dia)
+{
+    $query = "SELECT 
+            i.nome, 
+            SUM(pi.quantidade) AS total_vendido
+        FROM 
+            Pedidos p
+        JOIN 
+            Pedido_Itens pi ON p.id_pedido = pi.id_pedido
+        JOIN 
+            Itens i ON pi.id_item = i.id_item
+        WHERE 
+            p.id_estabelecimento = :estabelecimentoId
+            AND EXTRACT(DAY FROM data) = :dia
+        GROUP BY 
+            i.nome
+        ORDER BY 
+            total_vendido DESC
+        LIMIT 1;";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':dia', $dia, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result ? $result['nome'] : null;
+}
+
+function getItemMaisPedidoMensal($pdo, $estabelecimentoId, $mes)
+{
+    $query = "SELECT 
+            i.nome, 
+            SUM(pi.quantidade) AS total_vendido
+        FROM 
+            Pedidos p
+        JOIN 
+            Pedido_Itens pi ON p.id_pedido = pi.id_pedido
+        JOIN 
+            Itens i ON pi.id_item = i.id_item
+        WHERE 
+            p.id_estabelecimento = :estabelecimentoId
+            AND EXTRACT(MONTH FROM data) = :mes
+        GROUP BY 
+            i.nome
+        ORDER BY 
+            total_vendido DESC
+        LIMIT 1;";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result ? $result['nome'] : null;
+}
+
+//Função complementar da função getAvaliacaoMediaDiaria()
+function getTodasAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
+{
+    $query = "SELECT COUNT(*) AS total_avaliacao
+        FROM Avaliacoes
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_avaliacao'];
+}
+
+//Função complementar da função getAvaliacaoMediaDiaria()
+function getSomaAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
+{
+    $query = "SELECT SUM(classificacao) AS total_avaliacao
+        FROM Avaliacoes
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_avaliacao'];
+}
+
+function getAvaliacaoMediaDiaria($pdo, $estabelecimentoId, $dia)
+{
+    $somaAvaliacoes = getSomaAvaliacoesDoDia($pdo, $estabelecimentoId, $dia);
+    $totalAvaliacoes = getTodasAvaliacoesDoDia($pdo, $estabelecimentoId, $dia);
+
+    if ($totalAvaliacoes == 0) {
+        return 0;
+    }
+
+    $media = $somaAvaliacoes / $totalAvaliacoes;
+    return number_format($media, 2);
+}
+
+//Função complementar da função getAvaliacaoMediaMensal()
+function getTodasAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
+{
+    $query = "SELECT COUNT(*) AS total_avaliacao
+        FROM Avaliacoes
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_avaliacao'];
+}
+
+//Função complementar da função getAvaliacaoMediaMensal()
+function getSomaAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
+{
+    $query = "SELECT SUM(classificacao) AS total_avaliacao
+        FROM Avaliacoes
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_avaliacao'];
+}
+
+function getAvaliacaoMediaMensal($pdo, $estabelecimentoId, $mes)
+{
+    $somaAvaliacoes = getSomaAvaliacoesDoMes($pdo, $estabelecimentoId, $mes);
+    $totalAvaliacoes = getTodasAvaliacoesDoMes($pdo, $estabelecimentoId, $mes);
+
+    if ($totalAvaliacoes == 0) {
+        return 0;
+    }
+
+    $media = $somaAvaliacoes / $totalAvaliacoes;
+    return number_format($media, 2);
+}
+
+function getTempoMedio($pdo, $estabelecimentoId)
+{
+    $query = "SELECT tempo_medio_entrega AS tempo_medio
+        FROM Estabelecimentos
+        WHERE id_estabelecimento = :estabelecimentoId";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['tempo_medio'];
+}
+
+$estabelecimentoId = 1;
+
+$diaAtual = date("j");
+$mesAtual = date("n");
+
+$itemMaisPedidoDia = getItemMaisPedidoDiario($pdo, $estabelecimentoId, $diaAtual);
+
+$itemMaisPedidoMes = getItemMaisPedidoMensal($pdo, $estabelecimentoId, $mesAtual);
+
+$avaliacaoMediaDiaria = getAvaliacaoMediaDiaria($pdo, $estabelecimentoId, $diaAtual);
+
+$avaliacaoMediaMensal = getAvaliacaoMediaMensal($pdo, $estabelecimentoId, $mesAtual);
+
+$vendasDiarias = getVendasDiarias($pdo, $estabelecimentoId, $diaAtual);
+
+$vendasMensais = getVendasMensais($pdo, $estabelecimentoId, $mesAtual);
+
+$pedidosDiarios = getPedidosDiarios($pdo, $estabelecimentoId, $diaAtual);
+
+$pedidosMensais = getPedidosMensais($pdo, $estabelecimentoId, $mesAtual);
+
+$precoMedioDiario = getPrecoMedioDiario($pdo, $estabelecimentoId, $diaAtual);
+
+$precoMedioMensal = getPrecoMedioMensal($pdo, $estabelecimentoId, $mesAtual);
+
+$tempoMedioEntrega = getTempoMedio($pdo, $estabelecimentoId);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,8 +278,8 @@
 
         .grafico {
             overflow: auto;
-            height: 360px;
-            max-height: 360px;
+            height: 380px;
+            max-height: 380px;
         }
     </style>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -36,12 +294,18 @@
                 ["Element", "Pedidos", {
                     role: "style"
                 }],
-                ["Jul", 19, "gold"],
-                ["Ago", 25, "gold"],
-                ["Set", 17, "gold"],
-                ["Out", 16, "gold"],
-                ["Nov", 14, "gold"],
-                ["Dez", 21, "gold"],
+                ["Jan", <?= getPedidosMensais($pdo, $estabelecimentoId, 1) ?>, "gold"],
+                ["Fev", <?= getPedidosMensais($pdo, $estabelecimentoId, 2) ?>, "gold"],
+                ["Mar", <?= getPedidosMensais($pdo, $estabelecimentoId, 3) ?>, "gold"],
+                ["Abr", <?= getPedidosMensais($pdo, $estabelecimentoId, 4) ?>, "gold"],
+                ["Mai", <?= getPedidosMensais($pdo, $estabelecimentoId, 5) ?>, "gold"],
+                ["Jun", <?= getPedidosMensais($pdo, $estabelecimentoId, 6) ?>, "gold"],
+                ["Jul", <?= getPedidosMensais($pdo, $estabelecimentoId, 7) ?>, "gold"],
+                ["Ago", <?= getPedidosMensais($pdo, $estabelecimentoId, 8) ?>, "gold"],
+                ["Set", <?= getPedidosMensais($pdo, $estabelecimentoId, 9) ?>, "gold"],
+                ["Out", <?= getPedidosMensais($pdo, $estabelecimentoId, 10) ?>, "gold"],
+                ["Nov", <?= getPedidosMensais($pdo, $estabelecimentoId, 11) ?>, "gold"],
+                ["Dez", <?= getPedidosMensais($pdo, $estabelecimentoId, 12) ?>, "gold"],
             ]);
 
             var view = new google.visualization.DataView(data);
@@ -57,10 +321,10 @@
 
             var options = {
                 title: "Números de pedido por mês",
-                width: 800,
-                height: 390,
+                width: 820,
+                height: 340,
                 bar: {
-                    groupWidth: "12%"
+                    groupWidth: "35%"
                 },
                 legend: {
                     position: "none"
@@ -80,18 +344,24 @@
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Year', 'Dinheiro gasto'],
-                ['Jul', 100],
-                ['Ago', 200],
-                ['Set', 140],
-                ['Out', 220],
-                ['Nov', 180],
-                ['Dez', 300]
+                ['Jan', <?= getPedidosMensais($pdo, $estabelecimentoId, 1) ?>],
+                ['Fev', <?= getPedidosMensais($pdo, $estabelecimentoId, 2) ?>],
+                ['Mar', <?= getPedidosMensais($pdo, $estabelecimentoId, 3) ?>],
+                ['Abr', <?= getPedidosMensais($pdo, $estabelecimentoId, 4) ?>],
+                ['Mai', <?= getPedidosMensais($pdo, $estabelecimentoId, 5) ?>],
+                ['Jun', <?= getPedidosMensais($pdo, $estabelecimentoId, 6) ?>],
+                ['Jul', <?= getPedidosMensais($pdo, $estabelecimentoId, 7) ?>],
+                ['Ago', <?= getPedidosMensais($pdo, $estabelecimentoId, 8) ?>],
+                ['Set', <?= getPedidosMensais($pdo, $estabelecimentoId, 9) ?>],
+                ['Out', <?= getPedidosMensais($pdo, $estabelecimentoId, 10) ?>],
+                ['Nov', <?= getPedidosMensais($pdo, $estabelecimentoId, 11) ?>],
+                ['Dez', <?= getPedidosMensais($pdo, $estabelecimentoId, 12) ?>]
             ]);
 
             var options = {
-                width: 800,
-                height: 300,
-                title: 'Dinheiro gasto',
+                width: 820,
+                height: 340,
+                title: 'Vendas',
                 curveType: 'function',
                 legend: {
                     position: 'bottom'
@@ -111,6 +381,10 @@
     <?php
     include __DIR__ . "/includes/header_business.php";
     ?>
+    <!-- SIDEBAR -->
+    <?php
+    include __DIR__ . "/includes/sidebar_business.php";
+    ?>
     <!-- Sumário diário -->
     <section id="pricing" class="bg-light pt-2 pb-2">
         <div class="container-lg">
@@ -126,7 +400,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Vendas</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">469,70€</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $vendasDiarias . "€" ?></p>
                         </div>
                     </div>
                 </div>
@@ -134,7 +408,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Pedidos</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">110</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $pedidosDiarios ?></p>
                         </div>
                     </div>
                 </div>
@@ -142,7 +416,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Preço médio</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">70,70€</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $precoMedioDiario . "€" ?></p>
                         </div>
                     </div>
                 </div>
@@ -154,7 +428,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Tempo médio de preparação</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">00:11</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $tempoMedioEntrega ?></p>
                         </div>
                     </div>
                 </div>
@@ -162,7 +436,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Avaliação média dos clientes</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">4.4<i class="ms-3 bi bi-star-fill"></i></p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $avaliacaoMediaDiaria ?><i class="ms-3 bi bi-star-fill"></i></p>
                         </div>
                     </div>
                 </div>
@@ -170,7 +444,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h2 mb-3 text-secondary fw-bold">Menu Burguer King</p>
+                            <p class="h2 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ?></p>
                         </div>
                     </div>
                 </div>
@@ -196,7 +470,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Vendas</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">469,70€</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $vendasMensais . "€" ?></p>
                         </div>
                     </div>
                 </div>
@@ -204,7 +478,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Pedidos</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">110</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $pedidosMensais ?></p>
                         </div>
                     </div>
                 </div>
@@ -212,7 +486,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Preço médio</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">70,70€</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $precoMedioMensal . "€" ?></p>
                         </div>
                     </div>
                 </div>
@@ -224,7 +498,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Tempo médio de preparação</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">00:11</p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $tempoMedioEntrega ?></p>
                         </div>
                     </div>
                 </div>
@@ -232,7 +506,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Avaliação média dos clientes</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold">4.4<i class="ms-3 bi bi-star-fill"></i></p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $avaliacaoMediaMensal ?><i class="ms-3 bi bi-star-fill"></i></p>
                         </div>
                     </div>
                 </div>
@@ -240,7 +514,7 @@
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h2 mb-3 text-secondary fw-bold">Menu Burguer King</p>
+                            <p class="h2 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoMes ?></p>
                         </div>
                     </div>
                 </div>
