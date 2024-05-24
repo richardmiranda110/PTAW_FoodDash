@@ -7,7 +7,7 @@ $status = "error";
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     $message = "Tipo de dados tem que ser POST";
-    json_encode( getReturnMessage($status,$message));
+    echo json_encode( getReturnMessage($status,$message));
 }
 
 // define variaveis 
@@ -28,8 +28,8 @@ if ($checkFileSize == false) {
 } 
 
 if (file_exists($target_file)) {
-    $message = "O ficheiro já existe- $target_file";
-    echo json_encode(getReturnMessage($status,$message));
+    $message = "O ficheiro ja existe";
+    echo json_encode(getReturnMessage($status,$message,basename($target_file)));
     exit(2);
 }
 

@@ -49,6 +49,8 @@ const btnNovaBebida = document.querySelector("#add-drink-btn");
 const btnNovaOpcao = document.querySelector("#nova-personalizacao-btn");
 const btnSubmit = document.querySelector("#submit-btn");
 
+const alertContainer = document.querySelector("#alert");
+
 const form = document.querySelector('form');
 form.addEventListener('submit', handleSubmit);
 
@@ -247,7 +249,7 @@ document.addEventListener('click', event => {
   }
 });
 
-btnSubmit.onclick = () => submitJsonData();
+btnSubmit.onclick = () => generateItemData();
 
 // Ao clicar no x do modal, esconder interface de caixa
 spanBotaoX.onclick = hideModal;
@@ -452,7 +454,6 @@ function hideModal(){
     document.querySelector("#DefaultDable").remove();
   }catch(err){}
     selectContainer.remove();
-
 }
 
 async function fetchData(categoria = null){
@@ -472,13 +473,13 @@ async function fetchData(categoria = null){
   return response.json();
 }
 
-function submitJsonData(foto_url){
+function generateItemData(foto_url){
   let itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
   let isPersonalized = getCheckboxValue("personalizacoesativas").value;
   itemType += isPersonalized ? "-personalizado" : "";
 
   const itemFactory = new ItemFactory();
-  //try{
+  try{
     const item = itemFactory.createItem(itemType,isPersonalized,foto_url);
 
     let result = { 
@@ -488,9 +489,9 @@ function submitJsonData(foto_url){
     }
 
     return result;
-  // }catch(error){
-  //   alert(error);
-  // }
+   }catch(error){
+     displayErrorMessage(error);
+   }
   return undefined;
 }
 
@@ -537,7 +538,7 @@ class ItemFactory{
   createItem(tipo,isPersonalized,foto_url){
     
      if(this.isDataValid(tipo,isPersonalized) == false)
-       throw new Error("Input is not valid");
+       throw new Error("Por favor verifique um dos campos");
 
     switch(tipo){
       case "item-personalizado":
@@ -564,11 +565,13 @@ class ItemFactory{
     
   }
 
-  isDataValid(tipo,isPersonalized){
-    if(this.dados.nome === '' || this.dados.preco === NaN || 
-       this.dados.preco <= 0 ||
-       this.categoria == NaN){
-      return false;
+  isDataValid(){
+    if(this.dados.nome === ''){
+      throw new Error("Nome do item não pode estar vazio");
+    }else if(this.dados.preco === NaN){
+      throw new Error("Preço invalido");
+    }else if(this.dados.preco <= 0){
+      throw new Error("Preço não pode ser negativo");
     }
     return true;
   }
@@ -610,7 +613,7 @@ class MenuItemWithOptions extends MenuItem{
 }
 
 /** @param {Event} event */
-function handleSubmit(event) {
+async function handleSubmit(event) {
 event.preventDefault();
 
   const files = imageInput.files;
@@ -621,15 +624,69 @@ event.preventDefault();
   let formdata = new FormData();
   formdata.append("foto",files[0]);
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-      // Typical action to be performed when the document is ready:
-      const result = JSON.parse(xhttp.responseText);
-      if(result.status != "error")
-        console.log(JSON.stringify(submitJsonData(result.url)))
-      }
-  };
-  xhttp.open("POST", "uploadFile.php", true);
-  xhttp.send(formdata);
+  const uploadImageTask = await fetch("uploadFile.php", {
+    body: formdata,
+    method: "post",
+  })
+  .then(answer => answer.json())
+  .then(data => {
+    if(data.status == "error" && data.message != "O ficheiro ja existe"){
+      displayErrorMessage(result.message);
+      return;
+    }
+
+    displaySuccessMessage(data.message);
+    return generateItemData(data);
+  });
+
+  // returns object with image already attached
+  const data = uploadImageTask;
+
+  // COLOCAR AQUI SCRIPT PARA MANDAR ITEM PARA PHP
+  const createItemTask = await postJSON("link",data);
+
+  createItemTask.then({});
+
+}
+
+function displayErrorMessage(message){
+  alertContainer.classList.remove("d-none");
+
+  if(alertContainer.classList.contains("alert-success")){
+    alertContainer.classList.toggle("alert-success");
+  }
+  
+  alertContainer.classList.add("alert-danger")
+  alertContainer.innerHTML = message
+}
+
+function displaySuccessMessage(message){
+  alertContainer.classList.remove("d-none");
+
+  if(alertContainer.classList.contains("alert-danger")){
+    alertContainer.classList.remove("alert-danger")
+  }
+  alertContainer.classList.toggle("alert-success")
+  alertContainer.innerHTML = message
+}
+
+function hideAlertMessage(){
+  alertContainer.classList.add("d-none");
+}
+
+async function postJSON(url,data) {
+  try {
+    const response = await fetch(url, {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    console.log("Success:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }

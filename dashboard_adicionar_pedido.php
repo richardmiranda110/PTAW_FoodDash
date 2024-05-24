@@ -60,9 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
       <div class="container mt-5">
         <h2 class="mb-4">Adicionar Novo Item</h2>
-
-        <?php// include __DIR__ . "/includes/uploadFotosItens.php"; ?>
-
+        <div class='alert alert-danger d-none' id="alert" role='alert'> O Ficheiro não é uma imagem.</div>
         <form action="" method="post" enctype="multipart/form-data" id="dataForm">
             <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa); ?>">
 
