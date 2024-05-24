@@ -37,13 +37,13 @@ session_start();
                     <div class="collapse navbar-collapse" style="width: 15vw;" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link nav" style="font-size: 1.2vw; border-bottom: 1vh solid black;" href="listapedidos.php">Todos</a>
+                                <a class="nav-link nav" style="font-size: 1.2vw;" href="listapedidos.php">Todos</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link nav" href="listapedidosPorEntregar.php" style="font-size: 1.2vw;">Por Entregar</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link nav " href="listapedidosEntregues.php" style="font-size: 1.2vw;">Entregues</a>
+                                <a class="nav-link nav " href="listapedidosEntregues.php" style="font-size: 1.2vw; border-bottom: 1vh solid black;">Entregues</a>
                             </li>
                         </ul>
                     </div>
@@ -75,7 +75,7 @@ session_start();
 
             <!-- BOX LISTA DE PEDIDOS -->
             <div class="" id="listaPedidos" style="overflow-y: scroll; padding: 0vh 1vw; height: 57vh;">
-                <?php include 'database/listar_pedidos.php'; ?>
+                <?php include 'database/listar_pedidosEntregues.php'; ?>
             </div>
         </div>
     </div>
