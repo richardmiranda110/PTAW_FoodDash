@@ -223,9 +223,6 @@ if ($Validacao == true && $utilizadorModificado !== null) {
         var telefoneInput = document.querySelector("[name='telemovel']");
         var erroEmail = document.getElementById("erroEmail");
         var erroTelemovel = document.getElementById("erroTelemovel");
-        // Obter modal
-        var modal = document.getElementById("modal");
-
         var validacao = true;
 
         // Função para validar o formulário
@@ -247,9 +244,7 @@ if ($Validacao == true && $utilizadorModificado !== null) {
                 validacao = false; // marcar validação como falsa
             }
         }
-
-        // Obter o elemento <span> que fecha o modal
-        var span = document.getElementsByClassName("close1")[0];
+        
         document.addEventListener("DOMContentLoaded", function () {
             // Adiciona evento de clique ao botão
             btnEditar.addEventListener("click", function () {
