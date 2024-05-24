@@ -2,14 +2,15 @@
 
 /*https://www.youtube.com/watch?v=q1xhbc-oKnc*/
 
-.toast-body {
+.toast-body2 {
     height: 30vh;
     display: flex;
-    flex-direction: column; /* a */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: linear-gradient(45deg, #ffd195, #ffb288);
-    
+    padding: 2vh;
+    text-align: center;
 }
 
 .rating-box {
@@ -30,9 +31,7 @@
 }
 
 .rating-box .stars {
-    display: flex;
-    align-items: center;
-    gap: 1.1vw;
+
 }
 
 .stars i {
@@ -40,6 +39,7 @@
     font-size: 1.4vw;
     cursor: pointer;
     transition: color 0.2s ease;
+    padding-inline: 0.1vw;
 }
 
 .stars i.active {

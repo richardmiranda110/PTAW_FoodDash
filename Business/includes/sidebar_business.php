@@ -42,16 +42,6 @@
 				</a>
 			</li>
 
-			<!-- Clientes -->
-			<li>
-				<a href="#" class="nav-link">
-					<span class="bi bi-people-fill"></span>
-					<span class="bi has-text-grey">
-						Clientes
-					</span>
-				</a>
-			</li>
-
 			<!-- Avaliações -->
 			<li>
 				<a href="#" class="nav-link">
@@ -72,32 +62,12 @@
 				</a>
 			</li>
 
-			<!-- Pagamentos -->
-			<li>
-				<a href="#" class="nav-link">
-					<span class="bi-credit-card-fill"></span>
-					<span class="bi has-text-grey">
-						Pagamentos
-					</span>
-				</a>
-			</li>
-
-			<!-- Design -->
-			<li>
-				<a href="#" class="nav-link">
-					<span class="bi bi-pencil-square"></span>
-					<span class="bi has-text-grey">
-						Design
-					</span>
-				</a>
-			</li>
-
 			<!-- Defenições -->
 			<li>
 				<a href="#" class="nav-link">
 					<span class="bi-gear-fill"></span>
 					<span class="bi has-text-grey">
-						Defenições
+						Definições
 					</span>
 				</a>
 			</li>

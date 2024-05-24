@@ -92,7 +92,7 @@ include __DIR__."/includes/insertPedido.php";
 				  <strong class="me-auto">Avaliar Estabelecimento</strong>
 				  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 				</div>
-				<div class="toast-body" style="height: auto;">
+				<div class="toast-body2" style="height: auto;">
 				  <form id="ratingForm" method="POST"  enctype="multipart/form-data" action="">
 					
 					<div class="rating-box">

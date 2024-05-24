@@ -38,28 +38,30 @@ session_start();
     <div class="container mt-5">
         <div class="card p-4">
             <h1>Avaliações</h1>
-            <div class="col-12 col-md-6 col-lg-4 p-4">
-                <div class="card shadow border-1">
-                    <div class="card-body text-center">
-                        <h4 class="card-title fw-bold mb-3">Avaliação Média dos Clientes</h4>
-                        <p class="display-5 mb-3 text-secondary fw-bold">
-                        <?php 
-                        
-                        try {
-                            $q = "SELECT ROUND(AVG(classificacao), 1) as media FROM Avaliacoes";
-                            $statement = $pdo->prepare($q);
-                            $statement->execute();
-                            if ($statement) {
-                                $result = $statement->fetch(PDO::FETCH_ASSOC);
-                                echo htmlspecialchars($result["media"]);
-                            } else {
-                                echo "Erro ao executar a consulta.";
-                            }
-                        } catch (Exception $e) {
-                            echo "Erro na conexão à BD: " . $e->getMessage();
-                        };
-                        ?>
-                         ★</p>
+            <div class="d-flex justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4 p-4">
+                    <div class="card shadow border-1">
+                        <div class="card-body text-center">
+                            <h4 class="card-title fw-bold mb-3">Avaliação Média dos Clientes</h4>
+                            <p class="display-5 mb-3 text-secondary fw-bold">
+                                <?php
+
+                                try {
+                                    $q = "SELECT ROUND(AVG(classificacao), 1) as media FROM Avaliacoes";
+                                    $statement = $pdo->prepare($q);
+                                    $statement->execute();
+                                    if ($statement) {
+                                        $result = $statement->fetch(PDO::FETCH_ASSOC);
+                                        echo htmlspecialchars($result["media"]);
+                                    } else {
+                                        echo "Erro ao executar a consulta.";
+                                    }
+                                } catch (Exception $e) {
+                                    echo "Erro na conexão à BD: " . $e->getMessage();
+                                };
+                                ?>
+                                ★</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,7 +82,7 @@ session_start();
                                     echo '
                                     <li class="list-group-item">
                                         <h6>' . htmlspecialchars($row["nome"]) . '</h6>
-                                        <p class="mb-3 fw-bold">' . htmlspecialchars($row["classificacao"]) . '★ &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-secondary fw-medium">' . htmlspecialchars($row["data"]) . '</span></p>
+                                        <p class="mb-3 fw-bold">' . htmlspecialchars($row["classificacao"]) . ' ★ &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-secondary fw-medium">' . htmlspecialchars($row["data"]) . '</span></p>
                                         <p>' . htmlspecialchars($row["descricao"]) . '</p>
                                     </li>
                                     ';
