@@ -8,7 +8,7 @@ try {
 
     if ($stmt->rowCount() > 0) {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo '<div class="row border border-2 border-secondary rounded-4 my-3" style="padding: 1vh; height: 10vh;">';
+            echo '<div class="border border-2 border-secondary rounded-4 my-3 d-flex justify-content-between" style="padding: 1vh; height: 10vh;">';
             echo '    <div class="col-sm-1 d-flex justify-content-center text-center align-self-center" style="border-right: solid 0.2vw lightgrey; height: 100%; align-items: center;">';
             echo '        <strong style="font-size: 1.5vw;">' . htmlspecialchars($row["id_pedido"]) . '</strong>';
             echo '    </div>';
