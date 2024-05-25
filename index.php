@@ -131,7 +131,7 @@
             <h1>Registe o seu estabelecimento</h1>
             <p class="opacity-90">Ainda não realiza entregas no seu restaurante? Registe o seu estabelecimento ou rede
               de restaurantes e comece já a efetuar entregas online.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Registar</a></p>
+            <p><a class="btn btn-lg btn-primary" id="btn_business_account1" href="#">Registar</a></p>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@
           <div class="carousel-caption text-start">
             <h1>Receba estatísticas</h1>
             <p>Receba estatísticas detalhadas sobre as suas vendas.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Registar</a></p>
+            <p><a class="btn btn-lg btn-primary" id="btn_business_account2" href="#">Registar</a></p>
           </div>
         </div>
       </div>
@@ -150,7 +150,7 @@
         <div class="container">
           <div class="carousel-caption">
             <h1>Não espere pelo futuro, comece a moldá-lo hoje mesmo!</h1>
-            <p><a class="btn btn-lg btn-primary" href="#">Registar</a></p>
+            <p><a class="btn btn-lg btn-primary" id="btn_business_account3" href="#">Registar</a></p>
           </div>
         </div>
       </div>
@@ -166,7 +166,7 @@
   </div>
   <br><br>
   <div style="text-align: center;">
-    <button type="button" class="btn btn-dark btn-lg">Criar conta empresarial</button>
+    <button type="button" class="btn btn-dark btn-lg" id="btn_business_account">Criar conta empresarial</button>
   </div><br><br>
 
   <!-- FOOTER -->
@@ -175,6 +175,20 @@
   ?>
 
   <!-- SCRIPT -->
+  <script>
+    document.getElementById('btn_business_account').addEventListener('click', function() {
+      window.location.href = './business/home_page.php';
+    });
+    document.getElementById('btn_business_account1').addEventListener('click', function() {
+      window.location.href = './business/home_page.php';
+    });
+    document.getElementById('btn_business_account2').addEventListener('click', function() {
+      window.location.href = './business/home_page.php';
+    });
+    document.getElementById('btn_business_account3').addEventListener('click', function() {
+      window.location.href = './business/home_page.php';
+    });
+  </script>
   <script src="./assets/js/index_landing_page_script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

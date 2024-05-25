@@ -4,15 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	<link rel="stylesheet" href="../assets/styles/sitecss.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="../assets/styles/sitecss.css">
   <title>FoodDash</title>
 </head>
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto;">
+  <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
 
   <!-- Formulário de login -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 25vh;">
@@ -20,7 +19,7 @@
       <h1 class="h1 mb-3" style="text-align: center;">Login</h1><br>
       <div class="form-floating mb-1">
         <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" required>
-        <label for="inputEmail">Email</label>
+        <label for="inputEmail" style="cursor: pointer;">Email</label>
       </div>
       <div class="form-floating mb-1">
         <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password" required>
@@ -47,33 +46,33 @@
       </p>
 
       <?php
-        session_start();
-        if(isset($_SESSION['error_message'])) {
-            echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
-            unset($_SESSION['error_message']);
-        }
+      session_start();
+      if (isset($_SESSION['error_message'])) {
+        echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
+        unset($_SESSION['error_message']);
+      }
 
-        if(isset($_SESSION['success_message'])) {
-          echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
-          unset($_SESSION['success_message']);
-        }
+      if (isset($_SESSION['success_message'])) {
+        echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
+        unset($_SESSION['success_message']);
+      }
 
-        if(empty($_SESSION["authenticated"]) || $_SESSION["authenticated"] != 'true') {
-
-        } else {
-          echo "<div class='form-floating mb-1'>";
-          echo "<a id='btnLogout' class='w-100 btn btn-lg btn-primary' type='submit' href='logout.php'>Logout</a>";
-          echo "</div>";
-        }
+      if (empty($_SESSION["authenticated"]) || $_SESSION["authenticated"] != 'true') {
+      } else {
+        echo "<div class='form-floating mb-1'>";
+        echo "<a id='btnLogout' class='w-100 btn btn-lg btn-primary' type='submit' href='logout.php'>Logout</a>";
+        echo "</div>";
+      }
       ?>
-      
+
     </form>
-    
+
   </div>
 
 
   <script>
     document.querySelector("input#mostrarPasswordCheckbox").addEventListener("click", mostrarPassword)
+
     function mostrarPassword() {
       let passwordInput = document.getElementById("inputPassword");
       if (passwordInput.type === "password") {
@@ -111,12 +110,14 @@
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     }
+
+    document.getElementById('logo_fooddash').addEventListener('click', function() {
+      window.location.href = '../index.php';
+    });
   </script>
 
   <script src="loginScript.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
