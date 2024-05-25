@@ -1,14 +1,5 @@
 <?php
-session_start();
-
-// Verificar se o usuário está logado
-//if (!isset($_SESSION['username'])) {
-//    header("Location: login.php");
-//    exit();
-//}
-
-// Exibir nome de usuário
-//echo "Welcome, " . $_SESSION['username'];
+require_once  __DIR__."/../../session.php";
 ?>
 
 
@@ -23,6 +14,7 @@ session_start();
     <link rel="stylesheet" href="../../assets/styles/sitecss.css">
 	  <link rel="stylesheet" href="../../assets/styles/dashboard.css">
     <script src="../../assets/js/dable.js"></script>
+    <?php echo '<script>var idEmpresa="'.$_SESSION['id_empresa'].'"</script>' ?>
   </head>
   <body>
   <!--Zona do Header -->
@@ -30,7 +22,6 @@ session_start();
     <!-- Top/Menu da Página -->
     <?php include __DIR__."../../business/includes/header_business.php"; ?>
   </div>
-
   <!--Zona de Conteudo -->  
   <div id="contentPage" class="container-xxl">
     <?php include __DIR__."../../includes/sidebar_perfil.php"; ?>
@@ -39,29 +30,28 @@ session_start();
     <div id="contentDiv" class="col-md-12">
 
     <nav style="font-size:1.4rem; z-index: 1; text-align: center;" class="navbar navbar-expand-lg gray-navbar navbar-light fw-bold ">
-    <div class="collapse navbar-collapse" style="width: 15vw;" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link nav" href="#">Overview</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link nav" href="#">Menus</a>
-            </li>
-            <li class="nav-item"> <!-- não me digas nada sobre o style, o css não gosta dele -->
-                <a class="nav-link nav "  href="http://localhost/business/dashboard_lista_categorias.php#">Categorias</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link nav" style="border-bottom: 1vh solid black;"  href="http://localhost/business/dashboard_lista_items.php#">Itens</a>
-            </li>
-        </ul>
+      <div class="collapse navbar-collapse" style="width: 15vw;" id="navbarNav">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link nav" href="#">Overview</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link nav" href="#">Menus</a>
+              </li>
+              <li class="nav-item"> <!-- não me digas nada sobre o style, o css não gosta dele -->
+                  <a class="nav-link nav "  href="http://localhost/business/dashboard_lista_categorias.php#">Categorias</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link nav" style="border-bottom: 1vh solid black;"  href="http://localhost/business/dashboard_lista_items.php#">Itens</a>
+              </li>
+          </ul>
+      </div>
+    </nav>
+
+    <span class="float:left fw-bold h2 m-3 text-left">Items</span> 
+    <button class="float-end btn btn-custom fw-bold mt-1 " style="margin-right:4.5vw" onclick="window.open('../dashboard_adicionar_pedido.php')">+ Novo Item</button>
+    <div id="DefaultDable" ></div>
   </div>
-  </nav>
-    
-
-  <span class="float:left fw-bold h2 m-3 text-left">Items</span> 
-  <button class="float-end btn btn-custom fw-bold mt-1 " style="margin-right:4.5vw" onclick="window.open('../dashboard_adicionar_pedido.php')">+ Novo Item</button>
-  <div id="DefaultDable" ></div>
-
 
 <?php
 /*
@@ -76,29 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 $idEmpresa = 1;
 ?>	
 
- 
-<?php
-require_once __DIR__."../../database/credentials.php";
-require_once __DIR__."../../database/db_connection.php";
 
-try {
-
-	$stmt = $pdo->prepare("select id_categoria, nome from categorias where id_empresa = ? ");
-	$stmt->execute([$idEmpresa]);
-	$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-	foreach ($stmt as $row) {
-	  echo 		'<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
-	}
-
-	echo "</select>
-		</div>";
-
-
-} catch(PDOException $e) {
-	echo "Erro ao inserir registro: " . $e->getMessage();
-}
-?>
 </div>
   <!--Zona do Footer -->
   <?php include __DIR__."../../business/includes/footer_business.php"; ?>

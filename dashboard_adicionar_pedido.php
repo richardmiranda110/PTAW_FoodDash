@@ -1,16 +1,7 @@
 <?php
-session_start();
-
-// Verificar se o usuário está logado
-//if (!isset($_SESSION['username'])) {
-//    header("Location: login.php");
-//    exit();
-//}
-
-// Exibir nome de usuário
-//echo "Welcome, " . $_SESSION['username'];
+require_once  __DIR__."/Business/includes\session.php";
+$idEmpresa = $_SESSION['id_empresa'];
 ?>
-
 
 <!doctype html>
 <html lang="en">
@@ -25,39 +16,23 @@ session_start();
   <link rel="stylesheet" href="./assets/styles/responsive_styles.css">
   <link rel="stylesheet" href="./Business/assets/styles/adicionar.css">
   <script src="./assets/js/dable.js"></script>
+  <script>var idEstabelecimento = <?php echo $idEmpresa ?></script>
 </head>
 
 <body>
   <!--Zona do Header -->
     <div id="topHeader" class="container-xxl">
         <!-- Top/Menu da Página -->
-        <?php include __DIR__ . "/Business/includes/header_business.php"; ?>
+        <?php include __DIR__ . "/Business/includes/header_business_logged.php"; ?>
         
     </div>
 
     <!--Zona de Conteudo -->
     <div id="contentPage" class="container-xxl">
-	<?php include __DIR__ . "/Business/includes/sidebar_business.php"; ?>
+	  <?php include __DIR__ . "/Business/includes/sidebar_business.php"; ?>
  
-
     <!--Zona de Conteudo da Página -->
     <div id="contentDiv" class="col-md-12">
-
-      
-
-      <?php
-      /*
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-	if (!empty($_GET["idEmpresa"])) {
-		$idestabelecimento[] = $_GET['idEmpresa'];
-	};
-	
-	$idEmpresa = 1;
-}
-*/
-      $idEmpresa = 1;
-      ?>
-
       <div class="container mt-5">
         <h2 class="mb-4">Adicionar Novo Item</h2>
         <div class='alert alert-danger d-none' id="alert" role='alert'> O Ficheiro não é uma imagem.</div>
@@ -92,11 +67,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
               $stmt->execute([$idEmpresa]);
               $stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo "
-      <div class='mb-3' id='categoria-container'>
-        <p class='m fw-bold purple-text'>Categoria</p>
-        <select class='mb-5 form-select' name='idcategoria' id='idcategoria'>";
-
+              echo "
+                <div class='mb-3' id='categoria-container'>
+                  <p class='m fw-bold purple-text'>Categoria</p>
+                  <select class='mb-5 form-select' name='idcategoria' id='idcategoria'>";
+              if(count($stmt) == 0){
+                echo '<option value="null">Não existem opcoes disponiveis</option>';
+              }
               foreach ($stmt as $row) {
                 echo     '<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
               }

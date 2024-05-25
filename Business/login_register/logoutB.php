@@ -1,7 +1,5 @@
 <?php
     session_start();
-    unset($_SESSION["authenticatedB"]);
-
+    session_destroy();
     // Alterar depois
     header('location: login_business.php');
-?>

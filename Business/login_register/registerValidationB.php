@@ -37,4 +37,3 @@ try {
 } catch(PDOException $e) {
     echo "Erro ao inserir registo: " . $e->getMessage();
 }
-?>

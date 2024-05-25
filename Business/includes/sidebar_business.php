@@ -1,5 +1,3 @@
-<?php
-?>
 <div id="sideBarLeft" class="col-md-2 z-index-n1">
 	<div class="d-flex flex-column" id="sidebar">
 		<ul class="nav nav-pills flex-column mb-auto nav-item-container ">
@@ -72,7 +70,7 @@
 				</a>
 			</li>
 		</ul>
-		<button id="butSingOutSidebarLeft" class="btn btn-dark px-3" type="button">Terminar Sessão</button>
+		<a id="butSingOutSidebarLeft" href="<?php echo '/Business/login_register/logoutB.php'?>" class="btn btn-dark px-3" type="button">Terminar Sessão</a>
 	</div>
 </div>
 

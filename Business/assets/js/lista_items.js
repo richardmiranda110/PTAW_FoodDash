@@ -2,7 +2,7 @@ var dable = new Dable();
 var rows = [];
 var list_columns = [ 'Foto', 'Nome', 'Preço','Menus','Categorias','','' ];
 var items = [];
-const response = fetch('http://localhost/business/lista_items.php?idEstabelecimento=2 ')
+const response = fetch('http://localhost/business/lista_items.php?idEstabelecimento='+idEmpresa+'')
   .then(response => response.json())
   .then(data => {
     for(item of data.itens){

@@ -15,6 +15,8 @@ try {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if($row) {
+        $_SESSION['nome'] = $row['nome'];
+        $_SESSION['id_empresa'] = $row['id_empresa'];
         $_SESSION["authenticatedB"] = true;
         $_SESSION['success_message'] = "Logado com sucesso"; // Mensagem para testar, apagar depois
         // Alterar location depois
@@ -29,4 +31,3 @@ try {
 } catch(PDOException $e) {
     echo "Erro ao autenticar: " . $e->getMessage();
 }
-?>

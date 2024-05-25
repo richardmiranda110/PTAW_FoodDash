@@ -1,6 +1,6 @@
 "use strict";
 
-const dataSource = 'http://localhost/business/lista_items.php?idEstabelecimento=2';
+const dataSource = 'http://localhost/business/lista_items.php?idEstabelecimento='+idEstabelecimento;
 
 // Container complementos
 let complementoContainer = document.querySelector("#complement-section");
@@ -293,7 +293,7 @@ function configureCostimizationDable(){
 
 
   costumizationDable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return ' <div class="col-xs-2 w-25 mx-3s float-end "><input class="w-25 text-center float-end border option-amount" type="number" value="1" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light float-end btn-sm deleteOption">✕</button></div>';
+    return ' <div class="col-xs-2 w-25 mx-3s float-end "><input class="w-25 text-center float-end border option-price-amount" type="number" value="1" min="0" pattern="^\d*(\.\d{0,2})?$" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Preço:</span><input class="w-25 text-center float-end border option-amount" type="number" value="1" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light float-end btn-sm deleteOption">✕</button></div>';
   };
 
   costumizationDable.BuildAll("costumization-dable");
@@ -400,6 +400,13 @@ function showCategoryModal(text){
   // Coloca Funcionalidade no botão
   btnAdd.onclick = function() {
     const selected = selectTag.options[selectTag.selectedIndex];
+
+    if(selected.value == "null"){
+      displayErrorMessage("Por favor adicionar uma categoria para continuar");
+      spanBotaoX.click();
+      return;
+    }
+    
     gerarTabelaCategoria(selected.text);
     spanBotaoX.click();
   }
@@ -519,7 +526,8 @@ function getOptions(){
   const json = []
   costumizationDable.rows.slice(1).forEach((element,i) => {
     const options = document.querySelectorAll(".option-amount");
-    json.push({nome:element[0],max_quantidade: parseInt(options[i].value)});
+    const optionsprice = document.querySelectorAll(".option-price-amount");
+    json.push({nome:element[0],max_quantidade: parseInt(options[i].value),preco: parseFloat(optionsprice[i].value) });
   })
   return json;
 }
@@ -642,7 +650,6 @@ event.preventDefault();
   // returns object with image already attached
   const data = uploadImageTask;
 
-  // COLOCAR AQUI SCRIPT PARA MANDAR ITEM PARA PHP
   const createItemTask = await postJSON("link",data);
 
   createItemTask.then({});
