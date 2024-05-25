@@ -4,16 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	<link rel="stylesheet" href="../assets/styles/sitecss.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="../assets/styles/sitecss.css">
 
   <title>FoodDash</title>
 </head>
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto;">
+  <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
 
   <!-- Formulário de registo -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 20vh;">
@@ -60,15 +59,15 @@
       <div id="error-message" style="display: none; color: red; text-align: center;"></div>
 
       <?php
-        session_start();
-        if(isset($_SESSION['error_message'])) {
-            echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
-            unset($_SESSION['error_message']);
-        }
+      session_start();
+      if (isset($_SESSION['error_message'])) {
+        echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
+        unset($_SESSION['error_message']);
+      }
 
-        if(isset($_SESSION['success_message'])) {
-          echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
-          unset($_SESSION['success_message']);
+      if (isset($_SESSION['success_message'])) {
+        echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
+        unset($_SESSION['success_message']);
       }
       ?>
 
@@ -77,11 +76,10 @@
 
   <script src="loginScript.js"></script>
   <script src="../assets/js/script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script>
     document.querySelector("input#mostrarPasswordCheckbox").addEventListener("click", mostrarPassword)
+
     function mostrarPassword() {
       let passwordInput = document.getElementById("inputPassword");
       if (passwordInput.type === "password") {
@@ -96,6 +94,10 @@
         repetirPasswordInput.type = "password";
       }
     }
+
+    document.getElementById('logo_fooddash').addEventListener('click', function() {
+      window.location.href = '../index.php';
+    });
   </script>
 </body>
 

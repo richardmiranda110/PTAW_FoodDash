@@ -1,5 +1,5 @@
 <?php
-require_once  __DIR__."/../../session.php";
+session_start();
 ?>
 
 <!doctype html>
@@ -26,48 +26,48 @@ require_once  __DIR__."/../../session.php";
     </div>
 
     <!-- LISTA DE PEDIDOS -->  
-    <div id="contentPage" class="container">
+    <div id="contentPage" class="container-xxl">
         <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
-        <div id="contentDiv" class="col">
+        <div id="contentDiv" class="col-md-12">
             <div class="container ps-3 py-3">
                 <div class="row">
                     <h1 class="title" style="font-size: 2.1vw; font-weight: bold;">Pedidos</h1>
                 </div>
                 <div class="row">
-                    <nav style="font-size:1.4rem; z-index: 1; text-align: center;" class="navbar navbar-expand navbar-light">
-                        <div class="collapse navbar-collapse" style="width: 15vw; margin-left: 1vw;" id="navbarNav">
-                            <ul class="navbar-nav" style="margin-left: 1vw;">
-                                <li class="nav-item">
-                                    <a class="nav-link nav" style="font-size: 1.2vw; border-bottom: 1vh solid black; width: 12vw; display: inline-block;" href="listapedidos.php">Todos</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link nav" href="listapedidosPorEntregar.php" style="font-size: 1.2vw; width: 12vw; display: inline-block;">Por Entregar</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link nav " href="listapedidosEntregues.php" style="font-size: 1.2vw; width: 12vw; display: inline-block;">Entregues</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+                <nav style="font-size:1.4rem; z-index: 1; text-align: center;" class="navbar navbar-expand navbar-light">
+                    <div class="collapse navbar-collapse" style="width: 15vw; margin-left: 1vw;" id="navbarNav">
+                        <ul class="navbar-nav" style="margin-left: 1vw;">
+                            <li class="nav-item">
+                                <a class="nav-link nav" style="font-size: 1.2vw; width: 12vw; display: inline-block;" href="listapedidos.php">Todos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav" href="listapedidosPorEntregar.php" style="font-size: 1.2vw;  border-bottom: 1vh solid black; width: 12vw; display: inline-block;">Por Entregar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav " href="listapedidosEntregues.php" style="font-size: 1.2vw; width: 12vw; display: inline-block;">Entregues</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
                 </div>
             </div>
             <div class="container">
                 <div class="" style="margin-top: 2vh;">
-                    <div id="ticket-info" class="d-flex justify-content-between" style="padding: 1vh 1vw; display: inline-block;">
+                    <div id="ticket-info" class="d-flex justify-content-between" style="padding: 1vh 1vw;">
                         <div class="col-sm-1 d-flex justify-content-center text-center align-self-center">
-                            <span style="font-size: 1.3vw; display: inline-block;">Número</span>
+                            <span style="font-size: 1.3vw;">Número</span>
                         </div>
                         <div class="col-sm-1 d-flex justify-content-center text-center align-self-center">
-                            <span style="font-size: 1.3vw; margin-left: 1vh; display: inline-block;">Data</span>
+                        <span style="font-size: 1.3vw; margin-left: 1vh;">Data</span>
                         </div>
                         <div class="col-sm-5 d-flex justify-content-center text-center align-self-center">
-                            <span style="font-size: 1.3vw; margin-right: 3vh; display: inline-block;">Detalhes</span>
+                            <span style="font-size: 1.3vw; margin-right: 3vh;">Detalhes</span>
                         </div>
                         <div class="col-sm-3 d-flex justify-content-center text-center align-self-center">
-                            <span style="font-size: 1.3vw; margin-right: 4vh; display: inline-block;">Estado</span>
+                            <span style="font-size: 1.3vw; margin-right: 4vh;">Estado</span>
                         </div>
                         <div class="col-sm-1 d-flex justify-content-center text-center align-self-center">
-                            <span style="font-size: 1.3vw; margin-right: 5vh; display: inline-block;">Preço</span>
+                            <span style="font-size: 1.3vw; margin-right: 5vh;">Preço</span>
                         </div>
                         <div class="col-sm-1 align-self-center text-center">
                         </div>
@@ -77,7 +77,7 @@ require_once  __DIR__."/../../session.php";
 
             <!-- BOX LISTA DE PEDIDOS -->
             <div class="" id="listaPedidos" style="overflow-y: scroll; padding: 0vh 1vw; height: 57vh;">
-                <?php include 'database/listar_pedidos.php'; ?>
+                <?php include 'database/listar_pedidosPorEntregar.php'; ?>
             </div>
         </div>
     </div>
