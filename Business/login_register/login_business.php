@@ -1,10 +1,10 @@
 <?php 
-session_start();
+require_once '../includes/session.php';
 
-if (isset($_SESSION['authenticatedB'])) {
-  header("Location: /Business/dashboard_home_page.php");
-  exit();
-}
+// if (isset($_SESSION['authenticatedB'])) {
+//   header("Location: /Business/dashboard_home_page.php");
+//   exit();
+// }
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +66,6 @@ if (isset($_SESSION['authenticatedB'])) {
       </p>
 
       <?php
-        session_start();
         if(isset($_SESSION['error_message'])) {
             echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
             unset($_SESSION['error_message']);

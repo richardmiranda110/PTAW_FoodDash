@@ -9,6 +9,8 @@ const modalText = document.getElementById("modal-text");
 
 const btnNovaOpcao = document.querySelector("#btnNovoItemCategoria");
 
+const form = document.querySelector("#category-input");
+
 // Botão de fechar a caixa
 const spanBotaoX = document.querySelectorAll(".close")[0];
 
@@ -18,45 +20,57 @@ spanBotaoX.onclick = hideModal;
 window.onclick = event => {
   if (event.target == modal) {
    hideModal();
+
   }
 }
 
 function hideModal(){
   modal.classList.toggle('d-none');
+  document.querySelector("#adicionarBtn").remove();
 }
 
 var dable = new Dable();
-var rows = [];
-var list_columns = [ 'Nome', 'Itens'];
+var rows = [''];
+var list_columns = [ 'Nome', 'Itens',''];
 var items = [];
+
+
 const response = fetch('http://localhost/business/lista_categorias.php?idEmpresa='+idEmpresa+'')
   .then(response => response.json())
   .then(data => {
-    for(item of data){
+    for(let item of data){
       items.push(item);
-      rows.push([ item.nome,item.count+" item"]);
+      rows.push([ item.nome,item.count+" item",item.id_categoria]);
     }
     return rows;
   })
-  .then( _ =>{
-    dable.SetDataAsRows(rows)
+  .then( rows =>{
+    dable.SetDataAsRows(rows);  
     dable.style = 'fooddash_categorias';
 	  dable.SetColumnNames(list_columns);
 
-	dable.BuildAll("DefaultDable"); 
+    dable.columnData[2].CustomRendering = function (_cellValue, rowNumber) {
+      return '<button> <img width="30" class="bg-white deleteRow" cellValue='+_cellValue+'  src="../business/assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    };
+
+	  dable.BuildAll("DefaultDable"); 
   }).catch((error) => console.error('Error:', error));
 	
-  
-  document.addEventListener('click', handleDeleteButtonClick);
 
-function handleDeleteButtonClick(event) {
-    if (event.target.classList.contains('editRow')) {
-        editItem(event.target);
+document.addEventListener('click', event => {
+  if (event.target.classList.contains('deleteRow')) {
+    performDelete(event.target);
+  }
+});
 
-    }   
-    if (event.target.classList.contains('deleteRow')) {
-        removeItem(event.target);
-    }
+function performDelete(element){
+  const cellValue =  element.getAttribute("cellValue");
+  const rownumber =  element.getAttribute("data-rownumber");
+  const request = fetch("/Business/lista_categorias.php?idEmpresa="+idEmpresa+"&delete="+cellValue);
+  request.then(reply => {
+    console.log(reply);
+    dable.DeleteRow(rownumber);
+  });
 }
 
 btnNovaOpcao.onclick = _ => {
@@ -82,15 +96,6 @@ function editItem(element) {
 function showTextModal(text){
   const container = document.createElement("div");
   container.id = "import-select-container";
-  // cria elemento de opção
-  const modalInput = document.createElement("input");
-  modalInput.type = "text";
-
-  modalInput.classList.add("mb-2");
-  modalInput.classList.add("form-control");
-
-  // Colocar elemento na pagina
-  container.appendChild(modalInput);
 
   // criar botão de adicionar
   const btnAdd = document.createElement("button");
@@ -107,7 +112,7 @@ function showTextModal(text){
 
   // Coloca Funcionalidade no botão
   btnAdd.onclick = function() {
-    dable.AddRow([String(modalInput.value),0])
+    form.submit();
     spanBotaoX.click();
   }
 }

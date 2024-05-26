@@ -6,8 +6,9 @@ const response = fetch('http://localhost/business/lista_items.php?idEstabelecime
   .then(response => response.json())
   .then(data => {
     for(item of data.itens){
+      console.log(item);
       items.push(item);
-      rows.push([ item.foto, item.nome,item.preco+'€','Menu do Almoço, Menu do Jantar',' Na grelha, Carne','','' ]);
+      rows.push([ item.foto_url, item.nome,item.preco+'€','Menu do Almoço, Menu do Jantar',item.categoria,'','' ]);
     }
     return rows;
   })
@@ -16,7 +17,7 @@ const response = fetch('http://localhost/business/lista_items.php?idEstabelecime
     dable.style = 'CulpaDoRichard';
 	  dable.SetColumnNames(list_columns);
     dable.columnData[0].CustomRendering = function(cellValue, rowNumber) {
-			return '<img src="../../assets/stock_imgs/icon_info.jpg" alt="'+cellValue+'" width="60" height="60"  data-rownumber="' + rowNumber + '">';
+			return '<img src="../'+cellValue+'" alt="'+cellValue+'" width="60" height="60"  data-rownumber="' + rowNumber + '">';
 		};
     dable.columnData[5].CustomRendering = function (_cellValue, rowNumber) {
     return '<button> <img width="30" class="bg-white editRow" src="./assets/imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';

@@ -18,13 +18,13 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
     <link rel="stylesheet" href="../../assets/styles/sitecss.css">
 	  <link rel="stylesheet" href="../../assets/styles/dashboard.css">
     <script src="../../assets/js/dable.js"></script>
-    <?php echo '<script>var idEmpresa="'.$_SESSION['id_empresa'].'"</script>' ?>
+    <?php echo '<script>var idEmpresa="'.$_SESSION['id_estabelecimento'].'"</script>' ?>
   </head>
   <body>
   <!--Zona do Header -->
   <div id="topHeader" class="container-xxl">
     <!-- Top/Menu da Página -->
-    <?php include __DIR__."../../business/includes/header_business.php"; ?>
+    <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
   </div>
   <!--Zona de Conteudo -->  
   <div id="contentPage" class="container-xxl">
@@ -53,7 +53,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
     </nav>
 
     <span class="float:left fw-bold h2 m-3 text-left">Items</span> 
-    <button class="float-end btn btn-custom fw-bold mt-1 " style="margin-right:4.5vw" onclick="window.open('../dashboard_adicionar_pedido.php')">+ Novo Item</button>
+    <button class="float-end btn btn-custom fw-bold mt-1 " style="margin-right:4.5vw" onclick="window.open('./dashboard_inserir_item.php')">+ Novo Item</button>
     <div id="DefaultDable" ></div>
   </div>
 
@@ -69,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 */
 $idEmpresa = 1;
 ?>	
-
 
 </div>
   <!--Zona do Footer -->

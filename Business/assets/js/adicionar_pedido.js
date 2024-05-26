@@ -35,7 +35,7 @@ const inputPreco = document.querySelector("#preco");
 // input da caixa de descrição
 const inputDescricao = document.querySelector("#descricao");
 // label de personalizações
-const itemName = document.querySelector("#item-name-label");
+const itemName = document.querySelector("#item-name");
 // select tag ao adicionar categoria
 const categoriaSelector = document.querySelector("#idcategoria");
 // Tabela de bebidas
@@ -293,7 +293,7 @@ function configureCostimizationDable(){
 
 
   costumizationDable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return ' <div class="col-xs-2 w-25 mx-3s float-end "><input class="w-25 text-center float-end border option-price-amount" type="number" value="1" min="0" pattern="^\d*(\.\d{0,2})?$" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Preço:</span><input class="w-25 text-center float-end border option-amount" type="number" value="1" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light float-end btn-sm deleteOption">✕</button></div>';
+    return ' <div class="col-xs-2 w-25 mx-3s float-end "><input class="w-25 text-center float-end border option-price-amount" type="number" value="1" min="0" step="any" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Preço:</span><input step="any" class="w-25 text-center float-end border option-amount" type="number" value="1" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light float-end btn-sm deleteOption">✕</button></div>';
   };
 
   costumizationDable.BuildAll("costumization-dable");
@@ -483,18 +483,17 @@ async function fetchData(categoria = null){
 function generateItemData(foto_url){
   let itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
   let isPersonalized = getCheckboxValue("personalizacoesativas").value;
-  itemType += isPersonalized ? "-personalizado" : "";
+  itemType += isPersonalized == "true" ? "-personalizado" : "";
 
   const itemFactory = new ItemFactory();
   try{
     const item = itemFactory.createItem(itemType,isPersonalized,foto_url);
-
+ 
     let result = { 
-      idEstabelecimento: 0,
+      "idEstabelecimento": idEstabelecimento,
       tipo:itemType,
       dados: item
     }
-
     return result;
    }catch(error){
      displayErrorMessage(error);
@@ -537,7 +536,7 @@ class ItemFactory{
       nome: nomeInput.value,
       preco: parseFloat(inputPreco.value),
       descricao: inputDescricao.value,
-      disponivel: getCheckboxValue("disponivel").value,
+      disponivel: getCheckboxValue("disponivel").value == "true" ? true:false,
       categoria:  parseInt(categoriaSelector.options[categoriaSelector.selectedIndex].value),
       itens : getItems(),
       opcoes: getOptions()
@@ -549,37 +548,39 @@ class ItemFactory{
        throw new Error("Por favor verifique um dos campos");
 
     switch(tipo){
+      case "item":
+        return new MenuItem(
+          this.dados.nome,this.dados.preco,
+          this.dados.descricao,this.dados.disponivel,
+          foto_url,this.dados.categoria)
       case "item-personalizado":
-        if(isPersonalized == "true"){
           return new MenuItemWithOptions(
             this.dados.nome,this.dados.preco,
             this.dados.descricao,this.dados.disponivel,
             foto_url,this.dados.categoria,
             this.dados.opcoes)
-        }else{
-          return new MenuItem(
-            this.dados.nome,this.dados.preco,
-            this.dados.descricao,this.dados.disponivel,
-            foto_url,this.dados.categoria)
-        }
       case "menu":
         return new ItemBundle(
           this.dados.nome,this.dados.preco,
           this.dados.descricao,this.dados.disponivel,
-          foto_url,this.dados.categoria,this.dados.itens)
+          foto_url['url'],this.dados.categoria,this.dados.itens)
       default:
           throw new Error("Item invalido");
     }
     
   }
 
-  isDataValid(){
+  isDataValid(tipo,isPersonalized){
     if(this.dados.nome === ''){
       throw new Error("Nome do item não pode estar vazio");
     }else if(this.dados.preco === NaN){
       throw new Error("Preço invalido");
     }else if(this.dados.preco <= 0){
       throw new Error("Preço não pode ser negativo");
+    }else if(imageInput.files.length == 0){
+      throw new Error("Por favor coloque uma imagem");
+    }else if(costumizationDable.rows.length-1 == 0 && isPersonalized == "true"){
+      throw new Error("Opções não podem estar vazias");
     }
     return true;
   }
@@ -632,35 +633,38 @@ event.preventDefault();
   let formdata = new FormData();
   formdata.append("foto",files[0]);
 
-  const uploadImageTask = await fetch("uploadFile.php", {
+  const uploadImageTask = await fetch("../uploadFile.php", {
     body: formdata,
     method: "post",
   })
   .then(answer => answer.json())
   .then(data => {
     if(data.status == "error" && data.message != "O ficheiro ja existe"){
-      displayErrorMessage(result.message);
+      displayErrorMessage(data.message);
       return;
     }
 
     displaySuccessMessage(data.message);
-    return generateItemData(data);
+    return generateItemData(data.url);
   });
 
   // returns object with image already attached
   const data = uploadImageTask;
 
-  const createItemTask = await postJSON("link",data);
-
-  createItemTask.then({});
-
+  const createItemTask = await postJSON("./inserir_item.php",data);
+  
+  if(createItemTask['status'] == "error"){
+    displayErrorMessage(createItemTask.message);
+  }else{
+    displaySuccessMessage(createItemTask.message);
+  }
 }
 
 function displayErrorMessage(message){
   alertContainer.classList.remove("d-none");
 
   if(alertContainer.classList.contains("alert-success")){
-    alertContainer.classList.toggle("alert-success");
+    alertContainer.classList.remove("alert-success");
   }
   
   alertContainer.classList.add("alert-danger")
@@ -673,7 +677,7 @@ function displaySuccessMessage(message){
   if(alertContainer.classList.contains("alert-danger")){
     alertContainer.classList.remove("alert-danger")
   }
-  alertContainer.classList.toggle("alert-success")
+  alertContainer.classList.add("alert-success");
   alertContainer.innerHTML = message
 }
 
@@ -692,7 +696,7 @@ async function postJSON(url,data) {
     });
 
     const result = await response.json();
-    console.log("Success:", result);
+    return result;
   } catch (error) {
     console.error("Error:", error);
   }

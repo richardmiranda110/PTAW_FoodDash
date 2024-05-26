@@ -552,9 +552,9 @@
 				}
 			  //loop through the visible rows and display this page
 				var rows = [];
-				for (var i = pageDisplay; i < length; ++i) {
+				for (var i = pageDisplay; i < length; i++) {
 					var tempRow = row.cloneNode(false);
-					if (i % 2 == 0) {
+					if (i % 2 != 0) {
 						tempRow.setAttribute('class', $export.evenRowClass);
 					}
 					else {
@@ -566,6 +566,9 @@
 						var text = $export.visibleRows[i][j];
 						if ($export.columnData[j].CustomRendering != null) {
 							text = $export.columnData[j].CustomRendering(text, $export.visibleRowObjects[i].RowNumber);
+						}
+						if(text.includes('ite')){
+							tempRow.setAttribute('class', $export.evenRowClass);
 						}
 						tempCell.innerHTML = text;
 						tempRow.appendChild(tempCell);
@@ -728,8 +731,8 @@
 			
 				var cells = tableDiv.querySelectorAll('tbody td');
 				for (var i = 0; i < cells.length; ++i) {
-					if(i % 2 == 0)
-					cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:50%;color:#FEBB41;font-weight:bold;font-size:1em');
+					if(!cells[i].innerHTML.includes('ite'))
+						cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:50%;color:#FEBB41;font-weight:bold;font-size:1em');
 					else{
 						cells[i].setAttribute('style', 'padding: 10px 0px 5px 0px;width:50%;font-weight:bold;font-size:1em');
 					}

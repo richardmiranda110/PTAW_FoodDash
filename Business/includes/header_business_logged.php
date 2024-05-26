@@ -3,7 +3,7 @@ require_once  __DIR__."./session.php";
 ?>
 
 <nav class="navbar navbar-expand navbar-dark bg-dark z-1" aria-label="Second navbar example">
-  <div class=" justify-content-start">
+  <div class="justify-content-start">
     <button id="toggleSidebar" class="btn btn-primary">
       <i class="bi bi-list"></i>
     </button>
@@ -14,9 +14,10 @@ require_once  __DIR__."./session.php";
   </div>
   <div class="complement-header w-100 m-0">
       <a class="navbar-brand">
-        <img src="./Business/assets/imgs/logo.png" alt="" srcset="" style="width: 50%;">
+        <img src="/Business/assets/imgs/logo.png" alt="" srcset="" style="width: 40%;">
       </a>
-    <p class="fw-bold text-light" style="margin-right: 1vw;margin-top:1.5vh;margin-bottom:0" id="item-name-label"><?php echo "Bem vindo de volta, " . $_SESSION['nome']; ?></p>
+   
     </div>
+    <p class="fw-bold text-light" style="margin-right: 2vw;margin-top:1.5vh;margin-bottom:0" id="item-name-label"><?php echo $_SESSION['nome']; ?></p>
 </nav>
 
