@@ -1,25 +1,19 @@
 <?php
 //include __DIR__ . "/database/db_connection.php";
 //$pdo = include __DIR__ . "/database/db_connection.php";
+require_once './session.php';
 include __DIR__ . "/database/utilizadores.php";
 
-//conexão ao banco de dados
-define("DBHOST", "localhost");
-define("DBPORT", "5432");
-define("DBNAME", "ptaw");
-define("DBUSER", "postgres");
-define("DBPASS", "test");
+if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+    header("Location: /index.php");
+    exit();
+}
 
-$pdo = new PDO(
-    "pgsql:host=" . DBHOST .
-    "; port=" . DBPORT .
-    ";dbname=" . DBNAME,
-    DBUSER,
-    DBPASS
-);
+
+require './database/credentials.php';
+require './database/db_connection.php';
 
 // cria o o atributo $Validacao com o valor true, pois não existem falhas
-$Validacao = true;
 $utilizadorModificado = null;
 
 // Recebendo dados da BD de um determinado utilizador
@@ -44,7 +38,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Se não ocorreram erros de validação, atualizar o produto
-if ($Validacao == true && $utilizadorModificado !== null) {
+if ($utilizadorModificado !== null) {
     // Editar o usuário no banco de dados
     if (EditarUtilizador($pdo, 1, $utilizadorModificado)) { // ALTERAR ID
         $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR ID
@@ -86,7 +80,7 @@ if ($Validacao == true && $utilizadorModificado !== null) {
     ?>
 
     <!-- Div element where PHP value is set -->
-    <div id="valid" style="display: none;"><?php echo var_export($Validacao);
+    <div id="valid" style="display: none;"><?php echo $_SESSION['authenticated'];
     //var_dump($Validacao); ?></div>
 
     <form class="centro esquerdo form_editar" method="GET">

@@ -1,14 +1,9 @@
 <?php
 require_once './database/db_connection.php';
-
-// if (isset($_GET["id"])) {
-//      $restaurante = $_POST["input_pesquisar_restaurante"];
-//  } else{
-//     echo "please give an ID";
-//  }
+require_once './session.php';
 
 try {
-    $q = "SELECT nome, preco, disponivel, foto, categoria FROM itens;";
+    $q = "SELECT nome, preco, disponivel, foto, id_categoria FROM itens;";
     $statement = $pdo->prepare($q);
     $statement->execute();
 

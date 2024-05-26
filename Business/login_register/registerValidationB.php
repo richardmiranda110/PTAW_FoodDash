@@ -1,5 +1,11 @@
 <?php
-session_start();
+require_once  __DIR__."/include/session.php";
+
+
+if (isset($_SESSION['id_empresa']) || isset($_SESSION['nome'])) {
+  header("Location: /Business/dashboard_home_page.php");
+  exit();
+}
 
 require_once '../../database/db_connection.php';
 

@@ -1,9 +1,19 @@
 <?php
-
+require_once './includes/session.php';
 require_once __DIR__."/../database/credentials.php";
 require_once __DIR__."/../database/db_connection.php";
 
-$idEstabelecimento = $_GET['idEstabelecimento'];
+// if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+//     header("Location: /Business/dashboard_home_page.php");
+//     exit();
+//   }
+
+// não sei quem fez isto, mas $_GET aint it chief
+$idEstabelecimento = $_GET['id_estabelecimento'];
+
+if($idEstabelecimento != $_SESSION['id_estabelecimento']){
+    exit("You cant access other people's data!");
+}
 
 function getPedidosDiarios($pdo, $estabelecimentoId, $dia)
 {

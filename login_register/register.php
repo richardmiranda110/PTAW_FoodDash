@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<?php
+require_once './../session.php';
+
+if (isset($_SESSION['authenticated'])) {
+  header("Location: /dashboard.php");
+  exit();
+}
+
+?>
 <html lang="pt">
 
 <head>
@@ -59,7 +68,6 @@
       <div id="error-message" style="display: none; color: red; text-align: center;"></div>
 
       <?php
-      session_start();
       if (isset($_SESSION['error_message'])) {
         echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
         unset($_SESSION['error_message']);

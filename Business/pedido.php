@@ -1,14 +1,10 @@
 <?php
-session_start();
+require_once './includes/session.php';
 
-// Verificar se o utilizador está logado
-//if (!isset($_SESSION['username'])) {
-//    header("Location: login.php");
-//    exit();
-//}
-
-// Exibir nome de utilizador
-//echo "Welcome, " . $_SESSION['username'];
+if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    header("Location: /Business/dashboard_home_page.php");
+    exit();
+}
 ?>
 
 

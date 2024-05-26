@@ -1,5 +1,11 @@
 <?php
-require_once  __DIR__."/../session.php";
+require_once  __DIR__."/include/session.php";
+
+
+if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
+  header("Location: /Business/login_register/login_business.php");
+  exit();
+}
 ?>
 
 <!doctype html>

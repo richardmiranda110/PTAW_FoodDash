@@ -1,5 +1,6 @@
 <?php
 function realizarPedido($pdo, $id_cliente, $id_entregador, $id_estabelecimento, $precoTotal) {
+    
     $sql = "INSERT INTO Pedidos (id_cliente, id_entregador, id_estabelecimento, precoTotal) VALUES (?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$id_cliente, $id_entregador, $id_estabelecimento, $precoTotal]);

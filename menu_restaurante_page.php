@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<?php require_once './session.php' 
+
+
+
+?>
 <html lang="pt">
 
 <head>
@@ -14,7 +19,11 @@
 <body>
   <!-- NAVBAR -->
   <?php
-  include __DIR__."/includes/header_restaurantes_selected.php";
+  if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+    include __DIR__."/includes/header_restaurantes_selected.php";
+  }else{
+    include __DIR__."/includes/header_logged_in.php";
+  }
   ?>
 
   <!-- IDENTIFICAÇÃO DO RESTAURANTE -->

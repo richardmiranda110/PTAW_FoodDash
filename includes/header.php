@@ -16,8 +16,8 @@
           <a class="nav-link" id="restaurantes_btn" aria-current="page" href="#">Restaurantes</a>
         </li>
       </ul>
-      <button id="login_btn" type="button" class="btn btn-primary me-2">Login</button>
-      <button id="registar_btn" type="button" class="btn btn-secondary">Registar</button>
+      <a href='login_register/login.php' id="login_btn" type="button" class="btn btn-primary me-2">Login</a>
+      <a id="registar_btn" type="button" class="btn btn-secondary">Registar</a>
     </div>
   </div>
 </nav>

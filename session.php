@@ -14,10 +14,10 @@ if (!isset($_SESSION))
 }
 
 // Verificar se o usuário está logado
-if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
-    header("Location: /Business/login_register/login_business.php");
-    exit();
-  }
+// if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+//     header("Location: /index.php");
+//     exit();
+//   }
 
 if (!isset($_SESSION['user_ip']) && !isset($_SESSION['user_agent'])) {
     $_SESSION['user_ip'] = $_SERVER['REMOTE_ADDR'];

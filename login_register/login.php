@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<?php
+require_once './../session.php';
+
+if (isset($_SESSION['authenticated'])) {
+  header("Location: /dashboard.php");
+  exit();
+}
+
+?>
+
 <html lang="pt">
 
 <head>
@@ -46,7 +56,6 @@
       </p>
 
       <?php
-      session_start();
       if (isset($_SESSION['error_message'])) {
         echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
         unset($_SESSION['error_message']);
@@ -111,9 +120,7 @@
       return emailRegex.test(email);
     }
 
-    document.getElementById('logo_fooddash').addEventListener('click', function() {
-      window.location.href = '../index.php';
-    });
+   <?php header("Location: /dashboard.php"); ?>
   </script>
 
   <script src="loginScript.js"></script>

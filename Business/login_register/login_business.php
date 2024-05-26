@@ -1,6 +1,14 @@
+<?php 
+session_start();
+
+if (isset($_SESSION['authenticatedB'])) {
+  header("Location: /Business/dashboard_home_page.php");
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

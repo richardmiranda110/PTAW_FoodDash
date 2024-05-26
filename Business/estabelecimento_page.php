@@ -1,14 +1,9 @@
 <?php
-//include __DIR__ . "/database/db_connection.php";
-//$pdo = include __DIR__ . "/database/db_connection.php";
-include __DIR__ . "/../database/empresa_estabelecimento.php";
+require_once './../../../includes/session.php';
 
-//conexão ao banco de dados
-define("DBHOST", "localhost");
-define("DBPORT", "5432");
-define("DBNAME", "ptaw");
-define("DBUSER", "postgres");
-define("DBPASS", "test");
+include __DIR__ . "/../database/empresa_estabelecimento.php";
+include __DIR__ . "../database/credentials.php";
+include __DIR__ . "../database/db_connection.php";
 
 $pdo = new PDO(
     "pgsql:host=" . DBHOST .

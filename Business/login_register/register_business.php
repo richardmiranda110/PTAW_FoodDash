@@ -1,3 +1,11 @@
+<?php 
+require_once  __DIR__."/include/session.php";
+
+if (isset($_SESSION['authenticatedB'])) {
+  header("Location: /Business/dashboard_home_page.php");
+  exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt">
 

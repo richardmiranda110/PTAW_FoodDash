@@ -1,8 +1,19 @@
 <?php
+require_once './includes/session.php';
 require_once __DIR__."/../database/credentials.php";
 require_once __DIR__."/../database/db_connection.php";
 
 $idEmpresa = $_GET['idEstabelecimento'];
+
+if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome'])) {
+    header("Location: /Business/login_register/login_business.php");
+    exit();
+  }
+
+if($idEmpresa != $_SESSION['id_empresa']){
+    exit("You cant access other people's list!");
+}
+
 $query =  
 "SELECT id_item, item.nome, preco, 
 descricao, disponivel, 

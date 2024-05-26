@@ -1,16 +1,6 @@
 <?php
-session_start();
-
-// Verificar se o utilizador está logado
-//if (!isset($_SESSION['username'])) {
-//    header("Location: login.php");
-//    exit();
-//}
-
-// Exibir nome de utilizador
-//echo "Welcome, " . $_SESSION['username'];
+require_once './includes/session.php';
 ?>
-
 
 <!doctype html>
 <html lang="en">

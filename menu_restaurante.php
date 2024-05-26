@@ -1,3 +1,5 @@
+<?php require_once './session.php'; ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -21,19 +23,22 @@ include __DIR__."/includes/insertPedido.php";
   <!-- NAVBAR -->
   <?php
   ///validar id cliente por sessiom
-  $idCliente=1;
+  $idCliente=$_SESSION['id_cliente'];
   
   if (!isset($_GET['restaurante'])) {
     if (!empty($_SERVER['HTTP_REFERER'])) {
       header('Location: ' . $_SERVER['HTTP_REFERER']);
     } else {
-      header('Location: /~ptaw-2024-gr2/restaurantes_page.php');
+      header('Location: /restaurantes_page.php');
     }
     exit();
   }
 
-
-  include __DIR__ . '/includes/header_restaurantes_selected.php';
+  if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+    include __DIR__."/includes/header_restaurantes_selected.php";
+  }else{
+    include __DIR__."/includes/header_logged_in.php";
+  }
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';

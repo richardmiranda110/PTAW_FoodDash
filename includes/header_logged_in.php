@@ -16,16 +16,16 @@
     <div class="collapse navbar-collapse" id="navbarsExample02">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <!-- <a class="nav-link active" aria-current="page" href="#">Home</a> -->
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#">Restaurantes</a>
+          <a class="nav-link" aria-current="page" href="../restaurantes_page.php">Restaurantes</a>
         </li>
       </ul>
-      <button class="btn btn-default border border-white me-2">
+      <a class="btn btn-default border border-white me-2" href="../perfil.php">
         <img src="./assets/imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
-      </button>
-      <button class="btn btn-default border border-white">
+      </a>
+      <button class="btn btn-default border border-white" >
         <img src="./assets/imgs/carrinho-de-compras.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </button>
     </div>

@@ -1,7 +1,8 @@
 <?php
     session_start();
-    unset($_SESSION["authenticated"]); 
+    session_destroy();
 
     // Alterar depois
+    // rikko aqui, deixa tar assim
     header('location: ../index.php');
 ?>

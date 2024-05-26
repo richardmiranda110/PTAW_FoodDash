@@ -1,5 +1,10 @@
 <?php
-session_start();
+require_once './../session.php';
+
+if (isset($_SESSION['authenticated'])) {
+  header("Location: /dashboard.php");
+  exit();
+}
 
 require_once '../database/db_connection.php';
 

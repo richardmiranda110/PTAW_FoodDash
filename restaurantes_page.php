@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
-
+<?php require_once './session.php'; ?>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +16,12 @@
 <body>
   <!-- NAVBAR -->
   <?php
-  //require_once __DIR__."/database/db_connection.php";
+  require_once 'database/credentials.php';
+  require_once 'database/db_connection.php';
+
   include __DIR__ . "/includes/header_restaurantes_selected.php";
   include __DIR__ . "/includes/navbar_tipos_de_comida.php";
+
   ?>
 
 
@@ -35,8 +38,7 @@
   <!-- LISTA DE RESTAURANTES -->
       
 <?php
-require_once 'database/credentials.php';
-require_once 'database/db_connection.php';
+
 
 $itemPorPagina = 10;
 $pagAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
@@ -130,10 +132,10 @@ try {
     if ($pagAtual > 1) {
         echo "<li class='page-item'><a class='page-link' href='?pagina=" . ($pagAtual - 1) . "'>Anterior</a></li>";
     }
-    for ($i = 1; $i <= $total_paginas; $i++) {
+    for ($i = 1; $i <= $totalPages; $i++) {
         echo "<li class='page-item " . ($i == $pagAtual ? 'active' : '') . "'><a class='page-link' href='?pagina=" . $i . "'>" . $i . "</a></li>";
     }
-    if ($pagAtual < $total_paginas) {
+    if ($pagAtual < $totalPages) {
         echo "<li class='page-item'><a class='page-link' href='?pagina=" . ($pagAtual + 1) . "'>Próxima</a></li>";
     }
     echo "</ul></nav>";

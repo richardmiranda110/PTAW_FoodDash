@@ -1,8 +1,20 @@
 <?php
-require_once './init.php';
+require_once './session.php';
+require_once './database/credentials.php';
+require_once './database/db_connection.php';
+
+if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+    header("Location: /index.php");
+    exit();
+  }
 
 function getTotalPedidos($conn, $clienteId)
 {
+    if ($_SESSION['id_cliente'] != $clienteId){
+        header("Location: /index.php");
+        exit();
+    }
+
     $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_cliente = :clienteId";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
@@ -13,6 +25,11 @@ function getTotalPedidos($conn, $clienteId)
 // Função para contar pedidos por mês para um cliente específico
 function getMesPedidos($pdo, $clienteId, $mes)
 {
+    if ($_SESSION['id_cliente'] != $clienteId){
+        header("Location: /index.php");
+        exit();
+    }
+
     $query = "
         SELECT COUNT(*) AS total_pedidos
         FROM Pedidos
@@ -29,6 +46,11 @@ function getMesPedidos($pdo, $clienteId, $mes)
 // Função para calcular o total de dinheiro gasto por um cliente
 function getTotalDinheiro($pdo, $clienteId)
 {
+    if ($_SESSION['id_cliente'] != $clienteId){
+        header("Location: /index.php");
+        exit();
+    }
+
     $query = "
         SELECT SUM(precoTotal) AS total_dinheiro
         FROM Pedidos
@@ -44,6 +66,11 @@ function getTotalDinheiro($pdo, $clienteId)
 // Função para calcular o total de dinheiro gasto por um cliente em um mês específico
 function getMesDinheiro($pdo, $clienteId, $mes)
 {
+    if ($_SESSION['id_cliente'] != $clienteId){
+        header("Location: /index.php");
+        exit();
+    }
+
     $query = "
         SELECT SUM(precoTotal) AS total_dinheiro
         FROM Pedidos
@@ -61,6 +88,11 @@ function getMesDinheiro($pdo, $clienteId, $mes)
 // Função para calcular a média de custo por pedido
 function getMediaCustoPedidos($pdo, $clienteId)
 {
+    if ($_SESSION['id_cliente'] != $clienteId){
+        header("Location: /index.php");
+        exit();
+    }
+
     $totalDinheiro = getTotalDinheiro($pdo, $clienteId);
     $totalPedidos = getTotalPedidos($pdo, $clienteId);
 
@@ -73,7 +105,7 @@ function getMediaCustoPedidos($pdo, $clienteId)
 }
 
 // Exemplo de uso
-$clienteId = 1;  // ID do cliente para o qual queremos contar os pedidos
+$clienteId = $_SESSION['id_cliente'];  // ID do cliente para o qual queremos contar os pedidos
 $totalPedidos = getTotalPedidos($pdo, $clienteId);
 
 $totalDinheiro = getTotalDinheiro($pdo, $clienteId);

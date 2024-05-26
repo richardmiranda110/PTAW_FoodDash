@@ -1,6 +1,16 @@
 <?php
+
+if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
+    header("Location: /Business/login_register/login_business.php");
+    exit();
+  }
+
 function ObterEmpresa($pdo, $ID)
 {
+    if($ID != $_SESSION['id_empresa']){
+        exit("You cant access data of other companies!");
+    }
+
     try {
         $sql = "SELECT * FROM Empresas WHERE id_empresa = ?";
         $stmt = $pdo->prepare($sql);
@@ -26,6 +36,10 @@ function ObterEmpresa($pdo, $ID)
 // Altera os dados do utilizador, mas não a password
 function EditarEmpresa($pdo, $ID, $DadosUtilizadores)
 {
+    if($ID != $_SESSION['id_empresa']){
+        exit("You cant Edit other people's companies!");
+    }
+
     $sql = "UPDATE Empresas SET nome = ?, morada = ?, telemovel = ?,
     email = ?, tipo = ?, logotipo = ?, WHERE id_empresa = ?";
 
@@ -51,6 +65,9 @@ function EditarEmpresa($pdo, $ID, $DadosUtilizadores)
 
 function ObterEstabelecimento($pdo, $ID)
 {
+    if($ID != $_SESSION['id_empresa']){
+        exit("You cant access other people's Establishment!");
+    }
     try {
         $sql = "SELECT * FROM Estabelecimentos WHERE id_estabelecimento = ?";
         $stmt = $pdo->prepare($sql);
@@ -76,6 +93,10 @@ function ObterEstabelecimento($pdo, $ID)
 // Altera os dados do utilizador, mas não a password
 function EditarEstabelecimento($pdo, $ID, $DadosUtilizadores)
 {
+    if($ID != $_SESSION['id_empresa']){
+        exit("You cant edit other people's Establishment!");
+    }
+
     $sql = "UPDATE Estabelecimentos SET nome = ?, localizacao = ?, telemovel = ?,
     taxa_entrega = ?, tempo_medio_entrega = ?, imagem = ?
     WHERE id_estabelecimento = ?";

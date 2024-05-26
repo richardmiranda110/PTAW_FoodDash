@@ -1,30 +1,20 @@
 <?php
-session_start();
+require_once './session.php';
+require_once './database/credentials.php';
+require_once './database/db_connection.php';
 
-// Verificar se o usuário está logado
-//if (!isset($_SESSION['username'])) {
-//    header("Location: login.php");
-//    exit();
-//}
-
-// Exibir nome de usuário
-//conexão ao banco de dados
-define("DBHOST", "localhost");
-define("DBPORT", "5432");
-define("DBNAME", "ptaw");
-define("DBUSER", "postgres");
-define("DBPASS", "test");
-
-$pdo = new PDO(
-    "pgsql:host=" . DBHOST .
-    "; port=" . DBPORT .
-    ";dbname=" . DBNAME,
-    DBUSER,
-    DBPASS
-);
+if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+  header("Location: /index.php");
+  exit();
+}
 
 function ObterUmUtilizador($pdo, $ID)
 {
+	if($_SESSION['id_cliente'] != $ID){
+		header("Location: /index.php");
+		exit();
+	}
+
 	try {
 		//query
 		$stmt = $pdo->prepare('SELECT * FROM Clientes WHERE id = ?');
@@ -51,7 +41,7 @@ function ObterUmUtilizador($pdo, $ID)
 // Recebendo dados da BD
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	// Obter os dados do utilizador
-	$utilizador = ObterUmUtilizador($pdo, 1);
+	$utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']);
 }
 ?>
 

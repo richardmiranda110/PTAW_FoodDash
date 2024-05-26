@@ -1,15 +1,29 @@
 <?php
-session_start();
+require_once './session.php';
+require_once './database/credentials.php';
+require_once './database/db_connection.php';
 
-// // Verificar se o usuário está logado
-// if (!isset($_SESSION['username'])) {
-//     header("Location: login.php");
-//     exit();
+if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+  header("Location: /index.php");
+  exit();
+}
+
+$query = "SELECT id_pedido, data, estado, cancelado, precototal, id_cliente, id_entregador, id_estabelecimento
+FROM pedidos WHERE id_pedido = ?;";
+
+try {
+$stmt = $pdo->prepare($query);
+$stmt->execute([$_SESSION['id_cliente']]);
+$pedido = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+echo "Erro na conexão: " . $e->getMessage();
+}
+
+// if($pedido['id_cliente'] != $_SESSION['id_cliente']){
+//   header("Location: /index.php");
 // }
+?>
 
-// // Exibir nome de usuário
-// echo "Welcome, " . $_SESSION['username'];
-// ?>
 
 
 <!doctype html>
@@ -21,7 +35,7 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/styles/sitecss.css">
 	<link rel="stylesheet" href="assets/styles/dashboard.css">
-    
+
   </head>
   <body>
   <!--Zona do Header -->
@@ -31,7 +45,7 @@ session_start();
 
   </div>
 
-  <!--Zona de Conteudo -->  
+  <!--Zona de Conteudo -->
   <div id="contentPage" class="container-xxl">
   <?php include "includes/sidebar_perfil.php"; ?>
 

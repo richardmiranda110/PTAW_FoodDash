@@ -10,6 +10,10 @@ function criarConta($pdo, $nome, $email, $morada, $telemovel, $password)
 
 function ObterUmUtilizador($pdo, $ID)
 {
+    if($ID != $_SESSION['id_cliente']){
+        exit("You cant edit other people's Data!");
+    }
+
     try {
         $sql = "SELECT * FROM Clientes WHERE id_cliente = ?";
         $stmt = $pdo->prepare($sql);
@@ -35,6 +39,11 @@ function ObterUmUtilizador($pdo, $ID)
 // Altera os dados do utilizador, mas não a password
 function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
 {
+    if($ID != $_SESSION['id_cliente']){
+        exit("You cant edit other people's Data!");
+    }
+
+
     $sql = "UPDATE Clientes SET nome = ?, apelido = ?, email = ?,
     telemovel = ?, morada = ?, cidade = ?, pais = ?, CodPostal = ?
     WHERE id_cliente = ?";
@@ -74,4 +83,3 @@ function iniciarSessao($pdo, $email, $password)
     }
     return false;
 }
-?>

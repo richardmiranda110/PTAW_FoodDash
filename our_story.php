@@ -27,7 +27,11 @@
 <body>
   <!-- HEADER -->
   <?php
-  include __DIR__ . "/includes/header.php";
+  if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+    include __DIR__ . "/includes/header.php";
+  }else{
+    include __DIR__."/includes/header_logged_in.php";
+  }
   ?>
 
   <div class="content_our_story">

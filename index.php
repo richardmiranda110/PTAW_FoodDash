@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php require_once './session.php'; ?>
 <html lang="pt">
 
 <head>
@@ -15,7 +16,11 @@
 <body>
   <!-- NAVBAR -->
   <?php
-  include __DIR__ . "/includes/header.php";
+    if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+      include __DIR__ . "/includes/header.php";
+    }else{
+      include __DIR__."/includes/header_logged_in.php";
+    }
   ?>
   <!-- CONTAINER DE INSERIR MORADA -->
   <div class="main_land_image" style="background-image: url('./assets/stock_imgs/burger_bg_landingHomePage.png'); background-size: cover; background-repeat: no-repeat; background-position: center; width: 100%; height: 500px;">

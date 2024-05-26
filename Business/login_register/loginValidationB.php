@@ -1,6 +1,12 @@
 <?php
-session_start();
+require_once  __DIR__."/include/session.php";
 
+if (isset($_SESSION['authenticatedB'])) {
+  header("Location: /Business/dashboard_home_page.php");
+  exit();
+}
+
+require_once '../../database/credentials.php';
 require_once '../../database/db_connection.php';
 
 $email = $_POST['inputEmail'];
@@ -17,10 +23,12 @@ try {
     if($row) {
         $_SESSION['nome'] = $row['nome'];
         $_SESSION['id_empresa'] = $row['id_empresa'];
+        $_SESSION['id_estabelecimento'] = $row['id_estabelecimento'];
         $_SESSION["authenticatedB"] = true;
-        $_SESSION['success_message'] = "Logado com sucesso"; // Mensagem para testar, apagar depois
+        header('Location:  /Business/dashboard_home_page.php');
+        // $_SESSION['success_message'] = "Logado com sucesso"; // Mensagem para testar, apagar depois
         // Alterar location depois
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        // header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit;
     } else if($pass != 'password' || $email != 'email') {
         $_SESSION['stats_fail'] = true;
