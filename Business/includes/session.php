@@ -13,11 +13,11 @@ if (!isset($_SESSION))
     session_start();
 }
 
-// Verificar se o usuário está logado
-if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
-    header("Location: /Business/login_register/login_business.php");
-    exit();
-  }
+// // Verificar se o usuário está logado
+// if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+//     header("Location: /Business/login_register/login_business.php");
+//     exit();
+//   }
 
 if (!isset($_SESSION['user_ip']) && !isset($_SESSION['user_agent']) || !isset($_SESSION['authenticated'])) {
     $_SESSION['user_ip'] = $_SERVER['REMOTE_ADDR'];
