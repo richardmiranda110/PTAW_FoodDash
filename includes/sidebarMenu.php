@@ -20,12 +20,7 @@
 	  </li>
 	  <li>
 		<a href="#" class="nav-link">
-		  <span class="bi bi-graph-up">Estatisticas</span>
-		</a>
-	  </li>
-	  <li>
-		<a href="#" class="nav-link">
-		  <span class="bi bi-credit-card-fill">Método Pagamento</span>
+		  <span class="bi bi-graph-up">Estatísticas</span>
 		</a>
 	  </li>
 	</ul>
