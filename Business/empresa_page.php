@@ -15,44 +15,46 @@ $pdo = new PDO(
 
 // cria o o atributo $Validacao com o valor true, pois não existem falhas
 $Validacao = true;
+$empresaModificado = null;
 $estabelecimentoModificado = null;
 
-// Recebendo dados da BD de um determinado estabelecimento
+// Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Obter dados do estabelecimento
-    $estabelecimento = ObterEstabelecimento($pdo, 1); // ALTERAR O ID
+    // Obter os dados da empresa
+    $empresa = ObterEmpresa($pdo, 1); // ALTERAR O ID
 }
-// Enviando dados para a BD, ao editar dados de um determinado estabelecimento
+// Enviando dados para a BD, ao editar dados de um determinado «empresa
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Atribuir os dados do formulário à variável $estabelecimento
+    // Atribuir os dados do formulário à variável $empresa
     // e, ao mesmo tempo, retirar carateres perigosos
-    $estabelecimentoModificado = array(
+    $empresaModificado = array(
         'nome' => htmlentities(trim($_POST['nome'])),
-        'localizacao' => htmlentities(trim($_POST['localzacao'])),
+        'morada' => htmlentities(trim($_POST['morada'])),
         'telemovel' => htmlentities(trim($_POST['telemovel'])),
-        'taxa_entrega' => htmlentities(trim($_POST['taxa_entrega'])),
-        'tempo_medio_entrega' => htmlentities(trim($_POST['tempo_medio_entrega'])),
-        'imagem' => htmlentities(trim($_POST['imagem']))
+        'email' => htmlentities(trim($_POST['email'])),
+        'tipo' => htmlentities(trim($_POST['tipo'])),
+        'logotipo' => htmlentities(trim($_POST['logotipo']))
     );
 }
 
-// Se não ocorreram erros de validação, e o emprestimo tiver null
-if ($Validacao == true && ($estabelecimentoModificado !== null)) {
-    // Editar os dados do estabelecimento na base de dados
-    if (EditarEstabelecimento($pdo, 1, $estabelecimentoModificado)) { // ALTERAR ID
-        $estabelecimento = ObterEstabelecimento($pdo, 1); // ALTERAR ID
+// Se não ocorreram erros de validação, e se a empresa e o emprestimo tiver null
+if ($Validacao == true && ($empresaModificado !== null)) {
+    // Editar a empresa na base de dados
+    if (EditarEmpresa($pdo, 1, $empresaModificado)) { // ALTERAR ID
+        $empresa = ObterEmpresa($pdo, 1); // ALTERAR ID
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";
 
-        // Ocorreu um erro na alteração de dados, na base de dados
+        // Ocorreu um erro na alteração de dados
     } else {
         echo "<div class='alert alert-danger' role='alert'>
             Ocorreu um erro ao alterar dados! Por favor, tente novamente.
         </div>";
     }
-    // Se não existerem dadis a ser alterados 
+    // Se ocurrem erros 
 } else {
+    $empresa = ObterEmpresa($pdo, 1);
     $estabelecimento = ObterEstabelecimento($pdo, 1);
 }
 ?>
@@ -92,8 +94,8 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
             referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
-    <!-- Formulárop do Estabelecimento -->
-    <form id="estabelcimento" class="centro esquerdo form_editar" method="GET">
+    <!-- Empresa -->
+    <form id="empresa" class="centro esquerdo form_editar" method="GET">
         <h3><strong>Informações</strong></h3>
 
         <div class="align-items-md-stretch">
@@ -121,17 +123,17 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                             <span>Nome<span style='color:#ff0000'> *</span></span>
                             <div class="input-group flex-nowrap">
                                 <input name="nome" readonly type="text" class="form-control" placeholder="Nome"
-                                    aria-label="Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['nome']))
-                                        echo $estabelcimento['nome']; ?>">
+                                    aria-label="Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($empresa['nome']))
+                                        echo $empresa['nome']; ?>">
                             </div>
                             <br>
 
-                            <!-- localizacao -->
-                            <span>Localização</span>
+                            <!-- Morada -->
+                            <span>Morada</span>
                             <div class="input-group flex-nowrap">
-                                <input name="morada" readonly type="text" class="form-control" placeholder="Localização"
-                                    aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['localizacao']))
-                                        echo $estabelcimento['localizacao']; ?>">
+                                <input name="morada" readonly type="text" class="form-control" placeholder="Morada"
+                                    aria-label="Morada" aria-describedby="addon-wrapping" value="<?php if (!empty($empresa['morada']))
+                                        echo $empresa['morada']; ?>">
                             </div>
                             <br>
 
@@ -143,46 +145,35 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                             <div class="input-group flex-nowrap">
                                 <input name="telemovel" readonly type="text" class="form-control"
                                     placeholder="Telemóvel" aria-label="Telemovel" aria-describedby="addon-wrapping"
-                                    value="<?php if (!empty($estabelcimento['telemovel']))
-                                        echo $estabelcimento['telemovel']; ?>">
+                                    value="<?php if (!empty($empresa['telemovel']))
+                                        echo $empresa['telemovel']; ?>">
                                 <span id="erroTelemovel" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <br>
-                            <!-- taxa_entrega -->
+
+                            <!-- Email -->
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="col-md-12 esquerdo">
-                                        <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
+                                        <span>Email<span style='color:#ff0000'> *</span></span>
                                         <div class="input-group flex-nowrap">
-                                            <input name="taxa_entrega" readonly type="text" class="form-control"
-                                                placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
-                                                aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['taxa_entrega']))
-                                                    echo $estabelcimento['taxa_entrega']; ?>">
+                                            <input name="email" readonly type="text" class="form-control"
+                                                placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping"
+                                                value="<?php if (!empty($empresa['email']))
+                                                    echo $empresa['email']; ?>">
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- tempo_medio_entrega -->
+                                <!-- Tipo -->
                                 <div class="col-md-4">
                                     <div class="col-md-12">
-                                        <span>Tempo médio de entrega<span style='color:#ff0000'> *</span></span>
+                                        <span>Tipo<span style='color:#ff0000'> *</span></span>
                                         <div class="input-group flex-nowrap">
-                                            <input name="tempo_medio_entrega" readonly type="text" class="form-control"
-                                                placeholder="Tempo médio de entrega" aria-label="Tempo médio de entrega"
-                                                aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['tempo_medio_entrega']))
-                                                    echo $estabelcimento['tempo_medio_entrega']; ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- imagem -->
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <span>Imagem<span style='color:#ff0000'> *</span></span>
-                                        <div class="input-group flex-nowrap">
-                                            <!--<input name="cidade" readonly type="text" class="form-control"
-                                                placeholder="Imagem" aria-label="Imagem"
-                                                aria-describedby="addon-wrapping" value="<?php // if (!empty($utilizador['Imagem']))
-                                                //echo $utilizador['Imagem']; ?>">-->
+                                            <input name="tipo" readonly type="text" class="form-control"
+                                                placeholder="Tipo" aria-label="Tipo" aria-describedby="addon-wrapping"
+                                                value="<?php if (!empty($empresa['tipo']))
+                                                    echo $empresa['tipo']; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -207,33 +198,32 @@ include __DIR__ . "/includes/footer_business.php";
     //Geral
     var inputs = document.querySelectorAll(".form-control");
     var validacao = true;
-    var btnEditarEstabelcimento = document.getElementById("btn_editar_estabelcimento");
-    var formEstabelcimento = document.querySelector(".form_editar");
 
-    // dados inseridos no input
+    //Empresa
+    var btnEditarEmpresa = document.getElementById("btn_editar_empresa");
+    var formEmpresa = document.querySelector(".form_editar");
+    // input
     var nomeInput = document.querySelector("[name='nome']");
-    var localizacaoInput = document.querySelector("[name='localizacao']");
-    var telemovelInput = document.querySelector("[name='telemovel']");
-    var taxa_entregaInput = document.querySelector("[name='taxa_entrega']");
-    var tempo_medio_entregaInput = document.querySelector("[name='tempo_medio_entrega']");
-
-    // variáveis se ocurrerem erro
+    var moradaInput = document.querySelector("[name='morada']");
+    var telefoneInput = document.querySelector("[name='telemovel']");
+    var emailInput = document.querySelector("[name='email']");
+    var tipoInput = document.querySelector("[name='tipo']");
+    // erro
     var erroNome = document.getElementById("erroNome");
-    var erroLocalizacao = document.getElementById("erroLocalizacao");
-    var erroTelemovel = document.getElementById("erroTelemovel");
-    var erroTaxaEntrega = document.getElementById("erroTaxaEntrega");
     var erroEmail = document.getElementById("erroEmail");
-    var erroTempoMedioEntrega = document.getElementById("erroTempoMedioEntrega");
+    var erroMorada = document.getElementById("erroMorada");
+    var erroTelemovel = document.getElementById("erroTelemovel");
+    var erroTipo = document.getElementById("erroTipo");
 
 
-    // Função para validar o formulário da estabelcimento
-    function validarFormulario() {
+    // Função para validar o formulário da empresa
+    function validarFormularioEmpresa() {
         validacao = true; // resetar a validação
         erroNome.textContent = ""; // limpar mensagem de erro
-        erroLocalizacao.textContent = ""; // limpar mensagem de erro
+        erroMorada.textContent = ""; // limpar mensagem de erro
         erroTelemovel.textContent = ""; // limpar mensagem de erro
-        erroTaxaEntrega.textContent = ""; // limpar mensagem de erro
-        erroTempoMedioEntrega.textContent = ""; // limpar mensagem de erro
+        erroEmail.textContent = ""; // limpar mensagem de erro
+        erroTipo.textContent = ""; // limpar mensagem de erro
 
 
         // Verificar se o campo de nome está vazio
@@ -243,8 +233,8 @@ include __DIR__ . "/includes/footer_business.php";
         }
 
         // Verificar se o campo de e-mail está vazio
-        if (localizacaoInput.value.trim() === "") {
-            erroLocalizacao.textContent = "Campo obrigatório";
+        if (moradaInput.value.trim() === "") {
+            erroMorada.textContent = "Campo obrigatório";
             validacao = false; // marcar validação como falsa
         }
 
@@ -255,25 +245,24 @@ include __DIR__ . "/includes/footer_business.php";
         } else {
             // verficar se o campo contém só números
             var telemovel = telemovelInput.value.trim();
-            if (!(/^\d+$/.test(telemovel)) {
+            if (!(/^\d+$/.test(telemovel))) {
                 erroTelemovel.textContent = "O campo só pode conter números.";
                 validacao = false; // marcar validação como falsa
-            } elseif
-                (telemovel.length !== 9){
+            } else if (telemovel.length !== 9) {
                 erroTelemovel.textContent = "O campo deverá só conter números";
                 validacao = false; // marcar validação como falsa
             }
         }
 
         // Verificar se o campo de e-mail está vazio
-        if (taxaEntregaInput.value.trim() === "") {
-            erroTaxaEntrega.textContent = "Campo obrigatório";
+        if (emailInput.value.trim() === "") {
+            erroEmail.textContent = "Campo obrigatório";
             validacao = false; // marcar validação como falsa
         }
 
         // Verificar se o campo de e-mail está vazio
-        if (tempoMedioEntregaInput.value.trim() === "") {
-            erroTempoMedioEntrega.textContent = "Campo obrigatório";
+        if (taxaEntregaInput.value.trim() === "") {
+            erroTipo.textContent = "Campo obrigatório";
             validacao = false; // marcar validação como falsa
         }
     }
@@ -297,15 +286,16 @@ include __DIR__ . "/includes/footer_business.php";
             else {
                 // Validar o formulário ao clicar em "Guardar"
                 validarFormulario();
+                console.log(validacao);
 
                 // caso não haja erros, o formulário é submetido
                 if (validacao == true) {
                     validacao = true; // resetar a validação
                     erroNome.textContent = ""; // limpar mensagem de erro
-                    erroLocalizacao.textContent = ""; // limpar mensagem de erro
+                    erroMorada.textContent = ""; // limpar mensagem de erro
                     erroTelemovel.textContent = ""; // limpar mensagem de erro
-                    erroTaxaEntrega.textContent = ""; // limpar mensagem de erro
-                    erroTempoMedioEntrega.textContent = ""; // limpar mensagem de erro
+                    erroEmail.textContent = ""; // limpar mensagem de erro
+                    erroTipo.textContent = ""; // limpar mensagem de erro
                     btnEditar.innerHTML = "Editar";
                     btnEditar.setAttribute("type", "submit");
                     btnEditar.classList.remove("btn-success"); // tipo: submissão
