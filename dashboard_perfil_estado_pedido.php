@@ -8,20 +8,51 @@ if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SES
   exit();
 }
 
-$query = "SELECT id_pedido, data, estado, cancelado, precototal, id_cliente, id_entregador, id_estabelecimento
-FROM pedidos WHERE id_pedido = ?;";
+$PEDIDO_ID = $_GET['id'];
+
+$query = "SELECT clientes.morada as morada,clientes.nome as cliente,pedido.id_pedido as id, pedido.data as data, pedido.estado as estado, pedido.cancelado, pedido.precototal, pedido.id_cliente, pedido.id_entregador, id_estabelecimento
+FROM pedidos pedido 
+INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
+INNER JOIN CLIENTES ON pedido.ID_CLIENTE = CLIENTES.ID_CLIENTE
+WHERE pedido.id_pedido = ?;";
 
 try {
 $stmt = $pdo->prepare($query);
-$stmt->execute([$_SESSION['id_cliente']]);
+$stmt->execute([$PEDIDO_ID]);
 $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
 echo "Erro na conexão: " . $e->getMessage();
 }
 
-// if($pedido['id_cliente'] != $_SESSION['id_cliente']){
-//   header("Location: /index.php");
-// }
+$query = "SELECT item.nome as nome,pi.quantidade as qtd
+FROM public.pedido_itens 
+inner join itens item on pedido_itens.id_item = item.id_item
+inner join pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
+INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido
+WHERE pedido.id_pedido = ?";
+
+try {
+$stmts = $pdo->prepare($query);
+$stmt->execute([$PEDIDO_ID]);
+$stmts->execute();
+$items = $stmts->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+echo "Erro na conexão: " . $e->getMessage();
+}
+$item_arr = array();
+
+foreach($items as &$item){
+  $result = $item['nome'].' ('.$item['qtd'].'x)';
+  array_push($item_arr,$result);
+}
+
+$result = implode(' + ',$item_arr);
+
+echo $result;
+
+if($pedido['id_cliente'] != $_SESSION['id_cliente']){
+  header("Location: /index.php");
+}
 ?>
 
 
@@ -57,33 +88,31 @@ echo "Erro na conexão: " . $e->getMessage();
             <p class="text subtitle">Esta é a tua página de pedidos. Aqui podes ver o teu histórico de pedidos feitos, ver o estado dos pedidos, etc.</p>
         </div>
         <div class="container ">
-                <div class="row border my-3">
+                <div class="row border my-3 py-2">
                   <div class="col-sm-1 fs-1 ">
-				  <a href="dashboard_perfil_pedidos.php">
-                    <i style="cursor:pointer" class="bi bi-arrow-left-short border border-2 rounded bg-light"></i>
-					</a>
+                  <a href="dashboard_perfil_pedidos.php">
+                      <i style="cursor:pointer;" class="bi bi-arrow-left-short border border-2 rounded bg-light"></i>
+                  </a>
                   </div>
-                  <div class=" rounded-left rounded-right align-self-center py-2 fs-6">
-                      <p class="title display-6 fw-bold"><span>Menu Big King</span> - (<span>13:46</span>  <span>16/03/2024</span>)</p>
-                      <p class="text">Big King + Batatas Médias + IceTea Manga</p>
-                      <p class="text">Status do pedido: <span>💦</span></p>
-                      <p class="text">Método de Pagamento: <span></span><span>Visa *****</span></p>
-                      <p class="text">Preço: <span>9,28</span>€</p>
-                  </div>
-
-                  <div class="ps-3 py-3">MAP</div>
-
-                  <div class="container mt-5 px-5 ">
+                  <div class=" rounded-left rounded-right align-self-center py-2 fs-6" style="margin-left:3vw">
+                      <p class="title display-6 fw-bold"><span><?php echo 'Pedido #'.$pedido['id'].', '.$pedido['cliente']?></span> em <span><?php echo $pedido['data'] ?></span></p>
+                      <p class="text"><?php echo $result ?></p>
+                      <p class="text">Status do pedido: <span><?php echo $pedido['estado'] ?></span></p>
+                      <p class="text">Morada: <span><?php echo $pedido['morada'] ?></span></p>
+                      <p class="text">Preço: <span><?php echo $pedido['precototal'] ?></span>€</p>
+                  </div>  
+                  <div class="container mt-5 mx-4 px-5 ">
                     <div class="d-flex justify-content-center align-items-center">
-                        <div class="circle">1</div>
-                        <div class="line flex-grow-1"></div>
-                        <div class="circle">2</div>
-                        <div class="line flex-grow-1"></div>
-                        <div class="circle">3</div>
-                        <div class="line flex-grow-1"></div>
-                        <div class="circle">4</div>
-                        <div class="line flex-grow-1 gradient-line"></div>
-                        <div class="circle black-circle text-light">5</div>
+
+                        <div class="circle ">1</div>
+                        <div class="line flex-grow-1 <?php echo (($pedido['estado'] == 'EFETUADO') == 1 ? "gradient-line" : "") ?>"></div>
+                        <div class="circle <?php echo (($pedido['estado'] == 'EFETUADO') == 1 ? "black-circle text-light" : "") ?>" >2</div>
+                        <div class="line flex-grow-1 <?php echo ($pedido['estado'] == 'EM PREPARACAO' ? " gradient-line" : "") ?>"></div>
+                        <div class="circle <?php echo ($pedido['estado'] == 'EM PREPARACAO' ? "black-circle" : "") ?>">3</div>
+                        <div class="line flex-grow-1 <?php echo ($pedido['estado'] == 'A CAMINHO' ? " gradient-line" : "") ?>"></div>
+                        <div class="circle <?php echo ($pedido['estado'] == 'A CAMINHO' ? "black-circle text-light" : "") ?>">4</div>
+                        <div class="line flex-grow-1 <?php echo ($pedido['estado'] == 'FINALIZADO' ? " gradient-line" : "") ?>"></div>
+                        <div style="margin-right:5vw;" class="circle <?php echo ($pedido['estado'] == 'FINALIZADO' ? "black-circle text-light" : "") ?>">5</div>
                     </div>
                     <div class="d-flex justify-content-left align-items-left mb-4">
                       <div class="roadmap-item ten-percent-to-left align-items-top text-center"><span>Efetuação<br> do Pedido</span></div>
@@ -94,7 +123,7 @@ echo "Erro na conexão: " . $e->getMessage();
                       <div class="roadmap-item flex-grow-1"></div>
                       <div class="roadmap-item ten-percent-to-left align-items-top text-center"><span>Viagem Até<br> Sua Casa</span></div>
                       <div class="roadmap-item flex-grow-1"></div>
-                      <div class="roadmap-item ten-percent-to-right align-items-top text-center"><span>Entregue</span></div>
+                      <div style="margin-right:5vw;" class="roadmap-item ten-percent-to-right align-items-top text-center"><span>Entregue</span></div>
                   </div>
                 </div>
         </div>
