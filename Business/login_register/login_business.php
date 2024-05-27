@@ -2,7 +2,7 @@
 require_once __DIR__.'../includes/session.php';
 
 if (isset($_SESSION['authenticatedB'])) {
-  header("Location: /Business/dashboard_home_page.php");
+  header("Location: ../dashboard_home_page.php");
   exit();
 }
 ?>
@@ -31,7 +31,7 @@ if (isset($_SESSION['authenticatedB'])) {
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="../assets/imgs/logo.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto;">
+  <img src="../assets/imgs/logo.png" id="logoB" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto;">
 
   <!-- Formulário de login -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 25vh;">
@@ -128,6 +128,10 @@ if (isset($_SESSION['authenticatedB'])) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
     }
+
+    document.getElementById('logoB').addEventListener('click', function() {
+      window.location.href = '../home_page.php';
+    });
   </script>
 
   <script src="loginScript.js"></script>

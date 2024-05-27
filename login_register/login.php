@@ -116,7 +116,9 @@ require_once __DIR__.'/../session.php';
       return emailRegex.test(email);
     }
 
-
+    document.getElementById('logo_fooddash').addEventListener('click', function() {
+      window.location.href = '../index.php';
+    });
   </script>
 
   <script src="loginScript.js"></script>
