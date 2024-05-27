@@ -1,8 +1,4 @@
-<?php 
-require_once __DIR__.'/session.php'; 
-require_once __DIR__.'/database/credentials.php';
-require_once __DIR__.'/database/db_connection.php';
-?>
+<?php require_once './session.php'; ?>
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -26,8 +22,7 @@ include __DIR__."/includes/insertPedido.php";
 
   <!-- NAVBAR -->
   <?php
-  ///validar id cliente por sessiom
-  $idCliente=$_SESSION['id_cliente'];
+  
   
   if (!isset($_GET['restaurante'])) {
     if (!empty($_SERVER['HTTP_REFERER'])) {
@@ -37,13 +32,19 @@ include __DIR__."/includes/insertPedido.php";
     }
     exit();
   }
-
+	
   if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
     include __DIR__."/includes/header_restaurantes_selected.php";
   }else{
     include __DIR__."/includes/header_logged_in.php";
+	///validar id cliente por sessiom
+	$idCliente=$_SESSION['id_cliente'];
   }
+  
+  echo $idCliente;
 
+  require_once 'database/credentials.php';
+  require_once 'database/db_connection.php';
 
   function getImagePath($path, $default = './assets/stock_imgs/fd reduced logo.png')
   {
@@ -80,7 +81,7 @@ include __DIR__."/includes/insertPedido.php";
           <p class='mb-0'>Taxa de Entrega: " . $infoRest['taxa_entrega'] . "€</p>
         </div>
         <div class='col-lg-4 text-center'>
-          <img src='".$infoRest['imagem']. "' alt='" . $infoRest['nome'] . "' style='max-width: 25vw;'>
+          <img src='./assets/stock_imgs/" . $infoRest['imagem'] . "' alt='" . $infoRest['nome'] . "' style='max-width: 25vw;'>
         </div>
 		";
           ?>
@@ -91,7 +92,7 @@ include __DIR__."/includes/insertPedido.php";
             </div>
 
             <!-- TOAST --->
-            <button type="button" class="btn btn-primary" id="liveToastBtn">Avaliar Estabelecimento</button>
+            <button type="button" class="btn btn-primary" style="<?php echo $idCliente == 0 ? 'display: none;' : ''; ?>" id="liveToastBtn">Avaliar Estabelecimento</button>
 			<div class="toast-container position-fixed bottom-0 end-0 p-3">
 			  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
 				<div class="toast-header">
