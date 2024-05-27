@@ -101,8 +101,8 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                 <div class="card mb-3">
                     <div class="card-header">
                         <h5 class="esquerdo">Informações</h5>
-                        <button id="btn_editar" class="btn btn-warning direito" style="width: auto;"
-                            type="button" value="Editar">Editar</button>
+                        <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
+                            value="Editar">Editar</button>
                     </div>
                     <div class="card-body">
                         <!-- Informação da existência de campos obrigatórios -->
@@ -123,6 +123,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                                 <input name="nome" readonly type="text" class="form-control" placeholder="Nome"
                                     aria-label="Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['nome']))
                                         echo $estabelcimento['nome']; ?>">
+                                <span id="erroNome" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <br>
 
@@ -132,6 +133,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                                 <input name="morada" readonly type="text" class="form-control" placeholder="Localização"
                                     aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['localizacao']))
                                         echo $estabelcimento['localizacao']; ?>">
+                                        <span id="erroLocalizacao" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <br>
 
@@ -158,6 +160,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                                                 placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
                                                 aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['taxa_entrega']))
                                                     echo $estabelcimento['taxa_entrega']; ?>">
+                                                    <span id="erroTaxaEntrega" class="help-inline small" style="color:#ff0000"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -171,18 +174,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                                                 placeholder="Tempo médio de entrega" aria-label="Tempo médio de entrega"
                                                 aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['tempo_medio_entrega']))
                                                     echo $estabelcimento['tempo_medio_entrega']; ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- imagem -->
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <span>Imagem<span style='color:#ff0000'> *</span></span>
-                                        <div class="input-group flex-nowrap">
-                                            <!--<input name="cidade" readonly type="text" class="form-control"
-                                                placeholder="Imagem" aria-label="Imagem"
-                                                aria-describedby="addon-wrapping" value="<?php // if (!empty($utilizador['Imagem']))
-                                                //echo $utilizador['Imagem']; ?>">-->
+                                                    <span id="erroTempoMedioEntrega" class="help-inline small" style="color:#ff0000"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -255,7 +247,7 @@ include __DIR__ . "/includes/footer_business.php";
         } else {
             // verficar se o campo contém só números
             var telemovel = telemovelInput.value.trim();
-            if (!(/^\d+$/.test(telemovel)) {
+            if (!('/^\d+$/'.test(telemovel))) {
                 erroTelemovel.textContent = "O campo só pode conter números.";
                 validacao = false; // marcar validação como falsa
             } elseif

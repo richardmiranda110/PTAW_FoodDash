@@ -103,8 +103,8 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                 <div class="card mb-3">
                     <div class="card-header">
                         <h5 class="esquerdo">Informações</h5>
-                        <button id="btn_editar" class="btn btn-warning direito" style="width: auto;"
-                            type="button" value="Editar">Editar</button>
+                        <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
+                            value="Editar">Editar</button>
                     </div>
                     <div class="card-body">
                         <!-- Informação da existência de campos obrigatórios -->
@@ -125,6 +125,7 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                                 <input name="nome" readonly type="text" class="form-control" placeholder="Nome"
                                     aria-label="Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($empresa['nome']))
                                         echo $empresa['nome']; ?>">
+                                <span id="erroNome" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <br>
 
@@ -134,6 +135,7 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                                 <input name="morada" readonly type="text" class="form-control" placeholder="Morada"
                                     aria-label="Morada" aria-describedby="addon-wrapping" value="<?php if (!empty($empresa['morada']))
                                         echo $empresa['morada']; ?>">
+                                <span id="erroMorada" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <br>
 
@@ -161,6 +163,7 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                                                 placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping"
                                                 value="<?php if (!empty($empresa['email']))
                                                     echo $empresa['email']; ?>">
+                                            <span id="erroEmail" class="help-inline small" style="color:#ff0000"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -174,6 +177,7 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                                                 placeholder="Tipo" aria-label="Tipo" aria-describedby="addon-wrapping"
                                                 value="<?php if (!empty($empresa['tipo']))
                                                     echo $empresa['tipo']; ?>">
+                                            <span id="erroTipo" class="help-inline small" style="color:#ff0000"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -245,7 +249,7 @@ include __DIR__ . "/includes/footer_business.php";
         } else {
             // verficar se o campo contém só números
             var telemovel = telemovelInput.value.trim();
-            if (!(/^\d+$/.test(telemovel))) {
+            if (!('/^\d+$/'.test(telemovel))) {
                 erroTelemovel.textContent = "O campo só pode conter números.";
                 validacao = false; // marcar validação como falsa
             } else if (telemovel.length !== 9) {
