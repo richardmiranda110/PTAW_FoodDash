@@ -23,6 +23,9 @@ try {
     $stmt->execute();
     $count = $stmt->fetchColumn();
 
+    $salt = '$2y$10$' . bin2hex(random_bytes(22));
+    $hashedPass = crypt($pass, $salt);
+
     if ($count > 0) {
         $_SESSION['error_message'] = "O e-mail já existe!";
         header('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -35,7 +38,7 @@ try {
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':telemovel', $telemovel);
     $stmt->bindParam(':tipo', $tipo);
-    $stmt->bindParam(':palavrachave', $pass);
+    $stmt->bindParam(':palavrachave', $hashedPass);
     $stmt->execute();
 
     $_SESSION['success_message'] = "Registado com sucesso!";

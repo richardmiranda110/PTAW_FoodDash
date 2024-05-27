@@ -2,7 +2,7 @@
 require_once  __DIR__."/include/session.php";
 
 if (isset($_SESSION['authenticatedB'])) {
-  header("Location: /Business/dashboard_home_page.php");
+  header("Location: ../dashboard_home_page.php");
   exit();
 }
 ?>
@@ -29,13 +29,9 @@ if (isset($_SESSION['authenticatedB'])) {
   </style>
 </head>
 
-<?php
-session_start();
-?>
-
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="../assets/imgs/logo.png" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto;">
+  <img src="../assets/imgs/logo.png" id="logoB" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto;">
 
   <!-- Formulário de registo -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 15vh;">
@@ -136,6 +132,10 @@ session_start();
         repetirPasswordInput.type = "password";
       }
     }
+
+    document.getElementById('logoB').addEventListener('click', function() {
+      window.location.href = '../home_page.php';
+    });
   </script>
 </body>
 
