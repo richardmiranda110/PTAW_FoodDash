@@ -41,7 +41,7 @@ include __DIR__."/includes/insertPedido.php";
 	$idCliente=$_SESSION['id_cliente'];
   }
   
-  echo $idCliente;
+ // $idCliente = 1;
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
@@ -314,11 +314,11 @@ include __DIR__."/includes/insertPedido.php";
 							";
 					}
 					echo "</div>
-						<div class='d-flex justify-content-center mt-2'>
-						<input class='btn btn-primary btn-lg' type='submit' style='";
-						 echo $idCliente == 0 ? 'display: none;' : '';
-					echo	" value='Adicionar ao carrinho • " . $rowProd['preco'] . "€'>
-						</div>
+						<div class='d-flex justify-content-center mt-2'>";
+						if ($idCliente > 0) {
+					echo 	"<input class='btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho • " . $rowProd['preco'] . "€'> ";
+						}
+					echo "</div>
 					</div>
 					</div>
 				</div>
