@@ -16,10 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 $json = json_decode(file_get_contents('php://input'),true);
 
 $data = [
-    "idEstabelecimento" => $json['idEstabelecimento'], 
-    "tipo" => $json['tipo'], 
+    "idEstabelecimento" => $json['idEstabelecimento'],
+    "tipo" => $json['tipo'],
+    "id" => $json['id'],
     "dados" => $json['dados'],
- ]; 
+ ];
 
 if($data['idEstabelecimento'] != $_SESSION['id_estabelecimento']){
     exit("you cant add items to other stores!");
@@ -46,15 +47,19 @@ function getReturnMessage($status,$message){
 class ItemFactory{
     static function createItem($tipo,$dados){
         $item = null;
+        global $data;
+
+        $id = isset($data['id']) ? $data['id'] : null;
+
         switch($tipo){
             case 'item':
-                $item = new SingleItem($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria']);
+                $item = new SingleItem($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$id);
             break;
             case 'item-personalizado':
-                $item = new ItemPersonalized($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['opcoes']);
+                $item = new ItemPersonalized($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['opcoes'],$id);
             break;
-            case 'menu': 
-                $item = new Bundle($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['itens']);
+            case 'menu':
+                $item = new Bundle($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['itens'],$id);
             break;
             default:
                 throw new Exception('Invalid Object');
@@ -72,13 +77,14 @@ abstract class AbstractItem {
     public string $categoria;
     public int $item_id;
 
-    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$item_id = null) {
+    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$item_id) {
         $this->nome = $nome;
         $this->preco = $preco;
         $this->descricao = $descricao;
         $this->disponivel = $disponivel == "true" ? true:false;
         $this->foto = $foto;
         $this->categoria = $categoria;
+        $this->item_id = $item_id;
     }
     abstract function createDatabaseEntry();
 
@@ -89,7 +95,7 @@ abstract class AbstractItem {
         FROM public.itens where nome = ? and preco = ? and foto = ?;");
         $stmt->execute([$this->nome,$this->preco,$this->foto]);
         $count = $stmt->fetchColumn();
-    
+
         return $count > 0;
     }
 
@@ -97,10 +103,10 @@ abstract class AbstractItem {
         global $pdo;
 
         $id_query = "SELECT
-        id_item FROM ITENS 
-        where nome = ? 
-        and preco = ? and descricao = ? 
-        and disponivel = ? and foto = ? 
+        id_item FROM ITENS
+        where nome = ?
+        and preco = ? and descricao = ?
+        and disponivel = ? and foto = ?
         and id_categoria = ? and id_estabelecimento = ?";
 
         $stmt = $pdo->prepare($id_query);
@@ -117,8 +123,8 @@ abstract class AbstractItem {
 
 class SingleItem extends AbstractItem {
 
-    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria) {
-        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria);
+    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id) {
+        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id);
     }
 
     /**
@@ -126,27 +132,49 @@ class SingleItem extends AbstractItem {
     public function createDatabaseEntry() {
         global $pdo;
         global $idEmpresa;
+        echo $this->item_id;
+        if($this->item_id != null){
+            $query =
+            "UPDATE itens
+                SET
+                nome = :nome,
+                preco = :preco,
+                descricao = :descricao,
+                disponivel = :disponivel,
+                foto = :foto,
+                id_categoria = :id_categoria
+                WHERE id_item = :id_item;";
 
-        if ($this->checkExistence() == false) {
+            $stmt = $pdo->prepare($query);
+            $stmt->bindValue(":nome", $this->nome);
+            $stmt->bindValue(":preco", $this->preco);
+            $stmt->bindValue(":descricao", $this->descricao);
+            $stmt->bindValue(":disponivel", $this->disponivel ? 1:0);
+            $stmt->bindValue(":foto", $this->foto);
+            $stmt->bindValue(":id_categoria", $this->categoria);
+            $stmt->bindValue(":id_item", $this->item_id);
+            $count = $stmt->execute();
+            echo "hi";
+        }else  if ($this->checkExistence() == false ) {
             $query = "INSERT INTO itens(
                 nome, preco,
                 descricao, disponivel, foto,
                 itemsozinho, personalizacoesativas,
-                id_categoria, id_estabelecimento) 
+                id_categoria, id_estabelecimento)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            
+
             $stmt = $pdo->prepare($query);
-            $response = 
-            $stmt->execute([
-            $this->nome,$this->preco,
-            $this->descricao,$this->disponivel ? 1:0,
-            $this->foto,1, 0,
-            $this->categoria, $_SESSION['id_estabelecimento']]);
-    
-            if($response == false)
-                throw new Exception("Não foi possivel efetuar a operação");
+            //$response =
+            // $stmt->execute([
+            // $this->nome,$this->preco,
+            // $this->descricao,$this->disponivel ? 1:0,
+            // $this->foto,1, 0,
+            // $this->categoria, $_SESSION['id_estabelecimento']]);
+            echo "hio";
+            // if($response == false)
+            //     throw new Exception("Não foi possivel efetuar a operação");
         }
-        
+
         $this->item_id = $this->getId();
     }
 }
@@ -154,8 +182,8 @@ class SingleItem extends AbstractItem {
 class ItemPersonalized extends AbstractItem {
     var $options=array();
     var $id_item;
-    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$opcoes) {
-        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria);
+    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$opcoes,$id) {
+        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id);
 
         foreach($opcoes as $op){
             $option = new Opcao($op['nome'],$op['preco'],$op['max_quantidade']);
@@ -173,9 +201,9 @@ class ItemPersonalized extends AbstractItem {
                 nome, preco,
                 descricao, disponivel, foto,
                 itemsozinho, personalizacoesativas,
-                id_categoria, id_estabelecimento) 
+                id_categoria, id_estabelecimento)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+
             $stmt = $pdo->prepare($query);
             $stmt->execute([
             $this->nome,$this->preco,
@@ -203,7 +231,7 @@ class ItemPersonalized extends AbstractItem {
             return;
         }
 
-        $query = 
+        $query =
         "INSERT INTO opcoes
             (nome, max_quantidade, preco, id_item)
             VALUES ( ?, ?, ?, ?);";
@@ -222,15 +250,15 @@ class ItemPersonalized extends AbstractItem {
         FROM public.opcoes where nome = ? and max_quantidade = ? and preco = ? and id_item = ?;");
         $stmt->execute([$option->nome,$option->max_quantidade,$option->preco,$option->id_item]);
         $count = $stmt->fetchColumn();
-    
+
         return $count > 0;
     }
 }
 
 class Bundle extends AbstractItem {
     var $itens = array();
-    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$itens) {
-        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria);
+    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$itens,$id) {
+        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id);
         foreach($itens['items'] as $item){
             // $itemObject = ItemFactory::createItem($item['tipo'],$item['dados']);
             array_push($this->itens,$item);
@@ -279,7 +307,7 @@ class Bundle extends AbstractItem {
         FROM menus where nome = ? and preco = ? and foto = ?;");
         $stmt->execute([$this->nome,$this->preco,$this->foto]);
         $count = $stmt->fetchColumn();
-    
+
         return $count > 0;
     }
 
@@ -289,9 +317,9 @@ class Bundle extends AbstractItem {
         //and id_categoria = ?
         $id_query = "SELECT
         id_menu FROM menus
-        where nome = ? 
-        and preco = ? and descricao = ? 
-        and disponivel = ? and foto = ? 
+        where nome = ?
+        and preco = ? and descricao = ?
+        and disponivel = ? and foto = ?
         and id_estabelecimento = ?";
 
         $stmt = $pdo->prepare($id_query);
@@ -327,8 +355,8 @@ class Opcao {
     function getId(){
         global $pdo;
 
-        $id_query = "SELECT id_opcao FROM opcoes 
-        where nome = ? and max_quantidade = ? 
+        $id_query = "SELECT id_opcao FROM opcoes
+        where nome = ? and max_quantidade = ?
         and preco = ?";
 
         $stmt = $pdo->prepare($id_query);

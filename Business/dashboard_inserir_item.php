@@ -10,9 +10,53 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SES
     header("Location: /Business/login_register/login_business.php");
     exit();
 }
-
+$update = false;
 if(isset($_GET['id'])){
-  echo "MODIFICAR";
+  $update = true;
+  $query =  
+  "SELECT id_item, item.nome, preco,
+  descricao, disponivel, 
+  foto, itemsozinho, 
+  personalizacoesativas,
+  c.nome as categoria, 
+  c.id_categoria as id_categoria
+  FROM public.itens item 
+  INNER JOIN categorias c 
+  ON item.id_categoria = c.id_categoria
+  where item.id_item = ? and item.id_estabelecimento = ".$_SESSION['id_estabelecimento']."";
+
+  $stmt = $pdo->prepare($query);
+  $stmt->execute([$_GET['id']]);
+
+  $item = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  set_error_handler(function() {
+    exit("you cant edit other people's items!");
+  });
+
+  $type = "item";
+
+  if( $item["personalizacoesativas"] )
+    $type = $type.'-personalized';
+  else if($item["itemsozinho"] == false){
+    $type = "menu";
+  }
+  $final_item = array(
+      "id" => $item["id_item"],
+      "tipo" => $type,
+      "idEstabelecimento" => $_SESSION['id_estabelecimento'],
+      "dados" => array(
+        "tem_personalizacoes" => $item["personalizacoesativas"],
+        "bundle" => $item["itemsozinho"],
+        "disponivel" => $item["disponivel"],
+        "nome" => $item["nome"],
+        "categoria" => $item['id_categoria'],
+        "categoria_nome" => $item["categoria"],
+        "preco" => $item["preco"],
+        "descricao" => $item["descricao"],
+        "foto" => $item["foto"]
+      )
+  );
 }
 ?>
 
@@ -28,7 +72,16 @@ if(isset($_GET['id'])){
   <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
   <link rel="stylesheet" href="../Business/assets/styles/adicionar.css">
   <script src="../assets/js/dable.js"></script>
-  <script>var idEmpresa = <?php echo $idEmpresa ?>;var idEstabelecimento = <?php echo $idEstabelecimento ?>;</script>
+  <script>
+    var idEmpresa = <?php echo $idEmpresa ?>;
+    var idEstabelecimento = <?php echo $idEstabelecimento ?>;
+    <?php
+      echo 'var updateMode ='.($update ? 1: 0).';';
+      echo 'var updateId ='.(isset($_GET['id']) ? $_GET['id'] : -1).';';
+      if($update)
+      echo 'var updateObject ='. json_encode($final_item).';';
+    ?>
+  </script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -44,22 +97,22 @@ if(isset($_GET['id'])){
         <h2 class="mb-4">Adicionar Novo Item</h2>
         <div class='alert alert-danger d-none' id="alert" role='alert'> O Ficheiro não é uma imagem.</div>
         <form action="" method="post" enctype="multipart/form-data" id="dataForm">
-          <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa); ?>">
+          <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa);?>">
 
           <div class="mb-3">
             <label for="nome" class="form-label">Nome</label>
-            <input type="text" class="form-control " id="nome" name="nome" placeholder="Nome do item" required>
+            <input type="text" class="form-control " id="nome" name="nome" value="<?php echo ($update ? htmlspecialchars($item['nome']) : "")?>" placeholder="Nome do item" required>
           </div>
 
           <div class="mb-3">
             <label for="foto" class="form-label">Foto</label>
-            <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
+            <input type="file" class="form-control" id="foto" name="foto" file="" accept="image/*" <?php echo ($update ? "" : "required") ?>>
           </div>
 
           <div class="mb-3">
             <label for="descricaoForm1" class="purple-text">Descrição</label>
             <div class="form-group w-100">
-              <textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricao" name="descricao" rows="3"></textarea>
+              <textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricao"  name="descricao" rows="3"><?php if($update) echo htmlspecialchars($item['descricao']) ?></textarea>
             </div>
           </div>
 
@@ -76,8 +129,13 @@ if(isset($_GET['id'])){
             if(count($stmt) == 0){
               echo '<option value="null">Não existem opções disponíveis</option>';
             }
-            foreach ($stmt as $row) {
-              echo '<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
+
+            if($update){
+              echo '<option value="' . htmlspecialchars($final_item['dados']['categoria']) . '">' . htmlspecialchars($item["categoria"]) . '</option>';
+            }else{
+              foreach ($stmt as $row) {
+                echo '<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
+              }
             }
             echo "</select>
               </div>";
@@ -151,12 +209,12 @@ if(isset($_GET['id'])){
             <div class="form-group row mb-3">
               <div class="col-sm-2">
                 <label for="nome" class="form-label purple-text fw-bold">Preço</label>
-                <input type="number" min="0" class="form-control" id="preco" name="preco" placeholder="Introduza um valor (€)" step="0.10" required>
+                <input type="number" min="0" class="form-control" id="preco" name="preco" value="<?php echo $update ? htmlspecialchars($item['preco']) : ""?>" placeholder="Introduza um valor (€)" step="0.10" required>
               </div>
             </div>
           </div>
     
-          <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 40%; margin: 2% 30%;">Adicionar Item</button>
+          <button type="submit" class="btn btn-primary" id="submit-btn" style="width: 40%; margin: 2% 30%;"><?php echo $update ?'Actualizar Item':'Adicionar Item' ?></button>
         </form>
       </div>  
 

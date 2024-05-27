@@ -8,7 +8,7 @@ const response = fetch('http://localhost/business/lista_items.php?idEstabelecime
     for(item of data.itens){
       console.log(item);
       items.push(item);
-      rows.push([ item.foto_url, item.nome,item.preco+'€','Menu do Almoço, Menu do Jantar',item.categoria,'','' ]);
+      rows.push([ item.foto_url, item.nome,item.preco+'€',item.menus,item.categoria,item.id,item.id ]);
     }
     return rows;
   })
@@ -23,7 +23,7 @@ const response = fetch('http://localhost/business/lista_items.php?idEstabelecime
     return '<button> <img width="30" class="bg-white editRow" src="./assets/imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
   };
     dable.columnData[6].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button type="button"> <img width="30" class="bg-white deleteRow" src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button type="button"> <img width="30" class="bg-white deleteRow" cellValue="'+_cellValue+'" src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 	dable.BuildAll("DefaultDable"); 
   }).catch((error) => console.error('Error:', error));
@@ -31,14 +31,27 @@ const response = fetch('http://localhost/business/lista_items.php?idEstabelecime
   
   document.addEventListener('click', handleDeleteButtonClick);
 
+
+
 function handleDeleteButtonClick(event) {
     if (event.target.classList.contains('editRow')) {
         editItem(event.target);
 
     }   
     if (event.target.classList.contains('deleteRow')) {
-        removeItem(event.target);
+      performDelete(event.target);
     }
+}
+
+function performDelete(element){
+  const cellValue =  element.getAttribute("cellValue");
+  console.log(cellValue);
+  const rownumber =  element.getAttribute("data-rownumber");
+  const request = fetch("/Business/lista_items.php?idEstabelecimento="+idEmpresa+"&delete="+cellValue);
+  request.then(reply => {
+    console.log(reply);
+    dable.DeleteRow(rownumber);
+  });
 }
 
 function removeItem(element) {
@@ -52,6 +65,6 @@ function editItem(element) {
   var rowNumber = element.getAttribute('data-rownumber');
 
   const item = items[rowNumber];
-  window.open(`../dashboard_adicionar_pedido.php?id=${item.id_item}`);
+  window.open(`/Business/dashboard_inserir_item.php?id=${item.id}`);
 
 }

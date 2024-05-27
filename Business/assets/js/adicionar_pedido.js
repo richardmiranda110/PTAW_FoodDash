@@ -291,7 +291,6 @@ function configureCostimizationDable(){
   costumizationDable.style = 'fooddash';
   costumizationDable.SetColumnNames(costumizationColumns);
 
-
   costumizationDable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
     return ' <div class="col-xs-2 w-25 mx-3s float-end "><input class="w-25 text-center float-end border option-price-amount" type="number" value="1" min="0" step="any" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Preço:</span><input step="any" class="w-25 text-center float-end border option-amount" type="number" value="1" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light float-end btn-sm deleteOption">✕</button></div>';
   };
@@ -480,7 +479,7 @@ async function fetchData(categoria = null){
   return response.json();
 }
 
-function generateItemData(foto_url){
+function generateItemData(foto_url,id = null){
   let itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
   let isPersonalized = getCheckboxValue("personalizacoesativas").value;
   itemType += isPersonalized == "true" ? "-personalizado" : "";
@@ -492,6 +491,7 @@ function generateItemData(foto_url){
     let result = { 
       "idEstabelecimento": idEstabelecimento,
       tipo:itemType,
+      id: id,
       dados: item
     }
     return result;
@@ -567,7 +567,6 @@ class ItemFactory{
       default:
           throw new Error("Item invalido");
     }
-    
   }
 
   isDataValid(tipo,isPersonalized){
@@ -577,7 +576,7 @@ class ItemFactory{
       throw new Error("Preço invalido");
     }else if(this.dados.preco <= 0){
       throw new Error("Preço não pode ser negativo");
-    }else if(imageInput.files.length == 0){
+    }else if(imageInput.files.length == 0 && updateMode != 1){
       throw new Error("Por favor coloque uma imagem");
     }else if(costumizationDable.rows.length-1 == 0 && isPersonalized == "true"){
       throw new Error("Opções não podem estar vazias");
@@ -624,33 +623,20 @@ class MenuItemWithOptions extends MenuItem{
 /** @param {Event} event */
 async function handleSubmit(event) {
 event.preventDefault();
-
   const files = imageInput.files;
-  if(files.length == 0){
-      alert("Por favor man, imagem :bruh:");
+  let data;
+
+  if(files.length == 0 && updateMode){
+    data = generateItemData(updateObject.dados.foto,updateObject.id);
+  }else if(files.length > 0 && updateMode){
+    const picture = await uploadPicture(files);
+    // returns object with image already attached
+    data = generateItemData(picture,updateObject.id);
+  }else{
+    const picture = await uploadPicture(files);
+    // returns object with image already attached
+    data = generateItemData(picture);
   }
-
-  let formdata = new FormData();
-  formdata.append("foto",files[0]);
-
-  const uploadImageTask = await fetch("../uploadFile.php", {
-    body: formdata,
-    method: "post",
-  })
-  .then(answer => answer.json())
-  .then(data => {
-    if(data.status == "error" && data.message != "O ficheiro ja existe"){
-      displayErrorMessage(data.message);
-      return;
-    }
-
-    displaySuccessMessage(data.message);
-    document.location.href = "./dashboard_lista_items.php";
-    return generateItemData(data.url);
-  });
-
-  // returns object with image already attached
-  const data = uploadImageTask;
 
   const createItemTask = await postJSON("./inserir_item.php",data);
   
@@ -701,4 +687,26 @@ async function postJSON(url,data) {
   } catch (error) {
     console.error("Error:", error);
   }
+}
+
+async function uploadPicture(files){
+  let formdata = new FormData();
+  formdata.append("foto",files[0]);
+
+  const response = await fetch("../uploadFile.php", {
+    body: formdata,
+    method: "post",
+  })
+  .then(answer => answer.json())
+  .then(data => {
+    if(data.status == "error" && data.message != "O ficheiro ja existe"){
+      displayErrorMessage(data.message);
+      return data;
+    }
+
+    displaySuccessMessage(data.message);
+    //document.location.href = "./dashboard_lista_items.php";
+    return data;
+  });
+  return response.url;
 }

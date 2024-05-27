@@ -22,6 +22,12 @@ if($idEstabelecimento != $_SESSION['id_estabelecimento']){
     exit("You cant access other people's Items!");
 }
 
+if(isset($_GET['delete'])){
+    $stmt = $pdo->prepare("DELETE FROM itens WHERE id_item = ? and id_estabelecimento = ?");
+    $stmt->execute([$_GET['delete'],$idEstabelecimento]);
+    exit();
+}
+
 // if the user wants an item, retrieve item
 if(isset($_GET['itemId'])){
  $data = listarItem($_GET['itemId']);
@@ -68,6 +74,7 @@ function listarTodosItems($idEmpresa){
             "bundle" => $item["itemsozinho"],
             "disponivel" => $item["disponivel"],
             "nome" => $item["nome"],
+            "menus" => implode(',',getMenus($item["id_item"])),
             "categoria" => $item["categoria"],
             "preco" => $item["preco"],
             "descricao" => $item["descricao"],
@@ -84,6 +91,17 @@ function listarTodosItems($idEmpresa){
     return $data;
 }
 
+function getMenus($id_item){
+    global $pdo;
+
+    $query = "SELECT distinct menu.nome from itens item INNER JOIN item_menus mi on mi.id_item = item.id_item
+    INNER JOIN menus menu on menu.id_menu = mi.id_menu where item.id_item = ?;";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$id_item]);
+
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+}
+
 function listarItem($idItem){
     global $pdo;
     echo 'hi :'.$_SESSION['id_estabelecimento'];
@@ -92,11 +110,14 @@ function listarItem($idItem){
     descricao, disponivel, 
     foto, itemsozinho, 
     personalizacoesativas,
+    menu.nome as menu
     c.nome as categoria, 
     c.id_categoria
     FROM public.itens item 
     INNER JOIN categorias c 
     ON item.id_categoria = c.id_categoria
+    INNER JOIN menu_items mi on mi.id_item = item.id_item
+    INNER JOIN menus on menu.id_menu = mi.id_menu
     where item.id_item = ? and item.id_estabelecimento = ".$_SESSION['id_estabelecimento']."";
     
     $stmt = $pdo->prepare($query);
@@ -114,6 +135,7 @@ function listarItem($idItem){
         "preco" => $item["preco"],
         "descricao" => $item["descricao"],
         "foto_url" => $item["foto"],
+        "menu" => $item["menu"],
     );
     
     $data = array(
