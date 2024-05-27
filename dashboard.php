@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 						<div class="col-md-6">
 							<div class=" p-5 bg-body-tertiary border rounded-3">
 								<h3 style="float:left">Perfil do utilizador</h3>
-								<button class="btn btn-warning" style="float:right"> Visualizar </button>
+								<button class="btn btn-warning" style="float:right"> Editar </button>
 								<br><br>
 								<div class="esquerdo">
 									<span class="dados">Nome:</span>
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 						<div class="col-md-6 ">
 							<div class="h-100 p-5 bg-body-tertiary border rounded-3">
 								<h3 style="float:left">Estatísticas</h3>
-								<button class="btn btn-warning" style="float:right"> Editar </button>
+								<button class="btn btn-warning" style="float:right"> Visualizar </button>
 								<br><br>
 								<div class="esquerdo">
 									<span class="dados">Dinheiro Total Gasto:</span>

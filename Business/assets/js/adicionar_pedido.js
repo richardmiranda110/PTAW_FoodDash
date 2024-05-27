@@ -518,7 +518,7 @@ function getItems(){
         resultado.items.push(item[1])
     })
   });
-  return [resultado];
+  return resultado;
 }
 
 function getOptions(){
@@ -563,7 +563,7 @@ class ItemFactory{
         return new ItemBundle(
           this.dados.nome,this.dados.preco,
           this.dados.descricao,this.dados.disponivel,
-          foto_url['url'],this.dados.categoria,this.dados.itens)
+          foto_url,this.dados.categoria,this.dados.itens)
       default:
           throw new Error("Item invalido");
     }
@@ -602,9 +602,9 @@ class MenuItem{
 }
 
 class ItemBundle extends MenuItem {
-  constructor(nome,preco,descricao,disponivel,foto,categoria,items){
+  constructor(nome,preco,descricao,disponivel,foto,categoria,itens){
     super(nome,preco,descricao,disponivel,foto,categoria)
-    this.items = items;
+    this.itens = itens;
   }
 }
 
@@ -645,6 +645,7 @@ event.preventDefault();
     }
 
     displaySuccessMessage(data.message);
+    document.location.href = "./dashboard_lista_items.php";
     return generateItemData(data.url);
   });
 

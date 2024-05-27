@@ -1,6 +1,6 @@
 <?php
 
-require_once './includes/session.php';
+require_once    './includes/session.php';
 require_once '../database/credentials.php';
 require_once '../database/db_connection.php';
 
@@ -53,7 +53,7 @@ class ItemFactory{
             case 'item-personalizado':
                 $item = new ItemPersonalized($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['opcoes']);
             break;
-            case 'bundle': 
+            case 'menu': 
                 $item = new Bundle($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['itens']);
             break;
             default:
@@ -72,17 +72,13 @@ abstract class AbstractItem {
     public string $categoria;
     public int $item_id;
 
-    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$item_id = null,) {
+    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$item_id = null) {
         $this->nome = $nome;
         $this->preco = $preco;
         $this->descricao = $descricao;
         $this->disponivel = $disponivel == "true" ? true:false;
         $this->foto = $foto;
         $this->categoria = $categoria;
-
-        if($item_id != null){
-            $this->item_id = $this->getItemId();
-        }
     }
     abstract function createDatabaseEntry();
 
@@ -97,7 +93,7 @@ abstract class AbstractItem {
         return $count > 0;
     }
 
-    protected function getItemId(){
+    protected function getId(){
         global $pdo;
 
         $id_query = "SELECT
@@ -150,6 +146,8 @@ class SingleItem extends AbstractItem {
             if($response == false)
                 throw new Exception("Não foi possivel efetuar a operação");
         }
+        
+        $this->item_id = $this->getId();
     }
 }
 
@@ -186,7 +184,7 @@ class ItemPersonalized extends AbstractItem {
             $this->categoria, $_SESSION['id_estabelecimento']]);
         }
 
-        $this->id_item = $this->getItemId();
+        $this->id_item = $this->getId();
 
         foreach($this->options as $option){
             $this->createOptionEntry($option);
@@ -198,7 +196,7 @@ class ItemPersonalized extends AbstractItem {
         global $idEmpresa;
 
         if($this->id_item == null){
-            $this->id_item = $this->getItemId();
+            $this->id_item = $this->getId();
         }
 
         if($this->checkOptionExistence($option,$this->id_item) == true){
@@ -233,9 +231,9 @@ class Bundle extends AbstractItem {
     var $itens = array();
     public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$itens) {
         parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria);
-        foreach($itens as $item){
-            $option = new Opcao($item['nome'],$item['preco'],$item['max_quantidade']);
-            array_push($this->itens,$option);
+        foreach($itens['items'] as $item){
+            // $itemObject = ItemFactory::createItem($item['tipo'],$item['dados']);
+            array_push($this->itens,$item);
         }
     }
     /**
@@ -244,13 +242,66 @@ class Bundle extends AbstractItem {
         global $pdo;
         global $idEmpresa;
 
-        if ($this->checkExistence() == true) {
-            exit("Esse item já existe!");
+        $query = "INSERT INTO menus(
+            nome, preco, descricao, disponivel, foto, id_estabelecimento)
+            VALUES ( ?, ?, ?, ?, ?, ?)";
+
+        if ($this->checkExistence() == false) {
+            $stmt = $pdo->prepare($query);
+            $stmt->execute(
+                [$this->nome,$this->preco,
+                $this->descricao,$this->disponivel == "true" ? 1:0,
+                $this->foto,$_SESSION['id_estabelecimento']]);
         }
 
-        $stmt = $pdo->prepare("INSERT INTO categorias(nome, id_empresa) VALUES (?, ?);");
-        $stmt->execute([$_POST["category-input"],$idEmpresa]);
-        header('Location: /business/dashboard_lista_categorias.php');
+        $this->item_id = $this->getId();
+
+        foreach($this->itens as $item){
+            $this->createItemEntry($item['id']);
+        }
+    }
+
+    protected function createItemEntry($item_id){
+        global $pdo;
+
+        $query="INSERT INTO item_menus(
+            id_item, id_menu)
+            VALUES (?, ?)";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(
+            [$item_id,$this->item_id]);
+    }
+
+    protected function checkExistence(){
+        global $pdo;
+
+        $stmt = $pdo->prepare("SELECT count(*)
+        FROM menus where nome = ? and preco = ? and foto = ?;");
+        $stmt->execute([$this->nome,$this->preco,$this->foto]);
+        $count = $stmt->fetchColumn();
+    
+        return $count > 0;
+    }
+
+    protected function getId(){
+        global $pdo;
+        //$this->categoria,
+        //and id_categoria = ?
+        $id_query = "SELECT
+        id_menu FROM menus
+        where nome = ? 
+        and preco = ? and descricao = ? 
+        and disponivel = ? and foto = ? 
+        and id_estabelecimento = ?";
+
+        $stmt = $pdo->prepare($id_query);
+        $stmt->execute([
+            $this->nome,$this->preco,
+            $this->descricao,$this->disponivel == 'true' ? true :false,
+            $this->foto, $_SESSION['id_estabelecimento']]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['id_menu'];
     }
 }
 

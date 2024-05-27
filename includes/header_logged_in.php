@@ -22,7 +22,7 @@
           <a class="nav-link" aria-current="page" href="../restaurantes_page.php">Restaurantes</a>
         </li>
       </ul>
-      <a class="btn btn-default border border-white me-2" href="../perfil.php">
+      <a class="btn btn-default border border-white me-2" href="../dashboard.php">
         <img src="./assets/imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </a>
       <a class="btn btn-default border border-white" href="/checkout/checkout.php" >
