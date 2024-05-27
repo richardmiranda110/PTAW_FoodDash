@@ -223,9 +223,9 @@ include __DIR__."/includes/insertPedido.php";
                                 <img src='./assets/stock_imgs/mais.png' id='iconAddItem' alt='Ícone de adição' style='width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;'>
                             </div>
                         </div>
-                        <div class='card-body'>
+                        <div class='card-body' style='padding: 10px 0px;'>
                             <div class='d-flex justify-content-between align-items-center'>
-                                <h6 class='mb-0'>" . htmlspecialchars($rowProd['nome']) . "</h6>
+                                <h6 class='mb-0' style='min-height: 2.5rem;'>" . htmlspecialchars($rowProd['nome']) . "</h6>
                             </div>
                             <div class='d-flex justify-content-between align-items-center'>
                                 <p class='card-text mb-0' style='font-size: 12px;'>" . $rowProd['preco'] . "€</p>
@@ -367,7 +367,11 @@ include __DIR__."/includes/insertPedido.php";
             if (toastTrigger<?php echo $dado['id']; ?>) {
                 const toastBootstrap<?php echo $dado['id']; ?> = bootstrap.Toast.getOrCreateInstance(toastLiveExample<?php echo $dado['id']; ?>);
                 toastTrigger<?php echo $dado['id']; ?>.addEventListener('click', () => {
+							
+					 closeOtherToasts();
                     toastBootstrap<?php echo $dado['id']; ?>.show();
+					
+					
                 });
             }
         });
@@ -375,6 +379,14 @@ include __DIR__."/includes/insertPedido.php";
 
     document.querySelector("button#buttonPesquisarRestaurante").addEventListener("click", procurarRestaurante)
 
+	function closeOtherToasts() {
+		//para simplificar fexar todos os toast antes de abrir o que se pretende
+        var closeButtons = document.querySelectorAll('button.btn-close');
+		closeButtons.forEach(function(button) {
+		  button.click();
+		});
+    }
+	
     function procurarRestaurante() {
       let nomeRestaurante = document.querySelector("input#inputPesquisarRestaurante").value;
       console.log(nomeRestaurante)
