@@ -315,7 +315,9 @@ include __DIR__."/includes/insertPedido.php";
 					}
 					echo "</div>
 						<div class='d-flex justify-content-center mt-2'>
-						<input class='btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho • " . $rowProd['preco'] . "€'>
+						<input class='btn btn-primary btn-lg' type='submit' style='";
+						 echo $idCliente == 0 ? 'display: none;' : '';
+					echo	" value='Adicionar ao carrinho • " . $rowProd['preco'] . "€'>
 						</div>
 					</div>
 					</div>
