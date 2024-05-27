@@ -1,6 +1,6 @@
 <?php
-require_once 'database/credentials.php';
-require_once 'database/db_connection.php';
+require_once __DIR__.'./../database/credentials.php';
+require_once __DIR__.'./../database/db_connection.php';
 
 try {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idForm'] == 'insertPedido') {

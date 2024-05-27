@@ -1,4 +1,4 @@
-<?php require_once './session.php'; ?>
+<?php require_once __DIR__.'/session.php'; ?>
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -40,8 +40,8 @@ include __DIR__."/includes/insertPedido.php";
     include __DIR__."/includes/header_logged_in.php";
   }
 
-  require_once 'database/credentials.php';
-  require_once 'database/db_connection.php';
+  require_once __DIR__.'/database/credentials.php';
+  require_once __DIR__.'/database/db_connection.php';
 
   function getImagePath($path, $default = './assets/stock_imgs/fd reduced logo.png')
   {

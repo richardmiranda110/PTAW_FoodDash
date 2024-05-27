@@ -1,10 +1,10 @@
 <?php 
-require_once '../includes/session.php';
+require_once __DIR__.'../includes/session.php';
 
-// if (isset($_SESSION['authenticatedB'])) {
-//   header("Location: /Business/dashboard_home_page.php");
-//   exit();
-// }
+if (isset($_SESSION['authenticatedB'])) {
+  header("Location: /Business/dashboard_home_page.php");
+  exit();
+}
 ?>
 
 <!DOCTYPE html>

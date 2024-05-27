@@ -1,5 +1,5 @@
 <?php
-require_once './session.php';
+require_once __DIR__.'/session.php';
 
 if(!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
   header("Location: /index.php");

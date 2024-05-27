@@ -1,12 +1,12 @@
 <?php
-require_once './../session.php';
+require_once __DIR__.'/../session.php';
 
 if (isset($_SESSION['authenticated'])) {
   header("Location: /dashboard.php");
   exit();
 }
 
-require_once '../database/db_connection.php';
+require_once __DIR__.'/../database/db_connection.php';
 
 $name = $_POST['inputName'];
 $morada = $_POST['inputMorada'];

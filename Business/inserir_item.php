@@ -1,8 +1,8 @@
 <?php
 
-require_once    './includes/session.php';
-require_once '../database/credentials.php';
-require_once '../database/db_connection.php';
+require_once __DIR__.'./includes/session.php';
+require_once __DIR__.'../database/credentials.php';
+require_once __DIR__.'../database/db_connection.php';
 
 if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     header("Location: /Business/dashboard_home_page.php");
@@ -132,7 +132,7 @@ class SingleItem extends AbstractItem {
     public function createDatabaseEntry() {
         global $pdo;
         global $idEmpresa;
-        echo $this->item_id;
+        echo $this->item_id;    
         if($this->item_id != null){
             $query =
             "UPDATE itens

@@ -1,6 +1,6 @@
 <?php
-require_once './database/db_connection.php';
-require_once './session.php';
+require_once __DIR__.'/database/db_connection.php';
+require_once __DIR__.'/session.php';
 
 try {
     $q = "SELECT nome, preco, disponivel, foto, id_categoria FROM itens;";

@@ -64,8 +64,8 @@
   
   <?php
   /*
-require_once 'database/credentials.php';
-require_once 'database/db_connection.php';
+require_once __DIR__.'/database/credentials.php';
+require_once __DIR__.'/database/db_connection.php';
 
 try {
     //$query = "SELECT DISTINCT tipo FROM empresas";

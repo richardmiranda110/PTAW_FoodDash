@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
-<?php require_once './session.php'; ?>
+<?php require_once __DIR__.'/session.php'; ?>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +16,8 @@
 <body>
   <!-- NAVBAR -->
   <?php
-  require_once 'database/credentials.php';
-  require_once 'database/db_connection.php';
+  require_once __DIR__.'/database/credentials.php';
+  require_once __DIR__.'/database/db_connection.php';
 
   include __DIR__ . "/includes/header_restaurantes_selected.php";
   include __DIR__ . "/includes/navbar_tipos_de_comida.php";

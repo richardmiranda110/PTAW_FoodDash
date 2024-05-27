@@ -1,7 +1,7 @@
 <?php
 //include __DIR__ . "/database/db_connection.php";
 //$pdo = include __DIR__ . "/database/db_connection.php";
-require_once './session.php';
+require_once __DIR__.'/session.php';
 include __DIR__ . "/database/utilizadores.php";
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
