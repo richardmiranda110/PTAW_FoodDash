@@ -34,7 +34,7 @@ include __DIR__."/includes/insertPedido.php";
     exit();
   }
 
-  if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+  if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
     include __DIR__."/includes/header_restaurantes_selected.php";
   }else{
     include __DIR__."/includes/header_logged_in.php";
@@ -209,7 +209,6 @@ include __DIR__."/includes/insertPedido.php";
               
 
             foreach ($produtos as $rowProd) {
-			 
               $imagemPath = getImagePath($rowProd['foto']);
               $idProd = str_replace(' ', '', htmlspecialchars($rowProd['nome']));
               echo "<div>
@@ -240,7 +239,6 @@ include __DIR__."/includes/insertPedido.php";
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEstabelecimento."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_item']."'>
-					<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
 					<input type='hidden' name='idForm' id='idForm' value='insertPedido'>
 					

@@ -1,7 +1,7 @@
 <?php
 require_once './session.php';
 
-if(!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+if(!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
   header("Location: /index.php");
   exit();
 }

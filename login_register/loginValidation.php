@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+require_once '../session.php'; 
 require_once '../database/db_connection.php';
 
 $email = $_POST['inputEmail'];

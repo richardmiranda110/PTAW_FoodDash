@@ -4,7 +4,7 @@
 require_once './session.php';
 include __DIR__ . "/database/utilizadores.php";
 
-if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
     header("Location: /index.php");
     exit();
 }
@@ -19,7 +19,7 @@ $utilizadorModificado = null;
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
-    $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR O ID
+    $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']); // ALTERAR O ID
 }
 // Enviando dados para a BD, ao editar dados de um determinado utilizador
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -41,7 +41,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if ($utilizadorModificado !== null) {
     // Editar o usuário no banco de dados
     if (EditarUtilizador($pdo, 1, $utilizadorModificado)) { // ALTERAR ID
-        $utilizador = ObterUmUtilizador($pdo, 1); // ALTERAR ID
+        $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']); // ALTERAR ID
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";
@@ -51,7 +51,7 @@ if ($utilizadorModificado !== null) {
         </div>";
     }
 } else {
-    $utilizador = ObterUmUtilizador($pdo, 1);
+    $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']);
 }
 ?>
 

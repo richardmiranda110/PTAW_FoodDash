@@ -10,7 +10,7 @@
           aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="/~ptaw-2024-gr2/">
+    <a class="navbar-brand" href="/dashboard.php">
         <img src="assets/imgs/fooddash_logo_white.png" alt="" srcset="">
     </a>
     <div class="collapse navbar-collapse" id="navbarsExample02">
@@ -25,9 +25,9 @@
       <a class="btn btn-default border border-white me-2" href="../perfil.php">
         <img src="./assets/imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </a>
-      <button class="btn btn-default border border-white" >
+      <a class="btn btn-default border border-white" href="/checkout/checkout.php" >
         <img src="./assets/imgs/carrinho-de-compras.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
-      </button>
+      </a>
     </div>
   </div>
 </nav>

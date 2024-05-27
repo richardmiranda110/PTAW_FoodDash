@@ -3,7 +3,7 @@ require_once './session.php';
 require_once './database/credentials.php';
 require_once './database/db_connection.php';
 
-if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
     header("Location: /index.php");
     exit();
   }

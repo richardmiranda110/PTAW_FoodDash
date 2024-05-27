@@ -19,7 +19,7 @@
 <body>
   <!-- NAVBAR -->
   <?php
-  if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+  if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
     include __DIR__."/includes/header_restaurantes_selected.php";
   }else{
     include __DIR__."/includes/header_logged_in.php";

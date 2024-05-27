@@ -3,10 +3,11 @@ require_once './session.php';
 require_once './database/credentials.php';
 require_once './database/db_connection.php';
 
-if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
+if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
   header("Location: /index.php");
   exit();
 }
+
 
 function ObterUmUtilizador($pdo, $ID)
 {
@@ -17,10 +18,10 @@ function ObterUmUtilizador($pdo, $ID)
 
 	try {
 		//query
-		$stmt = $pdo->prepare('SELECT * FROM Clientes WHERE id = ?');
-		$stmt->bindValue(1, $ID, PDO::PARAM_INT);
+		$stmt = $pdo->prepare('SELECT id_cliente, nome, apelido, email, telemovel, morada, cidade, pais, codpostal
+		FROM clientes WHERE id_cliente = ?');
 		// Executar a query e verificar que não retornou false
-		if ($stmt->execute()) {
+		if ($stmt->execute([$ID])) {
 			// Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
 			$registo = $stmt->fetch();
 			// Retornar os dados
@@ -77,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		<div id="contentDiv" class="col-md-12">
 			<div class="container ps-3 py-3">
 				<div class="dashboard  texto_perfil">
-					<h3>Olá Maria!</h3>
+					<p class="h3">Olá <?php echo $utilizador['nome'] ?></p>
 					<p>Esta é a tua página de perfil. Aqui podes ver as tuas informções pessoais, ver estatísticas,
 						sobre a tua
 						conta, ver os teus pedidos e acompanhar o estado dos teus pedidos em tempo real</p>
@@ -105,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 									<br>
 									<span class="dados">Nº de Telemóvel:</span>
 									<span class="dados_utilizador"><span class="dados_utilizador">
-											<?php if (!empty($utilizador['telemovel']))
+											<?php
 												echo $utilizador['telemovel']; ?>
 										</span>
 								</div>
@@ -124,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 									<br>
 									<span class="dados">Código Postal:</span>
 									<span class="dados_utilizador">
-										<?php if (!empty($utilizador['CodPostal']))
-											echo $utilizador['CodPostal']; ?>
+										<?php if (!empty($utilizador['codpostal']))
+											echo $utilizador['codpostal']; ?>
 									</span>
 								</div>
 								<button class="btn btn-outline-light" type="button">Example button</button>

@@ -23,7 +23,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="nav-link">
+					<a href="perfil.php" class="nav-link">
 						<span class="bi-person-vcard"></span><span class="bi has-text-grey">Perfil de Utilizador</span>
 					</a>
 				</li>
@@ -38,7 +38,7 @@
 					</a>
 				</li>
 			</ul>
-			<button id="butSingOutSidebarLeft" class="btn btn-dark px-3" type="button">Terminar Sessão</button>
+			<a href="../login_register/logout.php" id="butSingOutSidebarLeft" class="btn btn-dark px-3" type="button">Terminar Sessão</a>
 		</div>
 	</div>
 

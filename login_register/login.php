@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <?php
-require_once './../session.php';
+require_once __DIR__.'/../session.php';
 
-if (isset($_SESSION['authenticated'])) {
-  header("Location: /dashboard.php");
-  exit();
-}
 
 ?>
 
@@ -120,7 +116,7 @@ if (isset($_SESSION['authenticated'])) {
       return emailRegex.test(email);
     }
 
-   <?php header("Location: /dashboard.php"); ?>
+
   </script>
 
   <script src="loginScript.js"></script>
