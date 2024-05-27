@@ -1,4 +1,8 @@
-<?php require_once __DIR__.'/session.php'; ?>
+<?php 
+require_once __DIR__.'/session.php'; 
+require_once __DIR__.'/database/credentials.php';
+require_once __DIR__.'/database/db_connection.php';
+?>
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -40,8 +44,6 @@ include __DIR__."/includes/insertPedido.php";
     include __DIR__."/includes/header_logged_in.php";
   }
 
-  require_once __DIR__.'/database/credentials.php';
-  require_once __DIR__.'/database/db_connection.php';
 
   function getImagePath($path, $default = './assets/stock_imgs/fd reduced logo.png')
   {
@@ -78,7 +80,7 @@ include __DIR__."/includes/insertPedido.php";
           <p class='mb-0'>Taxa de Entrega: " . $infoRest['taxa_entrega'] . "€</p>
         </div>
         <div class='col-lg-4 text-center'>
-          <img src='./assets/stock_imgs/" . $infoRest['imagem'] . "' alt='" . $infoRest['nome'] . "' style='max-width: 25vw;'>
+          <img src='".$infoRest['imagem']. "' alt='" . $infoRest['nome'] . "' style='max-width: 25vw;'>
         </div>
 		";
           ?>

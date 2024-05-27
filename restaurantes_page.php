@@ -16,10 +16,16 @@
 <body>
   <!-- NAVBAR -->
   <?php
+  require_once __DIR__.'/session.php';
   require_once __DIR__.'/database/credentials.php';
   require_once __DIR__.'/database/db_connection.php';
 
-  include __DIR__ . "/includes/header_restaurantes_selected.php";
+  if (isset($_SESSION['authenticated'])) {
+	include __DIR__ . "/includes/header_logged_in.php";
+
+  }else{
+	include __DIR__ . "/includes/header_restaurantes_selected.php";
+  }
   include __DIR__ . "/includes/navbar_tipos_de_comida.php";
 
   ?>
@@ -83,14 +89,17 @@ try {
 
 
 	echo "
-    <div class='container'>
-		<h2 id='txt_categoria'>";
+    <div class=' container'>
+		<h2 class='mb-4' id='txt_categoria'>";
 		
-		if (empty($_GET['restaurante']) and empty($_GET['categoria']) ){
-			echo 'Todos';
-		}
-		else {
+		if (isset($_GET['restaurante'])){
+			echo 'Pesquisa por: '.$_GET['restaurante'];
+		} else if (isset($_GET['restaurante']) and isset($_GET['categoria']) ){
 			echo 'Pesquisa por: '.$_GET['restaurante']. ' ' .$_GET['categoria']. ' ';
+		} else if (isset($_GET['categoria']) ){
+			echo 'Pesquisa por:'.$_GET['categoria']. '';
+		}else {
+			echo 'Todos';
 		}
 	echo "</h2>    ";
 	if ($nRegistos == 0) {
@@ -107,7 +116,7 @@ try {
 			echo "
 			<div class='col grid_restaurantes_btn'>
 			<div class='card shadow-sm' id='" . $row['nome'] . "'>
-				<img src='./assets/stock_imgs/" . $row['imagem'] . "' class='card-img-top' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
+				<img src='".$row['imagem']."' class='card-img-top' height='180' width='260' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
 				<div class='card-body'>
 					<div class='justify-content-between align-items-center'>
 						<h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>
@@ -151,7 +160,7 @@ try {
   <br><br>
   <!-- Footer -->
   <?php
-  include __DIR__ . "/includes/footer_1.php";
+  include __DIR__ . "/includes/footer_2.php";
   ?>
 
   <!-- SCRIPT -->

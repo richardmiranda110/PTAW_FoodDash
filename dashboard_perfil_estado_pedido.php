@@ -55,8 +55,6 @@ if($pedido['id_cliente'] != $_SESSION['id_cliente']){
 }
 ?>
 
-
-
 <!doctype html>
 <html lang="en">
   <head>

@@ -60,7 +60,38 @@ function getTotalDinheiro($pdo, $clienteId)
     $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
-    return $result['total_dinheiro'];
+    
+    return $result['total_dinheiro'] == NULL ? 0 : $result['total_dinheiro'];
+}
+
+function getRestauranteMaisPedido($clienteId)
+{
+    global $pdo;
+    if ($_SESSION['id_cliente'] != $clienteId){
+        header("Location: /index.php");
+        exit();
+    }
+
+    $query = "
+    SELECT estabelecimento,nome, count
+    FROM (
+        SELECT estabelecimentos.id_estabelecimento as estabelecimento,estabelecimentos.nome AS nome, COUNT(estabelecimentos.id_estabelecimento) AS count
+        FROM pedidos
+        INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento
+        where pedidos.id_cliente = ?
+        GROUP BY estabelecimentos.nome,estabelecimento
+    ) AS counts
+    ORDER BY count DESC
+    LIMIT 1;
+    ";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$clienteId]);
+    $result = $stmt->fetch();
+    
+    if($result == false){
+        return 'N/A';
+    }
+    return $result['nome'];
 }
 
 // Função para calcular o total de dinheiro gasto por um cliente em um mês específico
@@ -251,12 +282,12 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
                             <div class="card-body text-center">
                                 <p class="card-title">Restaurante Mais Pedido</p>
                                 <div class="row align-items-center">
-                                    <div class="col-8 text-center">
-                                        <p class="fw-bold text-secondary" style="max-height: 70px;">Burguer King</p>
+                                    <div class="col-12 text-center">
+                                        <p class="fw-bold text-secondary" style="max-height: 70px;"><?php echo getRestauranteMaisPedido($_SESSION['id_cliente']); ?></p>
                                     </div>
-                                    <div class="col-4" style="max-height: 70px;">
+                                    <!-- <div class="col-4" style="max-height: 70px;">
                                         <img src="../assets/imgs/burgerKing_marca.png" alt="Imagem do Restaurante" class="img-fluid">
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -265,7 +296,7 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
                         <div class="card flex-grow-1" style=" overflow: auto;">
                             <div class="card-body text-center">
                                 <p class="card-title">Total de pedidos realizados</p>
-                                <p class="display-4 text-secondary" style="max-height: 70px;"><?php echo $totalPedidos; ?></p>
+                                <p class="display-4 text-secondary" style="max-height: 70px;"><?php echo getTotalPedidos($pdo,$_SESSION['id_cliente']); ?></p>
                             </div>
                         </div>
 
@@ -274,7 +305,7 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
                                 <p class="card-title">Total de Dinheiro Gasto</p>
                                 <!-- Adicionar altura máxima para evitar conteúdo excessivo -->
                                 <p class="display-4 text-secondary" style="max-height: 70px; overflow: auto;">
-                                <?php echo $totalDinheiro . "€"; ?>
+                                <?php echo getTotalDinheiro($pdo,$_SESSION['id_cliente']) . "€"; ?>
                                 </p>
                             </div>
                         </div>
@@ -283,13 +314,6 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
                             <div class="card-body text-center">
                                 <p class="card-title">Média de Dinheiro Gasto por Pedido</p>
                                 <p class="display-4 text-secondary" style="max-height: 70px;"><?php echo $mediaCustoPedidos . "€"; ?></p>
-                            </div>
-                        </div>
-
-                        <div class="card flex-grow-1" style=" overflow: auto;">
-                            <div class="card-body text-center">
-                                <p a class="card-title">Tempo Médio de Entrega dos Pedidos</p>
-                                <p class="display-4 text-secondary" style="max-height: 70px;">00:28</p>
                             </div>
                         </div>
                     </div>
