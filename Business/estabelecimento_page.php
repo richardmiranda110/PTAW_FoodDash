@@ -5,22 +5,15 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
-$pdo = new PDO(
-    "pgsql:host=" . DBHOST .
-    "; port=" . DBPORT .
-    ";dbname=" . DBNAME,
-    DBUSER,
-    DBPASS
-);
-
-// cria o o atributo $Validacao com o valor true, pois não existem falhas
-$Validacao = true;
-$estabelecimentoModificado = null;
+if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    header("Location: /business/home_page.php");
+    exit();
+}
 
 // Recebendo dados da BD de um determinado estabelecimento
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter dados do estabelecimento
-    $estabelecimento = ObterEstabelecimento($pdo, 1); // ALTERAR O ID
+    $estabelecimento = ObterEstabelecimento($pdo, $_SESSION['id_estabelecimento']); // ALTERAR O ID
 }
 // Enviando dados para a BD, ao editar dados de um determinado estabelecimento
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -39,8 +32,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Se não ocorreram erros de validação, e o emprestimo tiver null
 if ($Validacao == true && ($estabelecimentoModificado !== null)) {
     // Editar os dados do estabelecimento na base de dados
-    if (EditarEstabelecimento($pdo, 1, $estabelecimentoModificado)) { // ALTERAR ID
-        $estabelecimento = ObterEstabelecimento($pdo, 1); // ALTERAR ID
+    if (EditarEstabelecimento($pdo, $_SESSION['id_estabelecimento'], $estabelecimentoModificado)) { // ALTERAR ID
+        $estabelecimento = ObterEstabelecimento($pdo, $_SESSION['id_estabelecimento']); // ALTERAR ID
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";
@@ -53,7 +46,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
     }
     // Se não existerem dadis a ser alterados 
 } else {
-    $estabelecimento = ObterEstabelecimento($pdo, 1);
+    $estabelecimento = ObterEstabelecimento($pdo, $_SESSION['id_estabelecimento']);
 }
 ?>
 
@@ -69,44 +62,38 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles/sitecss.css">
-    <link rel="stylesheet" href="assets/styles/dashboard.css">
-    <link rel="stylesheet" href="assets/styles/responsive_styles.css">
+    <link rel="stylesheet" href="/../assets/styles/sitecss.css">
+    <link rel="stylesheet" href="/../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="/../assets/styles/responsive_styles.css">
 </head>
 
 <!--Zona do Header -->
 <div id="topHeader" class="container-xxl">
     <!-- Top/Menu da Página -->
-    <?php include __DIR__ . "/includes/header_business.php"; ?>
+    <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
     <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
 </div>
 
 <!--Zona de Conteudo -->
 <div>
-    <h3><strong>Loja</strong></h3>
     <!--Mapa-->
-    <div>
-        <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18906.129712753736!2d6.722624160288201!3d60.12672284414915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463e997b1b6fc09d%3A0x6ee05405ec78a692!2sJ%C4%99zyk%20trola!5e0!3m2!1spl!2spl!4v1672239918130!5m2!1spl!2spl"
-            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
+
 
     <!-- Formulárop do Estabelecimento -->
-    <form id="estabelcimento" class="centro esquerdo form_editar" method="GET">
-        <h3><strong>Informações</strong></h3>
+    <form id="estabelcimento" class="w-75 form_editar" style="margin:auto" method="GET">
+        <p class="h4 pt-4">Informações</p>
 
         <div class="align-items-md-stretch">
             <div>
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h5 class="esquerdo">Informações</h5>
+                <div class="card pb-2">
+                    <div class="p-3 d-flex justify-content-between">
+                        <p class="h5">Informações Pessoais</p>
                         <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
                             value="Editar">Editar</button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-0 pb-1  ">
                         <!-- Informação da existência de campos obrigatórios -->
-                        <div class="alert" role="alert">
+                        <div class="alert p-0" role="alert">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-info-circle" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -116,7 +103,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                             <strong> Campos marcados com <span style='color:#ff0000'>*</span> são
                                 obrigatórios</strong>
                         </div>
-                        <div class="esquerdo" style="padding:5px">
+                        <div class="" style="">
                             <!-- Nome -->
                             <span>Nome<span style='color:#ff0000'> *</span></span>
                             <div class="input-group flex-nowrap">
@@ -130,15 +117,20 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                             <!-- localizacao -->
                             <span>Localização</span>
                             <div class="input-group flex-nowrap">
-                                <input name="morada" readonly type="text" class="form-control" placeholder="Localização"
+                                <input name="morada" readonly type="text" class="form-control mb-4" placeholder="Localização"
                                     aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['localizacao']))
                                         echo $estabelcimento['localizacao']; ?>">
                                         <span id="erroLocalizacao" class="help-inline small" style="color:#ff0000"></span>
                             </div>
-                            <br>
+                            <div>
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18906.129712753736!2d6.722624160288201!3d60.12672284414915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463e997b1b6fc09d%3A0x6ee05405ec78a692!2sJ%C4%99zyk%20trola!5e0!3m2!1spl!2spl!4v1672239918130!5m2!1spl!2spl"
+              width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
 
                             &emsp;
-                            <hr>&emsp;
+                            <hr class="m-1">&emsp;
 
                             <!-- Telemóvel -->
                             <span>Nº de Telemóvel<span style='color:#ff0000'> *</span></span>
@@ -153,15 +145,13 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                             <!-- taxa_entrega -->
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="col-md-12 esquerdo">
                                         <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
                                         <div class="input-group flex-nowrap">
                                             <input name="taxa_entrega" readonly type="text" class="form-control"
                                                 placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
                                                 aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['taxa_entrega']))
                                                     echo $estabelcimento['taxa_entrega']; ?>">
-                                                    <span id="erroTaxaEntrega" class="help-inline small" style="color:#ff0000"></span>
-                                        </div>
+                                                    <span id="erroTaxaEntrega" class="help-inline small" style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
 
@@ -174,7 +164,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                                                 placeholder="Tempo médio de entrega" aria-label="Tempo médio de entrega"
                                                 aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['tempo_medio_entrega']))
                                                     echo $estabelcimento['tempo_medio_entrega']; ?>">
-                                                    <span id="erroTempoMedioEntrega" class="help-inline small" style="color:#ff0000"></span>
+                                                    <span id="erroTempoMedioEntrega" class="help-inline small" style="color:#ff0000;padding-top:10px"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -184,6 +174,7 @@ if ($Validacao == true && ($estabelecimentoModificado !== null)) {
                 </div>
             </div>
     </form>
+
 </div>
 <!--Fim do conteúdo de página-->
 <?php
@@ -199,15 +190,15 @@ include __DIR__ . "/includes/footer_business.php";
     //Geral
     var inputs = document.querySelectorAll(".form-control");
     var validacao = true;
-    var btnEditarEstabelcimento = document.getElementById("btn_editar_estabelcimento");
-    var formEstabelcimento = document.querySelector(".form_editar");
+    var btnEditar = document.getElementById("btn_editar");
+    var form = document.querySelector(".form_editar");
 
     // dados inseridos no input
     var nomeInput = document.querySelector("[name='nome']");
-    var localizacaoInput = document.querySelector("[name='localizacao']");
+    var localizacaoInput = document.querySelector("[name='morada']");
     var telemovelInput = document.querySelector("[name='telemovel']");
-    var taxa_entregaInput = document.querySelector("[name='taxa_entrega']");
-    var tempo_medio_entregaInput = document.querySelector("[name='tempo_medio_entrega']");
+    var taxaEntregaInput = document.querySelector("[name='taxa_entrega']");
+    var tempoMedioEntregaInput = document.querySelector("[name='tempo_medio_entrega']");
 
     // variáveis se ocurrerem erro
     var erroNome = document.getElementById("erroNome");
@@ -230,7 +221,7 @@ include __DIR__ . "/includes/footer_business.php";
 
         // Verificar se o campo de nome está vazio
         if (nomeInput.value.trim() === "") {
-            nomeNome.textContent = "Campo obrigatório";
+            erroNome.textContent = "Campo obrigatório";
             validacao = false; // marcar validação como falsa
         }
 
@@ -250,7 +241,7 @@ include __DIR__ . "/includes/footer_business.php";
             if (!('/^\d+$/'.test(telemovel))) {
                 erroTelemovel.textContent = "O campo só pode conter números.";
                 validacao = false; // marcar validação como falsa
-            } elseif
+            } else if
                 (telemovel.length !== 9){
                 erroTelemovel.textContent = "O campo deverá só conter números";
                 validacao = false; // marcar validação como falsa

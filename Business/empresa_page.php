@@ -5,13 +5,10 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
-$pdo = new PDO(
-    "pgsql:host=" . DBHOST .
-    "; port=" . DBPORT .
-    ";dbname=" . DBNAME,
-    DBUSER,
-    DBPASS
-);
+if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    header("Location: /business/home_page.php");
+    exit();
+}
 
 // cria o o atributo $Validacao com o valor true, pois não existem falhas
 $Validacao = true;
@@ -21,7 +18,7 @@ $estabelecimentoModificado = null;
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados da empresa
-    $empresa = ObterEmpresa($pdo, 1); // ALTERAR O ID
+    $empresa = ObterEmpresa($pdo, $_SESSION['id_empresa']); // ALTERAR O ID
 }
 // Enviando dados para a BD, ao editar dados de um determinado «empresa
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -40,8 +37,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Se não ocorreram erros de validação, e se a empresa e o emprestimo tiver null
 if ($Validacao == true && ($empresaModificado !== null)) {
     // Editar a empresa na base de dados
-    if (EditarEmpresa($pdo, 1, $empresaModificado)) { // ALTERAR ID
-        $empresa = ObterEmpresa($pdo, 1); // ALTERAR ID
+    if (EditarEmpresa($pdo, $_SESSION['id_estabelecimento'], $empresaModificado)) { // ALTERAR ID
+        $empresa = ObterEmpresa($pdo, $_SESSION['id_estabelecimento']); // ALTERAR ID
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";
@@ -54,8 +51,8 @@ if ($Validacao == true && ($empresaModificado !== null)) {
     }
     // Se ocurrem erros 
 } else {
-    $empresa = ObterEmpresa($pdo, 1);
-    $estabelecimento = ObterEstabelecimento($pdo, 1);
+    $empresa = ObterEmpresa($pdo, $_SESSION['id_empresa']);
+    $estabelecimento = ObterEstabelecimento($pdo, $_SESSION['id_estabelecimento']);
 }
 ?>
 
@@ -71,42 +68,36 @@ if ($Validacao == true && ($empresaModificado !== null)) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles/sitecss.css">
-    <link rel="stylesheet" href="assets/styles/dashboard.css">
-    <link rel="stylesheet" href="assets/styles/responsive_styles.css">
+    <link rel="stylesheet" href="/../assets/styles/sitecss.css">
+    <link rel="stylesheet" href="/../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="/../assets/styles/responsive_styles.css">
 </head>
 
 <!--Zona do Header -->
 <div id="topHeader" class="container-xxl">
     <!-- Top/Menu da Página -->
-    <?php include __DIR__ . "/includes/header_business.php"; ?>
+    <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
     <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
 </div>
 
 <!--Zona de Conteudo -->
 <div>
     <h3><strong>Loja</strong></h3>
-    <!--Mapa-->
-    <div>
-        <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18906.129712753736!2d6.722624160288201!3d60.12672284414915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463e997b1b6fc09d%3A0x6ee05405ec78a692!2sJ%C4%99zyk%20trola!5e0!3m2!1spl!2spl!4v1672239918130!5m2!1spl!2spl"
-            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
+
 
     <!-- Empresa -->
-    <form id="empresa" class="centro esquerdo form_editar" method="GET">
-        <h3><strong>Informações</strong></h3>
+    <form id="empresa" class="w-75 form_editar" style="margin:auto" method="GET">
+        <p class="mt-5 h3 fw-bold">Informações</p>
 
         <div class="align-items-md-stretch">
             <div>
-                <div class="card mb-3">
-                    <div class="card-header">
+                <div class="card pb-0 mb-2">
+                    <div class="p-3 d-flex justify-content-between">
                         <h5 class="esquerdo">Informações</h5>
                         <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
                             value="Editar">Editar</button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-0 mb-2 pb-0">
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert" role="alert">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -139,7 +130,14 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                             </div>
                             <br>
 
-                            &emsp;
+                            <!--Mapa-->
+                            <div>
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18906.129712753736!2d6.722624160288201!3d60.12672284414915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463e997b1b6fc09d%3A0x6ee05405ec78a692!2sJ%C4%99zyk%20trola!5e0!3m2!1spl!2spl!4v1672239918130!5m2!1spl!2spl"
+                                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+
                             <hr>&emsp;
 
                             <!-- Telemóvel -->
@@ -156,7 +154,6 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                             <!-- Email -->
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="col-md-12 esquerdo">
                                         <span>Email<span style='color:#ff0000'> *</span></span>
                                         <div class="input-group flex-nowrap">
                                             <input name="email" readonly type="text" class="form-control"
@@ -165,7 +162,6 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                                                     echo $empresa['email']; ?>">
                                             <span id="erroEmail" class="help-inline small" style="color:#ff0000"></span>
                                         </div>
-                                    </div>
                                 </div>
 
                                 <!-- Tipo -->

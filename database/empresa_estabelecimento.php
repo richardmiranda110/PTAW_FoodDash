@@ -65,7 +65,7 @@ function EditarEmpresa($pdo, $ID, $DadosUtilizadores)
 
 function ObterEstabelecimento($pdo, $ID)
 {
-    if($ID != $_SESSION['id_empresa']){
+    if($ID != $_SESSION['id_estabelecimento']){
         exit("You cant access other people's Establishment!");
     }
     try {
@@ -93,7 +93,7 @@ function ObterEstabelecimento($pdo, $ID)
 // Altera os dados do utilizador, mas não a password
 function EditarEstabelecimento($pdo, $ID, $DadosUtilizadores)
 {
-    if($ID != $_SESSION['id_empresa']){
+    if($ID != $_SESSION['id_estabelecimento']){
         exit("You cant edit other people's Establishment!");
     }
 
