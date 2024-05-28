@@ -37,7 +37,7 @@ include __DIR__."/includes/insertPedido.php";
     include __DIR__."/includes/header_restaurantes_selected.php";
   }else{
     include __DIR__."/includes/header_logged_in.php";
-	///validar id cliente por sessiom
+	///validar id cliente por session
 	$idCliente=$_SESSION['id_cliente'];
   }
   

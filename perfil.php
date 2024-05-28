@@ -1,7 +1,7 @@
 <?php
 //include __DIR__ . "/database/db_connection.php";
 //$pdo = include __DIR__ . "/database/db_connection.php";
-require_once __DIR__.'/session.php';
+require_once __DIR__ . '/session.php';
 include __DIR__ . "/database/utilizadores.php";
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
@@ -61,8 +61,7 @@ if ($utilizadorModificado !== null) {
 <head>
     <title>Perfil</title>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/styles/dashboard_beatriz.css">
     <link rel="stylesheet" href="./assets/styles/dashboard.css">
     <link rel="stylesheet" href="./assets/styles/responsive_styles.css">
@@ -82,7 +81,8 @@ if ($utilizadorModificado !== null) {
 
     <!-- Div element where PHP value is set -->
     <div id="valid" style="display: none;"><?php echo $_SESSION['authenticated'];
-    //var_dump($Validacao); ?></div>
+                                            //var_dump($Validacao); 
+                                            ?></div>
 
     <form class="p-4 pb-0" style="width: 90%;padding: 5px;margin:auto" method="GET">
         <h3>Perfil do Utilizador</h3>
@@ -93,12 +93,11 @@ if ($utilizadorModificado !== null) {
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between">
                         <h5 class=" mb-0 align-self-center">A minha conta</h5>
-                        <button id="btn_editar" class="btn btn-warning" style="width: 9vw;" type="button"
-                            value="Editar">Editar</button>
+                        <button id="btn_editar" class="btn btn-warning" style="width: 9vw;" type="button" value="Editar">Editar</button>
                     </div>
                     <div class="card-body p-5 pt-4 pl-2">
 
-                         <p class="cinzento mb-0" style="">Informações Pessoais</p> 
+                        <p class="cinzento mb-0" style="">Informações Pessoais</p>
 
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert p-0 pt-3" role="alert">
@@ -110,18 +109,16 @@ if ($utilizadorModificado !== null) {
                             <!-- Nome -->
                             <span>Primeiro Nome</span>
                             <div class="input-group flex-nowrap">
-                                <input name="nome" readonly type="text" class="form-control" placeholder="Primeiro Nome"
-                                    aria-label="Primeiro Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['nome']))
-                                        echo $utilizador['nome']; ?>">
+                                <input name="nome" readonly type="text" class="form-control" placeholder="Primeiro Nome" aria-label="Primeiro Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['nome']))
+                                                                                                                                                                                                    echo $utilizador['nome']; ?>">
                             </div>
                             <br>
 
                             <!-- Email -->
                             <span>Email<span style='color:#ff0000'> *</span></span>
                             <div class="input-group flex-nowrap <?php if (!empty($ErroEmail)) { ?>has-error<?php } ?>">
-                                <input name="email" readonly type="text" class="form-control" placeholder="Email"
-                                    aria-label="Email" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['email']))
-                                        echo $utilizador['email']; ?>">
+                                <input name="email" readonly type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['email']))
+                                                                                                                                                                                    echo $utilizador['email']; ?>">
                                 <span id="erroEmail" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                         </div>
@@ -129,18 +126,15 @@ if ($utilizadorModificado !== null) {
                             <!-- Apelido -->
                             <span>Apelido</span>
                             <div class="input-group flex-nowrap">
-                                <input name="apelido" readonly type="text" class="form-control" placeholder="Apelido"
-                                    aria-label="Apelido" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['apelido']))
-                                        echo $utilizador['apelido']; ?>">
+                                <input name="apelido" readonly type="text" class="form-control" placeholder="Apelido" aria-label="Apelido" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['apelido']))
+                                                                                                                                                                                        echo $utilizador['apelido']; ?>">
                             </div>
                             <br>
                             <!-- Telemóvel -->
                             <span>Telemóvel</span>
                             <div class="input-group flex-nowrap">
-                                <input name="telemovel" readonly type="text" class="form-control"
-                                    placeholder="Telemóvel" aria-label="Telemovel" aria-describedby="addon-wrapping"
-                                    value="<?php if (!empty($utilizador['telemovel']))
-                                        echo $utilizador['telemovel']; ?>">
+                                <input name="telemovel" readonly type="text" class="form-control" placeholder="Telemóvel" aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['telemovel']))
+                                                                                                                                                                                                echo $utilizador['telemovel']; ?>">
                                 <span id="erroTelemovel" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                         </div>
@@ -152,9 +146,8 @@ if ($utilizadorModificado !== null) {
                         <p class="cinzento">Endereço de Cobrança</p>
                         <span>Morada</span>
                         <div class="input-group flex-nowrap">
-                            <input name="morada" readonly type="text" class="form-control" placeholder="Morada"
-                                aria-label="Morada" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['morada']))
-                                    echo $utilizador['morada']; ?>">
+                            <input name="morada" readonly type="text" class="form-control" placeholder="Morada" aria-label="Morada" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['morada']))
+                                                                                                                                                                                    echo $utilizador['morada']; ?>">
                         </div>
                         <br>
                         <div class="row">
@@ -163,10 +156,8 @@ if ($utilizadorModificado !== null) {
                                     <!-- Cidade -->
                                     <span>Cidade</span>
                                     <div class="input-group flex-nowrap">
-                                        <input name="cidade" readonly type="text" class="form-control"
-                                            placeholder="Cidade" aria-label="Cidade" aria-describedby="addon-wrapping"
-                                            value="<?php if (!empty($utilizador['cidade']))
-                                                echo $utilizador['cidade']; ?>">
+                                        <input name="cidade" readonly type="text" class="form-control" placeholder="Cidade" aria-label="Cidade" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['cidade']))
+                                                                                                                                                                                                echo $utilizador['cidade']; ?>">
                                     </div>
                                 </div>
                             </div>
@@ -176,9 +167,8 @@ if ($utilizadorModificado !== null) {
                                     <!-- País -->
                                     <span>País</span>
                                     <div class="input-group flex-nowrap">
-                                        <input name="pais" readonly type="text" class="form-control" placeholder="País"
-                                            aria-label="País" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['pais']))
-                                                echo $utilizador['pais']; ?>">
+                                        <input name="pais" readonly type="text" class="form-control" placeholder="País" aria-label="País" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['pais']))
+                                                                                                                                                                                        echo $utilizador['pais']; ?>">
                                     </div>
                                 </div>
                             </div>
@@ -188,10 +178,8 @@ if ($utilizadorModificado !== null) {
                                     <!-- Código Postal -->
                                     <span>Código-Postal</span>
                                     <div class="input-group flex-nowrap">
-                                        <input name="CodPostal" readonly type="text" class="form-control"
-                                            placeholder="Código Postal" aria-label="Código Postal"
-                                            aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['CodPostal']))
-                                                echo $utilizador['CodPostal']; ?>">
+                                        <input name="CodPostal" readonly type="text" class="form-control" placeholder="Código Postal" aria-label="Código Postal" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['CodPostal']))
+                                                                                                                                                                                                                echo $utilizador['CodPostal']; ?>">
                                     </div>
                                 </div>
                             </div>
@@ -206,9 +194,7 @@ if ($utilizadorModificado !== null) {
     include __DIR__ . "/includes/footer_2.php";
     ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
         // Obtém os elementos
         var btnEditar = document.getElementById("btn_editar");
@@ -239,17 +225,17 @@ if ($utilizadorModificado !== null) {
                 validacao = false; // marcar validação como falsa
             }
         }
-        
-        document.addEventListener("DOMContentLoaded", function () {
+
+        document.addEventListener("DOMContentLoaded", function() {
             // Adiciona evento de clique ao botão
-            btnEditar.addEventListener("click", function () {
+            btnEditar.addEventListener("click", function() {
                 // Altera para modo de edição
                 if (btnEditar.innerHTML == "Editar") {
                     btnEditar.innerHTML = "Guardar";
                     btnEditar.setAttribute("type", "button"); // tipo: botão
                     btnEditar.classList.remove("btn-warning");
                     btnEditar.classList.add("btn-success");
-                    inputs.forEach(function (input) {
+                    inputs.forEach(function(input) {
                         input.removeAttribute("readonly");
                     });
                     form.method = 'GET';
@@ -270,7 +256,7 @@ if ($utilizadorModificado !== null) {
                         btnEditar.setAttribute("type", "submit");
                         btnEditar.classList.remove("btn-success"); // tipo: submissão
                         btnEditar.classList.add("btn-warning");
-                        inputs.forEach(function (input) {
+                        inputs.forEach(function(input) {
                             input.setAttribute("readonly", "readonly");
                         });
                         form.method = 'POST';

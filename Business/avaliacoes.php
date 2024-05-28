@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__.'/includes/session.php';
+require_once __DIR__ . '/includes/session.php';
+
+$idEstabelecimento = $_SESSION['id_estabelecimento'];
 ?>
 
 <!doctype html>
@@ -37,7 +39,7 @@ require_once __DIR__.'/includes/session.php';
                                 <?php
 
                                 try {
-                                    $q = "SELECT ROUND(AVG(classificacao), 1) as media FROM Avaliacoes";
+                                    $q = "SELECT ROUND(AVG(classificacao), 1) as media FROM Avaliacoes WHERE id_estabelecimento=" . $idEstabelecimento . ";";
                                     $statement = $pdo->prepare($q);
                                     $statement->execute();
                                     if ($statement) {
@@ -63,7 +65,7 @@ require_once __DIR__.'/includes/session.php';
                         <?php
                         try {
                             $q = "SELECT classificacao, data, descricao, nome FROM Avaliacoes 
-                            INNER JOIN Clientes ON Clientes.id_cliente = Avaliacoes.id_cliente ORDER BY data DESC;";
+                            INNER JOIN Clientes ON Clientes.id_cliente = Avaliacoes.id_cliente WHERE id_estabelecimento=" . $idEstabelecimento . " ORDER BY data DESC;";
                             $statement = $pdo->prepare($q);
                             $statement->execute();
                             if ($statement) {
@@ -95,7 +97,6 @@ require_once __DIR__.'/includes/session.php';
     <!--Zona do Footer -->
     <?php include __DIR__ . "../../includes/footer_2.php"; ?>
 
-    <script src="./assets/js/adicionar_pedido.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__.'/session.php';
-require_once __DIR__."/database/credentials.php";
-require_once __DIR__."/database/db_connection.php";
- ?>
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . "/database/credentials.php";
+require_once __DIR__ . "/database/db_connection.php";
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -34,8 +34,8 @@ require_once __DIR__."/database/db_connection.php";
   <?php
   if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticated'])) {
     include __DIR__ . "/includes/header.php";
-  }else{
-    include __DIR__."/includes/header_logged_in.php";
+  } else {
+    include __DIR__ . "/includes/header_logged_in.php";
   }
   ?>
 
