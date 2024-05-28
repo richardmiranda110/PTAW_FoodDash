@@ -41,7 +41,7 @@ include __DIR__."/includes/insertPedido.php";
 	$idCliente=$_SESSION['id_cliente'];
   }
   
- // $idCliente = 1;
+  //$idCliente = 1;
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
@@ -190,10 +190,20 @@ include __DIR__."/includes/insertPedido.php";
         <?php
         try {
           $dados = [];
-          foreach ($categorias as $categoria) {
+		  
+		  //filtro para aparecer só a categoria pretendido
+		  if (!empty($_GET['categoria'])) {
+			foreach ($categorias as $categoria) {
+			  if ($_GET['categoria']==strtolower(str_replace(' ', '',$categoria['nome']))) {
+				$categorias = [
+					['nome' => $categoria['nome']]
+				];
+			  }		  
+			}			 
+		  }
 
-			if (empty($_GET['categoria']) or (!empty($_GET['categoria']) and $_GET['categoria']==strtolower(str_replace(' ', '',$categoria['nome'])))  ) {
-            
+          foreach ($categorias as $categoria) {
+            $fCategoria = htmlspecialchars($categoria['nome']);
 
             echo "<div class='accordion-item' style='border:none;'>
 				<h3 class='accordion-header' id='heading" . $fCategoria . "'>
@@ -220,6 +230,7 @@ include __DIR__."/includes/insertPedido.php";
               
 
             foreach ($produtos as $rowProd) {
+			 
               $imagemPath = getImagePath($rowProd['foto']);
               $idProd = str_replace(' ', '', htmlspecialchars($rowProd['nome']));
               echo "<div>
@@ -250,6 +261,7 @@ include __DIR__."/includes/insertPedido.php";
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEstabelecimento."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_item']."'>
+					<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
 					<input type='hidden' name='idForm' id='idForm' value='insertPedido'>
 					
@@ -338,15 +350,17 @@ include __DIR__."/includes/insertPedido.php";
             </div>
         </div>";
             }
-		  }
+
         } catch (PDOException $e) {
           echo "Erro na conexão: " . $e->getMessage();
         }
-		
-		if (empty($_GET['categoria'])) {  echo "</div></div></div></div></div></div></div>"; } else { echo "</div></div></div></div>";};
         ?>
       </div>
-
+	  
+    </div>
+  </div>
+  </div>
+  </div>
  
 
 
