@@ -81,7 +81,7 @@ include __DIR__."/includes/insertPedido.php";
           <p class='mb-0'>Taxa de Entrega: " . $infoRest['taxa_entrega'] . "€</p>
         </div>
         <div class='col-lg-4 text-center'>
-          <img src='./assets/stock_imgs/" . $infoRest['imagem'] . "' alt='" . $infoRest['nome'] . "' style='max-width: 25vw;'>
+          <img src=".$infoRest['imagem']."' alt='" . $infoRest['nome'] . "' style='max-width: 25vw;'>
         </div>
 		";
           ?>
@@ -170,7 +170,6 @@ include __DIR__."/includes/insertPedido.php";
 
 		  echo "<li class='nav-item'>
 			  <a href='menu_restaurante.php?restaurante=".strtolower(str_replace(' ', '', $_GET['restaurante']))."' class='nav-link link-body-emphasis' aria-current='page'>
-				<text class='opcao'>Ver Todos</text>
 			  </a>
 			</li>";
           foreach ($categorias as $row) {
@@ -254,14 +253,14 @@ include __DIR__."/includes/insertPedido.php";
                 </div>";
                 
                 $dados[]  = ['id' => $rowProd['id_item'] , 'trigger' => 'liveToastBtn_'.$idProd, 'toast' => 'liveToast_'.$idProd];
-
+                //<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>
 				echo "
 				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action=''>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEstabelecimento."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_item']."'>
-					<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>
+
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
 					<input type='hidden' name='idForm' id='idForm' value='insertPedido'>
 					
