@@ -1,5 +1,5 @@
 <?php
-require_once  __DIR__."/include/session.php";
+require_once  __DIR__."/../includes/session.php";
 
 
 if (isset($_SESSION['id_empresa']) || isset($_SESSION['nome'])) {
@@ -7,7 +7,7 @@ if (isset($_SESSION['id_empresa']) || isset($_SESSION['nome'])) {
   exit();
 }
 
-require_once __DIR__.'../../database/db_connection.php';
+require_once __DIR__.'/../../database/db_connection.php';
 
 $name = $_POST['inputNomeEstab'];
 $morada = $_POST['inputEndereco'];
