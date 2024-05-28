@@ -343,13 +343,11 @@ include __DIR__."/includes/insertPedido.php";
           echo "Erro na conexão: " . $e->getMessage();
         }
 		
-		if (empty($_GET['categoria'])) {  echo "</div></div>"; };
+		if (empty($_GET['categoria'])) {  echo "</div></div></div></div></div></div></div>"; } else { echo "</div></div></div></div>";};
         ?>
       </div>
 
-  </div>
-  </div>
-  </div>
+ 
 
 
   <!-- Footer -->
