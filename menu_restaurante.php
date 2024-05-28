@@ -162,15 +162,21 @@ include __DIR__."/includes/insertPedido.php";
           $query = "SELECT DISTINCT categorias.nome FROM itens
 			INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
 			INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
-			WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ?";
+			WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? ";
 
           $stmt = $pdo->prepare($query);
           $stmt->execute([$fRestaurante]);
           $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+		  echo "<li class='nav-item'>
+			  <a href='menu_restaurante.php?restaurante=".strtolower(str_replace(' ', '', $_GET['restaurante']))."' class='nav-link link-body-emphasis' aria-current='page'>
+				<text class='opcao'>Ver Todos</text>
+			  </a>
+			</li>";
           foreach ($categorias as $row) {
+			 $fcategoria = strtolower(str_replace(' ', '',$row['nome']));
             echo "<li class='nav-item'>
-			  <a href='#' class='nav-link link-body-emphasis' aria-current='page'>
+			  <a href='menu_restaurante.php?restaurante=".strtolower(str_replace(' ', '', $_GET['restaurante']))."&categoria=".$fcategoria."' class='nav-link link-body-emphasis' aria-current='page'>
 				<text class='opcao'>" . $row['nome'] . "</text>
 			  </a>
 			</li>";
@@ -185,7 +191,9 @@ include __DIR__."/includes/insertPedido.php";
         try {
           $dados = [];
           foreach ($categorias as $categoria) {
-            $fCategoria = htmlspecialchars($categoria['nome']);
+
+			if (empty($_GET['categoria']) or (!empty($_GET['categoria']) and $_GET['categoria']==strtolower(str_replace(' ', '',$categoria['nome'])))  ) {
+            
 
             echo "<div class='accordion-item' style='border:none;'>
 				<h3 class='accordion-header' id='heading" . $fCategoria . "'>
@@ -330,14 +338,15 @@ include __DIR__."/includes/insertPedido.php";
             </div>
         </div>";
             }
-
+		  }
         } catch (PDOException $e) {
           echo "Erro na conexão: " . $e->getMessage();
         }
+		
+		if (empty($_GET['categoria'])) {  echo "</div></div>"; };
         ?>
       </div>
 
-    </div>
   </div>
   </div>
   </div>
