@@ -1,3 +1,8 @@
+<?php 
+require_once __DIR__.'/includes/session.php';
+require_once __DIR__."/../database/credentials.php";
+require_once __DIR__."/../database/db_connection.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 

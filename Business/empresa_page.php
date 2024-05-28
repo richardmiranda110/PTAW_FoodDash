@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__.'./includes/session.php';
 
-include __DIR__ . "../database/empresa_estabelecimento.php";
-include __DIR__ . "../database/credentials.php";
-include __DIR__ . "../database/db_connection.php";
+include __DIR__ . "/../database/empresa_estabelecimento.php";
+include __DIR__ . "/../database/credentials.php";
+include __DIR__ . "/../database/db_connection.php";
 
 $pdo = new PDO(
     "pgsql:host=" . DBHOST .
