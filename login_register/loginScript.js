@@ -1,7 +1,6 @@
 document.getElementById('registoForm').addEventListener('submit', function(event) {
     var password = document.getElementById('inputPassword').value;
     var confirmPassword = document.getElementById('inputRepetirPassword').value;
-    var errorMessage = document.getElementById('error-message');
     let codigo_postal_inserido = document.getElementById("inputCP").value;
     console.log(codigo_postal_inserido);
     let regex_codigo_postal = /^[0-9]{4}-[0-9]{3}$/;
@@ -9,12 +8,18 @@ document.getElementById('registoForm').addEventListener('submit', function(event
     console.log(tele_inserido);
     let regex_tele = /^[0-9]{9}$/;
 
+    $('#error-message').toast('show');
+    const toastTriggerPass = document.getElementById('btnLogin');
+    const toastLivePass = document.getElementById('error-message');
+
     if (password !== confirmPassword) {
-        errorMessage.textContent = 'As senhas não coincidem!';
-        errorMessage.style.display = 'block';
+        if (toastTriggerPass) {
+            const toastBootstrapPass = bootstrap.Toast.getOrCreateInstance(toastLivePass);
+            toastTriggerPass.addEventListener('click', () => {
+            toastBootstrapPass.show();
+            });
+        };
         event.preventDefault(); // Impede o envio do formulário
-    } else {
-        errorMessage.style.display = 'none';
     }
 
     if (regex_codigo_postal.test(codigo_postal_inserido)) {

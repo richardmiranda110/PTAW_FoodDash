@@ -94,28 +94,65 @@ if (isset($_SESSION['authenticatedB'])) {
       <br><br>
       <p style="text-align: center; color: grey;">Já tem conta?<a type="button" class="btn btn-link" href="login_business.php" style="color: white;">Login</a>
       </p>
-      <div id="error-message" style="display: none; color: red; text-align: center;"></div>
+
+      <div class='toast-container position-fixed bottom-0 end-0 p-3'>
+        <div class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-autohide='false' id='error-message'>
+          <div class='toast-header'>
+            <strong class='mr-auto'>Erro</strong>
+            <button type='button' class='btn-close' data-dismiss='toast' aria-label='Close'>
+            </button>
+          </div>
+          <div class='toast-body' style='color: red; text-align: center;' id='error-messagee'>
+            As senhas não coincidem!
+          </div>
+        </div>
+      </div>
 
       <?php
         if(isset($_SESSION['error_message'])) {
-            echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
+          echo "<div class='toast-container position-fixed bottom-0 end-0 p-3'>
+                  <div class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-autohide='false' id='error-message-email'>
+                    <div class='toast-header'>
+                      <strong class='mr-auto'>Erro</strong>
+                      <button type='button' class='btn-close' data-dismiss='toast' aria-label='Close'>
+                      </button>
+                    </div>
+                    <div class='toast-body' style='color: red; text-align: center;'>
+                    ". $_SESSION['error_message'] ."
+                    </div>
+                  </div>
+                </div>";
             unset($_SESSION['error_message']);
         }
 
         if(isset($_SESSION['success_message'])) {
-          echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
+          echo "<div class='toast-container position-fixed bottom-0 end-0 p-3'>
+                  <div class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-autohide='false' id='success-message'>
+                    <div class='toast-header'>
+                      <strong class='mr-auto'>Sucesso</strong>
+                      <button type='button' class='btn-close' data-dismiss='toast' aria-label='Close'>
+                      </button>
+                    </div>
+                    <div class='toast-body' style='color: green; text-align: center;'>
+                    ". $_SESSION['success_message'] ."
+                    </div>
+                  </div>
+                </div>";
           unset($_SESSION['success_message']);
-      }
+        }
       ?>
 
     </form>
   </div>
 
   <script src="loginScriptB.js"></script>
-  <script src="../assets/js/script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script>
     document.querySelector("input#mostrarPasswordCheckbox").addEventListener("click", mostrarPassword)
     function mostrarPassword() {
@@ -136,6 +173,28 @@ if (isset($_SESSION['authenticatedB'])) {
     document.getElementById('logoB').addEventListener('click', function() {
       window.location.href = '../home_page.php';
     });
+
+    $('#error-message-email').toast('show');
+    const toastTrigger = document.getElementById('btnLogin');
+    const toastLiveExample = document.getElementById('error-message-email');
+
+    if (toastTrigger) {
+      const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+      toastTrigger.addEventListener('click', () => {
+      toastBootstrap.show();
+      });
+    };
+
+    $('#success-message').toast('show');
+    const toastTriggerSuccess = document.getElementById('btnLogin');
+    const toastLiveSuccess = document.getElementById('success-message');
+
+    if (toastTrigger) {
+      const toastBootstrapSuccess = bootstrap.Toast.getOrCreateInstance(toastLiveSuccess);
+      toastTriggerSuccess.addEventListener('click', () => {
+      toastBootstrapSuccess.show();
+      });
+    };
   </script>
 </body>
 

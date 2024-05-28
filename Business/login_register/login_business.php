@@ -67,17 +67,23 @@ if (isset($_SESSION['authenticatedB'])) {
 
       <?php
         if(isset($_SESSION['error_message'])) {
-            echo "<div id='error-message-email' style='color: red; text-align: center;'>" . $_SESSION['error_message'] . "</div>";
+          echo "<div class='toast-container position-fixed bottom-0 end-0 p-3'>
+                  <div class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-autohide='false' id='error-message-login'>
+                    <div class='toast-header'>
+                      <strong class='mr-auto'>Erro</strong>
+                      <button type='button' class='btn-close' data-dismiss='toast' aria-label='Close'>
+                      </button>
+                    </div>
+                    <div class='toast-body' style='color: red; text-align: center;'>
+                    ". $_SESSION['error_message'] ."
+                    </div>
+                  </div>
+                </div>";
             unset($_SESSION['error_message']);
         }
 
-        if(isset($_SESSION['success_message'])) {
-          echo "<div id='success-message' style='color: green; text-align: center;'>" . $_SESSION['success_message'] . "</div>";
-          unset($_SESSION['success_message']);
-        }
-
+        
         if(empty($_SESSION["authenticatedB"]) || $_SESSION["authenticatedB"] != 'true') {
-
         } else {
           echo "<div class='form-floating mb-1'>";
           echo "<a id='btnLogout' class='w-100 btn btn-lg btn-primary' type='submit' href='logoutB.php'>Logout</a>";
@@ -88,7 +94,13 @@ if (isset($_SESSION['authenticatedB'])) {
     </form>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script>
     document.querySelector("input#mostrarPasswordCheckbox").addEventListener("click", mostrarPassword)
     function mostrarPassword() {
@@ -132,12 +144,18 @@ if (isset($_SESSION['authenticatedB'])) {
     document.getElementById('logoB').addEventListener('click', function() {
       window.location.href = '../home_page.php';
     });
-  </script>
 
-  <script src="loginScript.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
+    $('#error-message-login').toast('show');
+    const toastTrigger = document.getElementById('btnLogin');
+    const toastLiveExample = document.getElementById('error-message-login');
+
+    if (toastTrigger) {
+      const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+      toastTrigger.addEventListener('click', () => {
+      toastBootstrap.show();
+      });
+    };
+  </script>
 </body>
 
 </html>
