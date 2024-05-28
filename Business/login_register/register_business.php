@@ -34,7 +34,7 @@ if (isset($_SESSION['authenticatedB'])) {
   <img src="../assets/imgs/logo.png" id="logoB" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto; cursor: pointer;">
 
   <!-- Formulário de registo -->
-  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 15vh;">
+  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 10vh;">
     <form action="registerValidationB.php" method="POST" id="registoForm" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center; color: white;">Registar</h1><br>
       <div class="form-floating mb-1">
