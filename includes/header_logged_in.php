@@ -33,13 +33,10 @@
 </nav>
 
 <script>
-  document.getElementById('logo_fooddash').addEventListener('click', function() {
-    window.location.href = 'index.php';
-  });
-  document.getElementById('home_btn').addEventListener('click', function() {
-    window.location.href = 'index.php';
-  });
-  document.getElementById('restaurantes_btn').addEventListener('click', function() {
-    window.location.href = 'restaurantes_page.php';
-  });
+  // document.getElementById('home_btn').addEventListener('click', function() {
+  //   window.location.href = 'index.php';
+  // });
+  // document.getElementById('restaurantes_btn').addEventListener('click', function() {
+  //   window.location.href = 'restaurantes_page.php';
+  // });
 </script>

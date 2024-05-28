@@ -171,9 +171,10 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/styles/sitecss.css">
     <link rel="stylesheet" href="/assets/styles/responsive_styles.css">
-
+    <link rel="stylesheet" href="assets/styles/dashboard.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+
         google.charts.load("current", {
             packages: ['corechart']
         });
@@ -203,7 +204,9 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
 
             var options = {
                 title: "Números de pedido por mês",
-                width: 800,
+                width: 1100,
+                responsive: true,
+                width_units: 'vw',
                 height: 390,
                 bar: {
                     groupWidth: "12%"
@@ -235,7 +238,7 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
             ]);
 
             var options = {
-                width: 800,
+                width: 80,
                 height: 300,
                 title: 'Dinheiro gasto',
                 curveType: 'function',
@@ -258,12 +261,12 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
     <?php
     include __DIR__ . "/includes/header_logged_in.php";
     ?>
-
-    <!--Zona de Conteudo -->
-    <div id="contentPage" style="min-width:100%;" class="container-xxl">
         <?php
         include __DIR__ . "/includes/sidebar_perfil.php";
         ?>
+    <!--Zona de Conteudo -->
+    <div id="contentPage" style="min-width:100%;" class="container-xxl">
+
         <!--Zona de Conteudo da Página -->
         <div id="contentDiv" class="col-md-10 pl-2 pt-3 pb-0">
             <div class="container-md" style="padding: 10px;">
@@ -320,11 +323,11 @@ $totalDinheiroDezembro = getMesDinheiro($pdo, $clienteId, 12);
 
                     <!-- Segunda Coluna: Gráficos -->
                     <div class="col-md-8 d-flex flex-column justify-content-between">
-                        <div class="card flex-grow-1" style=" overflow: auto;">
+
                             <div class="card-body text-center pt-5 pb-5">
                                 <div id="curve_chart" style=""></div>
                             </div>
-                        </div>
+                    
 
                         <div class="card flex-grow-1" style=" overflow: auto;">
                             <div class="card-body text-center pt-5 pb-5">

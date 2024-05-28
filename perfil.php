@@ -64,6 +64,7 @@ if ($utilizadorModificado !== null) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/styles/dashboard_beatriz.css">
+    <link rel="stylesheet" href="./assets/styles/dashboard.css">
     <link rel="stylesheet" href="./assets/styles/responsive_styles.css">
     <link rel="stylesheet" href="./assets/styles/sitecss.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -83,24 +84,24 @@ if ($utilizadorModificado !== null) {
     <div id="valid" style="display: none;"><?php echo $_SESSION['authenticated'];
     //var_dump($Validacao); ?></div>
 
-    <form class="centro esquerdo form_editar" method="GET">
+    <form class="p-4 pb-0" style="width: 90%;padding: 5px;margin:auto" method="GET">
         <h3>Perfil do Utilizador</h3>
         <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las</p>
 
         <div class="align-items-md-stretch">
             <div>
                 <div class="card mb-3">
-                    <div class="card-header">
-                        <h5 class="esquerdo">A minha conta</h5>
-                        <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
+                    <div class="card-header d-flex justify-content-between">
+                        <h5 class=" mb-0 align-self-center">A minha conta</h5>
+                        <button id="btn_editar" class="btn btn-warning" style="width: 9vw;" type="button"
                             value="Editar">Editar</button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-5 pt-4 pl-2">
 
-                        <p class="cinzento" style="padding:5px">Informação do Utilizador</p>
+                         <p class="cinzento mb-0" style="">Informações Pessoais</p> 
 
                         <!-- Informação da existência de campos obrigatórios -->
-                        <div class="alert" role="alert">
+                        <div class="alert p-0 pt-3" role="alert">
                             <i class="fas fa-info-circle" style="font-size:24px"></i>
                             <strong>Campos marcados com <span style='color:#ff0000'>*</span> são
                                 obrigatórios</strong>
@@ -145,10 +146,10 @@ if ($utilizadorModificado !== null) {
                         </div>
 
                         &emsp;
-                        <hr>&emsp;
+                        <hr class="m-0">&emsp;
 
                         <!-- Morada -->
-                        <p class="cinzento">Morada</p>
+                        <p class="cinzento">Endereço de Cobrança</p>
                         <span>Morada</span>
                         <div class="input-group flex-nowrap">
                             <input name="morada" readonly type="text" class="form-control" placeholder="Morada"

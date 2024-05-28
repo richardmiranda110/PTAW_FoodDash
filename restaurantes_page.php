@@ -6,7 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <style>
+  
+  <link rel="stylesheet" href="assets/styles/sitecss.css">
+    <link rel="stylesheet" href="assets/styles/dashboard.css">
+    <link rel="stylesheet" href="assets/styles/dashboard_beatriz.css">
+ <style>
     .card {
       cursor: pointer;
     }
@@ -26,12 +30,12 @@
   }else{
 	include __DIR__ . "/includes/header_restaurantes_selected.php";
   }
+
   include __DIR__ . "/includes/navbar_tipos_de_comida.php";
 
   ?>
 
 
-  <br><br>
   <!-- TÍTULO PÁGINA E PROCURAR -->
   <h1 style="text-align: center;">Restaurantes</h1><br>
   <form class="input-group container text-center mb-5" style="max-width: 40%;" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -42,10 +46,9 @@
   <br>
 
   <!-- LISTA DE RESTAURANTES -->
-      
 <?php
 
-
+include __DIR__ . "/includes/sidebar_perfil.php"; 
 $itemPorPagina = 10;
 $pagAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 $offset = ($pagAtual - 1) * $itemPorPagina;
