@@ -200,12 +200,12 @@ include __DIR__ . "/includes/footer_business.php";
     var validacao = true;
 
     //Empresa
-    var btnEditarEmpresa = document.getElementById("btn_editar_empresa");
-    var formEmpresa = document.querySelector(".form_editar");
+    var btnEditar = document.getElementById("btn_editar");
+    var form = document.querySelector(".form_editar");
     // input
     var nomeInput = document.querySelector("[name='nome']");
     var moradaInput = document.querySelector("[name='morada']");
-    var telefoneInput = document.querySelector("[name='telemovel']");
+    var telemovelInput = document.querySelector("[name='telemovel']");
     var emailInput = document.querySelector("[name='email']");
     var tipoInput = document.querySelector("[name='tipo']");
     // erro
@@ -217,7 +217,7 @@ include __DIR__ . "/includes/footer_business.php";
 
 
     // Função para validar o formulário da empresa
-    function validarFormularioEmpresa() {
+    function validarFormulario() {
         validacao = true; // resetar a validação
         erroNome.textContent = ""; // limpar mensagem de erro
         erroMorada.textContent = ""; // limpar mensagem de erro
@@ -245,12 +245,12 @@ include __DIR__ . "/includes/footer_business.php";
         } else {
             // verficar se o campo contém só números
             var telemovel = telemovelInput.value.trim();
-            if (!('/^\d+$/'.test(telemovel))) {
+            if (!(/^\d+$/.test(telemovel))) {
                 erroTelemovel.textContent = "O campo só pode conter números.";
                 validacao = false; // marcar validação como falsa
             } else if (telemovel.length !== 9) {
                 erroTelemovel.textContent = "O campo deverá só conter números";
-                validacao = false; // marcar validação como falsa
+                validacao = false; // marcar validação como falsaz  
             }
         }
 
@@ -260,11 +260,6 @@ include __DIR__ . "/includes/footer_business.php";
             validacao = false; // marcar validação como falsa
         }
 
-        // Verificar se o campo de e-mail está vazio
-        if (taxaEntregaInput.value.trim() === "") {
-            erroTipo.textContent = "Campo obrigatório";
-            validacao = false; // marcar validação como falsa
-        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {

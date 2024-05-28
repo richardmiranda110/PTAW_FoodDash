@@ -3,7 +3,7 @@ require_once __DIR__.'/../../database/credentials.php';
 require_once __DIR__.'/../includes/session.php';
 require_once __DIR__.'/../../database/db_connection.php';
 
-if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticatedB'])) {
+if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     header("Location: /index.php");
     exit();
   }
@@ -16,8 +16,8 @@ try {
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($rows) == 0) {
-        echo '<div class="row align-items-center border border-2 border-secondary rounded-4 my-3" style="padding: 1vh; height: 10vh;">';
-        echo '<h1>Nenhum pedido encontrado.</h1>';
+        echo '<div class="row align-items-centerborder-secondary rounded-4 my-3" style="padding: 1vh; height: 10vh;">';
+        echo '<h6>Nenhum pedido encontrado.</h6>';
         echo '</div>';
     }
 
