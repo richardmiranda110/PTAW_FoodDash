@@ -23,8 +23,9 @@ if(isset($_GET['delete'])){
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     $query =  
-    "SELECT nome,id_categoria,count(*) as count FROM categorias
-    where id_empresa = ? group by id_categoria";
+    "SELECT nome,categorias.id_categoria as id,count(item_categorias.id_item) as count FROM categorias
+	inner join item_categorias on categorias.id_categoria = item_categorias.id_categoria
+    where id_empresa = ? group by categorias.id_categoria;";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute([$idEmpresa]);

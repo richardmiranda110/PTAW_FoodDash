@@ -222,7 +222,7 @@ function addItem(element){
  
   const rownumber =  element.getAttribute("data-rownumber");
   const item = itemList[rownumber];
-  dable.AddRow([item.nome,item]);
+  dable.AddRow([item.nome,item.count]);
  }
  
 

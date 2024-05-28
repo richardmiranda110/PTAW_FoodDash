@@ -13,7 +13,7 @@ require_once  __DIR__."./session.php";
     </button>
   </div>
   <div class="complement-header w-100 m-0">
-      <a class="navbar-brand">
+      <a href="/business/dashboard_home_page.php" class="navbar-brand">
         <img src="/Business/assets/imgs/logo.png" alt="" srcset="" style="width: 40%;">
       </a>
    

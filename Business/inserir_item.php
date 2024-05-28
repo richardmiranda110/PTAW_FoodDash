@@ -153,8 +153,8 @@ class SingleItem extends AbstractItem {
             $stmt->bindValue(":foto", $this->foto);
             $stmt->bindValue(":id_categoria", $this->categoria);
             $stmt->bindValue(":id_item", $this->item_id);
-            $count = $stmt->execute();
-            echo "hi";
+            $stmt->execute();
+
         }else  if ($this->checkExistence() == false ) {
             $query = "INSERT INTO itens(
                 nome, preco,
@@ -164,14 +164,20 @@ class SingleItem extends AbstractItem {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $pdo->prepare($query);
-            $response =
             $stmt->execute([
             $this->nome,$this->preco,
             $this->descricao,$this->disponivel ? 1:0,
             $this->foto,1, 0,
             $this->categoria, $_SESSION['id_estabelecimento']]);
-            if($response == false)
-                throw new Exception("Não foi possivel efetuar a operação");
+
+            $this->item_id = $this->getId();
+
+            $query = "INSERT INTO item_categorias(id_item, id_categoria)
+                VALUES (?,?)";
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([
+            $this->item_id,$this->categoria]);
         }
         if($this->item_id == -1)
             $this->item_id = $this->getId();

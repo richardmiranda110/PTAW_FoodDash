@@ -26,7 +26,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
       <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
     </header>
     <main id="contentPage" class="container-xxl flex-grow-1">
-      <?php include __DIR__."../../includes/sidebar_perfil.php"; ?>
+      <?php include __DIR__."/includes/sidebar_business.php"; ?>
       <div id="contentDiv" class="col-md-12">
         <nav style="font-size:1.4rem; z-index: 1; text-align: center;" class="navbar navbar-expand-lg gray-navbar navbar-light fw-bold">
           <div class="collapse navbar-collapse" style="width: 15vw;" id="navbarNav">

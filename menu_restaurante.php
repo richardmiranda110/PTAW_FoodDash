@@ -147,31 +147,37 @@ include __DIR__."/includes/insertPedido.php";
       </div>
     </div>
 
+   <?php 
+   
+   $query = "SELECT DISTINCT categorias.nome FROM itens
+   INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
+   INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
+   WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? ";
 
-    <div class="container d-flex justify-content-start" style="margin: 0; padding: 0">
+       $stmt = $pdo->prepare($query);
+       $stmt->execute([$fRestaurante]);
+       $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   
+
+
+      if(count($categorias) != 0){
+    
+      echo '<div class="container d-flex justify-content-start" style="margin: 0; padding: 0">
       <!-- SIDEBAR CATEGORIAS -->
       <div class="d-flex flex-column p-3 bg-body-tertiary" style="width: 17.7vw;">
         <a class="d-flex align-items-center me-md-auto link-body-emphasis text-decoration-none">
           <span class="fs-4">Categorias</span>
         </a>
         <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-          <?php
+        <ul class="nav nav-pills flex-column mb-auto">';
 
-
-          $query = "SELECT DISTINCT categorias.nome FROM itens
-			INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
-			INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
-			WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? ";
-
-          $stmt = $pdo->prepare($query);
-          $stmt->execute([$fRestaurante]);
-          $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		  echo "<li class='nav-item'>
+        echo "<li class='nav-item'>
 			  <a href='menu_restaurante.php?restaurante=".strtolower(str_replace(' ', '', $_GET['restaurante']))."' class='nav-link link-body-emphasis' aria-current='page'>
 			  </a>
 			</li>";
+    }
+
+
           foreach ($categorias as $row) {
 			 $fcategoria = strtolower(str_replace(' ', '',$row['nome']));
             echo "<li class='nav-item'>
@@ -200,7 +206,9 @@ include __DIR__."/includes/insertPedido.php";
 			  }		  
 			}			 
 		  }
-
+        if(count($categorias) == 0){
+          echo "Este Restaurante não pussui itens";
+        }
           foreach ($categorias as $categoria) {
             $fCategoria = htmlspecialchars($categoria['nome']);
 

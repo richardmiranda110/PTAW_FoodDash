@@ -28,7 +28,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
   </div>
   <!--Zona de Conteudo -->  
   <div id="contentPage" class="container-xxl">
-    <?php include __DIR__."../../includes/sidebar_perfil.php"; ?>
+  <?php include __DIR__."/includes/sidebar_business.php"; ?>
 
     <!--Zona de Conteudo da Página -->
     <div id="contentDiv" class="col-md-12">
