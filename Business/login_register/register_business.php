@@ -31,7 +31,7 @@ if (isset($_SESSION['authenticatedB'])) {
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="../assets/imgs/logo.png" id="logoB" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto;">
+  <img src="../assets/imgs/logo.png" id="logoB" alt="FoodDash Logo" style="position: absolute; top: 8%; left: 4%; width: 22%; height: auto; cursor: pointer;">
 
   <!-- Formulário de registo -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 15vh;">
@@ -50,7 +50,7 @@ if (isset($_SESSION['authenticatedB'])) {
         <label for="inputEmail">Email</label>
       </div>
       <div class="form-floating mb-1">
-        <input type="tel" class="form-control" id="inputTel" name="inputTel" placeholder="name@example.com" pattern="[0-9]{3}[0-9]{3}[0-9]{3}" maxlength="9" required>
+        <input type="tel" class="form-control" id="inputTel" name="inputTel" placeholder="XXXXXXXXX" maxlength="9" required>
         <label class="form-label" for="inputTel">Telemovel</label>
       </div>
       <div class="form-floating mb-1">
