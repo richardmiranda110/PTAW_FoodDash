@@ -3,33 +3,29 @@ require_once __DIR__.'/includes/session.php';
 require_once __DIR__."/../database/credentials.php";
 require_once __DIR__."/../database/db_connection.php";
 
-// if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
-//     header("Location: /Business/dashboard_home_page.php");
-//     exit();
-//   }
+if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    header("Location: /Business/dashboard_home_page.php");
+    exit();
+  }
 
 // não sei quem fez isto, mas $_GET aint it chief
-$idEstabelecimento = $_GET['id_estabelecimento'];
+$idEstabelecimento = $_SESSION['id_estabelecimento'];
 
-if($idEstabelecimento != $_SESSION['id_estabelecimento']){
-    exit("You cant access other people's data!");
-}
-
-function getPedidosDiarios($pdo, $estabelecimentoId, $dia)
+function getPedidosDiarios($pdo, $idEstabelecimento, $dia)
 {
     $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':estabelecimentoId', $idEstabelecimento, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result['total_pedidos'];
 }
-function getPedidosMensais($pdo, $estabelecimentoId, $mes)
+function getPedidosMensais($pdo, $idEstabelecimento, $mes)
 {
     $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':estabelecimentoId', $idEstabelecimento, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
@@ -280,6 +276,9 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./assets/styles/adicionar.css">
+    <link rel="stylesheet" href="../../assets/styles/sitecss.css">
+	  <link rel="stylesheet" href="../../assets/styles/dashboard.css">
     <title>Performance</title>
     <style>
         .card {
@@ -392,7 +391,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
 
     <!-- NAVBAR -->
     <?php
-    include __DIR__ . "/includes/header_business.php";
+    include __DIR__ . "/includes/header_business_logged.php";
     ?>
     <!-- SIDEBAR -->
     <?php
