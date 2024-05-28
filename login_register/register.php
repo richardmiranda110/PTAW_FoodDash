@@ -24,16 +24,36 @@ if (isset($_SESSION['authenticated'])) {
   <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
 
   <!-- Formulário de registo -->
-  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 20vh;">
+  <div class="container d-flex align-items-center justify-content-center" style="margin-top: 17vh;">
     <form action="registerValidation.php" method="POST" id="registoForm" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center;">Registar</h1><br>
-      <div class="form-floating mb-1">
-        <input type="text" class="form-control" id="inputName" name="inputName" placeholder="name@example.com" required>
-        <label for="inputName">Nome</label>
+      <div class="d-flex">
+        <div class="form-floating mb-1">
+          <input type="text" class="form-control" id="inputName" name="inputName" placeholder="name@example.com" required>
+          <label for="inputName">Nome</label>
+        </div>
+        <div class="form-floating mb-1" style="margin-left: 0.3vw;">
+          <input type="text" class="form-control" id="inputApelido" name="inputApelido" placeholder="name@example.com" required>
+          <label for="inputName">Apelido</label>
+        </div>
       </div>
       <div class="form-floating mb-1">
         <input type="text" class="form-control" id="inputMorada" name="inputMorada" placeholder="name@example.com" required>
         <label for="inputMorada">Morada</label>
+      </div>
+      <div class="d-flex">
+        <div class="form-floating mb-1">
+          <input type="text" class="form-control" id="inputCP" name="inputCP" placeholder="XXXX-YYY" required>
+          <label for="inputName">Código Postal</label>
+        </div>
+        <div class="form-floating mb-1" style="margin-left: 0.3vw;">
+          <input type="text" class="form-control" id="inputCidade" name="inputCidade" placeholder="name@example.com" required>
+          <label for="inputName">Cidade</label>
+        </div>
+      </div>
+      <div class="form-floating mb-1">
+        <input type="tel" class="form-control" id="inputTele" name="inputTele" placeholder="XXXXXXXXX" maxlength="9" required>
+        <label for="inputTele">Telemóvel</label>
       </div>
       <div class="form-floating mb-1">
         <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" required>
