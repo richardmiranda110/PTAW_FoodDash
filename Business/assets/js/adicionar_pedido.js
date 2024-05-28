@@ -479,7 +479,7 @@ async function fetchData(categoria = null){
   return response.json();
 }
 
-function generateItemData(foto_url,id = null){
+function generateItemData(foto_url,id){
   let itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
   let isPersonalized = getCheckboxValue("personalizacoesativas").value;
   itemType += isPersonalized == "true" ? "-personalizado" : "";
@@ -635,7 +635,7 @@ event.preventDefault();
   }else{
     const picture = await uploadPicture(files);
     // returns object with image already attached
-    data = generateItemData(picture);
+    data = generateItemData(picture,-1);
   }
 
   const createItemTask = await postJSON("./inserir_item.php",data);

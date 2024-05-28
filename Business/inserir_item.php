@@ -77,7 +77,7 @@ abstract class AbstractItem {
     public string $categoria;
     public int $item_id;
 
-    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$item_id) {
+    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$item_id = -1) {
         $this->nome = $nome;
         $this->preco = $preco;
         $this->descricao = $descricao;
@@ -132,8 +132,8 @@ class SingleItem extends AbstractItem {
     public function createDatabaseEntry() {
         global $pdo;
         global $idEmpresa;
-        echo $this->item_id;    
-        if($this->item_id != null){
+
+        if($this->item_id != -1){
             $query =
             "UPDATE itens
                 SET
@@ -164,18 +164,17 @@ class SingleItem extends AbstractItem {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $pdo->prepare($query);
-            //$response =
-            // $stmt->execute([
-            // $this->nome,$this->preco,
-            // $this->descricao,$this->disponivel ? 1:0,
-            // $this->foto,1, 0,
-            // $this->categoria, $_SESSION['id_estabelecimento']]);
-            echo "hio";
-            // if($response == false)
-            //     throw new Exception("Não foi possivel efetuar a operação");
+            $response =
+            $stmt->execute([
+            $this->nome,$this->preco,
+            $this->descricao,$this->disponivel ? 1:0,
+            $this->foto,1, 0,
+            $this->categoria, $_SESSION['id_estabelecimento']]);
+            if($response == false)
+                throw new Exception("Não foi possivel efetuar a operação");
         }
-
-        $this->item_id = $this->getId();
+        if($this->item_id == -1)
+            $this->item_id = $this->getId();
     }
 }
 
@@ -223,7 +222,7 @@ class ItemPersonalized extends AbstractItem {
         global $pdo;
         global $idEmpresa;
 
-        if($this->id_item == null){
+        if($this->id_item != -1){
             $this->id_item = $this->getId();
         }
 
