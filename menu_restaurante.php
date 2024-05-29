@@ -41,7 +41,7 @@ include __DIR__."/includes/insertPedido.php";
 	$idCliente=$_SESSION['id_cliente'];
   }
   
-  //$idCliente = 1;
+  $idCliente = 1;
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
@@ -264,7 +264,7 @@ include __DIR__."/includes/insertPedido.php";
                 //<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>
 				echo "
 				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
-				<form method='POST'  enctype='multipart/form-data' action=''>
+				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEstabelecimento."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_item']."'>
@@ -272,7 +272,7 @@ include __DIR__."/includes/insertPedido.php";
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
 					<input type='hidden' name='idForm' id='idForm' value='insertPedido'>
 					
-					<div id='liveToast_" .$idProd. "' class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-bs-autohide='false' style='width: 40vw; max-height: 95vh; overflow-y: auto;'>
+					<div id='liveToast_" .$idProd. "' class='toast' role='alert' aria-live='assertive' aria-atomic='true' data-bs-autohide='false' style='width: 40vw; max-height: 95vh; overflow-y: auto; padding-bottom: 10px;'>
 					<div class='toast-header'>
 						<img src='./assets/stock_imgs/burgerKing_marca.png' class='rounded me-2' alt='logotipo' style='width: 1.5vw;'>
 						<strong class='me-auto'>" . htmlspecialchars($rowProd['nome']) . "</strong>
@@ -302,22 +302,25 @@ include __DIR__."/includes/insertPedido.php";
 						";
 						
 					foreach ($opcoes as $rowop) {
-						echo "<div class='form-check form-check-reverse'>
-						<input style='float: left; width: 5%; height: 25px; margin-right: 10px; margin-top: -1px;' class='form-check-input' type='checkbox' name='opcaos[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."' checked>	
-							<label style='float: left; width: 70%;' class='form-check-label d-flex justify-content-start' for='opcao_".$rowop['id_opcao']."'>".$rowop['nome']."</label>
-													
-							<input style='float: left; width: 20%;' class='form-control' type='number' name='quantidade_".$rowop['id_opcao']."' id='quantidade_".$rowop['id_opcao']."' min='1' max='".$rowop['max_quantidade']."' value=1>
-						</div>";
+						echo "<div class='form-check form-check-reverse product-item' style='display: flex; '>
+						<input style=' width: 5%; height: 25px; margin-right: 10px; margin-top: -1px;' class='form-check-input' type='checkbox' name='opcaos[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."' checked>	
+							<label style=' width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$rowop['id_opcao']."'>".$rowop['nome']."</label>													
+							<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$rowop['id_opcao']."' id='quantidade_".$rowop['id_opcao']."' min='1' max='".$rowop['max_quantidade']."' value=1>
+							<label style=' width: 10%; margin-left:2%; margin-bottom:1%;' class='form-check-label d-flex justify-content-start price-field' name='preco_".$rowop['id_opcao']."' id='preco_".$rowop['id_opcao']."' for='opcao_".$rowop['preco']."' value='opcao_".$rowop['preco']."'>".$rowop['preco']." €</label>	
+						</div>
+						";
+						
+						
 					}
-						}
+						} 
 					;
 					echo "</div></div>
 						<div class='d-flex justify-content-center mt-2'>";
 						if ($idCliente > 0) {
-					echo 	"<input class='btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho • " . $rowProd['preco'] . "€'> ";
+					echo 	"<label class=' btn btn-primary btn-lg' type='submit'> Adicionar ao carrinho • <span class='total-container' id='totalPedido'>" . $rowProd['preco'] . " </span> €</label> ";
 						}
+						
 					echo "</div>
-					
 					</div>
 				</div>
 				";
@@ -326,6 +329,7 @@ include __DIR__."/includes/insertPedido.php";
             echo "  </div>
 			</form>
             </div>
+
         </div>";
             }
 
@@ -452,6 +456,32 @@ include __DIR__."/includes/insertPedido.php";
       console.log("Comentário: " + comentario);
 
     }
+	
+	
+	//Adicionar/atualizar valor do pedido
+	const quantityInputs = document.querySelectorAll('.quantity-field');
+
+	quantityInputs.forEach(quantityInput => {
+
+	  quantityInput.addEventListener('click', function() {
+
+		const productId = this.id.split('_')[1];  // Extract product ID from element ID
+		const productPrice = parseFloat(document.getElementById('preco_' + productId).textContent.slice(1, -1));
+
+		const quantity = parseInt(this.value, 10); // Convert quantity to integer
+		const subtotal = productPrice * quantity;
+
+		// Update individual product subtotal (optional)
+		// document.getElementById(`subtotal_${productId}`).textContent = `Subtotal: €${subtotal.toFixed(2)}`; // Assuming a subtotal element exists
+
+		// Update total price
+		const currentTotal = parseFloat(getElementById('totalPedido').textContent.slice(1, -1));
+		currentTotal += subtotal;
+		alert(currentTotal);
+		alert(currentTotal);
+		totalElement.textContent = currentTotal.toFixed(2);
+	  });
+	});
   </script>
 
   <script src="./assets/js/toast.js"></script>
