@@ -14,8 +14,11 @@ $morada = $_POST['inputEndereco'];
 $email = $_POST['inputEmail'];
 $telemovel = $_POST['inputTel'];
 $tipo = $_POST['tipo'];
+$taxa = $_POST['inputTaxa'];
+$tempo = $_POST['inputTempo'];
 $pass = $_POST['inputPassword'];
 $repetirpass = $_POST['inputRepetirPassword'];
+
 
 try {
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM empresas WHERE email = :email");
@@ -32,6 +35,8 @@ try {
         exit();
     }
 
+    $pdo->beginTransaction();
+
     $stmt = $pdo->prepare("INSERT INTO empresas (nome, morada, email, telemovel, tipo, password) VALUES (:nome, :morada, :email, :telemovel, :tipo, :palavrachave)");
     $stmt->bindParam(':nome', $name);
     $stmt->bindParam(':morada', $morada);
@@ -41,8 +46,22 @@ try {
     $stmt->bindParam(':palavrachave', $hashedPass);
     $stmt->execute();
 
+    $id_empresa = $pdo->lastInsertId();
+
+    $stmt = $pdo->prepare("INSERT INTO estabelecimentos (nome, localizacao, telemovel, taxa_entrega, tempo_medio_entrega, id_empresa) VALUES (:nome, :localizacao, :telemovel, :taxa_entrega, :tempo_medio_entrega, :id_empresa)");
+    $stmt->bindParam(':nome', $name);
+    $stmt->bindParam(':localizacao', $morada);
+    $stmt->bindParam(':telemovel', $telemovel);
+    $stmt->bindParam(':taxa_entrega', $taxa);
+    $stmt->bindParam(':tempo_medio_entrega', $tempo);
+    $stmt->bindParam(':id_empresa', $id_empresa);
+    $stmt->execute();
+
+    $pdo->commit();
+
     $_SESSION['success_message'] = "Registado com sucesso!";
     header('Location: ' . $_SERVER['HTTP_REFERER']);
 } catch(PDOException $e) {
+    $pdo->rollBack();
     echo "Erro ao inserir registo: " . $e->getMessage();
 }

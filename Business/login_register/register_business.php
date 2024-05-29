@@ -68,6 +68,16 @@ if (isset($_SESSION['authenticatedB'])) {
           <option value="bebidas">Bedidas</option>
         </select>
       </div>
+      <div class="d-flex">
+        <div class="form-floating mb-1">
+          <input type="number" class="form-control" id="inputTaxa" name="inputTaxa" placeholder="name@example.com" min="0" step=".01" required>
+          <label for="inputTaxa">Taxa de entrega (€)</label>
+        </div>
+        <div class="form-floating mb-1" style="margin-left: 0.3vw;">
+          <input type="text" class="form-control" id="inputTempo" name="inputTempo" placeholder="name@example.com" required>
+          <label for="inputTempo" style="font-size: 0.8vw;">Tempo médio de entrega</label>
+        </div>
+      </div>
       <div class="form-floating mb-1">
         <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password" required>
         <label for="inputPassword">Password</label>
@@ -154,6 +164,32 @@ if (isset($_SESSION['authenticatedB'])) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var inputTempo = document.getElementById('inputTempo');
+
+      inputTempo.value = "hh:mm:ss";
+
+      inputTempo.addEventListener('focus', function () {
+        if (inputTempo.value === "hh:mm:ss") {
+            inputTempo.setSelectionRange(0, 8);
+        }
+      });
+    });
+
+    document.getElementById('registoForm').addEventListener('submit', function(event) {
+      var value_time = document.getElementById("inputTempo").value;
+      var regex_time = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+
+      if (regex_time.test(value_time)) {
+        console.log("Valid! " + value_time);
+      } else {
+        console.error("Invalid!");
+        alert("Formato inválido. Use hh:mm:ss. hh(00 a 23) / mm e ss(00 a 59");
+        document.getElementById("inputTempo").value = "hh:mm:ss";
+        event.preventDefault(); // Impede o envio do formulário
+      }
+    });
+
     document.querySelector("input#mostrarPasswordCheckbox").addEventListener("click", mostrarPassword)
     function mostrarPassword() {
       let passwordInput = document.getElementById("inputPassword");
