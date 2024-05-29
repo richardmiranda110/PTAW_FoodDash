@@ -132,55 +132,58 @@ class SingleItem extends AbstractItem {
     public function createDatabaseEntry() {
         global $pdo;
         global $idEmpresa;
+        try{
+            if($this->item_id != -1){
+                $query =
+                "UPDATE itens
+                    SET
+                    nome = :nome,
+                    preco = :preco,
+                    descricao = :descricao,
+                    disponivel = :disponivel,
+                    foto = :foto,
+                    id_categoria = :id_categoria
+                    WHERE id_item = :id_item;";
 
-        if($this->item_id != -1){
-            $query =
-            "UPDATE itens
-                SET
-                nome = :nome,
-                preco = :preco,
-                descricao = :descricao,
-                disponivel = :disponivel,
-                foto = :foto,
-                id_categoria = :id_categoria
-                WHERE id_item = :id_item;";
+                $stmt = $pdo->prepare($query);
+                $stmt->bindValue(":nome", $this->nome);
+                $stmt->bindValue(":preco", $this->preco);
+                $stmt->bindValue(":descricao", $this->descricao);
+                $stmt->bindValue(":disponivel", $this->disponivel ? 1:0);
+                $stmt->bindValue(":foto", $this->foto);
+                $stmt->bindValue(":id_categoria", $this->categoria);
+                $stmt->bindValue(":id_item", $this->item_id);
+                $stmt->execute();
+            }else  if ($this->checkExistence() == false ) {
+                $query = "INSERT INTO itens(
+                    nome, preco,
+                    descricao, disponivel, foto,
+                    itemsozinho, personalizacoesativas,
+                    id_categoria, id_estabelecimento)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            $stmt = $pdo->prepare($query);
-            $stmt->bindValue(":nome", $this->nome);
-            $stmt->bindValue(":preco", $this->preco);
-            $stmt->bindValue(":descricao", $this->descricao);
-            $stmt->bindValue(":disponivel", $this->disponivel ? 1:0);
-            $stmt->bindValue(":foto", $this->foto);
-            $stmt->bindValue(":id_categoria", $this->categoria);
-            $stmt->bindValue(":id_item", $this->item_id);
-            $stmt->execute();
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([
+                $this->nome,$this->preco,
+                $this->descricao,$this->disponivel ? 1:0,
+                $this->foto,1, 0,
+                $this->categoria, $_SESSION['id_estabelecimento']]);
 
-        }else  if ($this->checkExistence() == false ) {
-            $query = "INSERT INTO itens(
-                nome, preco,
-                descricao, disponivel, foto,
-                itemsozinho, personalizacoesativas,
-                id_categoria, id_estabelecimento)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $this->item_id = $this->getId();
 
-            $stmt = $pdo->prepare($query);
-            $stmt->execute([
-            $this->nome,$this->preco,
-            $this->descricao,$this->disponivel ? 1:0,
-            $this->foto,1, 0,
-            $this->categoria, $_SESSION['id_estabelecimento']]);
+                $query = "INSERT INTO item_categorias(id_item, id_categoria)
+                    VALUES (?,?)";
 
-            $this->item_id = $this->getId();
-
-            $query = "INSERT INTO item_categorias(id_item, id_categoria)
-                VALUES (?,?)";
-
-            $stmt = $pdo->prepare($query);
-            $stmt->execute([
-            $this->item_id,$this->categoria]);
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([
+                $this->item_id,$this->categoria]);
+            }
+            if($this->item_id == -1)
+                $this->item_id = $this->getId();
+        } catch(PDOException $e) {
+            $pdo->rollBack();
+            echo "Erro ao inserir registo: " . $e->getMessage();
         }
-        if($this->item_id == -1)
-            $this->item_id = $this->getId();
     }
 }
 
@@ -191,7 +194,7 @@ class ItemPersonalized extends AbstractItem {
         parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id);
 
         foreach($opcoes as $op){
-            $option = new Opcao($op['nome'],$op['preco'],$op['max_quantidade']);
+            $option = new Opcao($op['nome'],$op['preco'],$op['max_quantidade'],$op['id']);
             array_push($this->options,$option);
         }
     }
@@ -201,59 +204,80 @@ class ItemPersonalized extends AbstractItem {
         global $pdo;
         global $idEmpresa;
 
-        if ($this->checkExistence() == false) {
-            $query = "INSERT INTO itens(
-                nome, preco,
-                descricao, disponivel, foto,
-                itemsozinho, personalizacoesativas,
-                id_categoria, id_estabelecimento)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try{
+            if ($this->checkExistence() == false) {
+                $query = "INSERT INTO itens(
+                    nome, preco,
+                    descricao, disponivel, foto,
+                    itemsozinho, personalizacoesativas,
+                    id_categoria, id_estabelecimento)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            $stmt = $pdo->prepare($query);
-            $stmt->execute([
-            $this->nome,$this->preco,
-            $this->descricao,$this->disponivel == "true" ? 1:0 ,
-            $this->foto,1, 1,
-            $this->categoria, $_SESSION['id_estabelecimento']]);
-        }
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([
+                $this->nome,$this->preco,
+                $this->descricao,$this->disponivel == "true" ? 1:0 ,
+                $this->foto,1, 1,
+                $this->categoria, $_SESSION['id_estabelecimento']]);
+            }
 
-        $this->id_item = $this->getId();
+            $this->id_item = $this->getId();
 
-        foreach($this->options as $option){
-            $this->createOptionEntry($option);
+            foreach($this->options as $option){
+                $this->createOptionEntry($option);
+            }
+        } catch(PDOException $e) {
+            $pdo->rollBack();
+            echo "Erro ao inserir registo: " . $e->getMessage();
         }
     }
 
     private function createOptionEntry($option){
         global $pdo;
         global $idEmpresa;
+        try{
+            if($this->id_item != -1){
+                $this->id_item = $this->getId();
+            }
 
-        if($this->id_item != -1){
-            $this->id_item = $this->getId();
+            if($this->checkOptionExistence($option,$this->id_item) == true){
+                $query =
+                "UPDATE opcoes
+                    SET
+                    nome = :nome,
+                    max_quantidade = :max_quantidade,
+                    preco = :preco
+                    WHERE id_opcao = :id_opcao";
+
+                $stmt = $pdo->prepare($query);
+                $stmt->bindValue(":id_opcao", $option->id_item);
+                $stmt->bindValue(":max_quantidade", $option->max_quantidade);
+                $stmt->bindValue(":nome", $option->nome);
+                $stmt->bindValue(":preco", $option->preco);
+                $stmt->execute();
+            }else{
+                $query =
+                "INSERT INTO opcoes
+                    (nome, max_quantidade, preco, id_item)
+                    VALUES ( ?, ?, ?, ?);";
+        
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([
+                $option->nome,$option->max_quantidade,
+                $option->preco,$this->id_item]);
+            }
+        } catch(PDOException $e) {
+            $pdo->rollBack();
+            echo "Erro ao inserir registo: " . $e->getMessage();
         }
-
-        if($this->checkOptionExistence($option,$this->id_item) == true){
-            return;
-        }
-
-        $query =
-        "INSERT INTO opcoes
-            (nome, max_quantidade, preco, id_item)
-            VALUES ( ?, ?, ?, ?);";
-
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([
-        $option->nome,$option->max_quantidade,
-        $option->preco,$this->id_item]);
     }
-
 
     function checkOptionExistence($option,$id_item){
         global $pdo;
 
         $stmt = $pdo->prepare("SELECT count(*)
-        FROM public.opcoes where nome = ? and max_quantidade = ? and preco = ? and id_item = ?;");
-        $stmt->execute([$option->nome,$option->max_quantidade,$option->preco,$option->id_item]);
+        FROM public.opcoes where id_opcao = ?;");
+        $stmt->execute([$option->id_item]);
         $count = $stmt->fetchColumn();
 
         return $count > 0;
@@ -265,7 +289,6 @@ class Bundle extends AbstractItem {
     public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$itens,$id) {
         parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id);
         foreach($itens['items'] as $item){
-            // $itemObject = ItemFactory::createItem($item['tipo'],$item['dados']);
             array_push($this->itens,$item);
         }
     }
@@ -275,42 +298,68 @@ class Bundle extends AbstractItem {
         global $pdo;
         global $idEmpresa;
 
-        $query = "INSERT INTO menus(
-            nome, preco, descricao, disponivel, foto, id_estabelecimento)
-            VALUES ( ?, ?, ?, ?, ?, ?)";
+        try{
+            $query = "INSERT INTO menus(
+                nome, preco, descricao, disponivel, foto, id_estabelecimento)
+                VALUES ( ?, ?, ?, ?, ?, ?)";
 
-        if ($this->checkExistence() == false) {
-            $stmt = $pdo->prepare($query);
-            $stmt->execute(
-                [$this->nome,$this->preco,
-                $this->descricao,$this->disponivel == "true" ? 1:0,
-                $this->foto,$_SESSION['id_estabelecimento']]);
-        }
+            if ($this->checkExistence() == false) {
+                $stmt = $pdo->prepare($query);
+                $stmt->execute(
+                    [$this->nome,$this->preco,
+                    $this->descricao,$this->disponivel == "true" ? 1:0,
+                    $this->foto,$_SESSION['id_estabelecimento']]);
+            }
 
-        $this->item_id = $this->getId();
+            $this->item_id = $this->getId();
 
-        foreach($this->itens as $item){
-            $this->createItemEntry($item['id']);
+            foreach($this->itens as $item){
+                $this->createBundleItemEntry($item['id']);
+            }
+        } catch(PDOException $e) {
+            $pdo->rollBack();
+            echo "Erro ao inserir registo: " . $e->getMessage();
         }
     }
 
-    protected function createItemEntry($item_id){
+    private function createBundleItemEntry($new_item_id){
         global $pdo;
+        global $idEmpresa;
+        
+        if($this->item_id != -1){
+            $this->id_item = $this->getId();
+        }
 
-        $query="INSERT INTO item_menus(
-            id_item, id_menu)
-            VALUES (?, ?)";
+        if($this->checkBundleItemExistence($new_item_id) == true){
+            return;
+        }
+
+        $query =
+        "INSERT INTO item_menus
+            (id_item, id_menu)
+            VALUES ( ?, ?);";
+
         $stmt = $pdo->prepare($query);
-        $stmt->execute(
-            [$item_id,$this->item_id]);
+        $stmt->execute([$this->item_id,$new_item_id]);
     }
 
     protected function checkExistence(){
         global $pdo;
 
         $stmt = $pdo->prepare("SELECT count(*)
-        FROM menus where nome = ? and preco = ? and foto = ?;");
-        $stmt->execute([$this->nome,$this->preco,$this->foto]);
+        FROM menus where nome = ? and preco = ? and foto = ? and descricao = ? and id_estabelecimento = ?;");
+        $stmt->execute([$this->nome,$this->preco,$this->foto,$this->descricao,$_SESSION['id_estabelecimento']]);
+        $count = $stmt->fetchColumn();
+
+        return $count > 0;
+    }
+
+    function checkBundleItemExistence($id_item){
+        global $pdo;
+
+        $stmt = $pdo->prepare("SELECT count(*)
+        FROM public.item_menus where id_item = ? and id_menu = ?;");
+        $stmt->execute([$id_item,$this->item_id]);
         $count = $stmt->fetchColumn();
 
         return $count > 0;
@@ -318,8 +367,7 @@ class Bundle extends AbstractItem {
 
     protected function getId(){
         global $pdo;
-        //$this->categoria,
-        //and id_categoria = ?
+
         $id_query = "SELECT
         id_menu FROM menus
         where nome = ?
@@ -351,10 +399,6 @@ class Opcao {
         $this->preco = $preco;
         $this->max_quantidade = $max_quantidade;
         $this->id_item = $id_item;
-
-        if($id_item != -1){
-            $this->option_id = $this->getId();
-        }
     }
 
     function getId(){

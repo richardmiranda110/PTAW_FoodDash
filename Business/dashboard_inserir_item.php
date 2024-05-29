@@ -11,7 +11,13 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SES
     exit();
 }
 $update = false;
-if(isset($_GET['id'])){
+
+// set_error_handler(function() {
+//   exit("invalid item id!!");
+// });
+
+
+if(isset($_GET['itemid'])){
   $update = true;
   $query =  
   "SELECT id_item, item.nome, preco,
@@ -26,36 +32,76 @@ if(isset($_GET['id'])){
   where item.id_item = ? and item.id_estabelecimento = ".$_SESSION['id_estabelecimento']."";
 
   $stmt = $pdo->prepare($query);
-  $stmt->execute([$_GET['id']]);
-
+  $stmt->execute([$_GET['itemid']]);
   $item = $stmt->fetch(PDO::FETCH_ASSOC);
 
-  set_error_handler(function() {
-    exit("you cant edit other people's items!");
-  });
-
   $type = "item";
-
-  if( $item["personalizacoesativas"] )
-    $type = $type.'-personalized';
-  else if($item["itemsozinho"] == false){
-    $type = "menu";
+  if( $item["personalizacoesativas"] ){
+    $type = $type.'-personalizado';
   }
+
+  if($type == "item-personalizado"){
+    $query =  
+    "SELECT opcao.id_opcao as id, opcao.nome as nome, opcao.max_quantidade , opcao.preco
+    FROM public.opcoes opcao 
+    INNER JOIN itens item ON opcao.id_item = item.id_item
+	  where item.id_item = ? and item.id_estabelecimento = ?";
+  
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$_GET['itemid'],$_SESSION['id_estabelecimento']]);
+  
+    $personalizacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  } else if(isset($_GET['menuid'])){
+    $update = true;
+    $query =  
+    "SELECT id_menu, nome, preco,
+    descricao, disponivel, foto
+    FROM menus menu 
+    where menu.id_menu = ? and menu.id_estabelecimento = ?";
+  
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$_GET['itemid'],$_SESSION['id_estabelecimento']]);
+  
+    $menu = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+    if($type == "menu"){
+      $query =  
+      "SELECT im.id_item
+      FROM public.menus menu 
+      INNER JOIN item_menus im 
+      ON menu.id_menu = im.id_menu
+      where menu.id_menu = ? and menu.id_estabelecimento = ?";
+    
+      $stmt = $pdo->prepare($query);
+      $stmt->execute(
+        [$_GET['idmenu'],
+        $_SESSION['id_estabelecimento']
+      ]);
+    
+      $menuitems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
+if(isset($item)){
   $final_item = array(
-      "id" => $item["id_item"],
-      "tipo" => $type,
-      "idEstabelecimento" => $_SESSION['id_estabelecimento'],
-      "dados" => array(
-        "tem_personalizacoes" => $item["personalizacoesativas"],
-        "bundle" => $item["itemsozinho"],
-        "disponivel" => $item["disponivel"],
-        "nome" => $item["nome"],
-        "categoria" => $item['id_categoria'],
-        "categoria_nome" => $item["categoria"],
-        "preco" => $item["preco"],
-        "descricao" => $item["descricao"],
-        "foto" => $item["foto"]
-      )
+    "id" => $item["id_item"],
+    "tipo" => $type,
+    "idEstabelecimento" => $_SESSION['id_estabelecimento'],
+    "dados" => array(
+      "tem_personalizacoes" => $item["personalizacoesativas"],
+      "bundle" => $item["itemsozinho"],
+      "disponivel" => $item["disponivel"],
+      "nome" => $item["nome"],
+      "categoria" => $item['id_categoria'],
+      "categoria_nome" => $item["categoria"],
+      "preco" => $item["preco"],
+      "descricao" => $item["descricao"],
+      "foto" => $item["foto"],
+      "personalizacoes" => (isset($personalizacoes) ? $personalizacoes : null),
+      "menu_itens" =>(isset($menuitems) ? $menuitems : null)
+    )
   );
 }
 ?>
@@ -99,17 +145,17 @@ if(isset($_GET['id'])){
         <form action="" method="post" enctype="multipart/form-data" id="dataForm">
           <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa);?>">
 
-          <div class="mb-3">
+          <div class="mb-3 col-md-10">
             <label for="nome" class="form-label">Nome</label>
             <input type="text" class="form-control " id="nome" name="nome" value="<?php echo ($update ? htmlspecialchars($item['nome']) : "")?>" placeholder="Nome do item" required>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3 col-md-10">
             <label for="foto" class="form-label">Foto</label>
             <input type="file" class="form-control" id="foto" name="foto" file="" accept="image/*" <?php echo ($update ? "" : "required") ?>>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3 col-md-10">
             <label for="descricaoForm1" class="purple-text">Descrição</label>
             <div class="form-group w-100">
               <textarea placeholder="Introduza Descrição" class="form-control w-100" id="descricao"  name="descricao" rows="3"><?php if($update) echo htmlspecialchars($item['descricao']) ?></textarea>
@@ -123,7 +169,7 @@ if(isset($_GET['id'])){
             $stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             echo "
-              <div class='mb-3' id='categoria-container'>
+              <div class='mb-3 col-md-3' id='categoria-container'>
                 <p class='fw-bold purple-text'>Categoria</p>
                 <select class='mb-5 form-select' name='idcategoria' id='idcategoria'>";
             if(count($stmt) == 0){

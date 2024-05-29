@@ -35,12 +35,12 @@ var list_columns = [ 'Nome', 'Itens',''];
 var items = [];
 
 
-const response = fetch('http://localhost/business/lista_categorias.php?idEmpresa='+idEmpresa+'')
+const response = fetch('http://localhost/business/lista_categorias.php')
   .then(response => response.json())
   .then(data => {
     for(let item of data){
       items.push(item);
-      rows.push([ item.nome,item.count+" item",item.id_categoria]);
+      rows.push([ item.nome,item.count + (item.count == 1 ? " item" : " itens"),item.id_categoria]);
     }
     return rows;
   })
@@ -54,7 +54,7 @@ const response = fetch('http://localhost/business/lista_categorias.php?idEmpresa
     };
 
 	  dable.BuildAll("DefaultDable"); 
-  }).catch((error) => console.error('Error:', error));
+  }).catch((error) => console.error('Error:', error))
 	
 
 document.addEventListener('click', event => {
@@ -66,9 +66,8 @@ document.addEventListener('click', event => {
 function performDelete(element){
   const cellValue =  element.getAttribute("cellValue");
   const rownumber =  element.getAttribute("data-rownumber");
-  const request = fetch("/Business/lista_categorias.php?idEmpresa="+idEmpresa+"&delete="+cellValue);
-  request.then(reply => {
-    console.log(reply);
+  const request = fetch("/Business/lista_categorias.php?delete="+cellValue);
+  request.then(_ => {
     dable.DeleteRow(rownumber);
   });
 }
@@ -88,10 +87,9 @@ function editItem(element) {
   var rowNumber = element.getAttribute('data-rownumber');
 
   const item = items[rowNumber];
-  window.open(`../dashboard_adicionar_pedido.php?id=${item.id_item}         `);
+  window.open(`../dashboard_adicionar_pedido.php?id=${item.id_item}`);
 
 }
-
 
 function showTextModal(text){
   const container = document.createElement("div");

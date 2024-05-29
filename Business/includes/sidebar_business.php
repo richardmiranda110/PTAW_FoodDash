@@ -3,7 +3,7 @@
 		<ul class="nav nav-pills flex-column mb-auto nav-item-container ">
 			<!-- Home -->
 			<li class="nav-item">
-				<a href="<?php echo __DIR__; ?>../../dashboard_home_page.php" class="nav-link active" aria-current="page">
+				<a href="/business/dashboard_home_page.php" class="nav-link active" aria-current="page">
 					<span class="bi bi-house-door-fill">
 						Home
 					</span>
@@ -13,7 +13,7 @@
 
 			<!-- Loja -->
 			<li>
-				<a href="<?php echo __DIR__; ?>../../empresa_page.php" class="nav-link">
+				<a href="/business/empresa_page.php" class="nav-link">
 					<span class="bi-person-vcard"></span>
 					<span class="bi bi-shop">
 						Loja
@@ -23,7 +23,7 @@
 
 			<!-- Pedidos -->
 			<li>
-				<a href="<?php echo __DIR__; ?>../../listapedidos.php" class="nav-link">
+				<a href="/business/listapedidos.php" class="nav-link">
 					<span class="bi-card-list"></span>
 					<span class="bi has-text-grey">
 						Pedidos
@@ -33,7 +33,7 @@
 
 			<!-- Performance -->
 			<li>
-				<a href="<?php echo __DIR__; ?>../../performance.php" class="nav-link">
+				<a href="/business/performance.php" class="nav-link">
 					<span class="bi-graph-up"></span>
 					<span class="bi has-text-grey">
 						Performance
@@ -43,7 +43,7 @@
 
 			<!-- Avaliações -->
 			<li>
-				<a href="<?php echo __DIR__; ?>../../avaliacoes.php" class="nav-link">
+				<a href="/business/avaliacoes.php" class="nav-link">
 					<span class="bi bi-stars"></span>
 					<span class="bi has-text-grey">
 						Avaliações
@@ -53,7 +53,7 @@
 
 			<!-- Menu -->
 			<li>
-				<a href="<?php echo __DIR__; ?>../../dashboard_lista_items.php" class="nav-link">
+				<a href="/business/dashboard_lista_items.php" class="nav-link">
 					<span class=""></span>
 					<span class="bi has-text-grey">
 						Menu

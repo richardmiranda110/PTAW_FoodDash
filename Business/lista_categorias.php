@@ -8,18 +8,13 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
     exit();
   }
 
-$idEmpresa = $_GET['idEmpresa'];
-
-if($idEmpresa != $_SESSION['id_empresa']){
-    exit("You cant access other people's list!");
-}
+$idEmpresa = $_SESSION['id_empresa'];
 
 if(isset($_GET['delete'])){
     $stmt = $pdo->prepare("DELETE FROM categorias WHERE id_categoria = ? and id_empresa = ?");
     $stmt->execute([$_GET['delete'],$idEmpresa]);
     exit();
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     $query =  

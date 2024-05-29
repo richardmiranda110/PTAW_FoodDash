@@ -15,12 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // retrieve establishment id
-$idEstabelecimento = $_GET['idEstabelecimento'];
-
-// check if using the right one, for security reasons
-if($idEstabelecimento != $_SESSION['id_estabelecimento']){
-    exit("You cant access other people's Items!");
-}
+$idEstabelecimento = $_SESSION['id_estabelecimento'];
 
 if(isset($_GET['delete'])){
     $stmt = $pdo->prepare("DELETE FROM itens WHERE id_item = ? and id_estabelecimento = ?");
@@ -49,7 +44,7 @@ function listarTodosItems($idEmpresa){
     foto, itemsozinho, 
     personalizacoesativas,
     c.nome as categoria, 
-    c.id_categoria, id_estabelecimento
+    c.id_categoria as categoria_id, id_estabelecimento
     FROM public.itens item 
     INNER JOIN categorias c 
     ON item.id_categoria = c.id_categoria
@@ -76,6 +71,7 @@ function listarTodosItems($idEmpresa){
             "nome" => $item["nome"],
             "menus" => implode(',',getMenus($item["id_item"])),
             "categoria" => $item["categoria"],
+            "categoria_id" => $item["categoria_id"],
             "preco" => $item["preco"],
             "descricao" => $item["descricao"],
             "foto_url" => $item["foto"],
@@ -112,7 +108,7 @@ function listarItem($idItem){
     personalizacoesativas,
     menu.nome as menu
     c.nome as categoria, 
-    c.id_categoria
+    c.id_categoria as categoria_id
     FROM public.itens item 
     INNER JOIN categorias c 
     ON item.id_categoria = c.id_categoria
@@ -132,6 +128,7 @@ function listarItem($idItem){
         "disponivel" => $item["disponivel"],
         "nome" => $item["nome"],
         "categoria" => $item["categoria"],
+        "categoria_id" => $item["categoria_id"],
         "preco" => $item["preco"],
         "descricao" => $item["descricao"],
         "foto_url" => $item["foto"],

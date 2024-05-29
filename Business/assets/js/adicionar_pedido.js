@@ -77,6 +77,24 @@ importDable.style = 'CulpaDoRichard';
 // tabela de personalizar item
 var costumizationDable = new Dable();
 
+document.addEventListener("DOMContentLoaded", (event) => {
+  if(updateMode){
+    menuBox.remove();
+    personalizacoesBox.remove();
+  
+    if(updateObject.tipo == 'item-personalizado'){
+      personalizacoesContainer.style.display = 'block';
+      configureCostimizationDable();
+      itemName.innerHTML = updateObject.dados.nome;
+
+      for(let prop of updateObject.dados.personalizacoes)
+        costumizationDable.AddRow([prop.nome,prop]);
+    }else if( updateObject.tipo == 'menu'){
+      complementoContainer.style.display = 'block';
+    }
+  }
+});
+
 itemSozinhoForm.onclick = _ => {
     // Pegar na radiobox que esteja selecionada
     const isMenu = getCheckboxValue("itemsozinho");
@@ -211,9 +229,12 @@ function gerarTabelaCategoria(nomeCategoria){
 
 function deleteOption(element){
  const dable = costumizationDable;
-
  const rownumber = element.getAttribute("data-rownumber");
- dable.DeleteRow(rownumber);
+ const itemId = getCostumizationObject(rownumber).id;
+
+ fetch("/Business/lista_opcoes.php?deleteoption="+itemId).then(_ => {
+  dable.DeleteRow(rownumber);
+ });
 }
 
 function addItem(element){
@@ -222,7 +243,7 @@ function addItem(element){
  
   const rownumber =  element.getAttribute("data-rownumber");
   const item = itemList[rownumber];
-  dable.AddRow([item.nome,item.count]);
+  dable.AddRow([item.nome,item]);
  }
  
 
@@ -230,14 +251,28 @@ function performDelete(element){
   const dableId =  element.getAttribute("dable-id")
   const dable = buttonDableMap.get(dableId);
  
-  const rownumber =  element.getAttribute("data-rownumber");
+  const rownumber = element.getAttribute("data-rownumber");
   dable.DeleteRow(rownumber);
+}
+
+function deleteMenuItem(element){
+  const dable = costumizationDable;
+  const rownumber = element.getAttribute("data-rownumber");
+  const itemId = getCostumizationObject(rownumber).id;
+ 
+  fetch("/Business/lista_opcoes.php?deletemenuitem="+itemId).then(_ => {
+   dable.DeleteRow(rownumber);
+  });
 }
 
 // Adiciona funcionalidade a botão de apagar
 document.addEventListener('click', event => {
   if (event.target.classList.contains('deleteOption')) {
     deleteOption(event.target);
+  }
+
+  if (event.target.classList.contains('deleteMenuItem')) {
+    deleteMenuItem(event.target);
   }
 
   if (event.target.classList.contains('addRow')) {
@@ -284,18 +319,45 @@ function configureProductDable(dable,rowArray,columnArray){
   };
 }
 var costumizationColumns = [ 'Nome', ''];
-var costumizationRows = [[]];
-function configureCostimizationDable(){
+var costumizationRows = [''];
+function configureCostimizationDable(prop = 1){
   // Configura tabelas
   costumizationDable.SetDataAsRows(costumizationRows);
   costumizationDable.style = 'fooddash';
   costumizationDable.SetColumnNames(costumizationColumns);
 
   costumizationDable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return ' <div class="col-xs-2 w-25 mx-3s float-end "><input class="w-25 text-center float-end border option-price-amount" type="number" value="1" min="0" step="any" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Preço:</span><input step="any" class="w-25 text-center float-end border option-amount" type="number" value="1" min="0" class="form-control form-control-sm input-group-text" "><span class=" mx-2 float-end mr-2" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' >Max.:</span><button type="button" data-rownumber="' + rowNumber + '" dable-id='+costumizationDable.id+' class="btn btn-light float-end btn-sm deleteOption">✕</button></div>';
+    return  `
+    <div class="d-flex flex-row-reverse ">
+    <div>
+    <button type="button" cellValue='${_cellValue.id}' data-rownumber="${rowNumber}" dable-id="${costumizationDable.id}" class="btn btn-light float-end btn-sm deleteOption">✕</button>
+    <input class="w-25 text-center float-end border option-price-amount" type="number" value=${_cellValue.preco} min="0" step="any" class="form-control form-control-sm input-group-text" ">
+    <span class=" mx-2 float-end mr-2" data-rownumber="${rowNumber}" dable-id='${costumizationDable.id}' >Preço:</span>
+    </div>
+    <div>
+      <input type="number" 
+            min="1" 
+            step="1"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57" 
+            class="w-25 text-center float-end border option-amount form-control form-control-sm input-group-text" 
+            type="number" value="${_cellValue.preco}" 
+            min="0">
+
+      <span class=" mx-2 float-end mr-2"
+            data-rownumber="${rowNumber}" 
+            dable-id='${costumizationDable.id}'>
+            Max.:
+            </span>
+    </div>
+    </div>
+    `;
   };
 
   costumizationDable.BuildAll("costumization-dable");
+}
+
+function getCostumizationObject(rowNumber){
+ return costumizationDable.rowObjects[rowNumber].Row[1];
 }
 
 function checkIfDableExists(dableContainer){
@@ -357,7 +419,6 @@ function showImportModal(text,categoria,dable){
 
   // espera o resultado do servidor e popula tabela
   populateImportDable(categoria).then(_ => {
-
     // mostra tabela
     importDable.BuildAll("DefaultDable"); 
   })
@@ -480,12 +541,20 @@ async function fetchData(categoria = null){
 }
 
 function generateItemData(foto_url,id){
-  let itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
-  let isPersonalized = getCheckboxValue("personalizacoesativas").value;
-  itemType += isPersonalized == "true" ? "-personalizado" : "";
+  let itemType;
+  let isPersonalized;
 
-  const itemFactory = new ItemFactory();
+  if(updateMode == false){
+    itemType = getCheckboxValue("itemsozinho").value == "false" ? "item" : "menu";
+    isPersonalized = getCheckboxValue("personalizacoesativas").value;
+    itemType += isPersonalized == "true" ? "-personalizado" : "";
+  }else{
+    itemType = updateObject.tipo;
+    isPersonalized = updateObject.dados.tem_personalizacoes;
+  }
+
   try{
+    const itemFactory = new ItemFactory();
     const item = itemFactory.createItem(itemType,isPersonalized,foto_url);
  
     let result = { 
@@ -526,7 +595,30 @@ function getOptions(){
   costumizationDable.rows.slice(1).forEach((element,i) => {
     const options = document.querySelectorAll(".option-amount");
     const optionsprice = document.querySelectorAll(".option-price-amount");
-    json.push({nome:element[0],max_quantidade: parseInt(options[i].value),preco: parseFloat(optionsprice[i].value) });
+
+    let id_option;
+    if(updateMode && updateObject.dados.personalizacoes.length != 0)
+      id_option = updateObject.dados.personalizacoes[i].id;
+    else{
+      id_option = -1;
+    }
+
+    const maxqtd = parseInt(options[i].value);
+    const nome = element[0];
+    const preco = parseFloat(optionsprice[i].value);
+
+    if(!maxqtd || !preco){
+      throw new Error('Opções invalidas, verifique os campos');
+    }
+
+    const result = {
+      id:id_option,
+      nome:nome,
+      max_quantidade: maxqtd,
+      preco: preco 
+    }
+
+    json.push(result);
   })
   return json;
 }
@@ -637,7 +729,7 @@ event.preventDefault();
     // returns object with image already attached
     data = generateItemData(picture,-1);
   }
-
+  
   const createItemTask = await postJSON("./inserir_item.php",data);
   
   if(createItemTask['status'] == "error"){

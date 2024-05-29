@@ -32,10 +32,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
           <div class="collapse navbar-collapse" style="width: 15vw;" id="navbarNav">
               <ul class="navbar-nav">
                   <li class="nav-item">
-                      <a class="nav-link nav" href="#">Overview</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link nav" href="#">Menus</a>
+                      <a class="nav-link nav" href="http://localhost/business/dashboard_lista_menus.php#">Menus</a>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link nav" style="border-bottom: 1vh solid black;" href="http://localhost/business/dashboard_lista_categorias.php#">Categorias</a>
