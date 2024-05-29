@@ -81,7 +81,7 @@ include __DIR__."/includes/insertPedido.php";
           <p class='mb-0'>Taxa de Entrega: " . $infoRest['taxa_entrega'] . "€</p>
         </div>
         <div class='col-lg-4 text-center'>
-          <img src=".$infoRest['imagem']."' alt='" . $infoRest['nome'] . "' style='max-width: 25vw;'>
+          <img src='".$infoRest['imagem']."' alt='" . $infoRest['nome'] . "' style='max-width: 20vw;'>
         </div>
 		";
           ?>
@@ -219,11 +219,11 @@ include __DIR__."/includes/insertPedido.php";
 					</button>
 				</h3>";
 
-            $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto 
+            $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas  
 					FROM itens 
 					INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 					INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
-					WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
+					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
 
             $idCategoria = str_replace(' ', '', $fCategoria);
             $fCat = "%" . strtolower(str_replace(' ', '', $fCategoria)) . "%";
@@ -285,68 +285,39 @@ include __DIR__."/includes/insertPedido.php";
 						<p>" . htmlspecialchars($rowProd['descricao']) . "</p>
 						</div>
 						<hr>
-						<div>
-							<h5>Complemento</h5>
-						";
+						<div>	";
 
-                    $queryComp = "SELECT id_opcao, nome FROM opcoes ";
-                    $stmtComp = $pdo->prepare($queryComp);
-                    $stmtComp->execute();
-                    $complementos = $stmtComp->fetchAll(PDO::FETCH_ASSOC); 
-                 
-                    foreach ($complementos as $rowComp) {
-						echo "<div class='form-check form-check-reverse'>
-								<input class='form-check-input' type='radio' name='complemento' id='complemento' value='".$rowComp['id_opcao']."' checked>
-								<label class='form-check-label d-flex justify-content-start' for='complemento'>".$rowComp['nome']."</label>
-							</div>
-							";
-					}
-    
-					echo "</div>
-						<br>
-						<div>
-						<h5>Bebida</h5>
-						";
+						
 
-					$queryBeb = "select id_opcao, nome from opcoes ";
+					$queryOp = "select id_opcao, nome, max_quantidade, preco from opcoes where id_item='".$rowProd['id_item']."'";
 
-					$stmtBeb= $pdo->prepare($queryBeb);
-					$stmtBeb->execute();
-					$bebidas = $stmtBeb->fetchAll(PDO::FETCH_ASSOC);
-
-					foreach ($bebidas as $rowBeb) {
-						echo"<div class='form-check form-check-reverse'>
-							<input class='form-check-input' type='radio' name='bebida' id='bebida' value='".$rowBeb['id_opcao']."' checked>
-							<label class='form-check-label d-flex justify-content-start' for='bebida'>".$rowBeb['nome']."</label>
-						</div>
-						";
-					}
-					echo "</div>
-						<br>
-						<div>
-						<h5>Adiciona extras ao teu " . htmlspecialchars($rowProd['nome']) . "</h5>
-						";
-
-					$queryExt = "select * from opcoes ";
-
-					$stmtExt= $pdo->prepare($queryExt);
+					
+					$stmtExt= $pdo->prepare($queryOp);
 					$stmtExt->execute();
-					$extras = $stmtExt->fetchAll(PDO::FETCH_ASSOC);
+					$opcoes = $stmtExt->fetchAll(PDO::FETCH_ASSOC);
 
-					foreach ($extras as $rowExt) {
-						echo"<div class='form-check form-check-reverse'>
-								<input class='form-check-input' type='radio' name='extra' id='extra' value='".$rowExt['id_opcao']."' checked>
-								<label class='form-check-label d-flex justify-content-start' for='extra'>".$rowExt['nome']."</label>
-							</div>
-							";
+					if (!$rowProd['itemsozinho'] and count($opcoes) > 0) {
+							echo "
+						<h5>Adiciona extra(s) ao teu " . htmlspecialchars($rowProd['nome']) . "</h5>
+						";
+						
+					foreach ($opcoes as $rowop) {
+						echo "<div class='form-check form-check-reverse'>
+						<input style='float: left; width: 5%; height: 25px; margin-right: 10px; margin-top: -1px;' class='form-check-input' type='checkbox' name='opcaos[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."' checked>	
+							<label style='float: left; width: 70%;' class='form-check-label d-flex justify-content-start' for='opcao_".$rowop['id_opcao']."'>".$rowop['nome']."</label>
+													
+							<input style='float: left; width: 20%;' class='form-control' type='number' name='quantidade_".$rowop['id_opcao']."' id='quantidade_".$rowop['id_opcao']."' min='1' max='".$rowop['max_quantidade']."' value=1>
+						</div>";
 					}
-					echo "</div>
+						}
+					;
+					echo "</div></div>
 						<div class='d-flex justify-content-center mt-2'>";
 						if ($idCliente > 0) {
 					echo 	"<input class='btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho • " . $rowProd['preco'] . "€'> ";
 						}
 					echo "</div>
-					</div>
+					
 					</div>
 				</div>
 				";
