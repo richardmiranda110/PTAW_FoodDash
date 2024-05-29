@@ -2,6 +2,10 @@
 <?php
 require_once __DIR__.'/../session.php';
 
+$email = '';
+if (isset($_COOKIE['remembered_email'])) {
+    $email = $_COOKIE['remembered_email'];
+}
 
 ?>
 
@@ -24,7 +28,7 @@ require_once __DIR__.'/../session.php';
     <form action="loginValidation.php" method="POST" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center;">Login</h1><br>
       <div class="form-floating mb-1">
-        <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" required>
+        <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" value="<?php echo htmlspecialchars($email); ?>" required>
         <label for="inputEmail" style="cursor: pointer;">Email</label>
       </div>
       <div class="form-floating mb-1">
@@ -40,8 +44,8 @@ require_once __DIR__.'/../session.php';
       </div>
       <div class="checkbox mb-3">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault">
-          <label class="form-check-label" for="flexCheckDefault">
+          <input class="form-check-input" type="checkbox" value="Guardar email" id="remember_email" name="remember_email" <?php echo isset($_COOKIE['remembered_email']) ? 'checked' : ''; ?>>
+          <label class="form-check-label" for="remember_email">
             Guardar email
           </label>
         </div>

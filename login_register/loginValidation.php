@@ -18,6 +18,13 @@ try {
         $_SESSION["id_cliente"] = $row['id_cliente'];
         // $_SESSION['success_message'] = "Logado com sucesso"; // Mensagem para testar, apagar depois
         // Alterar location depois
+
+        if (isset($_POST['remember_email'])) {
+            setcookie('remembered_email', $email, time() + (1 * 24 * 60 * 60), "/");
+        } else {
+            setcookie('remembered_email', '', time() - 3600, "/");
+        }
+
         header('Location: ../dashboard.php');
         exit;
     } else if($pass != 'password' || $email != 'email') {

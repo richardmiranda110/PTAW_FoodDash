@@ -38,7 +38,7 @@
 					</a>
 				</li>
 			</ul>
-			<a href="../login_register/logout.php" id="butSingOutSidebarLeft" class="btn btn-dark px-3" type="button">Terminar Sessão</a>
+			<a href="./login_register/logout.php" id="butSingOutSidebarLeft" class="btn btn-dark px-3" type="button">Terminar Sessão</a>
 		</div>
 	</div>
 

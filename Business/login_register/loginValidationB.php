@@ -21,6 +21,13 @@ try {
         $_SESSION['id_estabelecimento'] = $row['id_estabelecimento'];
         $_SESSION["authenticatedB"] = true;
         $_SESSION['success_message'] = "Logado com sucesso"; // Mensagem para testar, apagar depois
+
+        if (isset($_POST['remember_email'])) {
+            setcookie('remembered_email', $email, time() + (1 * 24 * 60 * 60), "/");
+        } else {
+            setcookie('remembered_email', '', time() - 3600, "/");
+        }
+
         header('Location:  ../dashboard_home_page.php');
 
         // Alterar location depois

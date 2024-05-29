@@ -71,7 +71,7 @@
 				</a>
 			</li>
 		</ul>
-		<a id="butSingOutSidebarLeft" href="<?php echo '/Business/login_register/logoutB.php' ?>" class="btn btn-dark px-3" type="button">Terminar Sessão</a>
+		<a id="butSingOutSidebarLeft" href="<?php echo '../Business/login_register/logoutB.php' ?>" class="btn btn-dark px-3" type="button">Terminar Sessão</a>
 	</div>
 </div>
 

@@ -67,19 +67,11 @@ if (isset($_SESSION['authenticated'])) {
         <input type="password" class="form-control" id="inputRepetirPassword" name="inputRepetirPassword" placeholder="Password" required>
         <label for="floatingPassword">Repetir Password</label>
       </div>
-      <div class="form-check">
+      <div class="form-check mb-3">
         <input class="form-check-input" type="checkbox" value="" id="mostrarPasswordCheckbox">
         <label class="form-check-label" for="flexCheckDefault">
           Mostrar password
         </label>
-      </div>
-      <div class="checkbox mb-3">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault">
-          <label class="form-check-label" for="flexCheckDefault">
-            Guardar email
-          </label>
-        </div>
       </div>
       <button id="btnLogin" class="w-100 btn btn-lg btn-primary" type="submit">Registar</button>
       <br><br>

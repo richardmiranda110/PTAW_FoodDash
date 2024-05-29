@@ -5,6 +5,11 @@ if (isset($_SESSION['authenticatedB'])) {
   header("Location: ../dashboard_home_page.php");
   exit();
 }
+
+$email = '';
+if (isset($_COOKIE['remembered_email'])) {
+    $email = $_COOKIE['remembered_email'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +27,7 @@ if (isset($_SESSION['authenticatedB'])) {
       box-shadow: none;
     }
 
-    #flexCheckDefault, #flexCheckDefault:focus{
+    #remember_email, #remember_email:focus{
       border-color: white;
       box-shadow: none;
     }
@@ -38,7 +43,7 @@ if (isset($_SESSION['authenticatedB'])) {
     <form action="loginValidationB.php" method="POST" style="width: 30%;">
       <h1 class="h1 mb-3" style="text-align: center; color: white;">Login</h1><br>
       <div class="form-floating mb-1">
-        <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" required>
+        <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" value="<?php echo htmlspecialchars($email); ?>" required>
         <label for="inputEmail">Email</label>
       </div>
       <div class="form-floating mb-1">
@@ -54,8 +59,8 @@ if (isset($_SESSION['authenticatedB'])) {
       </div>
       <div class="checkbox mb-3">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="Guardar email" id="flexCheckDefault" style="background-color: black;">
-          <label class="form-check-label" for="flexCheckDefault" style="color: grey;">
+          <input class="form-check-input" type="checkbox" value="Guardar email" style="background-color: black;" id="remember_email" name="remember_email" <?php echo isset($_COOKIE['remembered_email']) ? 'checked' : ''; ?>>
+          <label class="form-check-label" for="remember_email" style="color: grey;">
             Guardar email
           </label>
         </div>
