@@ -27,6 +27,7 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
+    <link rel="stylesheet" href="/../assets/styles/dashboard_beatriz.css">
     <link rel="stylesheet" href="/../assets/styles/sitecss.css">
     <link rel="stylesheet" href="/../assets/styles/dashboard.css">
     <link rel="stylesheet" href="/../assets/styles/responsive_styles.css">
@@ -58,7 +59,8 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     </div>
 
     <!--Zona de Conteudo -->
-    <div class="container">
+    <br><br<<br>
+    <div class="container direita">
         <h1>Estabelecimentos da Empresa</h1>
         <div class="card mb-3">
             <?php if (!empty($estabelecimentos)): ?>
@@ -66,14 +68,23 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                     <?php foreach ($estabelecimentos as $estabelecimento): ?>
                         <img class="card-img-top max-img-size" src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
                             alt=" <?php echo htmlentities($estabelecimento['nome']); ?>">
+                        <br>
+                        <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
+                        <button id="btn_apagar" class="btn btn-danger direito" style="width: auto;" type="button"
+                            value="Editar">Apagar</button>
+                        <br>
+                        <hr>
                         <li class="list-group-item">
-                            <strong>Nome:</strong> <?php echo htmlentities($estabelecimento['nome']); ?><br>
                             <strong>Localização:</strong> <?php echo htmlentities($estabelecimento['localizacao']); ?><br>
                             <strong>Telemóvel:</strong> <?php echo htmlentities($estabelecimento['telemovel']); ?><br>
                             <strong>Taxa de Entrega:</strong> <?php echo htmlentities($estabelecimento['taxa_entrega']); ?><br>
                             <strong>Tempo Médio de Entrega:</strong>
                             <?php echo htmlentities($estabelecimento['tempo_medio_entrega']); ?><br>
                         </li>
+
+                        
+                    <br>
+                    <br>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>

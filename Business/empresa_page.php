@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'./includes/session.php';
+require_once __DIR__.'/includes/session.php';
 
 include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
@@ -245,7 +245,7 @@ include __DIR__ . "/includes/footer_business.php";
         } else {
             // verficar se o campo contém só números
             var telemovel = telemovelInput.value.trim();
-            if (!(/^\d+$/.test(telemovel))) {
+            if (!('/^\d+$/'.test(telemovel))) {
                 erroTelemovel.textContent = "O campo só pode conter números.";
                 validacao = false; // marcar validação como falsa
             } else if (telemovel.length !== 9) {

@@ -149,3 +149,7 @@ function EditarEstabelecimento($pdo, $ID, $DadosUtilizadores)
 
     return $sucesso;
 }
+
+function ApagarEstabelecimento() {
+    
+}
