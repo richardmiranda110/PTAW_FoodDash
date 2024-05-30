@@ -635,11 +635,13 @@
 				if (style.toLowerCase() != 'clear') {
 				  //base styles for 'none', the other styles sometimes build on these
 					//so we apply them beforehand
-
+					
 				if(style.toLowerCase() == 'fooddash_categorias')
 					$export.ApplyBaseFoodDashCategoriesStyles(tableDiv);
 				else if(style.toLowerCase() == 'fooddash_menu'){
 					$export.ApplyBaseMenuStyles(tableDiv);
+				}else if(style.toLowerCase() == 'culpadorichard'){
+					$export.ApplyBaseRichardStyles(tableDiv);
 				}
 				else{ 
 					$export.ApplyBaseStyles(tableDiv);
@@ -796,6 +798,78 @@
 				}
 			}
 
+			$export.ApplyBaseRichardStyles = function (tableDiv) {
+				if ($export.dableClass) {
+					tableDiv.setAttribute('class', $export.dableClass);
+				}
+				var table = tableDiv.querySelector('table');
+				table.setAttribute('style', 'width: 100%;');
+				if ($export.tableClass) {
+					table.setAttribute('class', $export.tableClass);
+				}
+			
+				var cells = tableDiv.querySelectorAll('tbody td');
+				if(cells.length != 0){
+					cells[0].setAttribute('style', 'width:px;padding: 10px 0px 5px 0px;');
+					cells[1].setAttribute('style', 'width:25%');
+					cells[2].setAttribute('style', 'width:25%');
+					cells[3].setAttribute('style', 'width:37%');
+					cells[4].setAttribute('style', 'width:4%');
+					cells[5].setAttribute('style', 'width:4%');
+				}
+
+				var headCells = tableDiv.querySelectorAll('th');
+				for (var i = 0; i < headCells.length; ++i) {
+					headCells[i].setAttribute('style', 'padding: 5px;border-bottom:1px solid black');
+					var headCellLeft = headCells[i].children[0];
+					headCellLeft.setAttribute('style', 'float: left');
+					if ($export.columnData[i].CustomSortFunc !== false) {
+						var headCellRight = headCells[i].children[1];
+						headCellRight.setAttribute('style', 'float: right');
+						var headCellClear = headCells[i].children[2];
+						headCellClear.setAttribute('style', 'clear: both;');
+
+					}
+					else {
+						var headCellClear = headCells[i].children[1];
+						headCellClear.setAttribute('style', 'clear: both;');
+					}
+				}
+
+				var header = tableDiv.querySelector('#' + $export.id + '_header');
+				header.setAttribute('style', 'padding: 5px;');
+				if ($export.headerClass) {
+					header.setAttribute('class', $export.headerClass);
+				}
+				var headLeft = header.children[0];
+				headLeft.setAttribute('style', 'float: left;');
+				var headRight = header.children[1];
+				headRight.setAttribute('style', 'float: right;');
+				var headClear = header.children[2];
+				headClear.setAttribute('style', 'clear: both;');
+
+				var footer = tableDiv.querySelector('#' + $export.id + '_footer');
+				footer.setAttribute('style', 'padding: 5px;');
+				if ($export.footerClass) {
+					footer.setAttribute('class', $export.footerClass);
+				}
+				var footLeft = footer.children[0];
+				footLeft.setAttribute('style', 'display:none');
+				var footClear = footer.children[2];
+				footClear.setAttribute('style', 'clear: both;');
+				var footRight = footer.children[1];
+				footRight.setAttribute('style', 'float: right; list-style: none;');
+				var footRightItems = footRight.querySelectorAll('li');
+				for (var i = 0; i < footRightItems.length; ++i) {
+					footRightItems[i].setAttribute(
+						'style',
+						'display: inline; margin-right: 5px;');
+					footRightItems[i].setAttribute(
+						'class',
+						'action-button btn');
+				}
+			}
+
 			$export.ApplyBaseMenuStyles = function (tableDiv) {
 				if ($export.dableClass) {
 					tableDiv.setAttribute('class', $export.dableClass);
@@ -807,12 +881,13 @@
 				}
 			
 				var cells = tableDiv.querySelectorAll('tbody td');
+				if(cells.length != 0){
 					cells[0].setAttribute('style', 'width:90px;padding: 10px 0px 5px 0px;');
 					cells[1].setAttribute('style', 'width:20%');
 					cells[2].setAttribute('style', 'width:65%');
 					cells[3].setAttribute('style', 'width:5%');
 					cells[4].setAttribute('style', 'width:5%');
-					
+				}
 
 				var headCells = tableDiv.querySelectorAll('th');
 				for (var i = 0; i < headCells.length; ++i) {
@@ -865,6 +940,7 @@
 						'action-button btn');
 				}
 			}
+
 
 			$export.ApplyBaseStyles = function (tableDiv) {
 				if ($export.dableClass) {

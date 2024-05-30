@@ -183,14 +183,6 @@ CREATE TABLE IF NOT EXISTS Item_Categorias (
     PRIMARY KEY (id_item, id_categoria)
 );
 
--- Tabela Item Menus Opções
-CREATE TABLE IF NOT EXISTS Item_Menus_Opcoes (
-    id_opcao_menu SERIAL PRIMARY KEY,
-    id_menu_item INTEGER REFERENCES Item_Menus(id_item_menu) ON DELETE CASCADE NOT NULL,
-    id_opcao INTEGER REFERENCES Opcoes(id_opcao) ON DELETE CASCADE,
-    quantidade INTEGER DEFAULT 1
-);
-
  -- Tabela Item_Menu
 CREATE TABLE IF NOT EXISTS Item_Menus (
     id_item_menu SERIAL PRIMARY KEY,

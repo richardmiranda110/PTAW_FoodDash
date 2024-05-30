@@ -120,7 +120,6 @@ abstract class AbstractItem {
     }
 }
 
-
 class SingleItem extends AbstractItem {
 
     public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id) {
@@ -312,8 +311,7 @@ class Bundle extends AbstractItem {
             }
 
             $this->item_id = $this->getId();
-
-            foreach($this->itens as $item){
+            foreach($this->itens as &$item){
                 $this->createBundleItemEntry($item['id']);
             }
         } catch(PDOException $e) {
@@ -326,21 +324,21 @@ class Bundle extends AbstractItem {
         global $pdo;
         global $idEmpresa;
         
-        if($this->item_id != -1){
-            $this->id_item = $this->getId();
+        if($this->item_id == -1){
+            $this->item_id = $this->getId();
         }
 
         if($this->checkBundleItemExistence($new_item_id) == true){
             return;
         }
-
+        
         $query =
         "INSERT INTO item_menus
             (id_item, id_menu)
             VALUES ( ?, ?);";
 
         $stmt = $pdo->prepare($query);
-        $stmt->execute([$this->item_id,$new_item_id]);
+        $stmt->execute([$new_item_id,$this->item_id]);
     }
 
     protected function checkExistence(){

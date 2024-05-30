@@ -1,6 +1,6 @@
 var dable = new Dable();
 var rows = [];
-var list_columns = [ 'Foto', 'Nome', 'Preço','Menus','','','' ];
+var list_columns = [ 'Foto', 'Nome', 'Preço','Menus','','' ];
 var items = [];
 const response = fetch('http://localhost/business/lista_items.php')
   .then(response => response.json())
@@ -8,7 +8,7 @@ const response = fetch('http://localhost/business/lista_items.php')
     for(item of data.itens){
       console.log(item);
       items.push(item);
-      rows.push([ item.foto_url, item,item.preco+'€',item.menus,'',item.id,item.id ]);
+      rows.push([ item.foto_url, item,item.preco+'€',item.menus.length > 0 ? item.menus : 'n/a',item.id,item.id ]);
     }
     return rows;
   })
@@ -29,10 +29,10 @@ const response = fetch('http://localhost/business/lista_items.php')
           </div>
       </div>`;
 		};
-    dable.columnData[5].CustomRendering = function (_cellValue, rowNumber) {
+    dable.columnData[4].CustomRendering = function (_cellValue, rowNumber) {
     return '<button> <img width="30" class="bg-white editRow" src="./assets/imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
   };
-    dable.columnData[6].CustomRendering = function (_cellValue, rowNumber) {
+    dable.columnData[5].CustomRendering = function (_cellValue, rowNumber) {
     return '<button type="button"> <img width="30" class="bg-white deleteRow" cellValue="'+_cellValue+'" src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 	dable.BuildAll("DefaultDable"); 

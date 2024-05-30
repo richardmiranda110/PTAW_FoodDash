@@ -141,7 +141,7 @@ if(isset($item)){
 
     <div id="contentDiv" class="col-md-12">
       <div class="container mt-5">
-        <h2 class="mb-4">Adicionar Novo Item</h2>
+        <h2 class="mb-4"><?php echo ($update ? 'Editar '.htmlspecialchars($type.' '.$final_item['dados']['nome']) :'Adicionar Novo Item'); ?></h2>
         <div class='alert alert-danger d-none' id="alert" role='alert'> O Ficheiro não é uma imagem.</div>
         <form action="" method="post" enctype="multipart/form-data" id="dataForm">
           <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa);?>">

@@ -240,6 +240,7 @@ function deleteOption(element){
  fetch("/Business/lista_opcoes.php?deleteoption="+itemId).then(_ => {
   dable.DeleteRow(rownumber);
  });
+ dable.DeleteRow(rownumber);
 }
 
 function addItem(element){
@@ -253,6 +254,7 @@ function addItem(element){
  
 
 function performDelete(element){
+
   const dableId =  element.getAttribute("dable-id")
   const dable = buttonDableMap.get(dableId);
  
@@ -263,15 +265,20 @@ function performDelete(element){
 }
 
 function deleteMenuItem(element){
+  const dableId =  element.getAttribute("dable-id")
+  const dable = buttonDableMap.get(dableId);
+
+  const rownumber = element.getAttribute("data-rownumber");
   const itemId = element.getAttribute("cellValue");
+
+  if(itemId == "undefined"){
+    dable.DeleteRow(rownumber);
+    return;
+  }
 
   fetch("/Business/lista_opcoes.php?deletemenuitem="+itemId).then(_ => {
    dable.DeleteRow(rownumber);
-   if(dable.rows.length == 1){
-    location.href = "/Business/dashboard_lista_menus.php";
-   }
   });
-  
 }
 
 // Adiciona funcionalidade a botão de apagar
@@ -350,7 +357,7 @@ function configureProductDable(dable,rowArray,columnArray){
   dable.SetColumnNames(columnArray);
 
   dable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button> <img width="30" cellValue="'+_cellValue.id_item+'" class="bg-white deleteRow" dable-id='+dable.id+' src="../business/assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button type="button"> <img width="30" cellValue="'+_cellValue.id_item+'" class="bg-white deleteRow" dable-id='+dable.id+' src="../business/assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 }
 var costumizationColumns = [ 'Nome', ''];
@@ -449,7 +456,7 @@ function showImportModal(text,categoria,dable){
   modalContent.appendChild(defaultDable);
 
   importDable.columnData[4].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button> <img width="30" class="bg-white addRow" dable-id='+dable.id+' src="../business/assets/imgs/add.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button type="button" > <img width="30" class="bg-white addRow" dable-id='+dable.id+' src="../business/assets/imgs/add.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 
   // espera o resultado do servidor e popula tabela
@@ -637,7 +644,7 @@ function getOptions(){
     if(updateMode && updateObject.dados.personalizacoes.length != 0)
       id_option = updateObject.dados.personalizacoes[i].id;
     else{
-      id_option = -1;
+      id_option = null;
     }
 
     const maxqtd = parseInt(options[i].value);
