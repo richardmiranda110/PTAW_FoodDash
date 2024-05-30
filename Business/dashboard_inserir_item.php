@@ -54,6 +54,7 @@ if(isset($_GET['itemid'])){
   }
 
   } else if(isset($_GET['menuid'])){
+    $type = 'menu';
     $update = true;
     $query =  
     "SELECT id_menu, nome, preco,
@@ -62,40 +63,40 @@ if(isset($_GET['itemid'])){
     where menu.id_menu = ? and menu.id_estabelecimento = ?";
   
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$_GET['itemid'],$_SESSION['id_estabelecimento']]);
+    $stmt->execute([$_GET['menuid'],$_SESSION['id_estabelecimento']]);
   
-    $menu = $stmt->fetch(PDO::FETCH_ASSOC);
+    $item = $stmt->fetch(PDO::FETCH_ASSOC);
   
-    if($type == "menu"){
       $query =  
-      "SELECT im.id_item
+      "SELECT item.*,categorias.nome as categoria
       FROM public.menus menu 
       INNER JOIN item_menus im 
       ON menu.id_menu = im.id_menu
+      inner join itens item 
+      on im.id_item = item.id_item
+      inner join categorias
+      on categorias.id_categoria = item.id_categoria
       where menu.id_menu = ? and menu.id_estabelecimento = ?";
     
       $stmt = $pdo->prepare($query);
       $stmt->execute(
-        [$_GET['idmenu'],
+        [$_GET['menuid'],
         $_SESSION['id_estabelecimento']
       ]);
     
-      $menuitems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-}
+      $menuitems = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+  }
 
 if(isset($item)){
   $final_item = array(
-    "id" => $item["id_item"],
+    "id" => (isset($item["id_item"]) ? $item["id_item"] : $item["id_menu"] ),
     "tipo" => $type,
     "idEstabelecimento" => $_SESSION['id_estabelecimento'],
     "dados" => array(
-      "tem_personalizacoes" => $item["personalizacoesativas"],
-      "bundle" => $item["itemsozinho"],
       "disponivel" => $item["disponivel"],
       "nome" => $item["nome"],
-      "categoria" => $item['id_categoria'],
-      "categoria_nome" => $item["categoria"],
+      "categoria" =>  ($type == 'item' ?  $item['id_categoria'] : null ),
+      "categoria_nome" =>  ($type == 'item' ? $item["categoria"] : null ),
       "preco" => $item["preco"],
       "descricao" => $item["descricao"],
       "foto" => $item["foto"],
@@ -140,7 +141,7 @@ if(isset($item)){
 
     <div id="contentDiv" class="col-md-12">
       <div class="container mt-5">
-        <h2 class="mb-4">Adicionar Novo Item</h2>
+        <h2 class="mb-4"><?php echo ($update ? 'Editar '.htmlspecialchars($type.' '.$final_item['dados']['nome']) :'Adicionar Novo Item'); ?></h2>
         <div class='alert alert-danger d-none' id="alert" role='alert'> O Ficheiro não é uma imagem.</div>
         <form action="" method="post" enctype="multipart/form-data" id="dataForm">
           <input type="hidden" id="idestabelecimento" name="idestabelecimento" value="<?php echo htmlspecialchars($idEmpresa);?>">
@@ -176,8 +177,8 @@ if(isset($item)){
               echo '<option value="null">Não existem opções disponíveis</option>';
             }
 
-            if($update){
-              echo '<option value="' . htmlspecialchars($final_item['dados']['categoria']) . '">' . htmlspecialchars($item["categoria"]) . '</option>';
+            if($update and (($type == 'item') or ($type == 'item') or ($type == 'item-personalizado'))){
+              echo '<option value="' . htmlspecialchars($stmt['dados']['categoria']) . '">' . htmlspecialchars($item["categoria"]) . '</option>';
             }else{
               foreach ($stmt as $row) {
                 echo '<option value="' . htmlspecialchars($row['id_categoria']) . '">' . htmlspecialchars($row['nome']) . '</option>';
