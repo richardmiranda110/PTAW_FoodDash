@@ -6,6 +6,7 @@
         <a href="/business/dashboard_home_page.php"><img id="logo_fooddash" src="./assets/imgs/fd_logo_blackWhite.png" alt="reduced_logo_fd" width="190" height="110"></a>
       </div>
       <div class="col"></div>
+      <div class="col"></div>
       <div class="col">
         <h4 style="color: #FEBB41;">Conta Empresarial</h4>
         <ul class="nav flex-column">
@@ -18,13 +19,6 @@
         <ul class="nav flex-column">
           <li class="nav-item" id="btn_our_story_footer"><a href="#" class="nav-link p-0" style="color: white;">História</a></li>
           <li class="nav-item" id="btn_team_footer"><a href="#" class="nav-link p-0" style="color: white;">Equipa</a></li>
-        </ul>
-      </div>
-      <div class="col">
-        <h4 style="color: #FEBB41;">Contatos</h4>
-        <ul class="nav flex-column">
-          <li class="nav-item"><a href="#" class="nav-link p-0" style="color: white;">Apoio ao cliente</a></li>
-          <li class="nav-item"><a href="#" class="nav-link p-0" style="color: white;">Contato empresarial</a></li>
         </ul>
       </div>
     </footer>
