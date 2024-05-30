@@ -1,16 +1,8 @@
 /*parte de quando se entra no pedido, ou seja, dentro do pedido*/
 body {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
-footer{
-    position:fixed;
-bottom:0;
-right:0;
-left: 0;
-}
 .customer-info {
     border: 1px solid #ffc107;
     width: fit-content;
@@ -21,6 +13,7 @@ left: 0;
 }
 
 .customer-info p {
+    font-size: 1.5vh;
     margin-bottom: 0;
 }
 
@@ -193,4 +186,24 @@ left: 0;
         transform: translateY(0px);
         opacity: 1;
     }
+}
+
+.card-header-text{
+    font-size: 1.5vh !important;
+}
+
+.card-body-text{
+    font-size: 1.2vh !important;
+}
+
+.card-body-huge-text{
+    font-size: 1.9vh !important;
+}
+
+.card-body-big-text{
+    font-size: 1.6vh !important;
+}
+
+.card-body-small-text{
+    font-size: 1vh !important;
 }
