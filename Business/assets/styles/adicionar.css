@@ -193,3 +193,26 @@ input[type="text"] {
 .table-row-odd:hover{
  background-color: #f3f3f398;
 }
+
+.small{
+  font-size: 0.7em!important;
+}
+
+.price-tag {
+  background-color: #d3d3d3; /* Cinza claro */
+  border-radius: 15px;
+  padding: 10px ;
+  display: inline-block;
+  width: fit-content !important;
+  min-width: 7% !important;
+  font-size: 1.5rem;
+  font-weight: bold !important;
+}
+
+.hover{
+  display:none;
+}
+
+.hover:hover{
+  display: block;
+}

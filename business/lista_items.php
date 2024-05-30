@@ -27,7 +27,7 @@ if(isset($_GET['delete'])){
 if(isset($_GET['itemId'])){
  $data = listarItem($_GET['itemId']);
 }else{ // else retrieve all items
- $data = listarTodosItems($idEstabelecimento);
+ $data = listarTodosMenus($idEstabelecimento);
 }
 
 //print result
@@ -35,7 +35,7 @@ header('Content-type: application/json');
 print_r(json_encode($data));
 
 // Functions
-function listarTodosItems($idEmpresa){
+function listarTodosMenus($idEmpresa){
     global $pdo;
 
     $query =  

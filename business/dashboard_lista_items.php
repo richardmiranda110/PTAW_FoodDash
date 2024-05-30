@@ -49,7 +49,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
       </div>
     </nav>
 
-    <span class="float:left fw-bold h2 m-3 text-left">Items</span> 
+    <span class="float:left fw-bold h2 m-3 mb-0 text-left">Items</span> 
     <button class="float-end btn btn-custom fw-bold mt-1 " style="margin-right:4.5vw" onclick="window.open('./dashboard_inserir_item.php')">+ Novo Item</button>
     <div id="DefaultDable" ></div>
   </div>

@@ -1,23 +1,23 @@
 var dable = new Dable();
 var rows = [];
-var list_columns = [ 'Foto', 'Nome', 'Preço','Menus','','','' ];
+var list_columns = [ '', '','', '','' ];
 var items = [];
-const response = fetch('http://localhost/business/lista_items.php')
+const response = fetch('http://localhost/business/lista_opcoes.php')
   .then(response => response.json())
   .then(data => {
     for(item of data.itens){
       console.log(item);
       items.push(item);
-      rows.push([ item.foto_url, item,item.preco+'€',item.menus,'',item.id,item.id ]);
+      rows.push([ item.foto_url, item,item,item.id,item.id]);
     }
     return rows;
   })
   .then( _ =>{
     dable.SetDataAsRows(rows)
-    dable.style = 'CulpaDoRichard';
+    dable.style = 'fooddash_menu';
 	  dable.SetColumnNames(list_columns);
     dable.columnData[0].CustomRendering = function(cellValue, rowNumber) {
-			return '<img src="../'+cellValue+'" alt="'+cellValue+'" width="70" height="70"  data-rownumber="' + rowNumber + '">';
+			return '<img src="../'+cellValue+'" alt="'+cellValue+'" class="rounded" width="70" height="70" data-rownumber="' + rowNumber + '">';
 		};
 
     dable.columnData[1].CustomRendering = function(cellValue, rowNumber) {
@@ -25,15 +25,22 @@ const response = fetch('http://localhost/business/lista_items.php')
       <div class="row justify-content-center">
           <div class="">
               <div class="fw-bold fs-5">${cellValue.nome}</div>
-              <div class="fs-6 small">${cellValue.categoria}</div>
+              <div class="fs-6 small">${cellValue.quantidade}${cellValue.quantidade == 1 ? " item" : " itens"}</div>
           </div>
       </div>`;
 		};
-    dable.columnData[5].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button> <img width="30" class="bg-white editRow" src="./assets/imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
+
+    dable.columnData[2].CustomRendering = function(cellValue, rowNumber) {
+			return `    
+      <div class="row justify-content-center">
+              <div class="fw-bold fs-5 price-tag w-50 text-center">${cellValue.preco} €</div>
+      </div>`;
+		};
+    dable.columnData[3].CustomRendering = function (_cellValue, rowNumber) {
+    return '<button> <img width="30" class="bg-white editRow img-fuid" src="./assets/imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
   };
-    dable.columnData[6].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button type="button"> <img width="30" class="bg-white deleteRow" cellValue="'+_cellValue+'" src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    dable.columnData[4].CustomRendering = function (_cellValue, rowNumber) {
+    return '<button type="button"> <img width="30" class="img-fuid bg-white deleteRow" cellValue="'+_cellValue+'" src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 	dable.BuildAll("DefaultDable"); 
   }).catch((error) => console.error('Error:', error));
@@ -55,7 +62,7 @@ function performDelete(element){
   const cellValue =  element.getAttribute("cellValue");
   console.log(cellValue);
   const rownumber =  element.getAttribute("data-rownumber");
-  const request = fetch("/Business/lista_items.php?delete="+cellValue);
+  const request = fetch("/Business/lista_opcoes.php?deletemenu="+cellValue);
   request.then(reply => {
     console.log(reply);
     dable.DeleteRow(rownumber);
@@ -73,6 +80,6 @@ function editItem(element) {
   var rowNumber = element.getAttribute('data-rownumber');
 
   const item = items[rowNumber];
-  window.open(`/Business/dashboard_inserir_item.php?itemid=${item.id}`);
+  window.open(`/Business/dashboard_inserir_item.php?menuid=${item.id}`);
 
 }

@@ -6,6 +6,8 @@ const dataSource = 'http://localhost/business/lista_items.php?idEstabelecimento=
 let complementoContainer = document.querySelector("#complement-section");
 // Container personalizações
 let personalizacoesContainer = document.querySelector("#personalizations-section");
+// Container Categoria Selector
+const categoriaContainer = document.querySelector("#categoria-container");
 // Checkbox item sozinho
 const itemSozinhoForm = document.querySelector("#itemsozinho-form");
 // Checkbox personalizações ativas
@@ -91,6 +93,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         costumizationDable.AddRow([prop.nome,prop]);
     }else if( updateObject.tipo == 'menu'){
       complementoContainer.style.display = 'block';
+      importMenuItemList();
+      
     }
   }
 });
@@ -196,6 +200,7 @@ function gerarTabelaCategoria(nomeCategoria){
   // cria container para libraria Dable
   const dableContainer = document.createElement("div")
   dableContainer.id = `dable-${nomeCategoria.replaceAll(/[\s.;,?%0-9]/g, '').replaceAll(' ','')}`
+  
   // verifica se categoria já existe
   if(checkIfDableExists(dableContainer)){
     spanBotaoX.click();
@@ -252,17 +257,21 @@ function performDelete(element){
   const dable = buttonDableMap.get(dableId);
  
   const rownumber = element.getAttribute("data-rownumber");
-  dable.DeleteRow(rownumber);
+  fetch("/Business/lista_opcoes.php?deletemenuitem="+itemId).then(_ => {
+    dable.DeleteRow(rownumber);
+   });
 }
 
 function deleteMenuItem(element){
-  const dable = costumizationDable;
-  const rownumber = element.getAttribute("data-rownumber");
-  const itemId = getCostumizationObject(rownumber).id;
- 
+  const itemId = element.getAttribute("cellValue");
+
   fetch("/Business/lista_opcoes.php?deletemenuitem="+itemId).then(_ => {
    dable.DeleteRow(rownumber);
+   if(dable.rows.length == 1){
+    location.href = "/Business/dashboard_lista_menus.php";
+   }
   });
+  
 }
 
 // Adiciona funcionalidade a botão de apagar
@@ -280,7 +289,7 @@ document.addEventListener('click', event => {
   }
 
   if (event.target.classList.contains('deleteRow')) {
-    performDelete(event.target);
+    deleteMenuItem(event.target);
   }
 });
 
@@ -294,6 +303,32 @@ window.onclick = event => {
   if (event.target == modal) {
    hideModal();
   }
+}
+
+function importMenuItemList(){
+  const items = updateObject.dados.menu_itens;
+  const categories = filterMenuItemCategories(items);
+
+  for(const category of categories){
+
+    const categoryItems = items.filter(item => item.categoria == category)
+    gerarTabelaCategoria(category);
+    const dable = dableProductTables.slice(-1)[0];
+
+    for(let item of categoryItems){
+      dable.AddRow([item.nome,item]);
+      
+    }
+  }
+}
+
+function filterMenuItemCategories(itemList){
+  const categoriesSet = new Set();
+
+  for(let item of itemList){
+    categoriesSet.add(item.categoria);
+  }
+  return categoriesSet;
 }
 
 function generateDableProductTable(container){
@@ -315,7 +350,7 @@ function configureProductDable(dable,rowArray,columnArray){
   dable.SetColumnNames(columnArray);
 
   dable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button> <img width="30" class="bg-white deleteRow" dable-id='+dable.id+' src="../business/assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button> <img width="30" cellValue="'+_cellValue.id_item+'" class="bg-white deleteRow" dable-id='+dable.id+' src="../business/assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 }
 var costumizationColumns = [ 'Nome', ''];
@@ -519,8 +554,10 @@ function hideModal(){
   modal.classList.add('d-none');
   try{
     document.querySelector("#DefaultDable").remove();
-  }catch(err){}
-    selectContainer.remove();
+  }catch(err){
+      selectContainer.remove();
+  }
+    
 }
 
 async function fetchData(categoria = null){
