@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
     data DATE DEFAULT NOW(),
     descricao TEXT,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
-    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
+    id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 
 -- Tabelas de Associação
