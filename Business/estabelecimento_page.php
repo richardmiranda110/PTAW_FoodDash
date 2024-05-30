@@ -30,6 +30,23 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <link rel="stylesheet" href="/../assets/styles/sitecss.css">
     <link rel="stylesheet" href="/../assets/styles/dashboard.css">
     <link rel="stylesheet" href="/../assets/styles/responsive_styles.css">
+
+    <style>
+        /* Define a classe .container-75 com uma largura de 75% */
+        .container {
+            width: 75%;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        /* Define a classe .max-img-size com a largura e altura máximas desejadas */
+        .max-img-size {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 
 <>
@@ -41,53 +58,34 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     </div>
 
     <!--Zona de Conteudo -->
-    <h1>Estabelecimentos da Empresa</h1>
-    <div class="card mb-3">
-        <img class="card-img-top" src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
-        alt=" <?php echo htmlentities($estabelecimento['nome']); ?>">
-        <?php if (!empty($estabelecimentos)): ?>
-            <ul class="list-group">
-                <?php foreach ($estabelecimentos as $estabelecimento): ?>
-                    <li class="list-group-item">
-                        <strong>Nome:</strong> <?php echo htmlentities($estabelecimento['nome']); ?><br>
-                        <strong>Localização:</strong> <?php echo htmlentities($estabelecimento['localizacao']); ?><br>
-                        <strong>Telemóvel:</strong> <?php echo htmlentities($estabelecimento['telemovel']); ?><br>
-                        <strong>Taxa de Entrega:</strong> <?php echo htmlentities($estabelecimento['taxa_entrega']); ?><br>
-                        <strong>Tempo Médio de Entrega:</strong>
-                        <?php echo htmlentities($estabelecimento['tempo_medio_entrega']); ?><br>
-                        <strong>Imagem:</strong> <img src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
-                            alt="Imagem do Estabelecimento">
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>Nenhum estabelecimento encontrado para esta empresa.</p>
-        <?php endif; ?>
-    </div>
-
     <div class="container">
         <h1>Estabelecimentos da Empresa</h1>
-        <?php if (!empty($estabelecimentos)): ?>
-            <ul class="list-group">
-                <?php foreach ($estabelecimentos as $estabelecimento): ?>
-                    <li class="list-group-item">
-                        <strong>Nome:</strong> <?php echo htmlentities($estabelecimento['nome']); ?><br>
-                        <strong>Localização:</strong> <?php echo htmlentities($estabelecimento['localizacao']); ?><br>
-                        <strong>Telemóvel:</strong> <?php echo htmlentities($estabelecimento['telemovel']); ?><br>
-                        <strong>Taxa de Entrega:</strong> <?php echo htmlentities($estabelecimento['taxa_entrega']); ?><br>
-                        <strong>Tempo Médio de Entrega:</strong>
-                        <?php echo htmlentities($estabelecimento['tempo_medio_entrega']); ?><br>
-                        <strong>Imagem:</strong> <img src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
-                            alt="Imagem do Estabelecimento">
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>Nenhum estabelecimento encontrado para esta empresa.</p>
-        <?php endif; ?>
-    </div>*/
+        <div class="card mb-3">
+            <?php if (!empty($estabelecimentos)): ?>
+                <ul class="list-group">
+                    <?php foreach ($estabelecimentos as $estabelecimento): ?>
+                        <img class="card-img-top max-img-size" src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
+                            alt=" <?php echo htmlentities($estabelecimento['nome']); ?>">
+                        <li class="list-group-item">
+                            <strong>Nome:</strong> <?php echo htmlentities($estabelecimento['nome']); ?><br>
+                            <strong>Localização:</strong> <?php echo htmlentities($estabelecimento['localizacao']); ?><br>
+                            <strong>Telemóvel:</strong> <?php echo htmlentities($estabelecimento['telemovel']); ?><br>
+                            <strong>Taxa de Entrega:</strong> <?php echo htmlentities($estabelecimento['taxa_entrega']); ?><br>
+                            <strong>Tempo Médio de Entrega:</strong>
+                            <?php echo htmlentities($estabelecimento['tempo_medio_entrega']); ?><br>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>Nenhum estabelecimento encontrado para esta empresa.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
     <!--Fim do conteúdo de página-->
+
+    <!-- Footer-->
     <?php include __DIR__ . "/includes/footer_business.php"; ?>
-</body>
+    </body>
 
 </html>
