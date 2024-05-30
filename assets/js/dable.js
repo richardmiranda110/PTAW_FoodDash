@@ -807,12 +807,13 @@
 				}
 			
 				var cells = tableDiv.querySelectorAll('tbody td');
+				if(cells.length != 0){
 					cells[0].setAttribute('style', 'width:90px;padding: 10px 0px 5px 0px;');
 					cells[1].setAttribute('style', 'width:20%');
 					cells[2].setAttribute('style', 'width:65%');
 					cells[3].setAttribute('style', 'width:5%');
 					cells[4].setAttribute('style', 'width:5%');
-					
+				}
 
 				var headCells = tableDiv.querySelectorAll('th');
 				for (var i = 0; i < headCells.length; ++i) {
