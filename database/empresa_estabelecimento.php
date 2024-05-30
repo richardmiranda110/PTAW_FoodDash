@@ -1,13 +1,8 @@
 <?php
 
-if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
-    header("Location: /Business/login_register/login_business.php");
-    exit();
-  }
-
 function ObterEmpresa($pdo, $ID)
 {
-    if($ID != $_SESSION['id_empresa']){
+    if ($ID != $_SESSION['id_empresa']) {
         exit("You cant access data of other companies!");
     }
 
@@ -36,7 +31,7 @@ function ObterEmpresa($pdo, $ID)
 // Altera os dados do utilizador, mas não a password
 function EditarEmpresa($pdo, $ID, $DadosUtilizadores)
 {
-    if($ID != $_SESSION['id_empresa']){
+    if ($ID != $_SESSION['id_empresa']) {
         exit("You cant Edit other people's companies!");
     }
 
@@ -63,9 +58,42 @@ function EditarEmpresa($pdo, $ID, $DadosUtilizadores)
     return $sucesso;
 }
 
+function ObterEstabelecimentosPorEmpresa($pdo, $ID)
+{
+    if ($ID != $_SESSION['id_empresa']) {
+        throw new Exception("You can't access other people's Establishment!");
+    }
+    try {
+        $id = $_SESSION['id_empresa'];
+
+        $sql = "SELECT Estabelecimentos.* FROM Estabelecimentos
+            INNER JOIN Empresas ON Estabelecimentos.id_empresa = Empresas.id_empresa
+            WHERE Empresas.id_empresa = $id";
+
+        $stmt = $pdo->prepare($sql);
+        //$stmt->bindParam($id, $_SESSION['id_empresa'], PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            // Fetch retorna vários resultados, então usamos fetch() e não fetchAll()
+            $estabelecimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Retornar os dados
+            return $estabelecimentos;
+        } else {
+            // Se a consulta falhar, retornar null
+            return null;
+        }
+
+    } catch (Exception $e) {
+        echo "Erro na conexão à BD: " . $e->getMessage();
+        // Se ocorrer um erro, retornar null
+        return null;
+    }
+}
+
+
 function ObterEstabelecimento($pdo, $ID)
 {
-    if($ID != $_SESSION['id_estabelecimento']){
+    if ($ID != $_SESSION['id_estabelecimento']) {
         exit("You cant access other people's Establishment!");
     }
     try {
@@ -93,7 +121,7 @@ function ObterEstabelecimento($pdo, $ID)
 // Altera os dados do utilizador, mas não a password
 function EditarEstabelecimento($pdo, $ID, $DadosUtilizadores)
 {
-    if($ID != $_SESSION['id_estabelecimento']){
+    if ($ID != $_SESSION['id_estabelecimento']) {
         exit("You cant edit other people's Establishment!");
     }
 
