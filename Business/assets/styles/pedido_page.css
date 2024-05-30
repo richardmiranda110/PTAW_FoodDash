@@ -1,6 +1,20 @@
 /*parte de quando se entra no pedido, ou seja, dentro do pedido*/
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer{
+    position:fixed;
+bottom:0;
+right:0;
+left: 0;
+}
 .customer-info {
     border: 1px solid #ffc107;
+    width: fit-content;
+    margin: 0 auto;
     padding: 1vw;
     border-radius: 1vw;
     margin-bottom: 5vh;
@@ -19,7 +33,7 @@
 
 #progress-bar-container {
     position: relative;
-    width: 90%;
+    width: 130%;
     margin: auto;
     height: 100px;
     margin-top: 65px;
@@ -71,8 +85,8 @@
 #progress-bar-container li .step-inner {
     position: absolute;
     width: 100%;
-    bottom: 0;
-    font-size: 14px;
+    bottom: 0vh;
+    font-size: 1.21em;
 }
 
 #progress-bar-container li.active,
@@ -128,6 +142,10 @@
     transition: all ease 0.9s;
 }
 
+.preparacao{
+    height: 18vh !important;
+}
+
 #progress-content-section {
     width: 90%;
     margin: auto;
@@ -136,7 +154,7 @@
 }
 
 #progress-content-section .section-content {
-    padding: 30px 40px;
+    padding: 20px 30px;
     text-align: center;
 }
 
