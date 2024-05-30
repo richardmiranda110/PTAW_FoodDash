@@ -303,10 +303,10 @@ include __DIR__."/includes/insertPedido.php";
 						
 					foreach ($opcoes as $rowop) {
 						echo "<div class='form-check form-check-reverse product-item' style='display: flex; '>
-						<input style=' width: 5%; height: 25px; margin-right: 10px; margin-top: -1px;' class='form-check-input' type='checkbox' name='opcoes[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."' checked>	
+						<input style=' width: 5%; height: 25px; margin-right: 10px; margin-top: -1px;' class='form-check-input' type='checkbox' name='opcoes[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."'>	
 							<label style=' width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$rowop['id_opcao']."'>".$rowop['nome']."</label>													
-							<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$rowop['id_opcao']."' id='quantidade_".$rowop['id_opcao']."' min='1' max=4' value=1>
-							<input type='hidden' class='form-control price-field' name='preco_".$rowop['id_opcao']."' id='preco_".$rowop['id_opcao']."' value=2> 
+							<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$rowop['id_opcao']."' id='quantidade_".$rowop['id_opcao']."' min='1' max='".$rowop['max_quantidade']."' value=0 disabled >
+							<input type='hidden' class='form-control price-field' name='preco_".$rowop['id_opcao']."' id='preco_".$rowop['id_opcao']."' value=".$rowop['preco']."> 
 							<label style=' width: 10%; margin-left:2%; margin-bottom:1%;' class='form-check-label d-flex justify-content-start' >".$rowop['preco']." €</label>	
 						</div>
 						";
@@ -465,36 +465,47 @@ include __DIR__."/includes/insertPedido.php";
 	
 	//Adicionar/atualizar valor do pedido
 	// Adicione um ouvinte de evento para a mudança na quantidade
-        document.querySelector('.quantity-field').addEventListener('input', updateTotalPrice);
+	const checkboxes = document.querySelectorAll('.form-check-input');
+	const quantityFields = document.querySelectorAll('.quantity-field');
 
-        function updateTotalPrice() {
-			const totalPedido = parseFloat(document.querySelector('.total-item').value);
-            const quantity = parseFloat(document.querySelector('.quantity-field').value);
-            const price = parseFloat(document.querySelector('.price-field').value);
-            const total = totalPedido + (quantity * price);
-			const checkbox = document.querySelector('.form-check-input');
-			
-            if (checkbox.checked) {
-            document.querySelector('#totalPedido').textContent = total.toFixed(2);
-			document.querySelector('#valuePedido').value = total.toFixed(2);
-			}
-        }
-		
-		// Selecione a caixa de seleção e o campo de quantidade
-		const checkbox = document.querySelector('.form-check-input');
-		const quantityField = document.querySelector('.quantity-field');
+	// Adicione um ouvinte de evento para cada caixa de seleção
+	checkboxes.forEach(function (checkbox) {
+		checkbox.addEventListener('change', updateTotalPrice);
+	});
+	
+	quantityFields.forEach(function (checkbox) {
+		checkbox.addEventListener('input', updateTotalPrice);
+	});
 
-		// Adicione um ouvinte de evento para a mudança na caixa de seleção
-		checkbox.addEventListener('change', function () {
-			// Verifique se a caixa de seleção está marcada
+	function updateTotalPrice() {
+		const totalPedido = parseFloat(document.querySelector('#totalPedido').textContent);   
+		const valItem = parseFloat(document.querySelector('#valueItem').value);
+
+		let total = valItem;
+
+		// Verifique cada caixa de seleção
+		checkboxes.forEach(function (checkbox, index) {
 			if (checkbox.checked) {
-				// Ative o campo de quantidade
-				quantityField.removeAttribute('disabled');
+				document.querySelector('#quantidade_' + checkbox.value).disabled =false;
+
+				const quantity = parseFloat(document.querySelector('#quantidade_' + checkbox.value).value);
+				if (quantity == 0) {
+					document.querySelector('#quantidade_' + checkbox.value).value = 1;
+					quantity = 1;
+				}
+				const price = parseFloat(document.querySelector('#preco_' + checkbox.value).value);
+				total += (quantity * price);
 			} else {
-				// Desative o campo de quantidade
-				quantityField.setAttribute('disabled', 'true');
+				document.querySelector('#quantidade_' + checkbox.value).disabled =true;
+				document.querySelector('#quantidade_' + checkbox.value).value = 0;
 			}
 		});
+
+		// Atualize o preço total exibido
+		document.querySelector('#totalPedido').textContent = total.toFixed(2);
+		
+	}
+		
   </script>
 
   <script src="./assets/js/toast.js"></script>
