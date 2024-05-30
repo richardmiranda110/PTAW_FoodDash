@@ -39,11 +39,11 @@ if (isset($_SESSION['authenticatedB'])) {
       <h1 class="h1 mb-3" style="text-align: center; color: white;">Registar</h1><br>
       <div class="form-floating mb-1">
         <input type="text" class="form-control" id="inputNomeEstab" name="inputNomeEstab" placeholder="name@example.com" required>
-        <label for="inputName">Nome do Estabelecimento</label>
+        <label for="inputName">Nome da Empresa</label>
       </div>
       <div class="form-floating mb-1">
         <input type="text" class="form-control" id="inputEndereco" name="inputEndereco" placeholder="name@example.com" required>
-        <label for="inputMorada">Morada do Estabelecimento</label>
+        <label for="inputMorada">Morada da Empresa</label>
       </div>
       <div class="form-floating mb-1">
         <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="name@example.com" required>
@@ -54,8 +54,8 @@ if (isset($_SESSION['authenticatedB'])) {
         <label class="form-label" for="inputTel">Telemovel</label>
       </div>
       <div class="form-floating mb-1">
-        <select id="tipo" name="tipo" class="form-select" style="padding-top: 1.1vh;" required>
-          <option value="" selected>Tipo</option>
+        <select id="tipo" name="tipo" class="form-select" style="padding-top: 1.1vh;" placeholder="Tipo" required>
+          <option value="" selected hidden>Tipo</option>
           <option value="pizza">Pizza</option>
           <option value="fastfood">Fast Food</option>
           <option value="hamburger">Hamburger</option>
@@ -68,15 +68,13 @@ if (isset($_SESSION['authenticatedB'])) {
           <option value="bebidas">Bedidas</option>
         </select>
       </div>
-      <div class="d-flex">
-        <div class="form-floating mb-1">
-          <input type="number" class="form-control" id="inputTaxa" name="inputTaxa" placeholder="name@example.com" min="0" step=".01" required>
-          <label for="inputTaxa">Taxa de entrega (€)</label>
-        </div>
-        <div class="form-floating mb-1" style="margin-left: 0.3vw;">
-          <input type="text" class="form-control" id="inputTempo" name="inputTempo" placeholder="name@example.com" required>
-          <label for="inputTempo" style="font-size: 0.8vw;">Tempo médio de entrega</label>
-        </div>
+      <div class="form-floating mb-1">
+        <input type="number" class="form-control" id="inputTaxa" name="inputTaxa" placeholder="name@example.com" min="0" step=".01" required>
+        <label for="inputTaxa">Taxa de entrega (€)</label>
+      </div>
+      <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="inputTempo" name="inputTempo" placeholder="name@example.com" required>
+        <label for="inputTempo">Tempo médio de entrega (hh:mm:ss)</label>
       </div>
       <div class="form-floating mb-1">
         <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password" required>
@@ -159,8 +157,6 @@ if (isset($_SESSION['authenticatedB'])) {
     document.addEventListener('DOMContentLoaded', function () {
       var inputTempo = document.getElementById('inputTempo');
 
-      inputTempo.value = "hh:mm:ss";
-
       inputTempo.addEventListener('focus', function () {
         if (inputTempo.value === "hh:mm:ss") {
             inputTempo.setSelectionRange(0, 8);
@@ -176,7 +172,7 @@ if (isset($_SESSION['authenticatedB'])) {
         console.log("Valid! " + value_time);
       } else {
         console.error("Invalid!");
-        alert("Formato inválido. Use hh:mm:ss. hh(00 a 23) / mm e ss(00 a 59");
+        alert("Formato inválido. Use hh:mm:ss. hh(00 a 23) / mm e ss(00 a 59)");
         document.getElementById("inputTempo").value = "hh:mm:ss";
         event.preventDefault(); // Impede o envio do formulário
       }
