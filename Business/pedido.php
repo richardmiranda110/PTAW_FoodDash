@@ -38,7 +38,7 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     // $stmt->execute([$idPedido]);
-    $pedido = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($stmt->rowCount() == 0) {
         exit("Pedido não encontrado");
