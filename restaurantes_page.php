@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="assets/styles/sitecss.css">
 	<link rel="stylesheet" href="assets/styles/dashboard.css">
 	<link rel="stylesheet" href="assets/styles/dashboard_beatriz.css">
+
 	<style>
 		.card {
 			cursor: pointer;
@@ -54,22 +55,30 @@
 	$offset = ($pagAtual - 1) * $itemPorPagina;
 
 	try {
-		$query = "SELECT est.id_estabelecimento, est.nome, est.localizacao, est.telemovel, 
-          est.taxa_entrega, est.tempo_medio_entrega, est.imagem, emp.nome AS empresa,
-          COALESCE ((select sum(classificacao)/count(classificacao) from avaliacoes where avaliacoes.id_estabelecimento=est.id_estabelecimento),0) as avaliacao
-          FROM estabelecimentos AS est
-          INNER JOIN empresas AS emp ON emp.id_empresa = est.id_empresa";
+		$query = "select id_empresa, nome, morada, telemovel,
+		COALESCE ( 
+			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
+			,0) as taxa_entrega,
+		COALESCE ( 
+			(select avg(tempo_medio_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
+			,'00:00:00') as tempo_medio_entrega,
+			logotipo,
+		COALESCE (
+			(select sum(classificacao)/count(classificacao) from avaliacoes 
+			 where avaliacoes.id_empresa=empresas.id_empresa)
+			,0) as avaliacao
+		from empresas";
 
 		$params = [];
 		$conditions = [];
 
 		if ($_SERVER["REQUEST_METHOD"] == "GET") {
 			if (!empty($_GET["restaurante"])) {
-				$conditions[] = "lower(est.nome) LIKE ?";
+				$conditions[] = "lower(nome) LIKE ?";
 				$params[] = "%" . strtolower($_GET['restaurante']) . "%";
 			}
 			if (!empty($_GET["categoria"])) {
-				$conditions[] = "lower(replace(emp.tipo,' ','')) = ?";
+				$conditions[] = "lower(replace(tipo,' ','')) = ?";
 				$params[] = $_GET['categoria'];
 			}
 		}
@@ -118,14 +127,14 @@
 				echo "
 			<div class='col grid_restaurantes_btn'>
 			<div class='card shadow-sm' id='" . $row['nome'] . "'>
-				<img src='" . $row['imagem'] . "' class='card-img-top' height='180' width='260' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
+				<img src='" . $row['logotipo'] . "' class='card-img-top' height='180' width='260' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
 				<div class='card-body'>
 					<div class='justify-content-between align-items-center'>
 						<h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>
 						<p class='mb-0'>" . $row['avaliacao'] . " ★</p>
 					</div>
 					<div class='d-flex justify-content-between align-items-center'>
-						<p class='card-text mb-0' style='font-size: 12px;'>Taxa de Entrega: " . $row['taxa_entrega'] . " €</p>
+						<p class='card-text mb-0' style='font-size: 12px;'>Taxa de Entrega: a partir de " . $row['taxa_entrega'] . " €</p>
 						<small class='text-body-secondary mb-0' style='font-size: 12px;'>" . $row['tempo_medio_entrega'] . " mins</small>
 					</div>
 				</div>

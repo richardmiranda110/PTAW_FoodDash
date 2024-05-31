@@ -39,6 +39,7 @@ include __DIR__."/includes/insertPedido.php";
     include __DIR__."/includes/header_logged_in.php";
 	///validar id cliente por session
 	$idCliente=$_SESSION['id_cliente'];
+
   }
   
   $idCliente = 1;
@@ -53,12 +54,20 @@ include __DIR__."/includes/insertPedido.php";
 
   $fRestaurante = "%" . strtolower(str_replace(' ', '', $_GET['restaurante'])) . "%";
 
-  $queryTop = "SELECT est.id_estabelecimento, est.nome, est.localizacao, est.telemovel, 
-          est.taxa_entrega, est.tempo_medio_entrega, est.imagem, emp.nome AS empresa,
-          COALESCE ((select sum(classificacao)/count(classificacao) from avaliacoes where avaliacoes.id_estabelecimento=est.id_estabelecimento),0) as avaliacao
-          FROM estabelecimentos AS est
-          INNER JOIN empresas AS emp ON emp.id_empresa = est.id_empresa
-		  WHERE REPLACE(LOWER(est.nome), ' ', '') LIKE ?";
+  $queryTop = "select id_empresa, nome,
+		COALESCE ( 
+			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
+			,0) as taxa_entrega,
+		COALESCE ( 
+			(select avg(tempo_medio_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
+			,'00:00:00') as tempo_medio_entrega,
+			logotipo,
+		COALESCE (
+			(select sum(classificacao)/count(classificacao) from avaliacoes 
+			 where avaliacoes.id_empresa=empresas.id_empresa)
+			,0) as avaliacao
+		from empresas
+		WHERE REPLACE(LOWER(nome), ' ', '') LIKE ?";
 
   try {
     $stmtTop = $pdo->prepare($queryTop);
@@ -75,13 +84,13 @@ include __DIR__."/includes/insertPedido.php";
       <div class="row">
         <div class="col-lg-4 px-0">
           <?php
-		  $idEstabelecimento = $infoRest['id_estabelecimento'] ;
+		  $idEmpresa = $infoRest['id_empresa'] ;
           echo "<h3 class='display-6' style='font-weight: bolder;'>" . $infoRest['nome'] . "</h3>
           <h5 class='mb-0'>" . $infoRest['avaliacao'] . "★</h5>
-          <p class='mb-0'>Taxa de Entrega: " . $infoRest['taxa_entrega'] . "€</p>
+          <p class='mb-0'>Taxa de Entrega: a partir de " . $infoRest['taxa_entrega'] . "€</p>
         </div>
         <div class='col-lg-4 text-center'>
-          <img src='".$infoRest['imagem']."' alt='" . $infoRest['nome'] . "' style='max-width: 20vw;'>
+          <img src='".$infoRest['logotipo']."' alt='" . $infoRest['nome'] . "' style='max-width: 20vw;'>
         </div>
 		";
           ?>
@@ -92,12 +101,12 @@ include __DIR__."/includes/insertPedido.php";
             </div>
 
             <!-- TOAST --->
-            <button type="button" class="btn btn-primary" style="<?php echo $idCliente == 0 ? 'display: none;' : ''; ?>" id="liveToastBtn">Avaliar Estabelecimento</button>
+            <button type="button" class="btn btn-primary" style="<?php echo $idCliente == 0 ? 'display: none;' : ''; ?>" id="liveToastBtn">Avaliar Empresa</button>
 			<div class="toast-container position-fixed bottom-0 end-0 p-3">
 			  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
 				<div class="toast-header">
 				  <img src="./assets/imgs/estrela_ilustrativa.png" class="rounded me-2" alt="star" style="width: 1.5vw;">
-				  <strong class="me-auto">Avaliar Estabelecimento</strong>
+				  <strong class="me-auto">Avaliar Empresa</strong>
 				  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 				</div>
 				<div class="toast-body2" style="height: auto;">
@@ -114,7 +123,7 @@ include __DIR__."/includes/insertPedido.php";
 					  </div>
 					</div>
 					<input type="hidden" name="idForm" id="idForm" value="insertAvaliation">
-					<input type="hidden" name="idEstabelecimento" id="idEstabelecimento" value="<?php echo $idEstabelecimento; ?>">
+					<input type="hidden" name="idEmpresa" id="idEmpresa" value="<?php echo $idEmpresa; ?>">
 					<input type="hidden" name="idCliente" id="idCliente" value="<?php echo $idCliente; ?>">
 					<input type="hidden" name="estrelas" id="ratingValue">
 					<textarea rows="4" cols="50" maxlength="100" name="input_text_comentario" id="input_text_comentario" placeholder="Insira um comentário (opcional) ..." style="margin-bottom: 1vh; width: 80%;"></textarea>
@@ -149,10 +158,12 @@ include __DIR__."/includes/insertPedido.php";
 
    <?php 
    
-   $query = "SELECT DISTINCT categorias.nome FROM itens
-   INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
-   INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
-   WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? ";
+   $query = "SELECT DISTINCT categorias.nome  from menus
+			inner join estabelecimentos on menus.id_estabelecimento = estabelecimentos.id_estabelecimento
+			inner join item_menus on menus.id_menu = item_menus.id_menu
+			inner join item_categorias on item_categorias.id_item=item_menus.id_item
+			inner join categorias on categorias.id_categoria=item_categorias.id_categoria
+			WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? ";
 
        $stmt = $pdo->prepare($query);
        $stmt->execute([$fRestaurante]);
@@ -261,11 +272,11 @@ include __DIR__."/includes/insertPedido.php";
                 </div>";
                 
                 $dados[]  = ['id' => $rowProd['id_item'] , 'trigger' => 'liveToastBtn_'.$idProd, 'toast' => 'liveToast_'.$idProd];
-                echo "<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>";
+                //echo "<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>";
 				echo "
 				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
-					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEstabelecimento."'>
+					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_item']."'>
 
@@ -348,7 +359,7 @@ include __DIR__."/includes/insertPedido.php";
   </div>
   </div>
   </div>
- 
+  </div> 
 
 
   <!-- Footer -->
