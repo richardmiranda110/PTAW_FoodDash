@@ -200,6 +200,9 @@ CREATE TABLE IF NOT EXISTS Item_Menus (
     ON DELETE CASCADE NOT NULL,
 );
 
+ALTER TABLE Pedidos ADD CONSTRAINT check_estado_valido
+CHECK (estado IN ('EM CHECKOUT','EFETUADO', 'EM PREPARACAO', 'A CAMINHO', 'FINALIZADO'));
+
 -- trigger para verificar se já existe uma avaliação do mesmo cliente para o mesmo estabelecimento, porque um cliente só pode avaliar um estabelecimento uma vez
 CREATE OR REPLACE FUNCTION verificar_avaliacao_duplicada()
 RETURNS TRIGGER AS $$
@@ -262,7 +265,7 @@ BEGIN
     -- Insere ou atualiza o pedido
     IF p_id_pedido IS NULL THEN
         INSERT INTO pedidos (data, estado, cancelado, precototal, id_cliente, id_entregador, id_estabelecimento)
-        VALUES (NOW(), 'EFETUADO', false, p_value_pedido, p_id_cliente, p_id_entregador, p_id_estabelecimento)
+        VALUES (NOW(), 'EM CHECKOUT', false, p_value_pedido, p_id_cliente, p_id_entregador, p_id_estabelecimento)
         RETURNING id_pedido INTO v_id_pedido;
     ELSE
         UPDATE pedidos SET precototal = p_value_pedido WHERE id_pedido = p_id_pedido;
