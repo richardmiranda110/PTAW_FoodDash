@@ -158,16 +158,12 @@ include __DIR__."/includes/insertPedido.php";
 
    <?php 
    
-   $query = "SELECT DISTINCT categorias.nome  from menus
-			inner join estabelecimentos on menus.id_estabelecimento = estabelecimentos.id_estabelecimento
-			inner join item_menus on menus.id_menu = item_menus.id_menu
-			inner join item_categorias on item_categorias.id_item=item_menus.id_item
-			inner join categorias on categorias.id_categoria=item_categorias.id_categoria
-			WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? ";
+   $query = "SELECT 'Menus' as categoria ";
 
        $stmt = $pdo->prepare($query);
-       $stmt->execute([$fRestaurante]);
-       $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+       //$stmt->execute([strtolower($fRestaurante)]);
+       $stmt->execute();
+	   $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
    
 
 
@@ -230,17 +226,23 @@ include __DIR__."/includes/insertPedido.php";
 					</button>
 				</h3>";
 
-            $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas  
+			$queryProd = "select m.id_menu, m.nome, m.descricao, m.preco, m.foto, false itemsozinho, true personalizacoesativas
+					from menus m 
+					inner join empresas e on e.id_empresa=m.id_estabelecimento  
+					and REPLACE(LOWER(e.nome), ' ', '') LIKE ? ";
+			
+            $queryProdOld = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas  
 					FROM itens 
 					INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 					INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
-					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
+					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ?";
+					//? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
 
             $idCategoria = str_replace(' ', '', $fCategoria);
             $fCat = "%" . strtolower(str_replace(' ', '', $fCategoria)) . "%";
 
             $stmtProd = $pdo->prepare($queryProd);
-            $stmtProd->execute([$fRestaurante, $fCat]);
+            $stmtProd->execute([$fRestaurante]);
             $produtos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
 
             echo "<div id='collapse" . $idCategoria . "' class='accordion-collapse collapse show' aria-labelledby='heading" . $idCategoria . "' data-bs-parent='#listProds'>
@@ -271,14 +273,14 @@ include __DIR__."/includes/insertPedido.php";
                     </div>
                 </div>";
                 
-                $dados[]  = ['id' => $rowProd['id_item'] , 'trigger' => 'liveToastBtn_'.$idProd, 'toast' => 'liveToast_'.$idProd];
+                $dados[]  = ['id' => $rowProd['id_menu'] , 'trigger' => 'liveToastBtn_'.$idProd, 'toast' => 'liveToast_'.$idProd];
                 //echo "<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>";
 				echo "
 				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
-					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_item']."'>
+					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_menu']."'>
 
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
 					<input type='hidden' name='idForm' id='idForm' value='insertPedido'>
@@ -296,36 +298,46 @@ include __DIR__."/includes/insertPedido.php";
 						<p>" . htmlspecialchars($rowProd['descricao']) . "</p>
 						</div>
 						<hr>
-						<div>	";
-
-						
-
-					$queryOp = "select id_opcao, nome, max_quantidade, preco from opcoes where id_item='".$rowProd['id_item']."'";
-
-					
-					$stmtExt= $pdo->prepare($queryOp);
-					$stmtExt->execute();
-					$opcoes = $stmtExt->fetchAll(PDO::FETCH_ASSOC);
-
-					if (!$rowProd['itemsozinho'] and count($opcoes) > 0) {
-							echo "
-						<h5>Adiciona extra(s) ao teu " . htmlspecialchars($rowProd['nome']) . "</h5>
+						<div>	
+						<h5>Personaliza o teu " . htmlspecialchars($rowProd['nome']). "</h5>
 						";
 						
-					foreach ($opcoes as $rowop) {
-						echo "<div class='form-check form-check-reverse product-item' style='display: flex; '>
-						<input style=' width: 5%; height: 25px; margin-right: 10px; margin-top: -1px;' class='form-check-input' type='checkbox' name='opcoes[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."'>	
-							<label style=' width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$rowop['id_opcao']."'>".$rowop['nome']."</label>													
-							<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$rowop['id_opcao']."' id='quantidade_".$rowop['id_opcao']."' min='1' max='".$rowop['max_quantidade']."' value=0 disabled >
-							<input type='hidden' class='form-control price-field' name='preco_".$rowop['id_opcao']."' id='preco_".$rowop['id_opcao']."' value=".$rowop['preco']."> 
-							<label style=' width: 10%; margin-left:2%; margin-bottom:1%;' class='form-check-label d-flex justify-content-start' >".$rowop['preco']." €</label>	
-						</div>
+					$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas
+							from item_menus as im
+							inner join menus m on m.id_menu=im.id_menu
+							inner join itens i on i.id_item=im.id_item
+							inner join empresas e on e.id_empresa=m.id_estabelecimento 
+							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER('McDonalds') and m.id_menu=".$rowProd['id_menu']."";
+
+					$stmtMenu= $pdo->prepare($queryMenu);
+					$stmtMenu->execute();
+					$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
+						
+					foreach ($itensMenus as $rowit) {
+						echo "<h5>" . htmlspecialchars($rowit['nome']) . "</h5>
+						<input type='hidden' name='itens[]' id='itens_".$rowit['id_item']."' value='".$rowit['id_item']."'>	
 						";
+						$queryOp = "select id_opcao, nome, max_quantidade, preco from opcoes where id_item='".$rowit['id_item']."'";
+
 						
-						
+						$stmtExt= $pdo->prepare($queryOp);
+						$stmtExt->execute();
+						$opcoes = $stmtExt->fetchAll(PDO::FETCH_ASSOC);
+							
+						foreach ($opcoes as $rowop) {
+							echo "<div class='form-check form-check-reverse product-item' style='display: flex; '>
+							<input style=' width: 5%; height: 25px; margin-right: 10px; margin-top: -1px;' class='form-check-input' type='checkbox' name='opcoes[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."'>	
+								<label style=' width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$rowop['id_opcao']."'>".$rowop['nome']."</label>													
+								<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$rowop['id_opcao']."' id='quantidade_".$rowop['id_opcao']."' min='1' max='".$rowop['max_quantidade']."' value=0 disabled >
+								<input type='hidden' class='form-control price-field' name='preco_".$rowop['id_opcao']."' id='preco_".$rowop['id_opcao']."' value=".$rowop['preco']."> 
+								<input type='hidden' name='itemop_".$rowop['id_opcao']."' id='itemop_".$rowop['id_opcao']."' value=".$rowit['id_item']."> 
+								<label style=' width: 10%; margin-left:2%; margin-bottom:1%;' class='form-check-label d-flex justify-content-start' >".$rowop['preco']." €</label>	
+							</div>
+							";
+						}
+						echo "<hr>";
 					}
-						} 
-					;
+					
 					echo "</div></div>
 						<div class='justify-content-center mt-2' style='text-align: center;'>";
 						if ($idCliente > 0) {
