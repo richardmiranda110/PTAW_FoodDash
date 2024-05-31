@@ -10,7 +10,7 @@ p {
 }
 
 .esquerdo {
-    flex: 75%;
+    flex: 25%;
 }
 
 .direito {

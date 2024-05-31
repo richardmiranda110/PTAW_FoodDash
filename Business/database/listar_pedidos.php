@@ -25,7 +25,7 @@ try {
 	FROM public.pedido_itens
 	inner join itens on itens.id_item=pedido_itens.id_item
 	inner join pedidos on pedidos.id_pedido=pedido_itens.id_pedido
-	where pedidos.id_pedido = 1;";
+	where pedidos.id_pedido = pedido_itens.id_pedido";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute();

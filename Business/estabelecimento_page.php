@@ -50,7 +50,7 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     </style>
 </head>
 
-<>
+<ul>
     <!--Zona do Header -->
     <div id="topHeader" class="container-xxl">
         <!-- Top/Menu da Página -->
@@ -59,38 +59,52 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     </div>
 
     <!--Zona de Conteudo -->
-    <br><br<<br>
-    <div class="container direita">
-        <h1>Estabelecimentos da Empresa</h1>
-        <div class="card mb-3">
-            <?php if (!empty($estabelecimentos)): ?>
-                <ul class="list-group">
-                    <?php foreach ($estabelecimentos as $estabelecimento): ?>
-                        <img class="card-img-top max-img-size" src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
-                            alt=" <?php echo htmlentities($estabelecimento['nome']); ?>">
-                        <br>
-                        <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
-                        <button id="btn_apagar" class="btn btn-danger direito" style="width: auto;" type="button"
-                            value="Editar">Apagar</button>
-                        <br>
-                        <hr>
-                        <li class="list-group-item">
-                            <strong>Localização:</strong> <?php echo htmlentities($estabelecimento['localizacao']); ?><br>
-                            <strong>Telemóvel:</strong> <?php echo htmlentities($estabelecimento['telemovel']); ?><br>
-                            <strong>Taxa de Entrega:</strong> <?php echo htmlentities($estabelecimento['taxa_entrega']); ?><br>
-                            <strong>Tempo Médio de Entrega:</strong>
-                            <?php echo htmlentities($estabelecimento['tempo_medio_entrega']); ?><br>
-                        </li>
-
-                        
-                    <br>
-                    <br>
-                    <?php endforeach; ?>
-                </ul>
-            <?php else: ?>
-                <p>Nenhum estabelecimento encontrado para esta empresa.</p>
-            <?php endif; ?>
-        </div>
+    <div class="direita">
+        <h1 class="container">Estabelecimentos da Empresa</h1>
+        <?php if (!empty($estabelecimentos)): ?>
+            <?php foreach ($estabelecimentos as $estabelecimento): ?>
+                <div class="container">
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img class="img-fluid max-img-size"
+                                    src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
+                                    class="img-fluid rounded-start" alt="<?php echo htmlentities($estabelecimento['nome']); ?>">
+                            </div>
+                            <div class="col-md-8">
+                                <br>
+                                <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
+                                <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
+                                    value="Editar">Editar</button>
+                                <br>
+                                <hr>
+                                <dl class="list-group list-group-flush">
+                                    <dd name="id" disabled><strong>Localização:</strong>
+                                        <?php echo htmlentities($estabelecimento['id_estabelecimento']); ?><br>
+                                    </dd>
+                                    <dd name="localizacao"><strong>Localização:</strong>
+                                        <?php echo htmlentities($estabelecimento['localizacao']); ?><br>
+                                    </dd>
+                                    <dd name="telemovel"><strong>Telemóvel:</strong>
+                                        <?php echo htmlentities($estabelecimento['telemovel']); ?><br>
+                                    </dd>
+                                    <dd name="taxa"><strong>Taxa de Entrega:</strong>
+                                        <?php echo htmlentities($estabelecimento['taxa_entrega']); ?><br>
+                                    </dd>
+                                    <dd name="tempo"><strong>Tempo Médio de Entrega:</strong>
+                                        <?php echo htmlentities($estabelecimento['tempo_medio_entrega']); ?>
+                                    </dd>
+                                    <br>
+                                </dl>
+                            </div>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Nenhum estabelecimento encontrado para esta empresa.</p>
+        <?php endif; ?>
     </div>
 
     <!--Fim do conteúdo de página-->
@@ -98,5 +112,63 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <!-- Footer-->
     <?php include __DIR__ . "/includes/footer_business.php"; ?>
     </body>
+
+    <script>
+
+        // Obtém os elementos
+        //Geral
+        var validacao = true;
+        var btnEditar = document.getElementById("btn_editar");
+        var localizacaoInput = document.querySelector("[name='localizacao']");
+        var telemovelInput = document.querySelector("[name='telemovel']");
+
+
+        // Função para validar o formulário da estabelcimento
+        function a() {
+
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Adiciona evento de clique ao botão
+            btnEditar.addEventListener("click", function () {
+                // Altera para modo de edição
+                if (btnEditar.innerHTML == "Editar") {
+                    btnEditar.innerHTML = "Guardar";
+                    btnEditar.setAttribute("type", "button"); // tipo: botão
+                    btnEditar.classList.remove("btn-warning");
+                    btnEditar.classList.add("btn-success");
+                    inputs.forEach(function (input) {
+                        input.removeAttribute("readonly");
+                    });
+                    form.method = 'GET';
+                    form.removeAttribute("action");
+                }
+                // Altera para modo de leitura
+                else {
+                    // Validar o formulário ao clicar em "Guardar"
+                    validarFormulario();
+
+                    // caso não haja erros, o formulário é submetido
+                    if (validacao == true) {
+                        validacao = true; // resetar a validação
+                        erroNome.textContent = ""; // limpar mensagem de erro
+                        erroLocalizacao.textContent = ""; // limpar mensagem de erro
+                        erroTelemovel.textContent = ""; // limpar mensagem de erro
+                        erroTaxaEntrega.textContent = ""; // limpar mensagem de erro
+                        erroTempoMedioEntrega.textContent = ""; // limpar mensagem de erro
+                        btnEditar.innerHTML = "Editar";
+                        btnEditar.setAttribute("type", "submit");
+                        btnEditar.classList.remove("btn-success"); // tipo: submissão
+                        btnEditar.classList.add("btn-warning");
+                        inputs.forEach(function (input) {
+                            input.setAttribute("readonly", "readonly");
+                        });
+                        form.method = 'POST';
+                        form.setAttribute("action", "perfil.php");
+                    }
+                }
+            })
+        });
+    </script>
 
 </html>
