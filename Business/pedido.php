@@ -24,7 +24,7 @@ try {
     itens.nome as nome_item,
     pi.quantidade as quantidade_pedida,
     pedido.data as data, pedido.estado as estado,
-    pedido.precototal as total
+    pedido.precototal as total,pedido.id_pedido as id_pedido
     FROM pedido_itens pi
     FULL JOIN itens 
     on itens.id_item=pi.id_item
@@ -44,11 +44,19 @@ try {
         exit("Pedido não encontrado");
     }
 
-    $query = "SELECT *
-	FROM public.pedido_itens
-	inner join itens on itens.id_item=pedido_itens.id_item
-	inner join pedidos on pedidos.id_pedido=pedido_itens.id_pedido
-	where pedidos.id_pedido = 1;";
+    $query = 
+        "SELECT item.nome as item_nome, item.preco as item_preco,                 -- item_nome, item_preco,
+        disponivel as item_disponivel, foto as item_foto, itemsozinho,    -- item_disponivel, item_foto
+        personalizacoesativas, pi.id_pedido_item as id_item_no_pedido,    -- personalizacoesativas, id_item_no_pedido
+        pi.id_item as item_id, pi.quantidade as item_quantidade,         -- id_item_no_pedido, item_id
+        pio.id_pedido_item_opcao as id_opcao_no_item_pedido,              -- id_pedido_item_opcao
+        pio.id_pedido_item as opcao_no_item_pedido,                       -- opcao_no_item_pedido
+        pio.id_opcao, pio.quantidade                                      -- opcao de cada item do pedido
+        FROM pedido_itens pi
+        inner join itens item on item.id_item=pi.id_item
+        inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
+        full join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
+        where pedido.id_pedido = 1;--  and pedidos.id_estabelecimento = 1;";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute();
@@ -56,7 +64,7 @@ try {
 
     $item_arr = array();
     foreach($itens as &$item){
-        array_push($item_arr,$item['nome']);
+        array_push($item_arr,$item['item_nome']);
     }
 
     $descricao = implode(' + ',$item_arr);
@@ -94,7 +102,7 @@ try {
     </head>
     <body>
         <div class="container">
-            <div class="card shadow-sm py-1" style="margin: 0 auto;">
+            <div class="card shadow-sm py-1"  style="width: 115vh !important;max-width:100vw;margin: 0 auto;">
                 <div class="container">
                     <div class="card-body">
                         <h3 class="card-title fw-bold"><?php echo 'Pedido #'.$pedido['id_pedido'].', '.$pedido['nome'] ?></h3>
@@ -105,15 +113,15 @@ try {
 
                     <div class="container mb-4">
                         <!-- grid caralho -->
-                        <div class="grid gap-0 column-gap-3">
-                            <!-- PRIMEIRO CARALHO -->
+                         <div class="grid gap-0 column-gap-3">
+                            <!-- PRIMEIRO CARALHO
                             <div class="g-col-4 card p-0 rounded-3 shadow-sm">
                                 <div class="card-header py-3">
                                     <h4 class="my-0 text-center  card-header-text">Menu Big King</h4>
                                 </div>
                                 <div class="card-body">
                                     <p class="card-title card-body-big-text pricing-card-title">5,99€</p>
-                                    <p class="card-body-big-text"><?php echo htmlspecialchars($descricao) ?></p>
+                                    <p class="card-body-big-text"><?php// echo htmlspecialchars($descricao) ?></p>
                                     
                                     <div class="div_personalizacoes">
                                         <p class="h5 card-body-huge-text">Personalizações:</p>
@@ -138,18 +146,66 @@ try {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <!-- SEGUNDO CARALHO -->
-                            <div class="g-col-4 card p-0 rounded-3 shadow-sm">
-                                <div class="card-header py-3">
-                                    <h4 class="my-0 card-header-text"><?php echo $pedido['nome_item'] ?></h4>
-                                </div>
-                                <div class="card-body">
-                                    <h6 class="card-title card-body-big-text pricing-card-title">1,49€</h6>
-                                    <h6><?php echo $pedido['nome_item'] ?></h6>
-                                </div>
-                            </div>
+                            <?php 
+                            foreach($itens as &$item){
+                                echo '
+                                <!-- SEGUNDO CARALHO -->
+                                <div class="g-col-4 card p-0 rounded-3 shadow-sm">
+                                    <div class="card-header py-3">
+                                        <p class=" h4 my-0 card-header-text">'.$item['item_nome'].'</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class=" h6 card-title card-body-big-text pricing-card-title">'.$item['item_preco'].' €</p>
+                                        <p class="h6">'.$item['item_nome'].'</h6>';
+                                        
+                                if($item['personalizacoesativas']){
+                                echo 
+                                '<div class="div_personalizacoes mr-2">
+                                    <p class="h5 card-body-huge-text">Personalizações:</p>';
+                                    if($item['itemsozinho'] == false){
+                                        echo $descricao;
+                                    }else{
+                                        $options = getItemPersonalizations($item['id_item_no_pedido']);
+                                        echo '
+                                        <div>
+                                            <p class="h6 card-body-text" style="margin-bottom: 0.5vh;">'.$item['item_nome'].'</p>
+                                            <ul style="margin: 0;">';
+                                            foreach($options as &$option){
+                                                if($option['quantidade'] == 0)
+                                                    echo ' <li class="card-body-small-text" style="padding: 0.2vh">'.($option['quantidade'] == 0 ? 'Sem ' : 'Com ').$option['nome'].'</li>';
+                                            }
+                                            echo '</ul>
+                                        </div>';
+                                    }
+                                    echo '</div>';
+                                }
+
+                        echo  '</div></div>';
+                            }
+
+
+            function getItemPersonalizations($id_pedido_item){
+                global $pdo;
+
+                $query = 
+                "SELECT pio.id_pedido_item as opcao_no_item_pedido,                       -- opcao_no_item_pedido
+                opcao.nome, pio.quantidade as quantidade, opcao.preco                     -- opcao de cada item do pedido
+                FROM pedido_itens pi
+                inner join itens item on item.id_item=pi.id_item
+                inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
+                full join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
+                inner join opcoes opcao on opcao.id_opcao =pio.id_opcao
+                where pio.id_pedido_item = ?; --and pedidos.id_estabelecimento = 1;";
+        
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([$id_pedido_item]);
+                return $stmt->fetchAll();
+            }
+                            ?>
+                    
+
                         </div>
                     </div>
 
@@ -161,46 +217,81 @@ try {
                         <p><strong>Morada:</strong> <?php echo $pedido['morada'] ?>, <?php echo $pedido['codpostal'] ?>, <?php echo $pedido['cidade'] ?></p>
                     </div>
 
+                    <?php
+                        switch($pedido['estado']){
+                            case 'EFETUADO':
+                                $step1 = 'active';
+                                $step2 = '';
+                                $step3 = '';
+                                $step4 = '';
+                                $width = '3%';
+                                break;
+                            case 'EM PREPARACAO':
+                                $step1 = 'active';
+                                $step2 = 'active';
+                                $step3 = '';
+                                $step4 = '';
+                                $width = '33%';
+                                break;
+                            case 'A CAMINHO':
+                                $step1 = 'active';
+                                $step2 = 'active';
+                                $step3 = 'active';
+                                $step4 = '';
+                                $width = '66%';
+                                break;
+                            case 'ENTREGUE':
+                                $step1 = 'active';
+                                $step2 = 'active';
+                                $step3 = 'active';
+                                $step4 = 'active';
+                                $width = '100%';
+                                break;
+                            default:
+                                exit('Algo de errado aconteceu');
+                            }
+                    ?>
+
                     <div class="process-wrapper mb-3">
                         <div id="progress-bar-container">
                             <ul>
-                                <li class="step step01 active">
-                                    <div class="step-inner">PEDIDO EFETUADO</div>
+                                <li class="step step01 <?php echo $step1 ?>">
+                                    <div class="step-inner <?php echo $step1 ?>">PEDIDO EFETUADO</div>
                                 </li>
-                                <li class="step step02">
-                                    <div class="step-inner">PREPARAÇÃO</div>
+                                <li class="step step02 <?php echo $step2 ?>">
+                                    <div class="step-inner <?php echo $step2 ?>">PREPARAÇÃO</div>
                                 </li>
-                                <li class="step step03">
-                                    <div class="step-inner">VIAGEM ATÉ DESTINO</div>
+                                <li class="step step03 <?php echo $step3 ?>">
+                                    <div class="step-inner <?php echo $step3 ?>">VIAGEM ATÉ DESTINO</div>
                                 </li>
-                                <li class="step step04">
-                                    <div class="step-inner">ENTREGUE</div>
+                                <li class="step step04 <?php echo $step4 ?>">
+                                    <div class="step-inner <?php echo $step4 ?>">ENTREGUE</div>
                                 </li>
                             </ul>
                             <div id="line">
-                                <div id="line-progress"></div>
+                                <div id="line-progress" style="width:<?php echo $width ?>;"></div>
                             </div>
                         </div>
                         <div id="progress-content-section">
-                            <div class="section-content efetuacao-pedido <?php $pedido['estado'] == 'EFETUADO' ? 'active' : '' ?>">
+                            <div class="section-content efetuacao-pedido <?php echo $pedido['estado'] == 'EFETUADO' ? 'active' : '' ?>">
                                 <h2>Efetuação do Pedido</h2>
                                 <p>O pedido foi efetuado.</p>
                                 <div class="d-flex justify-content-center mt-4 mb-4">
                                     <button class="btn btn-outline-warning btn-block" id="btn_comecar_preparar" style="color: #343a40;">Começar a Preparar</button>
                                 </div>
                             </div>
-                            <div class="section-content preparacao">
+                            <div class="section-content preparacao  <?php echo $pedido['estado'] == 'EM PREPARACAO' ? 'active' : '' ?>">
                                 <h2>Preparação</h2>
                                 <p>O pedido está em fase de preparação. Assim que o pedido estiver pronto para entrega dê-o ao seu entregador e carregue no botão abaixo para iniciar a fase entrega.</p>
                                 <div class="d-flex justify-content-center mt-4 mb-4">
                                     <button class="btn btn-outline-warning btn-block" id="btn_pedido_pronto" style="color: #343a40;">Pedido Pronto</button>
                                 </div>
                             </div>
-                            <div class="section-content viagem">
+                            <div class="section-content viagem <?php echo $pedido['estado'] == 'A CAMINHO' ? 'active' : '' ?>">
                                 <h2>Viagem até ao Destino</h2>
                                 <p>O pedido está a caminho do seu cliente.</p>
                             </div>
-                            <div class="section-content entregue">
+                            <div class="section-content entregue <?php echo $pedido['estado'] == 'ENTREGUE' ? 'active' : '' ?>">
                                 <h2>Entregue</h2>
                                 <p>O pedido foi entregue com sucesso. Parabéns. Muito obrigado.</p>
                             </div>
@@ -215,38 +306,75 @@ try {
         <br />
         <!--Zona do Footer -->
         <?php include __DIR__ . "../../includes/footer_2.php"; ?>
-        <script src="./assets/js/adicionar_pedido.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script>
+            let width = '<?php echo $width; ?>';
             $(".disabled");
 
-            $(".step").click(function () {
-                $(this).addClass("active").prevAll().addClass("active");
-                $(this).nextAll().removeClass("active");
-            });
+
 
             $(".step01").click(function () {
-                $("#line-progress").css("width", "3%");
+                if($(this).hasClass("active")){
+                    return;
+                }
+
+                $("#line-progress").css("width", '3%');
                 $(".efetuacao-pedido").addClass("active").siblings().removeClass("active");
             });
 
             $(".step02, #btn_comecar_preparar").click(function () {
+                if($(this).hasClass("active") == true){
+                    return;
+                }
+
                 $("#line-progress").css("width", "33%");
                 $(".preparacao").addClass("active").siblings().removeClass("active");
                 $(".step02").addClass("active");
+
+                $.ajax({
+                    url: "//business/pedidos.php?id=<?php echo $pedido['id_pedido']?>&stage=2",
+                    success: function (result) {
+                       console.log(result);
+                    }
+                });
             });
 
             $(".step03, #btn_pedido_pronto").click(function () {
+                if($(this).hasClass("active") == true){
+                    return
+                }
+
                 $("#line-progress").css("width", "66%");
-                $(".viagem").addClass("active").siblings().removeClass("active");
-                $(".step03").addClass("active");
+                    $(".viagem").addClass("active").siblings().removeClass("active");
+                    $(".step03").addClass("active");
+
+                    $.ajax({
+                        url: "/business/pedidos.php?id=<?php echo $pedido['id_pedido']?>&stage=3",
+                        success: function (result) {
+                        console.log(result);
+                        }
+                    });
+
             });
 
             $(".step04").click(function () {
+                if($(this).hasClass("active") == true){
+                    return;
+                }
+
                 $("#line-progress").css("width", "100%");
                 $(".entregue").addClass("active").siblings().removeClass("active");
+                $(".step04").addClass("active");
+
+                $.ajax({
+                    url: "/business/pedidos.php?id=<?php echo $pedido['id_pedido']?>&stage=4",
+                    success: function (result) {
+                       console.log(result);
+                    }
+                });
+
             });
         </script>
     </body>
