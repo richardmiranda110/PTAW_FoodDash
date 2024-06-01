@@ -43,7 +43,6 @@ function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
         exit("You cant edit other people's Data!");
     }
 
-
     $sql = "UPDATE Clientes SET nome = ?, apelido = ?, email = ?,
     telemovel = ?, morada = ?, cidade = ?, pais = ?, CodPostal = ?
     WHERE id_cliente = ?";

@@ -13,7 +13,6 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SES
 // cria o o atributo $Validacao com o valor true, pois não existem falhas
 $Validacao = true;
 $empresaModificado = null;
-$estabelecimentoModificado = null;
 
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -37,8 +36,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Se não ocorreram erros de validação, e se a empresa e o emprestimo tiver null
 if ($Validacao == true && ($empresaModificado !== null)) {
     // Editar a empresa na base de dados
-    if (EditarEmpresa($pdo, $_SESSION['id_estabelecimento'], $empresaModificado)) { // ALTERAR ID
-        $empresa = ObterEmpresa($pdo, $_SESSION['id_estabelecimento']); // ALTERAR ID
+    if (EditarEmpresa($pdo, $_SESSION['id_empresa'], $empresaModificado)) { // ALTERAR ID
+        $empresa = ObterEmpresa($pdo, $_SESSION['id_empresa']); // ALTERAR ID
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";
@@ -52,7 +51,6 @@ if ($Validacao == true && ($empresaModificado !== null)) {
     // Se ocurrem erros 
 } else {
     $empresa = ObterEmpresa($pdo, $_SESSION['id_empresa']);
-    $estabelecimento = ObterEstabelecimento($pdo, $_SESSION['id_estabelecimento']);
 }
 ?>
 

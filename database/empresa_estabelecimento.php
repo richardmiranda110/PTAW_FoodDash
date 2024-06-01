@@ -28,8 +28,8 @@ function ObterEmpresa($pdo, $ID)
     }
 }
 
-// Altera os dados do utilizador, mas não a password
-function EditarEmpresa($pdo, $ID, $DadosUtilizadores)
+// Altera os dados do empresa, mas não a password
+function EditarEmpresa($pdo, $ID, $DadosEmpresa)
 {
     if ($ID != $_SESSION['id_empresa']) {
         exit("You cant Edit other people's companies!");
@@ -39,12 +39,12 @@ function EditarEmpresa($pdo, $ID, $DadosUtilizadores)
     email = ?, tipo = ?, logotipo = ?, WHERE id_empresa = ?";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $DadosUtilizadores['nome'], PDO::PARAM_STR);
-    $stmt->bindValue(2, $DadosUtilizadores['morada'], PDO::PARAM_STR);
-    $stmt->bindValue(3, $DadosUtilizadores['telemovel'], PDO::PARAM_STR);
-    $stmt->bindValue(4, $DadosUtilizadores['email'], PDO::PARAM_STR);
-    $stmt->bindValue(5, $DadosUtilizadores['tipo'], PDO::PARAM_STR);
-    $stmt->bindValue(6, $DadosUtilizadores['logotipo'], PDO::PARAM_STR);
+    $stmt->bindValue(1, $DadosEmpresa['nome'], PDO::PARAM_STR);
+    $stmt->bindValue(2, $DadosEmpresa['morada'], PDO::PARAM_STR);
+    $stmt->bindValue(3, $DadosEmpresa['telemovel'], PDO::PARAM_STR);
+    $stmt->bindValue(4, $DadosEmpresa['email'], PDO::PARAM_STR);
+    $stmt->bindValue(5, $DadosEmpresa['tipo'], PDO::PARAM_STR);
+    $stmt->bindValue(6, $DadosEmpresa['logotipo'], PDO::PARAM_STR);
     $stmt->bindValue(7, $ID, PDO::PARAM_INT);
 
     // Executar a query e verificar que não retornou false
@@ -91,15 +91,15 @@ function ObterEstabelecimentosPorEmpresa($pdo, $ID)
 }
 
 
-function ObterEstabelecimento($pdo, $ID)
+function ObterEstabelecimento($pdo, $id_estabelecimento)
 {
-    if ($ID != $_SESSION['id_estabelecimento']) {
+    if ($id_estabelecimento != $_SESSION['id_estabelecimento']) {
         exit("You cant access other people's Establishment!");
     }
     try {
         $sql = "SELECT * FROM Estabelecimentos WHERE id_estabelecimento = ?";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $ID, PDO::PARAM_INT);
+        $stmt->bindValue(1, $id_estabelecimento, PDO::PARAM_INT);
         // Executar a query e verificar que não retornou false
         if ($stmt->execute()) {
             // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
@@ -118,8 +118,8 @@ function ObterEstabelecimento($pdo, $ID)
     }
 }
 
-// Altera os dados do utilizador, mas não a password
-function EditarEstabelecimento($pdo, $ID, $DadosUtilizadores)
+// Altera os dados do estabelecimento, mas não a password
+function EditarEstabelecimento($pdo, $ID, $DadosEstabelecimentos)
 {
     if ($ID != $_SESSION['id_estabelecimento']) {
         exit("You cant edit other people's Establishment!");
@@ -130,12 +130,12 @@ function EditarEstabelecimento($pdo, $ID, $DadosUtilizadores)
     WHERE id_estabelecimento = ?";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $DadosUtilizadores['nome'], PDO::PARAM_STR);
-    $stmt->bindValue(2, $DadosUtilizadores['localizacao'], PDO::PARAM_STR);
-    $stmt->bindValue(3, $DadosUtilizadores['telemovel'], PDO::PARAM_STR);
-    $stmt->bindValue(4, (float) $DadosUtilizadores['taxa_entrega'], PDO::PARAM_STR); // Cast to float
-    $stmt->bindValue(5, $DadosUtilizadores['tempo_medio_entrega'], PDO::PARAM_STR); // Should be a valid time string
-    $stmt->bindValue(6, $DadosUtilizadores['imagem'], PDO::PARAM_STR);
+    $stmt->bindValue(1, $DadosEstabelecimentos['nome'], PDO::PARAM_STR);
+    $stmt->bindValue(2, $DadosEstabelecimentos['localizacao'], PDO::PARAM_STR);
+    $stmt->bindValue(3, $DadosEstabelecimentos['telemovel'], PDO::PARAM_STR);
+    $stmt->bindValue(4, (float) $DadosEstabelecimentos['taxa_entrega'], PDO::PARAM_STR); // Cast to float
+    $stmt->bindValue(5, $DadosEstabelecimentos['tempo_medio_entrega'], PDO::PARAM_STR); // Should be a valid time string
+    $stmt->bindValue(6, $DadosEstabelecimentos['imagem'], PDO::PARAM_STR);
     $stmt->bindValue(7, (int) $ID, PDO::PARAM_INT);
 
     // Executar a query e verificar que não retornou false

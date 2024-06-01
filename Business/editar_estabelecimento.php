@@ -5,41 +5,46 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
-/* if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
-    header("Location: /business/home_page.php");
-    exit();
-} */
+$id_estabelecimento = null;
+$Validacao = true;
+$estabelecimento = null;
+$estabelecimentoModificado = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_estabelecimento'])) {
     $id_estabelecimento = $_POST['id_estabelecimento'];
+} else {
+    $id_estabelecimento = null;
 }
 
 // Recebendo dados da BD de um determinado estabelecimento
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter dados do estabelecimento
-    $estabelecimento = ObterEstabelecimento($pdo, $id); // ALTERAR O ID
+    $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento); // ALTERAR O ID
 }
+
+echo $id_estabelecimento;
+var_dump($estabelecimento);
+
 // Enviando dados para a BD, ao editar dados de um determinado estabelecimento
-elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+/*elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
     // Atribuir os dados do formulário à variável $estabelecimento
     // e, ao mesmo tempo, retirar carateres perigosos
     $estabelecimentoModificado = array(
-        'nome' => htmlentities(trim($_POST['nome'])),
-        'localizacao' => htmlentities(trim($_POST['localzacao'])),
-        'telemovel' => htmlentities(trim($_POST['telemovel'])),
-        'taxa_entrega' => htmlentities(trim($_POST['taxa_entrega'])),
-        'tempo_medio_entrega' => htmlentities(trim($_POST['tempo_medio_entrega'])),
-        'imagem' => htmlentities(trim($_POST['imagem']))
+        'nome' => isset($_POST['nome']) ? htmlentities(trim($_POST['nome'])) : '',
+        'localizacao' => isset($_POST['localzacao']) ? htmlentities(trim($_POST['localzacao'])) : '',
+        'telemovel' => isset($_POST['telemovel']) ? htmlentities(trim($_POST['telemovel'])) : '',
+        'taxa_entrega' => isset($_POST['taxa_entrega']) ? htmlentities(trim($_POST['taxa_entrega'])) : '',
+        'tempo_medio_entrega' => isset($_POST['tempo_medio_entrega']) ? htmlentities(trim($_POST['tempo_medio_entrega'])) : '',
+        'imagem' => isset($_POST['imagem']) ? htmlentities(trim($_POST['imagem'])) : ''
     );
-}
+}*/
 
-$Validacao == null;
-
-// Se não ocorreram erros de validação, e o emprestimo tiver null
-if ($Validacao == true && ($estabelecimentoModificado !== null)) {
+// Se não ocorreram erros de validação, e o estabelecimento tiver null
+if ($estabelecimentoModificado !== null) {
     // Editar os dados do estabelecimento na base de dados
-    if (EditarEstabelecimento($pdo, $_SESSION['id_estabelecimento'], $estabelecimentoModificado)) { // ALTERAR ID
-        $estabelecimento = ObterEstabelecimento($pdo, $_SESSION['id_estabelecimento']); // ALTERAR ID
+    if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) { // ALTERAR ID
+        $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento); // ALTERAR ID
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";
