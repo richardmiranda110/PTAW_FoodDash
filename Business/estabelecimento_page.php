@@ -74,12 +74,13 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                             <div class="col-md-8">
                                 <br>
                                 <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
-                                <input type="hidden" name="id_estabelecimento"
-                                            value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
-                                <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
-                                    value="Editar" href="editar_estabelecimento.php
-                                    <?php htmlentities($estabelecimento['id_estabelecimento']);?>">Editar</button>
-                                <br>
+                                <form action="editar_estabelecimento.php" method="post">
+                                    <input type="hidden" name="id_estabelecimento"
+                                        value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
+                                    <button class="btn btn-warning direito" style="width: auto;" type="submit">
+                                        Editar
+                                    </button>
+                                </form>
                                 <hr>
                                 <dl class="list-group list-group-flush">
                                     <dd name="id" disabled><strong>Id do estabelcimento:</strong>
@@ -115,4 +116,5 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <!-- Footer-->
     <?php include __DIR__ . "/includes/footer_business.php"; ?>
     </body>
+
 </html>
