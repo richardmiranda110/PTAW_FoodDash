@@ -10,10 +10,14 @@ include __DIR__ . "/../database/db_connection.php";
     exit();
 } */
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_estabelecimento'])) {
+    $id_estabelecimento = $_POST['id_estabelecimento'];
+}
+
 // Recebendo dados da BD de um determinado estabelecimento
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter dados do estabelecimento
-    $estabelecimento = ObterEstabelecimento($pdo, $_SESSION['id_estabelecimento']); // ALTERAR O ID
+    $estabelecimento = ObterEstabelecimento($pdo, $id); // ALTERAR O ID
 }
 // Enviando dados para a BD, ao editar dados de um determinado estabelecimento
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {

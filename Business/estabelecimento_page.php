@@ -74,12 +74,15 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                             <div class="col-md-8">
                                 <br>
                                 <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
+                                <input type="hidden" name="id_estabelecimento"
+                                            value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
                                 <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
-                                    value="Editar">Editar</button>
+                                    value="Editar" href="editar_estabelecimento.php
+                                    <?php htmlentities($estabelecimento['id_estabelecimento']);?>">Editar</button>
                                 <br>
                                 <hr>
                                 <dl class="list-group list-group-flush">
-                                    <dd name="id" disabled><strong>Localização:</strong>
+                                    <dd name="id" disabled><strong>Id do estabelcimento:</strong>
                                         <?php echo htmlentities($estabelecimento['id_estabelecimento']); ?><br>
                                     </dd>
                                     <dd name="localizacao"><strong>Localização:</strong>
@@ -112,63 +115,4 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <!-- Footer-->
     <?php include __DIR__ . "/includes/footer_business.php"; ?>
     </body>
-
-    <script>
-
-        // Obtém os elementos
-        //Geral
-        var validacao = true;
-        var btnEditar = document.getElementById("btn_editar");
-        var localizacaoInput = document.querySelector("[name='localizacao']");
-        var telemovelInput = document.querySelector("[name='telemovel']");
-
-
-        // Função para validar o formulário da estabelcimento
-        function a() {
-
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Adiciona evento de clique ao botão
-            btnEditar.addEventListener("click", function () {
-                // Altera para modo de edição
-                if (btnEditar.innerHTML == "Editar") {
-                    btnEditar.innerHTML = "Guardar";
-                    btnEditar.setAttribute("type", "button"); // tipo: botão
-                    btnEditar.classList.remove("btn-warning");
-                    btnEditar.classList.add("btn-success");
-                    inputs.forEach(function (input) {
-                        input.removeAttribute("readonly");
-                    });
-                    form.method = 'GET';
-                    form.removeAttribute("action");
-                }
-                // Altera para modo de leitura
-                else {
-                    // Validar o formulário ao clicar em "Guardar"
-                    validarFormulario();
-
-                    // caso não haja erros, o formulário é submetido
-                    if (validacao == true) {
-                        validacao = true; // resetar a validação
-                        erroNome.textContent = ""; // limpar mensagem de erro
-                        erroLocalizacao.textContent = ""; // limpar mensagem de erro
-                        erroTelemovel.textContent = ""; // limpar mensagem de erro
-                        erroTaxaEntrega.textContent = ""; // limpar mensagem de erro
-                        erroTempoMedioEntrega.textContent = ""; // limpar mensagem de erro
-                        btnEditar.innerHTML = "Editar";
-                        btnEditar.setAttribute("type", "submit");
-                        btnEditar.classList.remove("btn-success"); // tipo: submissão
-                        btnEditar.classList.add("btn-warning");
-                        inputs.forEach(function (input) {
-                            input.setAttribute("readonly", "readonly");
-                        });
-                        form.method = 'POST';
-                        form.setAttribute("action", "perfil.php");
-                    }
-                }
-            })
-        });
-    </script>
-
 </html>
