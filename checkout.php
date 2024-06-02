@@ -107,7 +107,7 @@ foreach ($pedidos as $rowPed) {
 
 		foreach ($items as $rowItem) {
 			echo "
-                    <span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>" .htmlspecialchars($rowItem['nome']). " : </span> <br>
+                    <span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>".$rowItem['quantidade']. " * " .htmlspecialchars($rowItem['nome']). " : </span> <br>
 				";
 				
 			$queryItens = "select i.nome, pio.quantidade
