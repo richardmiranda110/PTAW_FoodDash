@@ -1,14 +1,15 @@
 <?php
-require_once __DIR__.'/includes/session.php';
-require_once __DIR__."/../database/credentials.php";
-require_once __DIR__."/../database/db_connection.php";
 
-if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+require_once __DIR__ . '/includes/session.php';
+require_once __DIR__ . "/../database/credentials.php";
+require_once __DIR__ . "/../database/db_connection.php";
+
+if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     header("Location: /Business/dashboard_home_page.php");
     exit();
-  }
+}
 
-// não sei quem fez isto, mas $_GET aint it chief
+
 $idEstabelecimento = $_SESSION['id_estabelecimento'];
 
 function getPedidosDiarios($pdo, $idEstabelecimento, $dia)
@@ -21,6 +22,7 @@ function getPedidosDiarios($pdo, $idEstabelecimento, $dia)
     $result = $stmt->fetch();
     return $result['total_pedidos'];
 }
+
 function getPedidosMensais($pdo, $idEstabelecimento, $mes)
 {
     $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
@@ -153,7 +155,7 @@ function getTodasAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+        WHERE id_empresa = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
@@ -167,7 +169,7 @@ function getSomaAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
 {
     $query = "SELECT SUM(classificacao) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+        WHERE id_empresa = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
@@ -194,7 +196,7 @@ function getTodasAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+        WHERE id_empresa = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
@@ -208,7 +210,7 @@ function getSomaAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
 {
     $query = "SELECT SUM(classificacao) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+        WHERE id_empresa = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
@@ -257,7 +259,7 @@ $vendasDiarias = getVendasDiarias($pdo, $idEstabelecimento, $diaAtual);
 
 $vendasMensais = getVendasMensais($pdo, $idEstabelecimento, $mesAtual);
 
-$pedidosDiarios = getPedidosDiarios($pdo, $idEstabelecimento, $diaAtual);
+$pedidosDiarios =  getPedidosDiarios($pdo, $idEstabelecimento, $diaAtual);
 
 $pedidosMensais = getPedidosMensais($pdo, $idEstabelecimento, $mesAtual);
 
@@ -269,135 +271,56 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./assets/styles/adicionar.css">
-    <link rel="stylesheet" href="../../assets/styles/sitecss.css">
-	  <link rel="stylesheet" href="../../assets/styles/dashboard.css">
-    <title>Performance</title>
+    <title>Utilizador</title>
     <style>
+        section {
+            padding: 8px;
+        }
+
         .card {
             overflow: auto;
             height: 160px;
             max-height: 160px;
-            /* Defina a altura fixa desejada */
         }
 
         .grafico {
-            overflow: auto;
-            height: 380px;
-            max-height: 380px;
+            height: 1000px;
+            /* Altura mínima dos gráficos */
+            max-height: 1000px;
+            /* Altura máxima dos gráficos */
+        }
+
+        .grafico canvas {
+            max-width: 100%;
+            height: 100%;
+            /* Faz o canvas ocupar toda a altura do contêiner pai */
         }
     </style>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load("current", {
-            packages: ['corechart']
-        });
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ["Element", "Pedidos", {
-                    role: "style"
-                }],
-                ["Jan", <?= getPedidosMensais($pdo, $estabelecimentoId, 1) ?>, "gold"],
-                ["Fev", <?= getPedidosMensais($pdo, $estabelecimentoId, 2) ?>, "gold"],
-                ["Mar", <?= getPedidosMensais($pdo, $estabelecimentoId, 3) ?>, "gold"],
-                ["Abr", <?= getPedidosMensais($pdo, $estabelecimentoId, 4) ?>, "gold"],
-                ["Mai", <?= getPedidosMensais($pdo, $estabelecimentoId, 5) ?>, "gold"],
-                ["Jun", <?= getPedidosMensais($pdo, $estabelecimentoId, 6) ?>, "gold"],
-                ["Jul", <?= getPedidosMensais($pdo, $estabelecimentoId, 7) ?>, "gold"],
-                ["Ago", <?= getPedidosMensais($pdo, $estabelecimentoId, 8) ?>, "gold"],
-                ["Set", <?= getPedidosMensais($pdo, $estabelecimentoId, 9) ?>, "gold"],
-                ["Out", <?= getPedidosMensais($pdo, $estabelecimentoId, 10) ?>, "gold"],
-                ["Nov", <?= getPedidosMensais($pdo, $estabelecimentoId, 11) ?>, "gold"],
-                ["Dez", <?= getPedidosMensais($pdo, $estabelecimentoId, 12) ?>, "gold"],
-            ]);
-
-            var view = new google.visualization.DataView(data);
-            view.setColumns([0, 1,
-                {
-                    calc: "stringify",
-                    sourceColumn: 1,
-                    type: "string",
-                    role: "annotation"
-                },
-                2
-            ]);
-
-            var options = {
-                title: "Números de pedido por mês",
-                width: 820,
-                height: 340,
-                bar: {
-                    groupWidth: "35%"
-                },
-                legend: {
-                    position: "none"
-                },
-            };
-            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-            chart.draw(view, options);
-        }
-    </script>
-
-    <script type="text/javascript">
-        google.charts.load('current', {
-            'packages': ['corechart']
-        });
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Year', 'Dinheiro gasto'],
-                ['Jan', <?= getPedidosMensais($pdo, $estabelecimentoId, 1) ?>],
-                ['Fev', <?= getPedidosMensais($pdo, $estabelecimentoId, 2) ?>],
-                ['Mar', <?= getPedidosMensais($pdo, $estabelecimentoId, 3) ?>],
-                ['Abr', <?= getPedidosMensais($pdo, $estabelecimentoId, 4) ?>],
-                ['Mai', <?= getPedidosMensais($pdo, $estabelecimentoId, 5) ?>],
-                ['Jun', <?= getPedidosMensais($pdo, $estabelecimentoId, 6) ?>],
-                ['Jul', <?= getPedidosMensais($pdo, $estabelecimentoId, 7) ?>],
-                ['Ago', <?= getPedidosMensais($pdo, $estabelecimentoId, 8) ?>],
-                ['Set', <?= getPedidosMensais($pdo, $estabelecimentoId, 9) ?>],
-                ['Out', <?= getPedidosMensais($pdo, $estabelecimentoId, 10) ?>],
-                ['Nov', <?= getPedidosMensais($pdo, $estabelecimentoId, 11) ?>],
-                ['Dez', <?= getPedidosMensais($pdo, $estabelecimentoId, 12) ?>]
-            ]);
-
-            var options = {
-                width: 820,
-                height: 340,
-                title: 'Vendas',
-                curveType: 'function',
-                legend: {
-                    position: 'bottom'
-                }
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-            chart.draw(data, options);
-        }
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/styles/adicionar.css">
+    <link rel="stylesheet" href="../assets/styles/sitecss.css">
+    <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
-    <?php
-    include __DIR__ . "/includes/header_business_logged.php";
-    ?>
-    <!-- SIDEBAR -->
-    <?php
-    include __DIR__ . "/includes/sidebar_business.php";
-    ?>
-    <!-- Sumário diário -->
+    <!--Zona do Header -->
+
+    <!-- Top/Menu da Página -->
+    <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
+    <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
+
+
+    <!--Zona de Conteudo -->
     <section id="pricing" class="bg-light pt-2 pb-2">
         <div class="container-lg">
             <div class="text-start mt-1">
@@ -545,10 +468,9 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
             <!-- Primeiro gráfico -->
             <div class="row my-4 gx-5 gy-3 align-items-center justify-content-start">
                 <div class="col-12 col-md-7 col-lg-8">
-                    <div class="card grafico shadow border-1">
-                        <div class="card-body text-center">
-                            <div id="curve_chart" style=""></div>
-
+                    <div class="card grafico shadow border-1" style="height: 450px; max-height: 450px;">
+                        <div class="card-body">
+                            <canvas id="vendasChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -556,20 +478,96 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
             <!-- Segundo gráfico -->
             <div class="row my-4 gx-5 gy-3 align-items-center justify-content-start">
                 <div class="col-12 col-md-7 col-lg-8">
-                    <div class="card grafico shadow border-1">
-                        <div class="card-body text-center">
-                            <div id="columnchart_values" style=""></div>
+                    <div class="card grafico shadow border-1" style="height: 450px; max-height: 450px;">
+                        <div class="card-body">
+                            <canvas id="pedidosChart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- FOOTER -->
+    <!--Fim do conteúdo de página-->
     <?php
     include __DIR__ . "/includes/footer_business.php";
     ?>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const pedidosChart = document.getElementById('pedidosChart').getContext('2d');
+        const vendasChart = document.getElementById('vendasChart').getContext('2d');
+
+        new Chart(pedidosChart, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Pedidos',
+                    data: [
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 1) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 2) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 3) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 4) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 5) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 6) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 7) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 8) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 9) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 10) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 11) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 12) ?>
+                    ],
+                    borderWidth: 1,
+                    borderColor: 'rgb(0,0,0)',
+                    backgroundColor: 'rgb(255,215,0)',
+                    tension: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        new Chart(vendasChart, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Vendas',
+                    data: [
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 1) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 2) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 3) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 4) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 5) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 6) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 7) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 8) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 9) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 10) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 11) ?>,
+                        <?= getPedidosMensais($pdo, $idEstabelecimento, 12) ?>
+                    ],
+                    borderWidth: 5,
+                    borderColor: 'rgb(255,215,0)',
+                    backgroundColor: 'rgb(255,215,0)',
+                    tension: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
 </body>
 
 </html>
