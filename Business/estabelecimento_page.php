@@ -74,13 +74,21 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                             <div class="col-md-8">
                                 <br>
                                 <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
-                                <form action="editar_estabelecimento.php" method="post">
+                                <form id="editar_form" action="editar_estabelecimento.php" method="post">
                                     <input type="hidden" name="id_estabelecimento"
                                         value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
-                                    <button class="btn btn-warning direito" style="width: auto;" type="submit">
+                                    <button id="editar_btn" class="btn btn-warning direito" style="width: auto;">
                                         Editar
                                     </button>
                                 </form>
+                                <form id="apagar_form" action="estabelecimento_page.php" method="post">
+                                    <input type="hidden" name="id_estabelecimento"
+                                        value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
+                                    <button id="apagar_btn" class="btn btn-danger direito" style="width: auto;">
+                                        Apagar
+                                    </button>
+                                </form>
+
                                 <hr>
                                 <dl class="list-group list-group-flush">
                                     <dd name="id" disabled><strong>Id do estabelcimento:</strong>
@@ -116,5 +124,29 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <!-- Footer-->
     <?php include __DIR__ . "/includes/footer_business.php"; ?>
     </body>
+
+    <script>
+        document.getElementById("apagar_btn").addEventListener("click", function (event) {
+            event.preventDefault(); // Prevenir o envio do formulário por enquanto
+            
+            var $apagarForm = document.getElementById("apagar_form")
+            var confirmar = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>?");
+            texto = "Após eliminar, não é possível reaver";
+            var confirmar2 = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>?" . texto);
+
+            if (confirmar) {
+                if (confirmar2) {
+                    // Se confirmar, envia o formulário
+                    $apagarForm.submit();
+                } else {
+                    // Se não confirmar, não faz nada
+                    return false;
+                }
+            } else {
+                // Se não confirmar, não faz nada
+                return false;
+            }
+        });
+    </script>
 
 </html>

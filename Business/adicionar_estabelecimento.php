@@ -7,9 +7,10 @@ include __DIR__ . "/../database/db_connection.php";
 
 $id_estabelecimento = null;
 $Validacao = true;
+$estabelecimento = null;
 $estabelecimentoModificado = null;
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['id_estabelecimento'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['id_estabelecimento'])) {
     $id_estabelecimento = $_GET['id_estabelecimento'];
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_estabelecimento'])) {
     $id_estabelecimento = $_POST['id_estabelecimento'];
@@ -22,8 +23,8 @@ if ($id_estabelecimento !== null) {
     // Recebendo dados da BD de um determinado estabelecimento
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // Obter dados do estabelecimento
-        $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
-        echo var_dump($estabelecimento);
+        $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento); // ALTERAR O ID
+        var_dump($estabelecimento);
     }
 }
 
@@ -41,18 +42,15 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'imagem' => htmlentities(trim($_POST['imagem']))
     );
 
-    /*$estabelecimentoModificado = array(
+    $estabelecimentoModificado = array(
         'nome' => isset($_POST['nome']) ? htmlentities(trim($_POST['nome'])) : '',
         'localizacao' => isset($_POST['localzacao']) ? htmlentities(trim($_POST['localzacao'])) : '',
         'telemovel' => isset($_POST['telemovel']) ? htmlentities(trim($_POST['telemovel'])) : '',
         'taxa_entrega' => isset($_POST['taxa_entrega']) ? htmlentities(trim($_POST['taxa_entrega'])) : '',
         'tempo_medio_entrega' => isset($_POST['tempo_medio_entrega']) ? htmlentities(trim($_POST['tempo_medio_entrega'])) : '',
         'imagem' => isset($_POST['imagem']) ? htmlentities(trim($_POST['imagem'])) : ''
-    );*/
+    );
 }
-
-echo "id: " . $id_estabelecimento . " estabelecimento: ";
-echo var_dump($estabelecimento);
 
 // Se não ocorreram erros de validação, e o estabelecimento tiver null
 if ($estabelecimentoModificado !== null) {
@@ -149,10 +147,10 @@ if ($estabelecimentoModificado !== null) {
                                 <span id="erroLocalizacao" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <div>
-                                <!-- <iframe
+                                <iframe
                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18906.129712753736!2d6.722624160288201!3d60.12672284414915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463e997b1b6fc09d%3A0x6ee05405ec78a692!2sJ%C4%99zyk%20trola!5e0!3m2!1spl!2spl!4v1672239918130!5m2!1spl!2spl"
                                     width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
 
                             &emsp;

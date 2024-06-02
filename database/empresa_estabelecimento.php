@@ -90,33 +90,29 @@ function ObterEstabelecimentosPorEmpresa($pdo, $ID)
     }
 }
 
-
 function ObterEstabelecimento($pdo, $id_estabelecimento)
 {
-    if ($id_estabelecimento != $_SESSION['id_estabelecimento']) {
-        exit("You cant access other people's Establishment!");
-    }
     try {
         $sql = "SELECT * FROM Estabelecimentos WHERE id_estabelecimento = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $id_estabelecimento, PDO::PARAM_INT);
-        // Executar a query e verificar que não retornou false
+        //$registo = $stmt->fetch(PDO::FETCH_ASSOC);
+
         if ($stmt->execute()) {
             // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
-            $registo = $stmt->fetch();
-            // Retornar os dados
+            //$registo = $stmt->fetch();
+            $registo = $stmt->fetch(PDO::FETCH_ASSOC);
             return $registo;
         } else {
             // Se a consulta falhar, retornar null
             return null;
         }
-
-    } catch (Exception $e) {
-        echo "Erro na conexão à BD: " . $e->getMessage();
-        // Se ocorrer um erro, retornar null
+    } catch (PDOException $e) {
+        echo "Erro ao buscar o estabelecimento: " . $e->getMessage();
         return null;
     }
 }
+
 
 // Altera os dados do estabelecimento, mas não a password
 function EditarEstabelecimento($pdo, $ID, $DadosEstabelecimentos)
@@ -150,6 +146,21 @@ function EditarEstabelecimento($pdo, $ID, $DadosEstabelecimentos)
     return $sucesso;
 }
 
-function ApagarEstabelecimento() {
-    
+function ApagarEstabelecimento($pdo, $id_estabelecimento)
+{
+    try {
+        // Prepare a query para excluir o estabelecimento
+        $stmt = $pdo->prepare("DELETE FROM Estabelecimentos WHERE id_estabelecimento = ?");
+
+        // Executa a query, passando o ID do estabelecimento como parâmetro
+        $stmt->execute([$id_estabelecimento]);
+
+        // Retorna verdadeiro se a exclusão foi bem-sucedida
+        return true;
+    } catch (PDOException $e) {
+        // Em caso de erro, você pode tratar aqui
+        // Por exemplo, pode registrar o erro em um arquivo de log
+        // Ou pode retornar false para indicar que a exclusão falhou
+        return false;
+    }
 }
