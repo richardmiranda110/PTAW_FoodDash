@@ -162,8 +162,9 @@ include __DIR__."/includes/insertPedido.php";
 			union
 			SELECT DISTINCT categorias.nome FROM itens
 			INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
+			INNER JOIN empresas on empresas.id_empresa=estabelecimentos.id_empresa
 			INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
-			WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? ";
+			WHERE REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? ";
 
        $stmt = $pdo->prepare($query);
        $stmt->execute([strtolower($fRestaurante)]);
@@ -582,6 +583,11 @@ include __DIR__."/includes/insertPedido.php";
 		document.querySelector('#valuePedido').value = total.toFixed(2);
 	}
 		
+	document.getElementById('pedidoForm').addEventListener('submit', function(event) {
+        if (!confirm('Tem certeza de que deseja excluir este pedido?')) {
+            event.preventDefault();
+        }
+    });	
   </script>
 
   <script src="./assets/js/toast.js"></script>
