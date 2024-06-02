@@ -6,7 +6,7 @@ require_once __DIR__.'/../database/db_connection.php';
 try {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idForm'] == 'insertPedido') {
 		$idProd = isset($_POST['idProd']) ? intval($_POST['idProd']) : null;
-		$totalPedido = isset($_POST['valuePedido']) ? intval($_POST['valuePedido']) : null;
+		$totalPedido = isset($_POST['valuePedido']) ? floatval($_POST['valuePedido']) : null;
 		$idCliente = isset($_POST['idCliente']) ? intval($_POST['idCliente']) : null;
 		$idEstabelecimento = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
 		$idEntregador = isset($_POST['idEntregador']) ? intval($_POST['idEntregador']) : 1;
@@ -44,16 +44,18 @@ try {
         $itens = isset($_POST['itens']) ? $_POST['itens'] : [];
 		$opcoes = [];
         $opcoes = isset($_POST['opcoes']) ? $_POST['opcoes'] : [];
-		$totalPedido = isset($_POST['valuePedido']) ? intval($_POST['valuePedido']) : null;
+		$totalPedido = isset($_POST['valuePedido']) ? floatval($_POST['valuePedido']) : null;
         $idCliente = isset($_POST['idCliente']) ? intval($_POST['idCliente']) : null;
         $idEstabelecimento = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
         $idEntregador = isset($_POST['idEntregador']) ? intval($_POST['idEntregador']) : 1;
 
+		
         // Atualiza os dados na base de dados
         if (empty($idPedido)) {
 
             $stmt = $pdo->prepare("INSERT INTO pedidos (data, estado, cancelado, precototal, id_cliente, id_entregador, id_estabelecimento)
                                    VALUES (NOW(), 'EM CHECKOUT', false, :preco, :idCliente, :idEntregador, :idEstabelecimento) RETURNING id_pedido");
+
             $stmt->bindParam(':preco', $totalPedido);
             $stmt->bindParam(':idCliente', $idCliente);
             $stmt->bindParam(':idEntregador', $idEntregador);
@@ -75,10 +77,17 @@ try {
         if (!empty($idPedido)){
 			foreach ($itens as $id_item) {
 				// Preenche tabela pedido_itens
-				$stmt = $pdo->prepare("INSERT INTO pedido_itens (id_pedido, id_item, quantidade)
-									   VALUES (:idpedido, :idProd, 1) RETURNING id_pedido_item");
+				$itemid = $_POST['itemid_'. $id_item];
+				$quantidade = $_POST['quantidade_'. $id_item];
+				$preco = $_POST['preco_'. $id_item];
+				$idmenu = $_POST['idmenu_'. $id_item];
+				
+				$stmt = $pdo->prepare("INSERT INTO pedido_itens (id_pedido, id_item, quantidade, id_menu)
+									   VALUES (:idpedido, :idProd, :quantidade, :idmenu) RETURNING id_pedido_item");
 				$stmt->bindParam(':idpedido', $idPedido);
-				$stmt->bindParam(':idProd', $id_item);
+				$stmt->bindParam(':idProd', $itemid);
+				$stmt->bindParam(':quantidade', $quantidade);
+				$stmt->bindParam(':idmenu', $idmenu);
 				
 				$stmt->execute();
 
@@ -87,15 +96,18 @@ try {
 
 				//$opcoes = $_POST['opcoes'];						
 				foreach ($opcoes as $id_opcao) {
-					if ($id_item == $_POST['itemop_'. $id_opcao]) {
-						$quantidade = $_POST['quantidade_'. $id_opcao];
-						$preco = $_POST['preco_'. $id_opcao];
+					if ($itemid == $_POST['itemop_'. $id_opcao]) {
+						
+						$quant = 0;
+						if (!isset($_POST['opcao_'. $id_opcao])){
+							$quant = 1;
+						}
 
 						$stmt = $pdo->prepare("INSERT INTO pedido_item_opcoes (id_pedido_item, id_opcao, quantidade)
 											   VALUES (:idPedidoItem, :id_opcao, :qtd)");
 						$stmt->bindParam(':idPedidoItem', $idPedidoItem);
 						$stmt->bindParam(':id_opcao', $id_opcao);
-						$stmt->bindParam(':qtd', $quantidade, PDO::PARAM_INT);
+						$stmt->bindParam(':qtd', $quant);
 						
 						$stmt->execute();		
 					}					

@@ -322,12 +322,12 @@ include __DIR__."/includes/insertPedido.php";
 						<div>	
 						<h5>Personaliza o teu " . htmlspecialchars($rowProd['nome']). "</h5>
 						";
-						
+					
 					if (strtolower($idCategoria) == 'menus') {
-						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas
+						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu
 							from item_menus as im
 							inner join menus m on m.id_menu=im.id_menu
-							inner join itens i on i.id_item=im.id_item
+							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
 							inner join empresas e on e.id_empresa=m.id_estabelecimento 
 							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
 
@@ -335,7 +335,7 @@ include __DIR__."/includes/insertPedido.php";
 						$stmtMenu->execute([$fRestaurante]);
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
 					} else {
-						$queryMenu = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 isMenu
+						$queryMenu = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu
 							FROM itens 
 							INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
@@ -346,7 +346,7 @@ include __DIR__."/includes/insertPedido.php";
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
 					}
 					
-											
+										
 					foreach ($itensMenus as $rowit) {
 						$idIndex++;
 						echo "
@@ -355,10 +355,12 @@ include __DIR__."/includes/insertPedido.php";
 								<input type='hidden' name='itemid_".$idIndex ."' id='itemid_".$idIndex ."' value=".$rowit['id_item'] ."> 
 								<label style='font-size: 1.5vh; font-weight: bold;  width: 74%;' class='form-check-label d-flex justify-content-start' for='itens_".$idIndex."'>".$rowit['nome']."</label>													
 								<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' min='1' max='".$rowit['max_quantidade']."' value=1 >
+								<input type='hidden' class='form-control' name='categoria_".$idIndex."' id='categoria_".$idIndex."' value='".$idCategoria."'> 
+								<input type='hidden' class='form-control' name='idmenu_".$idIndex."' id='idmenu_".$idIndex."' value='".$rowit['id_menu']."'> 
 								<input type='hidden' class='form-control price-field' name='preco_".$idIndex."' id='preco_".$idIndex."' value=".$rowit['preco']."> 
 								<label style=' width: 10%; margin-left:2%; margin-bottom:1%;' class='form-check-label d-flex justify-content-start' >".$rowit['preco']." €</label>	
 							</div>
-						
+						 
 						";
 						$queryOp = "select id_opcao, nome, max_quantidade, preco from opcoes where id_item='".$rowit['id_item']."'";
 
@@ -370,25 +372,26 @@ include __DIR__."/includes/insertPedido.php";
 						foreach ($opcoes as $rowop) {
 							$idIndex++;
 							echo "<div class='form-check form-switch product-item' style='display: flex; '>
-							<input type='hidden' name='opcoes[]' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."'> 
-							<input style=' width: 4%; height: 20px; margin: 0px 10px 0px 5%;'  type='checkbox' name='opcao_".$rowop['id_opcao']."' id='opcao_".$rowop['id_opcao']."' value='".$rowop['id_opcao']."' checked>	
-								<label style='width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$rowop['id_opcao']."'>".$rowop['nome']."</label>													
-								<input type='hidden' name='itemop_".$rowop['id_opcao']."' id='itemop_".$rowop['id_opcao']."' value=".$rowit['id_item']."> 
+							<input type='hidden' name='opcoes[]' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."'> 
+							<input style=' width: 4%; height: 20px; margin: 0px 10px 0px 5%;'  class='form-check-input' type='checkbox' name='opcao_".$idIndex."' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."' checked>	
+								<label style='width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$idIndex."'>".$rowop['nome']."</label>									
+								<input type='hidden' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' value=1 >								
+								<input type='hidden' name='itemop_".$idIndex."' id='itemop_".$idIndex."' value=".$rowit['id_item']."> 
 							</div>
 							";
 						}
 						echo "<hr>";
 					}
-					
+		
 					echo "</div></div>
 						<div class='justify-content-center mt-2' style='text-align: center;'>";
 						if ($idCliente > 0) {
 					echo 	" <label'>Total Pedido: <span  id='totalPedido'>" . $rowProd['preco'] . " </span> €</label> 
 								<input type='hidden' class='total-item' name='valueItem' id='valueItem' value='" . $rowProd['preco'] . "'>
 								<input type='hidden' class='total-container' name='valuePedido' id='valuePedido' value='" . $rowProd['preco'] . "'>
-					<hr>
-					<input class=' btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho'>
-					</div>";
+							<hr>
+							<input class=' btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho'>
+							</div>";
 					
 						}
 						
@@ -556,10 +559,13 @@ include __DIR__."/includes/insertPedido.php";
 				document.querySelector('#quantidade_' + checkbox.value).disabled =false;
 
 				const quantity = parseFloat(document.querySelector('#quantidade_' + checkbox.value).value);
+
 				if (quantity == 0) {
 					document.querySelector('#quantidade_' + checkbox.value).value = 1;
 					quantity = 1;
 				}
+				
+				const catItem = document.querySelector('#categoria_' + checkbox.value).value;
 				
 				if (quantity > 1) {
 					const price = parseFloat(document.querySelector('#preco_' + checkbox.value).value);
