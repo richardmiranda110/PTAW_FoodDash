@@ -49,7 +49,6 @@ try {
         $idEstabelecimento = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
         $idEntregador = isset($_POST['idEntregador']) ? intval($_POST['idEntregador']) : 1;
 
-		
         // Atualiza os dados na base de dados
         if (empty($idPedido)) {
 
@@ -113,7 +112,9 @@ try {
 					}					
 				}
 			}
-            
+            $itens = null;
+			$opcoes = null;
+			
             echo "<div class='alert alert-success' role='alert'> Item Adicionado ao pedido nº.".$idPedido."
                 <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>

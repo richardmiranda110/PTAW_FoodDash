@@ -5,45 +5,52 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'
-    integrity='sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH' crossorigin='anonymous'>
-	<link rel='stylesheet' href='assets/styles/checkout.css'>
+        integrity='sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH' crossorigin='anonymous'>
+    <link rel='stylesheet' href='assets/styles/checkout.css'>
     <script src='assets/js/checkout.js'></script>
     <title>Checkout</title>
 </head>
 
-<!-- NAVBAR -->
-	<?php
+<body>
+    <!-- NAVBAR -->
+    <?php
 	require_once __DIR__ . "/session.php";
 	require_once __DIR__ . "/database/credentials.php";
 	require_once __DIR__ . "/database/db_connection.php";
-
-	if (isset($_SESSION['authenticated'])) {
-		include __DIR__ . "/includes/header_logged_in.php";
-	} else {
-		include __DIR__ . "/includes/header_restaurantes_selected.php";
+	
+	if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
+		include __DIR__."/includes/header_restaurantes_selected.php";
+	  }else{
+		include __DIR__."/includes/header_logged_in.php";
+		///validar id cliente por session
+		$idCliente=$_SESSION['id_cliente'];
+		$idIndex=240;
 	}
 	
+	include __DIR__."/includes/deletePedido.php";
+	include __DIR__."/includes/confirmPedido.php";
+
 	///validar id cliente por session
 	//$idCliente=$_SESSION['id_cliente'];
 	$idCliente = 1;
 	$totalPedido = 0;
+	$idIndex=340;
 	?>
-	
-<body>
+
     <div class='container' style='max-width: 100%;'>
         <div class='row justify-content-center'>
             <h1 class='checkout-title'>Checkout</h1>
         </div>
 
-		<div class='d-flex flex-row align-items-center' style='margin-left: 15vw; margin-right: 15vw;'>
+        <div class='d-flex flex-row align-items-center' style='margin-left: 15vw; margin-right: 15vw;'>
             <h2 class='burger-king-title' style='font-size: 2vw;'>Resumo do(s) pedido(s)</h2>
         </div>
-        
+
         <div class='row justify-content-between' id='boxes' style='margin-left: 15vw; margin-right: 15vw;'>
             <div class='col-md-5 mb-3'>
                 <div class='left-div'>
                     <div class='ResumoPedido'>
-<?php	
+                        <?php	
 try {
 $queryPedRestaurantes = "select distinct e.nome as nomeEmpresa, e.logotipo, e.id_empresa
 			from pedidos as p
@@ -69,92 +76,97 @@ $queryPedidos = "select p.id_pedido, p.data, p.precototal,
 			from pedidos as p
 			inner join clientes as c on c.id_cliente=p.id_cliente
 			inner join empresas as e on e.id_empresa = p.id_estabelecimento
-			where p.estado ='EM CHECKOUT'  and p.id_cliente = ? ";
+			where p.estado ='EM CHECKOUT'  and p.id_cliente = ? and e.id_empresa = ?";
 			
 $stmtPed = $pdo->prepare($queryPedidos);
-$stmtPed->execute([$idCliente]);
+$stmtPed->execute([$idCliente,$rowRestaurantes['id_empresa']]);
 $pedidos = $stmtPed->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
 	echo "Erro na conexão: " . $e->getMessage();
-}					
+}		
+
+echo "
+<form method='POST' enctype='multipart/form-data' action='' id='checkoutForm'>
+			<input type='hidden' name='idForm' id='idForm' value='checkoutForm'> 
+";			
 foreach ($pedidos as $rowPed) {
 	$totalPedido += $rowPed['precototal'];
-	
-	echo" <div style='width: 100%; height: 45px;'>	
-			<form id='formDeletePedido' action='' method='POST'> 
-			<input type='hidden' name='record_id' id='record_id' value='1'> <!-- O ID do registro a ser deletado -->
-				<div class='align-items-center' style='float:left;'>
-					<span class='resumo-pedido' class='burger-king-title' style='font-size: 1.25vw;margin-bottom: 0px;'>Pedido nº " .$rowPed['id_pedido']. " | " .$rowPed['data']. "</span> <br>
-					<span class='resumo-pedido' class='burger-king-title' style='font-size: 1vw;margin-bottom: 0px;'>" .$rowPed['precototal']. " €</span>
-					
-				</div>
-				<button type='button' class='btn btn-outline-danger' style='float:right;'>
-				<i class='bi bi-trash'></i>X
-				</button>
-				<div style='float:none;'></div>
-			</form>	
-			</div><br>
-				";
-						
-		$queryItens = "select pi.id_pedido_item, i.nome, i.descricao, pi.quantidade 
+	$idIndex++;
+	echo "
+	<input type='hidden' name='pedidos[]' id='pedido_".$idIndex."' value='".$idIndex."'>
+	<input type='hidden' name='id_pedido_".$idIndex ."' id='id_pedido_".$idIndex ."' value='".$rowPed['id_pedido']."'>
+	<input type='hidden' name='pedidosEmpresa[]' id='pedidosEmpresa_".$rowPed['id_empresa']."' value='".$rowPed['id_pedido']."'>
+	";
+
+	echo "
+	<div style='width: 100%; height: 45px;'>
+		<div class='align-items-center' style='float:left;'>
+			<span class='resumo-pedido' class='burger-king-title' style='font-size: 1.25vw;margin-bottom: 0px;'>Pedido nº " .$rowPed['id_pedido']. " | " .$rowPed['data']. "</span> <br>
+			<span class='resumo-pedido' class='burger-king-title' style='font-size: 1vw;margin-bottom: 0px;'>" .$rowPed['precototal']. " €</span>
+		</div>
+		<button type='button' class='btn btn-outline-danger' style='float:right;' onclick='deletePedido(".$rowPed['id_pedido'].")'>
+			<i class='bi bi-trash'></i>X
+		</button>
+		<div style='float:none;'></div>
+	</div><br>
+	";
+
+	$queryItens = "select pi.id_pedido_item, i.nome, i.descricao, pi.quantidade, coalesce(m.nome,'') menu
 					from pedido_itens as pi
 					inner join itens as i on i.id_item=pi.id_item
+					left join menus as m on m.id_menu=pi.id_menu
 					where pi.id_pedido=? ";
 
-		$stmtItems = $pdo->prepare($queryItens);
-		$stmtItems->execute([$rowPed['id_pedido']]);
-		$items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+	$stmtItems = $pdo->prepare($queryItens);
+	$stmtItems->execute([$rowPed['id_pedido']]);
+	$items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
 
-		foreach ($items as $rowItem) {
-			echo "
-                    <span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>".$rowItem['quantidade']. " * " .htmlspecialchars($rowItem['nome']). " : </span> <br>
-				";
-				
-			$queryItens = "select i.nome, pio.quantidade
+	$printMenu = 0;
+		
+	foreach ($items as $rowItem) {
+		if ($printMenu == 0 && !empty($rowItem['menu'])) {
+			$printMenu++;
+			echo "<span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>Menu: " . htmlspecialchars($rowItem['menu']) . " </span> <br>";
+		}
+		echo "<span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>" . $rowItem['quantidade'] . " * " . htmlspecialchars($rowItem['nome']) . " : </span> <br>";
+
+		$queryItens = "select i.nome, pio.quantidade
 						from pedido_item_opcoes as pio
 						inner join opcoes as i on i.id_opcao=pio.id_opcao
 						where pio.id_pedido_item = ? ";
 						
-			$stmtOpcoes = $pdo->prepare($queryItens);
-			$stmtOpcoes->execute([$rowPed['id_pedido_item']]);
-			$opcoes = $stmtOpcoes->fetchAll(PDO::FETCH_ASSOC);
-			
-			if (empty($opcoes)) {
-				echo "	
-					<span style='margin.top-0.4vw; margin-bottom: 0.4vw; font-size: 0.87vw; margin-left:0.7vw'><i>sem opção</i></span> <br>
-					";
-			}
-			foreach ($opcoes as $rowopcao) {
-				echo "	
-					<span style='margin.top-0.4vw; margin-bottom: 0.4vw; font-size: 0.87vw; margin-left:0.7vw'><i>" .htmlspecialchars($rowopcao['nome']). " + ".$rowopcao['quantidade']."</i></span> <br>
-					";
-			}
+		$stmtOpcoes = $pdo->prepare($queryItens);
+		$stmtOpcoes->execute([$rowPed['id_pedido_item']]);
+		$opcoes = $stmtOpcoes->fetchAll(PDO::FETCH_ASSOC);
 
+		if (empty($opcoes)) {
+			echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>sem opção</i></span> <br>";
 		}
-			$queryRest = "select id_estabelecimento, nome, localizacao, taxa_entrega 
-						from estabelecimentos
-						where id_empresa = ? ";
+		foreach ($opcoes as $rowopcao) {
+			echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>" . htmlspecialchars($rowopcao['nome']) . " + " . $rowopcao['quantidade'] . "</i></span> ";
+		}
+	}
+	echo "<br>";
+	$queryRest = "select id_estabelecimento, nome, localizacao, taxa_entrega 
+					from estabelecimentos
+					where id_empresa = ? ";
 						
-			$stmtRest = $pdo->prepare($queryRest);
-			$stmtRest->execute([$rowPed['id_empresa']]);
-			$restaurantes = $stmtRest->fetchAll(PDO::FETCH_ASSOC);
-}		
-			echo "<br>
-			<label for='estabelecimento'>Restaurante Pedido:</label>
-			<select class='form-select'  name='estabelecimento_".$rowPed['id_empresa']."' id='estabelecimento_".$rowPed['id_empresa']."'>
-			<option value='0' data-taxa-entrega=0>Escolha o Restaurante pretendido...</option>
-			";
-			foreach ($restaurantes as $rowRest){
-				echo"
-					<option value='".$rowRest['id_estabelecimento']."' data-taxa-entrega=".$rowRest['taxa_entrega'].">".$rowRest['nome']." - ".$rowRest['localizacao']." 
-					</option>
-					";
-			}
-			echo"
-			</select>
-			
-			
-			<hr><br>";
+	$stmtRest = $pdo->prepare($queryRest);
+	$stmtRest->execute([$rowPed['id_empresa']]);
+	$restaurantes = $stmtRest->fetchAll(PDO::FETCH_ASSOC);
+}			
+	$idIndex++;
+	echo "<br>
+	<input type='hidden' name='restaurantes[]' id='restaurante_".$idIndex."' value='".$idIndex."'>	
+	<input type='hidden' name='pedidosRestaurante' id='pedidosRestaurante_".$idIndex."' value='".$idsPedidos."'>	
+
+	<label for='estabelecimento'>Restaurante Pedido:</label>
+	<select class='form-select' name='estabelecimento_".$rowPed['id_empresa']."' id='estabelecimento_".$rowPed['id_empresa']."'>
+		<option value='0' data-taxa-entrega=0>Escolha o Restaurante pretendido...</option>";
+	foreach ($restaurantes as $rowRest) {
+		echo "<option value='".$rowRest['id_estabelecimento']."' data-taxa-entrega=".$rowRest['taxa_entrega'].">".$rowRest['nome']." - ".$rowRest['localizacao']."</option>";
+	}
+	echo "</select><hr>";
 }
 ?>
                     </div>
@@ -184,7 +196,7 @@ foreach ($pedidos as $rowPed) {
                     </div>
                     <div class='EstimativaEntrega'>
                         <h4 class='estimativa-entrega' style='font-size: 1.25vw;'>Estimativa para Entrega</h4>
-                        <div class='row align-items-center opcaoEntrega' style='margin: 0.75vw 0vh' onclick='toggleSelectionEntrega(this)'>
+                        <div class='row align-items-center opcaoEntrega selected' style='margin: 0.75vw 0vh' onclick='toggleSelectionEntrega(this)'>
                             <div class='col-auto'>
                                 <img src='assets/stock_imgs/iconStandard.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
                             </div>
@@ -193,7 +205,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0' style='font-size: 0.6vw;'>20-30min</p>
                             </div>
                         </div>
-                        <div class='row align-items-center opcaoEntrega' style='margin: 0.75vw 0vh' onclick='toggleSelectionEntrega(this)'>
+                        <div class='row align-items-center opcaoEntrega' style='margin: 0.75vw 0vh; pointer-events: none;' onclick='toggleSelectionEntrega(this)'>
                             <div class='col-auto'>
                                 <img src='assets/stock_imgs/iconAgenda.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
                             </div>
@@ -201,6 +213,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0' style='font-size: 0.8vw;'>Agendar</p>
                                 <p class='m-0' style='font-size: 0.6vw;'>Selecionar uma hora</p>
                             </div>
+                            <i style='font-size: 0.5vw;'>opção temporariamente indisponível</i>
                         </div>
                     </div>
                     <div id='agendarHoraCampos' style='display: none;'>
@@ -218,7 +231,7 @@ foreach ($pedidos as $rowPed) {
                     <div class='Pagamento'>
                         <h4 class='pagamento' style='font-size: 1.25vw;'>Pagamento</h4>
                         <p style='margin-top: 0.7vw; font-size: 0.87vw;'>Escolher forma de pagamento:</p>
-                        <div class='row align-items-center opcao' onclick='toggleSelection(this)' style='padding: 0.4vw 0vh; margin: 0.75vw 0vh;'>
+                        <div class='row align-items-center opcao' onclick='toggleSelection(this, "cartao")' style='padding: 0.4vw 0vh; margin: 0.75vw 0vh;'>
                             <div class='col-auto'>
                                 <img src='assets/stock_imgs/iconCartao.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
                             </div>
@@ -226,7 +239,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0' style='font-size: 0.82vw;'>Cartão de Crédito ou Débito</p>
                             </div>
                         </div>
-                        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this)'>
+                        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this, "mbway")'>
                             <div class='col-auto'>
                                 <img src='assets/stock_imgs/iconMBWAY.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
                             </div>
@@ -234,7 +247,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0' style='font-size: 0.82vw;'>MBWAY</p>
                             </div>
                         </div>
-                        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this)'>
+                        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this, "paypal")'>
                             <div class='col-auto'>
                                 <img src='assets/stock_imgs/iconPaypal.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
                             </div>
@@ -283,7 +296,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <p class='m-0' style='font-weight: bold; font-size: 0.87vw;' data-sub-total=<?php echo $totalPedido; ?> id='subtotal'><?php echo number_format((float)$totalPedido,2); ?> €</p>
+                                <p class='m-0' style='font-weight: bold; font-size: 0.87vw;' data-sub-total=<?php echo $totalPedido; ?> id='subtotal'><?php echo number_format((float)$totalPedido, 2); ?> €</p>
                             </div>
                         </div>
                         <div class='row align-items-center'>
@@ -323,7 +336,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <h4 class='m-0' style='font-weight: bold; font-size: 1.25vw;' id='totalPedido' >0€</h4>
+                                <h4 class='m-0' style='font-weight: bold; font-size: 1.25vw;' id='totalPedido'>0€</h4>
                             </div>
                         </div>
                         <div class='row align-items-center' style='margin-top: 1vw;'>
@@ -346,10 +359,10 @@ foreach ($pedidos as $rowPed) {
                         </div>
                     </div>
                 </div>
-                <form>
-                    <div class='text-center'>
-                        <button type='submit' class='btn btn-primary' id='btnConfirmPagamento'>Confirmar Pagamento</button>
-                    </div>
+
+                <div class='text-center'>
+                    <button type='submit' class='btn btn-primary' id='btnConfirmPagamento'>Confirmar Pagamento</button>
+                </div>
                 </form>
             </div>
         </div>
@@ -357,13 +370,10 @@ foreach ($pedidos as $rowPed) {
     </div>
 
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
-    integrity='sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz'
-    crossorigin='anonymous'></script>
-	<script>
-
-		
-		//Adicionar/atualizar valor do pedido
-	const selectBox = document.querySelectorAll('.form-select');
+        integrity='sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz' crossorigin='anonymous'></script>
+    <script>
+        /*	//Adicionar/atualizar valor do pedido
+		const selectBox = document.querySelectorAll('.form-select');
 
 	// Adicione um ouvinte de evento para cada caixa de seleção
 	selectBox.forEach(function (select) {
@@ -389,6 +399,97 @@ foreach ($pedidos as $rowPed) {
 		var somaTotal = totalTaxaEntrega + subTotal + taxaServico
 		document.querySelector('#totalPedido').textContent = somaTotal.toFixed(2) + ' €';
 	}
+	
+	
+	 document.getElementById('formDeletePedido').addEventListener('submit', function(event) {
+        if (!confirm('Tem certeza de que deseja excluir este pedido?')) {
+            event.preventDefault();
+        }
+    });
+	
+	let opcaoSelecionada = '';
+
+    function toggleSelection(element, opcao) {
+        opcaoSelecionada = opcao;
+        document.querySelectorAll('.opcao').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+
+        document.getElementById('cartaoCampos').style.display = opcao === 'cartao' ? 'block' : 'none';
+        document.getElementById('MBWAYCampos').style.display = opcao === 'mbway' ? 'block' : 'none';
+    }
+	
+	function validarPagamento() {
+        if (opcaoSelecionada === 'cartao') {
+            const nomeTitular = document.getElementById('nomeTitular').value;
+            const numeroCartao = document.getElementById('numeroCartao').value;
+            const dataValidade = document.getElementById('dataValidade').value;
+            const cvc = document.getElementById('cvc').value;
+            if (!nomeTitular || !numeroCartao || !dataValidade || !cvc) {
+                return false;
+            }
+        } else if (opcaoSelecionada === 'mbway') {
+            const numeroTelemovel = document.getElementById('numeroTelemovel').value;
+            if (!numeroTelemovel) {
+                return false;
+            }
+        }
+        return true;
+    }
+	
+	document.getElementById('btnConfirmPagamento').addEventListener('submit', function(event) {	
+        if (!confirm('Tem certeza de que deseja confirmar o pedido?')) {
+            event.preventDefault();
+        }
+    });	
+	
+	document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+		if (!validateForm()) {
+			event.preventDefault();
+		} else if (!confirm('Tem certeza de que deseja confirmar o pedido?')) {
+			event.preventDefault();
+		}
+	});
+	
+	function validateForm() {
+		let allValid = true;
+		selectBox.forEach(function (select) {
+			const taxaEntrega = parseFloat(select.options[select.selectedIndex].getAttribute("data-taxa-entrega"));
+			if (isNaN(taxaEntrega) || taxaEntrega <= 0) {
+				allValid = false;
+			}
+		});
+		
+		if (!validarPagamento()){
+			allValid = false;
+		}
+
+		if (!allValid) {
+			alert("Todos os pedidos devem ter um restaurante selecionado com uma restaurante de envio.");
+		}
+		//return allValid;
+		return true;
+	}
+	*/
+
+        function deletePedido(id_pedido) {
+            if (confirm('Tem certeza de que deseja excluir este pedido?')) {
+                // Cria um formulário dinamicamente
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "");
+
+                // Cria um campo de entrada para o ID do pedido
+                var input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", "id_toDelete");
+                input.setAttribute("value", id_pedido);
+
+                // Adiciona o campo ao formulário e envia o formulário
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
     </script>
 </body>
 

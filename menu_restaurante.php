@@ -23,12 +23,11 @@ include __DIR__."/includes/insertPedido.php";
   <!-- NAVBAR -->
   <?php
   
-  
   if (!isset($_GET['restaurante'])) {
     if (!empty($_SERVER['HTTP_REFERER'])) {
       header('Location: ' . $_SERVER['HTTP_REFERER']);
     } else {
-      header('Location: /restaurantes_page.php');
+      header('Location: /~ptaw-2024-gr2/restaurantes_page.php');
     }
     exit();
   }
@@ -73,6 +72,16 @@ include __DIR__."/includes/insertPedido.php";
     $stmtTop = $pdo->prepare($queryTop);
     $stmtTop->execute([$fRestaurante]);
     $infoRest = $stmtTop->fetch(PDO::FETCH_ASSOC);
+	
+	if (empty($infoRest)) {
+        // Mensagem de erro
+        echo "Nenhum registro encontrado.";
+        
+        // Redireciona para a página definida
+        header('Location: /~ptaw-2024-gr2/restaurantes_page.php');
+        exit();
+    } 
+	
   } catch (PDOException $e) {
     echo "Erro na conexão: " . $e->getMessage();
   }

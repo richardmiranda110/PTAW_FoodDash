@@ -4,8 +4,8 @@ require_once __DIR__.'/../database/credentials.php';
 require_once __DIR__.'/../database/db_connection.php';
 
 try {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idForm'] == 'deletePedido') {
-		$idPedido = isset($_POST['id_pedido']) ? intval($_POST['id_pedido']) : null;
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idForm'] != 'checkoutForm') {
+		$idPedido = isset($_POST['id_toDelete']) ? intval($_POST['id_toDelete']) : null;
 				
         // Atualiza os dados na base de dados
         if (!empty($idPedido)) {
