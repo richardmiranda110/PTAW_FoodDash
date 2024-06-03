@@ -33,7 +33,7 @@ const response = fetch('http://localhost/business/lista_opcoes.php')
     dable.columnData[2].CustomRendering = function(cellValue, rowNumber) {
 			return `    
       <div class="row justify-content-center">
-              <div class="fw-bold fs-5 price-tag w-50 text-center">${cellValue.preco} €</div>
+              <div class="fw-bold fs-5 price-tag text-center" style="width:10vw">${cellValue.preco} €</div>
       </div>`;
 		};
     dable.columnData[3].CustomRendering = function (_cellValue, rowNumber) {

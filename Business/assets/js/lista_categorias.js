@@ -39,8 +39,9 @@ const response = fetch('http://localhost/business/lista_categorias.php')
   .then(response => response.json())
   .then(data => {
     for(let item of data){
+      console.log(item);
       items.push(item);
-      rows.push([ item.nome,item.count + (item.count == 1 ? " item" : " itens"),item.id_categoria]);
+      rows.push([ item.nome,item.count + (item.count == 1 ? " item" : " itens"),item.id]);
     }
     return rows;
   })
@@ -110,7 +111,7 @@ function showTextModal(text){
 
   // Coloca Funcionalidade no botão
   btnAdd.onclick = function() {
-    form.submit();
+    //form.submit();
     spanBotaoX.click();
   }
 }
