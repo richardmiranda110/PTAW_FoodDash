@@ -61,6 +61,10 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <!--Zona de Conteudo -->
     <div class="direita">
         <h1 class="container">Estabelecimentos da Empresa</h1>
+        <div class="d-grid gap-2">
+            <a href="adicionar_estabelecimento.php" class="btn btn-light">Adicionar Estabelecimento</a>
+        </div>
+        <br><br>
         <?php if (!empty($estabelecimentos)): ?>
             <?php foreach ($estabelecimentos as $estabelecimento): ?>
                 <div class="container">
@@ -128,7 +132,7 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
     <script>
         document.getElementById("apagar_btn").addEventListener("click", function (event) {
             event.preventDefault(); // Prevenir o envio do formulário por enquanto
-            
+
             var $apagarForm = document.getElementById("apagar_form")
             var confirmar = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>?");
             texto = "Após eliminar, não é possível reaver";

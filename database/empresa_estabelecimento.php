@@ -58,6 +58,34 @@ function EditarEmpresa($pdo, $ID, $DadosEmpresa)
     return $sucesso;
 }
 
+function AdicionarEstabelecimento($pdo, $id_empresa,$dadosEstabelecimento) {
+    try {
+        // Preparar a consulta SQL para inserir um novo estabelecimento
+        $sql = "INSERT INTO Estabelecimentos (nome, localizacao, telemovel, taxa_entrega, tempo_medio_entrega, imagem, id_empresa) VALUES (:nome, :localizacao, :telemovel, :taxa_entrega, :tempo_medio_entrega, :imagem, :id_empresa)";
+        
+        // Preparar a declaração PDO
+        $stmt = $pdo->prepare($sql);
+        
+        // Vincular parâmetros
+        $stmt->bindParam(':nome', $dadosEstabelecimento['nome']);
+        $stmt->bindParam(':localizacao', $dadosEstabelecimento['localizacao']);
+        $stmt->bindParam(':telemovel', $dadosEstabelecimento['telemovel']);
+        $stmt->bindParam(':taxa_entrega', $dadosEstabelecimento['taxa_entrega']);
+        $stmt->bindParam(':tempo_medio_entrega', $dadosEstabelecimento['tempo_medio_entrega']);
+        $stmt->bindParam(':imagem', $dadosEstabelecimento['imagem']);
+        $stmt->bindParam(':id_empresa', $id_empresa);
+        
+        // Executar a consulta
+        $stmt->execute();
+        
+        // Retornar verdadeiro se a inserção for bem-sucedida
+        return true;
+    } catch (PDOException $e) {
+        // Se houver algum erro, lançar uma exceção ou lidar de outra forma
+        return false;
+    }
+}
+
 function ObterEstabelecimentosPorEmpresa($pdo, $ID)
 {
     if ($ID != $_SESSION['id_empresa']) {
