@@ -36,6 +36,72 @@ function ObterUmUtilizador($pdo, $ID)
     }
 }
 
+function ObterUltimoPedido()
+{
+    global $pdo;
+
+    try {
+        // query
+        $stmt = 
+        $pdo->prepare(
+            'SELECT id_pedido, data, estado, cancelado, precototal, id_estabelecimento 
+            FROM pedidos 
+            where id_cliente = ?
+            ORDER BY id_pedido 
+            DESC LIMIT 1'
+        );
+        
+        // Executar a query e verificar que não retornou false
+        if ($stmt->execute([$_SESSION['id_cliente']])) {
+            // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
+            $registo = $stmt->fetch();
+            // Retornar os dados
+            return $registo;
+        } else {
+            // Se a consulta falhar, retornar null
+            return null;
+        }
+    } catch (Exception $e) {
+        echo "Erro na conexão à BD: " . $e->getMessage();
+        // Se ocorrer um erro, retornar null
+        return null;
+    }
+}
+
+$ultimoPedido = ObterUltimoPedido();
+
+
+function ObterEstatisticas()
+{
+    global $pdo;
+
+    try {
+        // query
+        $stmt = 
+        $pdo->prepare(
+            'SELECT (SELECT round(avg(precototal),2) from pedidos where id_cliente = :idcliente) as totalgasto, (SELECT count(id_pedido) from pedidos where id_cliente = :idcliente) as totalpedidos,
+            (select max(estabelecimentos.nome) from pedidos inner join estabelecimentos on estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento where id_cliente = :idcliente) as maispedido;'
+        );
+        $stmt->bindValue(":idcliente",$_SESSION['id_cliente']);
+        // Executar a query e verificar que não retornou false
+        if ($stmt->execute()) {
+            // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
+            $registo = $stmt->fetch();
+            // Retornar os dados
+            return $registo;
+        } else {
+            // Se a consulta falhar, retornar null
+            return null;
+        }
+    } catch (Exception $e) {
+        echo "Erro na conexão à BD: " . $e->getMessage();
+        // Se ocorrer um erro, retornar null
+        return null;
+    }
+}
+
+$estatisticas = ObterEstatisticas();
+
 // Recebendo dados da BD
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados do utilizador
@@ -141,40 +207,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     </div>
                                 </div>
 								
-								<div class="pedidos">
-                        <div class="a">
-						<div class="w-100 p-3 pb-0 bg-body-tertiary border rounded-3">
-    <div class="d-flex mb-4 justify-content-between">
-        <p class="h4 mb-0 mt-1">Ultimo Pedido</p>
-        <a href="./dashboard_perfil_pedidos.php" class="btn btn-warning">Visualizar Pedidos</a>
-    </div>
-    <div>
-        <div class="card mb-4">
-            <div class="card-body d-flex flex-row align-items-end">
-                <div class="align-self-center me-auto">
-                    <p class="texto_pedido align-self-center m-0" style="text-align: center;">13:46</p>
-                    <p class="texto_pedido m-0" style="">16/03/2024</p>
-                </div>
-                <div class="align-self-center me-auto">
-                    <p class="m-0">Menu Big King<span>(Burger King)</span></>
-                    <p class="texto_pedido m-0">(Big King + Batatas Médias + Ice Tea Manga)</p>
-                </div>
-                <div class="align-self-center me-auto">
+                    <div class="pedidos">
+                        <?php 
+                        if($ultimoPedido){
+                            echo '<div class="a">
+                                <div class="w-100 p-3 pb-0 bg-body-tertiary border rounded-3">
+                                    <div class="d-flex mb-4 justify-content-between">
+                                        <p class="h4 mb-0 mt-1">Ultimo Pedido</p>
+                                        <a href="./dashboard_perfil_pedidos.php" class="btn btn-warning">Visualizar Pedidos</a>
+                                    </div>
+                                    <div>
+                                        <div class="card mb-4">
+                                            <div class="card-body d-flex flex-row align-items-end">
+                                                <div class="align-self-center me-auto">
+                                                    <p class="texto_pedido align-self-center m-0" style="text-align: center;">13:46</p>
+                                                    <p class="texto_pedido m-0" style="">16/03/2024</p>
+                                                </div>
+                                                <div class="align-self-center me-auto">
+                                                    <p class="m-0">Menu Big King<span>(Burger King)</span></p>
+                                                    <p class="texto_pedido m-0">(Big King + Batatas Médias + Ice Tea Manga)</p>
+                                                </div>
+                                                <div class="align-self-center me-auto">
 
-                    <div class="mb-2 align-self-center">
-                        <span class=" m-0 texto_pedido_negrito">Status:</span><br>
-                        <span class="texto_pedido m-0">Entregue</span>
-                    </div>
-                </div>
-                <div class=" m-0 align-self-center me-auto" style="">
-                    <p class="h6 text-center">9,28€</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-                        </div>
+                                                    <div class="mb-2 align-self-center">
+                                                        <span class=" m-0 texto_pedido_negrito">Status:</span><br>
+                                                        <span class="texto_pedido m-0">Entregue</span>
+                                                    </div>
+                                                </div>
+                                                <div class=" m-0 align-self-center me-auto" style="">
+                                                    <p class="h6 text-center">9,28€</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+                    }
+                        ?>
                     </div>
                             </div>
                             <div class="col-md-7">
