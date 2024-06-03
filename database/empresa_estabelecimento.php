@@ -85,7 +85,6 @@ function AdicionarEstabelecimento($pdo, $id_empresa,$dadosEstabelecimento) {
         return false;
     }
 }
-
 function ObterEstabelecimentosPorEmpresa($pdo, $ID)
 {
     if ($ID != $_SESSION['id_empresa']) {
@@ -186,9 +185,7 @@ function ApagarEstabelecimento($pdo, $id_estabelecimento)
         // Retorna verdadeiro se a exclusão foi bem-sucedida
         return true;
     } catch (PDOException $e) {
-        // Em caso de erro, você pode tratar aqui
-        // Por exemplo, pode registrar o erro em um arquivo de log
-        // Ou pode retornar false para indicar que a exclusão falhou
+        echo "Erro ao buscar o estabelecimento: " . $e->getMessage();
         return false;
     }
 }

@@ -1,4 +1,4 @@
-<button?php
+<?php
 require_once __DIR__ . '/includes/session.php';
 
 include __DIR__ . "/../database/empresa_estabelecimento.php";
@@ -55,13 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Se não ocorreram erros de validação, inserir o produto
     if ($Validacao == true) {
         if (AdicionarEstabelecimento($pdo, $_SESSION['id_empresa'], $estabelecimento)) {
-            $_SESSION["sucesso"] = "O produto foi inserido com sucesso!";
-            echo "O produto foi inserido com sucesso!";    
+            //$_SESSION["sucesso"] = "O produto foi inserido com sucesso!";
+            //echo "O produto foi inserido com sucesso!";    
             header("Location: estabelecimento_page.php");
             exit();
         } else {
             //$_SESSION["erro"] = "Ocorreu um erro ao tentar inserir o novo produto!";
-            echo "Ocorreu um erro ao tentar inserir o novo produto!";
+            //echo "Ocorreu um erro ao tentar inserir o novo produto!";
         }
     }
 }
@@ -104,8 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="p-3 d-flex justify-content-between">
                         <p class="h5">Informações Pessoais</p>
                         <div>
-                            <button href="adicionar_estabelecimento.php" class="btn btn-light">
-                                Voltar</button>
+                            <a href="adicionar_estabelecimento.php" class="btn btn-light">Voltar</a>
                             <button id="btn_guardar" class="btn btn-success direito" style="width: auto;" type="submit"
                                 value="Guardar">Guardar</button>
                         </div>
@@ -193,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     &emsp; &emsp;</label>
                                     <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time"
                                      value="<?php if (!empty($estabelcimento['tempo_medio_entrega']))
-                                            echo $estabelcimento['tempo_medio_entrega']; ?>" required>
+                                            echo $estabelcimento['tempo_medio_entrega']; ?>">
                                     <?php if (!empty($ErroTempo)) { ?>
                                         <span class="help-block small"
                                             style="color:#ff0000"><?php echo $ErroTempo; ?></span>

@@ -75,24 +75,25 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                                     src="<?php echo htmlentities($estabelecimento['imagem']); ?>"
                                     class="img-fluid rounded-start" alt="<?php echo htmlentities($estabelecimento['nome']); ?>">
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-8 justify-content-between">
                                 <br>
                                 <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
-                                <form id="editar_form" action="editar_estabelecimento.php" method="post">
-                                    <input type="hidden" name="id_estabelecimento"
-                                        value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
-                                    <button id="editar_btn" class="btn btn-warning direito" style="width: auto;">
-                                        Editar
-                                    </button>
-                                </form>
-                                <form id="apagar_form" action="estabelecimento_page.php" method="post">
-                                    <input type="hidden" name="id_estabelecimento"
-                                        value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
-                                    <button id="apagar_btn" class="btn btn-danger direito" style="width: auto;">
-                                        Apagar
-                                    </button>
-                                </form>
-
+                                <div>
+                                    <form id="editar_form" action="editar_estabelecimento.php" method="post">
+                                        <input type="hidden" name="id_estabelecimento"
+                                            value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
+                                        <button id="editar_btn" class="btn btn-warning direito" style="width: auto;">
+                                            Editar
+                                        </button>
+                                    </form>
+                                    <form id="apagar_form" action="estabelecimento_page.php" method="post">
+                                        <input type="hidden" name="id_estabelecimento"
+                                            value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
+                                        <button id="apagar_btn" class="btn btn-danger direito" style="width: auto;">
+                                            Apagar
+                                        </button>
+                                    </form>
+                                </div>
                                 <hr>
                                 <dl class="list-group list-group-flush">
                                     <dd name="id" disabled><strong>Id do estabelcimento:</strong>
