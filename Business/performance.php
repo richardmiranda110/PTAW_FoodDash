@@ -155,7 +155,7 @@ function getTodasAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
@@ -169,7 +169,7 @@ function getSomaAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
 {
     $query = "SELECT SUM(classificacao) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
@@ -196,7 +196,7 @@ function getTodasAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
@@ -210,7 +210,7 @@ function getSomaAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
 {
     $query = "SELECT SUM(classificacao) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
@@ -379,7 +379,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h2 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ?></p>
+                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ? $itemMaisPedidoDia : 0 ?></p>
                         </div>
                     </div>
                 </div>
@@ -449,7 +449,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h2 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoMes ?></p>
+                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ? $itemMaisPedidoDia : 0 ?></p>
                         </div>
                     </div>
                 </div>

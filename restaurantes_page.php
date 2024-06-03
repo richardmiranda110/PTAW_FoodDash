@@ -38,8 +38,8 @@
 
 
 	<!-- TÍTULO PÁGINA E PROCURAR -->
-	<h1 style="text-align: center;">Restaurantes</h1><br>
-	<form class="input-group container text-center mb-5" style="max-width: 40%;" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+	<p class="h1 text-center pt-2 mb-2">Restaurantes</p>
+	<form class="input-group container mb-5 w-50" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 		<input type="text" class="form-control" placeholder="Procurar restaurante" name="restaurante" id="restaurante">
 		<button class="btn btn-outline-primary" type="button" id="buttonPesquisarRestaurante">Procurar</button>
 	</form>
@@ -55,7 +55,7 @@
 	$offset = ($pagAtual - 1) * $itemPorPagina;
 
 	try {
-		$query = "select id_empresa, nome, morada, telemovel,
+		$query = "select empresas.id_empresa, empresas.nome, empresas.morada, empresas.telemovel,
 		COALESCE ( 
 			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
 			,0) as taxa_entrega,
@@ -65,9 +65,9 @@
 			logotipo,
 		COALESCE (
 			(select sum(classificacao)/count(classificacao) from avaliacoes 
-			 where avaliacoes.id_empresa=empresas.id_empresa)
+			 where avaliacoes.id_estabelecimento=estabelecimentos.id_estabelecimento)
 			,0) as avaliacao
-		from empresas";
+		from empresas inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa";
 
 		$params = [];
 		$conditions = [];
@@ -101,7 +101,7 @@
 
 
 		echo "
-    <div class=' container'>
+    <div class=' container p-5 pt-0'>
 		<h2 class='mb-4' id='txt_categoria'>";
 
 		if (isset($_GET['restaurante'])) {
