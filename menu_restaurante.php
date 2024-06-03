@@ -33,7 +33,7 @@
   }else{
     include __DIR__."/includes/header_logged_in.php";
 	///validar id cliente por session
-	$idCliente=$_SESSION['id_cliente'];
+	$idCliente=(isset($_SESSION['id_cliente']) ? $_SESSION['id_cliente'] : 0);
 	$idIndex=240;
   }
   
@@ -52,7 +52,7 @@
 
   $fRestaurante = "%" . strtolower(str_replace(' ', '', $_GET['restaurante'])) . "%";
 
-  $queryTop = "select id_empresa, nome,
+  $queryTop = "select empresas.id_empresa, empresas.nome,
 		COALESCE ( 
 			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
 			,0) as taxa_entrega,
@@ -62,10 +62,11 @@
 			logotipo,
 		COALESCE (
 			(select sum(classificacao)/count(classificacao) from avaliacoes 
-			 where avaliacoes.id_empresa=empresas.id_empresa)
+			 where avaliacoes.id_estabelecimento=estabelecimentos.id_estabelecimento)
 			,0) as avaliacao
 		from empresas
-		WHERE REPLACE(LOWER(nome), ' ', '') LIKE ?";
+		inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa
+		WHERE REPLACE(LOWER(empresas.nome), ' ', '') LIKE ?";
 
   try {
     $stmtTop = $pdo->prepare($queryTop);
@@ -181,7 +182,7 @@
 
       if(count($categorias) != 0){
     
-      echo '<div class="container d-flex justify-content-start" style="margin: 0; padding: 0">
+      echo '<div class="container d-flex justify-content-start" style="margin: 0; padding: 0;min-height:20.2vw">
       <!-- SIDEBAR CATEGORIAS -->
       <div class="d-flex flex-column p-3 bg-body-tertiary" style="width: 17.7vw;">
         <a class="d-flex align-items-center me-md-auto link-body-emphasis text-decoration-none">
@@ -264,10 +265,11 @@
 					$stmtProd->execute([$fRestaurante]);
 					$produtos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
 			} else {
-            $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas  
+            $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas, menus.id_menu
 					FROM itens 
 					INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 					INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
+					FULL join menus on menus.id_estabelecimento = estabelecimentos.id_estabelecimento
 					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
 					
 					$stmtProd = $pdo->prepare($queryProd);
@@ -309,7 +311,7 @@
 				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
-					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
+					<input type='hidden' name='idCliente' id='idCliente' value='".(isset($_SESSION['id_cliente']) ? $_SESSION['id_cliente'] : 0) ."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_menu']."'>
 
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
@@ -333,21 +335,26 @@
 						";
 					
 					if (strtolower($idCategoria) == 'menus') {
-						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu
+						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu, opcoes.max_quantidade as max_quantidade
 							from item_menus as im
 							inner join menus m on m.id_menu=im.id_menu
 							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
 							inner join empresas e on e.id_empresa=m.id_estabelecimento 
+							inner join item_menus_opcoes on im.id_item_menu = item_menus_opcoes.id_item_menu
+							inner join opcoes on opcoes.id_opcao = item_menus_opcoes.id_opcao
 							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
 
 						$stmtMenu= $pdo->prepare($queryMenu);
 						$stmtMenu->execute([$fRestaurante]);
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
 					} else {
-						$queryMenu = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu
+						$queryMenu = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu, opcoes.max_quantidade
 							FROM itens 
 							INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
+							inner join item_menus as im on im.id_item = itens.id_item
+							inner join item_menus_opcoes on im.id_item_menu = item_menus_opcoes.id_item_menu
+							inner join opcoes on opcoes.id_opcao = item_menus_opcoes.id_opcao
 							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
 					
 						$stmtMenu= $pdo->prepare($queryMenu);
@@ -355,8 +362,9 @@
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
 					}
 					
-										
+					$idIndex = 240;
 					foreach ($itensMenus as $rowit) {
+						echo var_dump($rowit);
 						$idIndex++;
 						echo "
 						<div class='form-check form-switch product-item' style='display: flex; '>
@@ -390,8 +398,9 @@
 							";
 						}
 						echo "<hr>";
-					}
-		
+					}	
+					$idCliente=(isset($_SESSION['id_cliente']) ? $_SESSION['id_cliente'] : 0);
+
 					echo "</div></div>
 						<div class='justify-content-center mt-2' style='text-align: center;'>";
 						if ($idCliente > 0) {

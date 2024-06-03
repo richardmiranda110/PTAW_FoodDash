@@ -186,16 +186,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     <div class="">
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Dinheiro Total Gasto:</span>
-                                            <span class="dados_utilizador">489,27€</span>
+                                            <span class="dados_utilizador"><?php echo $estatisticas['totalgasto'] == 0 ? 0: $estatisticas['totalgasto'] ?> €</span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Total de Pedidos Realizados:</span>
-                                            <span class="dados_utilizador">71</span>
+                                            <span class="dados_utilizador"><?php echo $estatisticas['totalpedidos'] ?></span>
                                         </div>
-                                        <div class="mb-2">
+                                        <?php 
+                                        if($estatisticas['maispedido'])
+                                        '<div class="mb-2">
                                             <span class="dados fw-bold">Restaurante Mais Pedido:</span>
-                                            <span class="dados_utilizador">McDonald's</span>
-                                        </div>
+                                            <span class="dados_utilizador">'.$estatisticas['maispedido'].'</span>
+                                        </div>';
+                                        ?>
                                     </div>
 
                                     <div  class="chart-container">
