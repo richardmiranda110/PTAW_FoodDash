@@ -32,7 +32,7 @@
 
 	///validar id cliente por session
 	//$idCliente=$_SESSION['id_cliente'];
-	//$idCliente = 1;
+	$idCliente = 1;
 	$totalPedido = 0;
 	$idIndex=340;
 	?>
@@ -142,14 +142,18 @@ foreach ($pedidos as $rowPed) {
 						where pio.id_pedido_item = ? ";
 						
 		$stmtOpcoes = $pdo->prepare($queryItens);
-		$stmtOpcoes->execute([$rowPed['id_pedido_item']]);
+		$stmtOpcoes->execute([$rowItem['id_pedido_item']]);
 		$opcoes = $stmtOpcoes->fetchAll(PDO::FETCH_ASSOC);
 
 		if (empty($opcoes)) {
 			echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>sem opção</i></span> <br>";
 		}
 		foreach ($opcoes as $rowopcao) {
-			echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>" . htmlspecialchars($rowopcao['nome']) . " + " . $rowopcao['quantidade'] . "</i></span> ";
+			if ($rowopcao['quantidade'] == 0) {
+				echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>sem ".htmlspecialchars($rowopcao['nome'])."</i></span> ";
+			} else {
+				echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>".$rowopcao['quantidade']." * ".htmlspecialchars($rowopcao['nome'])."</i></span> ";
+			}
 		}
 	}
 	echo "<br>";

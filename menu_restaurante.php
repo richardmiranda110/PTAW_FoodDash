@@ -40,7 +40,7 @@
 	include __DIR__."/includes/insertAvaliationRestaurant.php"; 
 	include __DIR__."/includes/insertPedido.php"; 
   
-  //$idCliente = 1;
+  $idCliente = 1;
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
@@ -52,7 +52,7 @@
 
   $fRestaurante = "%" . strtolower(str_replace(' ', '', $_GET['restaurante'])) . "%";
 
-  $queryTop = "select empresas.id_empresa, empresas.nome,
+  $queryTop = "select id_empresa, nome,
 		COALESCE ( 
 			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
 			,0) as taxa_entrega,
@@ -62,11 +62,10 @@
 			logotipo,
 		COALESCE (
 			(select sum(classificacao)/count(classificacao) from avaliacoes 
-			 where avaliacoes.id_estabelecimento=estabelecimentos.id_estabelecimento)
+			 where avaliacoes.id_empresa=empresas.id_empresa)
 			,0) as avaliacao
 		from empresas
-		inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa
-		WHERE REPLACE(LOWER(empresas.nome), ' ', '') LIKE ?";
+		WHERE REPLACE(LOWER(nome), ' ', '') LIKE ?";
 
   try {
     $stmtTop = $pdo->prepare($queryTop);
@@ -173,7 +172,7 @@
 			INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
 			INNER JOIN empresas on empresas.id_empresa=estabelecimentos.id_empresa
 			INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
-			WHERE REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? ";
+			WHERE itens.itemsozinho=true and REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? ";
 
        $stmt = $pdo->prepare($query);
        $stmt->execute([strtolower($fRestaurante)]);
@@ -182,7 +181,7 @@
 
       if(count($categorias) != 0){
     
-      echo '<div class="container d-flex justify-content-start" style="margin: 0; padding: 0;min-height:20.2vw">
+      echo '<div class="container d-flex justify-content-start" style="margin: 0; padding: 0">
       <!-- SIDEBAR CATEGORIAS -->
       <div class="d-flex flex-column p-3 bg-body-tertiary" style="width: 17.7vw;">
         <a class="d-flex align-items-center me-md-auto link-body-emphasis text-decoration-none">
@@ -265,12 +264,13 @@
 					$stmtProd->execute([$fRestaurante]);
 					$produtos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
 			} else {
-            $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas, menus.id_menu
+             $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas, menus.id_menu
 					FROM itens 
 					INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 					INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
 					FULL join menus on menus.id_estabelecimento = estabelecimentos.id_estabelecimento
 					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
+					
 					
 					$stmtProd = $pdo->prepare($queryProd);
 					$stmtProd->execute([$fRestaurante,$fCat]);
@@ -311,7 +311,7 @@
 				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
-					<input type='hidden' name='idCliente' id='idCliente' value='".(isset($_SESSION['id_cliente']) ? $_SESSION['id_cliente'] : 0) ."'>
+					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_menu']."'>
 
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
@@ -335,7 +335,14 @@
 						";
 					
 					if (strtolower($idCategoria) == 'menus') {
-						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu, opcoes.max_quantidade as max_quantidade
+						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu
+							from item_menus as im
+							inner join menus m on m.id_menu=im.id_menu
+							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
+							inner join empresas e on e.id_empresa=m.id_estabelecimento 
+							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
+							
+						$queryMenu2 = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu, opcoes.max_quantidade as max_quantidade
 							from item_menus as im
 							inner join menus m on m.id_menu=im.id_menu
 							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
@@ -348,7 +355,13 @@
 						$stmtMenu->execute([$fRestaurante]);
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
 					} else {
-						$queryMenu = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu, opcoes.max_quantidade
+						$queryMenu = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu
+							FROM itens 
+							INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
+							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
+							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
+					
+						$queryMenu2 = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu, opcoes.max_quantidade
 							FROM itens 
 							INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
@@ -357,14 +370,14 @@
 							inner join opcoes on opcoes.id_opcao = item_menus_opcoes.id_opcao
 							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
 					
+					
 						$stmtMenu= $pdo->prepare($queryMenu);
 						$stmtMenu->execute([$fRestaurante]);
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
 					}
 					
-					$idIndex = 240;
+										
 					foreach ($itensMenus as $rowit) {
-						echo var_dump($rowit);
 						$idIndex++;
 						echo "
 						<div class='form-check form-switch product-item' style='display: flex; '>
@@ -389,18 +402,17 @@
 						foreach ($opcoes as $rowop) {
 							$idIndex++;
 							echo "<div class='form-check form-switch product-item' style='display: flex; '>
-							<input type='hidden' name='opcoes[]' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."'> 
-							<input style=' width: 4%; height: 20px; margin: 0px 10px 0px 5%;'  class='form-check-input' type='checkbox' name='opcao_".$idIndex."' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."' checked>	
-								<label style='width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$idIndex."'>".$rowop['nome']."</label>									
-								<input type='hidden' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' value=1 >								
-								<input type='hidden' name='itemop_".$idIndex."' id='itemop_".$idIndex."' value=".$rowit['id_item']."> 
-							</div>
-							";
+								<input type='hidden' name='opcoes[]' id='opcao_hidden_".$idIndex."' value='".$idIndex."'> 
+								<input style=' width: 4%; height: 20px; margin: 0px 10px 0px 5%;'  type='checkbox'  id='checkboxop_".$idIndex."'  onchange='updateOptionValue(".$idIndex.")' checked>    
+								<label style='width: 74%;' class='form-check-label d-flex justify-content-start' for='checkbox_".$idIndex."'>".$rowop['nome']."</label>     
+								<input type='hidden' class='form-control' type='number' name='opcao_".$idIndex."' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."' > 								
+								<input type='hidden' class='form-control' type='number' name='quantidadeop_".$idIndex."' id='quantidadeop_".$idIndex."' value=1 >                                
+								<input type='hidden' name='itemop_".$idIndex."' id='itemop_".$idIndex."' value='".$rowit['id_item']."'> 
+							  </div>";
 						}
 						echo "<hr>";
-					}	
-					$idCliente=(isset($_SESSION['id_cliente']) ? $_SESSION['id_cliente'] : 0);
-
+					}
+		
 					echo "</div></div>
 						<div class='justify-content-center mt-2' style='text-align: center;'>";
 						if ($idCliente > 0) {
@@ -409,8 +421,9 @@
 								<input type='hidden' class='total-container' name='valuePedido' id='valuePedido' value='" . $rowProd['preco'] . "'>
 							<hr>
 							<input class=' btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho'>
-							</div>";
-					
+							</div>
+							</form>
+							";					
 						}
 						
 					echo "</div>
@@ -420,7 +433,7 @@
             }
 
             echo "  </div>
-			</form>
+			
             </div>
 
         </div>";
@@ -569,57 +582,46 @@
 		const totalPedidoElement = document.getElementById('totalPedido');
 		const valueItemElement = document.getElementById('valueItem');
 		const valuePedidoElement = document.getElementById('valuePedido');
-		
-		if (!totalPedidoElement || !valueItemElement || !valuePedidoElement) {
-			alert("Elementos DOM necessários não encontrados");
-			return;
-		}
 
 		const totalPedido = parseFloat(totalPedidoElement.textContent);
 		const valItem = parseFloat(valueItemElement.value);
 
-		if (isNaN(totalPedido) || isNaN(valItem)) {
-			console.error("Valores inválidos para totalPedido ou valItem");
-			return;
-		}
 
 		let total = valItem;
 		
 		try {
 			
-
 			// Seleciona todas as caixas de seleção
-			const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+			//const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+			// Seleciona a div com a classe "toast fade show"
+			let toastDiv = document.querySelector('.toast.fade.show');
+			if (!toastDiv) {
+				throw new Error('Div com a classe "toast fade show" não encontrada.');
+			}
 
+			// Seleciona todas as caixas de seleção dentro da div "toast fade show"
+			const checkboxes = toastDiv.querySelectorAll('input[type="checkbox"]');
+		
 			// Verifique cada caixa de seleção
 			checkboxes.forEach(function (checkbox) {
 				if (checkbox.checked) {
 					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
 					const priceInput = document.querySelector('#preco_' + checkbox.value);
+					const isMenuInput = document.querySelector('#idmenu_' + checkbox.value);
 
 					// Verifica se os elementos existem antes de acessar suas propriedades
 					if (quantityInput && priceInput) {
 						quantityInput.disabled = false;
-
 						let quantity = parseFloat(quantityInput.value);
-
-						if (quantity === 0) {
-							quantityInput.value = 1;
-							quantity = 1;
-						}
-
 						const price = parseFloat(priceInput.value);
-						if (!isNaN(quantity) && !isNaN(price)) {
-							total += (quantity * price);
-						} else {
-							console.error('Valores inválidos para quantity ou price', { quantity, price });
-						}
-						total += (quantity * price);
-					} else {
-						console.error('Erro: um ou mais elementos não encontrados', {
-							quantityInput, priceInput
-						});
-					}
+						const isMenu = parseInt(isMenuInput.value);
+						
+		
+							if (!isNaN(quantity) && !isNaN(price)) {
+								total = (quantity * price);
+							}
+						
+					} 
 				} else {
 					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
 					if (quantityInput) {
@@ -640,10 +642,21 @@
 
 		
 	document.getElementById('pedidoForm').addEventListener('submit', function(event) {
-        if (!confirm('Tem certeza de que deseja excluir este pedido?')) {
+        if (!confirm('Deseja incluir este artigo no seu pedido?')) {
             event.preventDefault();
         }
     });	
+	
+	function updateOptionValue(index) {
+          const checkbox = document.getElementById('checkboxop_' + index);
+          const hiddenField = document.getElementById('quantidadeop_' + index);
+          
+          if (hiddenField.value == 0) {
+              document.getElementById('quantidadeop_' + index).value = '1';
+          } else {
+			  document.getElementById('quantidadeop_' + index).value = '0';
+		  }
+        }
   </script>
 
   <script src="./assets/js/toast.js"></script>
