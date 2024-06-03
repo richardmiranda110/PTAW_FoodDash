@@ -74,6 +74,7 @@ try {
         }
 
         if (!empty($idPedido)){
+			print_r($itens);
 			foreach ($itens as $id_item) {
 				// Preenche tabela pedido_itens
 				$itemid = $_POST['itemid_'. $id_item];
@@ -95,7 +96,7 @@ try {
 
 				//$opcoes = $_POST['opcoes'];						
 				foreach ($opcoes as $id_opcao) {
-					if ($itemid == $_POST['itemop_'. $id_opcao]) {
+					if ($itemid === $_POST['itemop_'. $id_opcao]) {
 						
 						$quant = 0;
 						if (!isset($_POST['opcao_'. $id_opcao])){
@@ -124,7 +125,7 @@ try {
    
 	}
 } catch(PDOException $e) {
-    echo "<br>
+    echo "
     <div class='alert alert-danger' role='alert'> Erro ao processar o pedido: " . $e->getMessage() . "
         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
         <span aria-hidden='true'>&times;</span>

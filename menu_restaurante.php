@@ -15,10 +15,6 @@
 </head>
 
 <body>
-<?php 
-include __DIR__."/includes/insertAvaliationRestaurant.php"; 
-include __DIR__."/includes/insertPedido.php"; 
-?>
 
   <!-- NAVBAR -->
   <?php
@@ -41,7 +37,10 @@ include __DIR__."/includes/insertPedido.php";
 	$idIndex=240;
   }
   
-  $idCliente = 1;
+	include __DIR__."/includes/insertAvaliationRestaurant.php"; 
+	include __DIR__."/includes/insertPedido.php"; 
+  
+  //$idCliente = 1;
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
@@ -285,7 +284,7 @@ include __DIR__."/includes/insertPedido.php";
               $imagemPath = getImagePath($rowProd['foto']);
               $idProd = str_replace(' ', '', htmlspecialchars($rowProd['nome']));
               echo "<div>
-                    <div class='card shadow-sm' id='" . $idProd . "' style='width:18%; margin: 0px 0.5% 1% 0.5%; float:left;'>
+                    <div class='card shadow-sm' id='" . $idProd . "' style='width:18%; margin: 0px 0.5% 1% 0.5%; float:left; min-width: 150px;'>
                     <div class='card-body'>
                         <div class='image-overlay' style='position: relative; border-radius: 5.5px; overflow: hidden;'>
                             <img src='" . $imagemPath . "' class='card-img-top' alt='" . $idProd . "' style='border-radius: 5.5px;'>
@@ -558,39 +557,78 @@ include __DIR__."/includes/insertPedido.php";
 	});
 
 	function updateTotalPrice() {
-		const totalPedido = parseFloat(document.querySelector('#totalPedido').textContent);   
-		const valItem = parseFloat(document.querySelector('#valueItem').value);
+		const totalPedidoElement = document.getElementById('totalPedido');
+		const valueItemElement = document.getElementById('valueItem');
+		const valuePedidoElement = document.getElementById('valuePedido');
+		
+		if (!totalPedidoElement || !valueItemElement || !valuePedidoElement) {
+			alert("Elementos DOM necessários não encontrados");
+			return;
+		}
+
+		const totalPedido = parseFloat(totalPedidoElement.textContent);
+		const valItem = parseFloat(valueItemElement.value);
+
+		if (isNaN(totalPedido) || isNaN(valItem)) {
+			console.error("Valores inválidos para totalPedido ou valItem");
+			return;
+		}
 
 		let total = valItem;
-		// Verifique cada caixa de seleção
-		checkboxes.forEach(function (checkbox, index) {
-			//alert(JSON.stringify(checkboxes));
-			if (checkbox.checked) {
-				document.querySelector('#quantidade_' + checkbox.value).disabled =false;
+		
+		try {
+			
 
-				const quantity = parseFloat(document.querySelector('#quantidade_' + checkbox.value).value);
+			// Seleciona todas as caixas de seleção
+			const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-				if (quantity == 0) {
-					document.querySelector('#quantidade_' + checkbox.value).value = 1;
-					quantity = 1;
+			// Verifique cada caixa de seleção
+			checkboxes.forEach(function (checkbox) {
+				if (checkbox.checked) {
+					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
+					const priceInput = document.querySelector('#preco_' + checkbox.value);
+
+					// Verifica se os elementos existem antes de acessar suas propriedades
+					if (quantityInput && priceInput) {
+						quantityInput.disabled = false;
+
+						let quantity = parseFloat(quantityInput.value);
+
+						if (quantity === 0) {
+							quantityInput.value = 1;
+							quantity = 1;
+						}
+
+						const price = parseFloat(priceInput.value);
+						if (!isNaN(quantity) && !isNaN(price)) {
+							total += (quantity * price);
+						} else {
+							console.error('Valores inválidos para quantity ou price', { quantity, price });
+						}
+						total += (quantity * price);
+					} else {
+						console.error('Erro: um ou mais elementos não encontrados', {
+							quantityInput, priceInput
+						});
+					}
+				} else {
+					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
+					if (quantityInput) {
+						quantityInput.disabled = true;
+						quantityInput.value = 0;
+					}
 				}
-				
-				const catItem = document.querySelector('#categoria_' + checkbox.value).value;
-				
-				if (quantity > 1) {
-					const price = parseFloat(document.querySelector('#preco_' + checkbox.value).value);
-					total += (quantity * price);
-				}
-			} else {
-				document.querySelector('#quantidade_' + checkbox.value).disabled =true;
-				document.querySelector('#quantidade_' + checkbox.value).value = 0;
-			}
-		});
+			});
 
-		// Atualize o preço total exibido
-		document.querySelector('#totalPedido').textContent = total.toFixed(2);
-		document.querySelector('#valuePedido').value = total.toFixed(2);
+			// Atualize o preço total exibido
+			totalPedidoElement.textContent = ""+ total.toFixed(2);
+			valuePedidoElement.value = total.toFixed(2);
+
+		} catch (error) {
+			console.error('Erro durante a execução de updateTotalPrice:', error);
+		}
 	}
+
 		
 	document.getElementById('pedidoForm').addEventListener('submit', function(event) {
         if (!confirm('Tem certeza de que deseja excluir este pedido?')) {

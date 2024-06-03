@@ -32,7 +32,7 @@
 
 	///validar id cliente por session
 	//$idCliente=$_SESSION['id_cliente'];
-	$idCliente = 1;
+	//$idCliente = 1;
 	$totalPedido = 0;
 	$idIndex=340;
 	?>
@@ -88,14 +88,20 @@ $pedidos = $stmtPed->fetchAll(PDO::FETCH_ASSOC);
 echo "
 <form method='POST' enctype='multipart/form-data' action='' id='checkoutForm'>
 			<input type='hidden' name='idForm' id='idForm' value='checkoutForm'> 
-";			
+";	
+$indexRest = 0;		
+$pedRest = "";
+
+foreach ($pedidos as $rowPed) {
+	$pedRest = $pedRest.'||'.$rowPed['id_pedido'];
+}
 foreach ($pedidos as $rowPed) {
 	$totalPedido += $rowPed['precototal'];
 	$idIndex++;
+	$indexRest++;
 	echo "
 	<input type='hidden' name='pedidos[]' id='pedido_".$idIndex."' value='".$idIndex."'>
 	<input type='hidden' name='id_pedido_".$idIndex ."' id='id_pedido_".$idIndex ."' value='".$rowPed['id_pedido']."'>
-	<input type='hidden' name='pedidosEmpresa[]' id='pedidosEmpresa_".$rowPed['id_empresa']."' value='".$rowPed['id_pedido']."'>
 	";
 
 	echo "
@@ -158,11 +164,11 @@ foreach ($pedidos as $rowPed) {
 	$idIndex++;
 	echo "<br>
 	<input type='hidden' name='restaurantes[]' id='restaurante_".$idIndex."' value='".$idIndex."'>	
-	<input type='hidden' name='pedidosRestaurante' id='pedidosRestaurante_".$idIndex."' value='".$idsPedidos."'>	
+	<input type='hidden' name='pedidosRestaurante_".$idIndex."' id='pedidosRestaurante_".$idIndex."' value='".$pedRest."'>	
 
 	<label for='estabelecimento'>Restaurante Pedido:</label>
-	<select class='form-select' name='estabelecimento_".$rowPed['id_empresa']."' id='estabelecimento_".$rowPed['id_empresa']."'>
-		<option value='0' data-taxa-entrega=0>Escolha o Restaurante pretendido...</option>";
+	'<select class='form-select' name='estabelecimento_".$idIndex."' id='estabelecimento_".$idIndex."'>
+		<option  value='0' data-taxa-entrega=0> Escolha o Restaurante pretendido...</option>";
 	foreach ($restaurantes as $rowRest) {
 		echo "<option value='".$rowRest['id_estabelecimento']."' data-taxa-entrega=".$rowRest['taxa_entrega'].">".$rowRest['nome']." - ".$rowRest['localizacao']."</option>";
 	}
@@ -372,7 +378,7 @@ foreach ($pedidos as $rowPed) {
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
         integrity='sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz' crossorigin='anonymous'></script>
     <script>
-        /*	//Adicionar/atualizar valor do pedido
+      	//Adicionar/atualizar valor do pedido
 		const selectBox = document.querySelectorAll('.form-select');
 
 	// Adicione um ouvinte de evento para cada caixa de seleção
@@ -385,6 +391,12 @@ foreach ($pedidos as $rowPed) {
 		// Verifique cada caixa de seleção
 		selectBox.forEach(function (select) {
 			var taxaEntrega = parseFloat(select.options[select.selectedIndex].getAttribute("data-taxa-entrega"));
+			
+			var idRest = parseFloat(select.options[select.selectedIndex].getAttribute("data-pair-id").value);
+				document.querySelectorAll('input[data-pair-id="' + idRest + '"]').forEach(input => {
+				input.value = idRest;
+			});
+		
 			if (!isNaN(taxaEntrega)) {
 				totalTaxaEntrega += taxaEntrega;
 			}
@@ -406,7 +418,7 @@ foreach ($pedidos as $rowPed) {
             event.preventDefault();
         }
     });
-	
+	  
 	let opcaoSelecionada = '';
 
     function toggleSelection(element, opcao) {
@@ -469,7 +481,7 @@ foreach ($pedidos as $rowPed) {
 		//return allValid;
 		return true;
 	}
-	*/
+	
 
         function deletePedido(id_pedido) {
             if (confirm('Tem certeza de que deseja excluir este pedido?')) {
@@ -490,6 +502,8 @@ foreach ($pedidos as $rowPed) {
                 form.submit();
             }
         }
+		
+}
     </script>
 </body>
 
