@@ -11,12 +11,12 @@ $estabelecimento = null;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Atribuir os dados do formulário à variável $produto e, ao mesmo tempo, retirar carateres perigosos			
     $estabelecimento = array(
-        'nome' => htmlentities(trim($_POST['nome'])),
-        'localizacao' => htmlentities(trim($_POST['localizacao'])),
-        'telemovel' => htmlentities(trim($_POST['telemovel'])),
-        'taxa_entrega' => htmlentities(trim($_POST['taxa_entrega'])),
-        'tempo_medio_entrega' => htmlentities(trim($_POST['tempo_medio_entrega']))
-    );
+    'nome' => htmlspecialchars(trim($_POST['nome'])),
+    'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
+    'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
+    'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
+    'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega']))
+);
 
     if ((empty($_POST['nome']))) {
         $ErroNome = "Campo obrigatório!";
@@ -142,15 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <?php if (!empty($ErroLocalizacao)) { ?>
                                 <span class="help-block small" style="color:#ff0000"><?php echo $ErroLocalizacao; ?></span>
                             <?php } ?>
-                        </div>
-
-                        <!--Mapa-->
-                        <div>
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18906.129712753736!2d6.722624160288201!3d60.12672284414915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463e997b1b6fc09d%3A0x6ee05405ec78a692!2sJ%C4%99zyk%20trola!5e0!3m2!1spl!2spl!4v1672239918130!5m2!1spl!2spl"
-                                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
                         </div>
 
                         &emsp;
