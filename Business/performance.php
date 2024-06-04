@@ -176,8 +176,9 @@ function getItemMaisPedidoMensal($pdo, $idEmpresa, $mes)
 function getTodasAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
-        FROM Avaliacoes
-        WHERE id_empresa = :empresaId AND EXTRACT(DAY FROM data) = :dia AND EXTRACT(MONTH FROM data) = :mes";
+        FROM Avaliacoes a
+        INNER JOIN Empresas e ON a.id_avaliacao = e.id_empresa
+        WHERE e.id_empresa = :empresaId AND EXTRACT(DAY FROM data) = :dia AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
@@ -190,9 +191,10 @@ function getTodasAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes)
 //Função complementar da função getAvaliacaoMediaDiaria()
 function getSomaAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes)
 {
-    $query = "SELECT SUM(classificacao) AS total_avaliacao
-        FROM Avaliacoes
-        WHERE id_empresa = :empresaId AND EXTRACT(DAY FROM data) = :dia AND EXTRACT(MONTH FROM data) = :mes";
+    $query = "SELECT SUM(a.classificacao) AS total_avaliacao
+        FROM Avaliacoes a
+        INNER JOIN Empresas e ON a.id_avaliacao = e.id_empresa
+        WHERE e.id_empresa = :empresaId AND EXTRACT(DAY FROM a.data) = :dia AND EXTRACT(MONTH FROM a.data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
@@ -219,8 +221,9 @@ function getAvaliacaoMediaDiaria($pdo, $idEmpresa, $dia, $mes)
 function getTodasAvaliacoesDoMes($pdo, $idEmpresa, $mes)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
-        FROM Avaliacoes
-        WHERE id_empresa = :empresaId AND EXTRACT(MONTH FROM data) = :mes";
+        FROM Avaliacoes a
+        INNER JOIN Empresas e ON a.id_avaliacao = e.id_empresa
+        WHERE e.id_empresa = :empresaId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
@@ -233,8 +236,9 @@ function getTodasAvaliacoesDoMes($pdo, $idEmpresa, $mes)
 function getSomaAvaliacoesDoMes($pdo, $idEmpresa, $mes)
 {
     $query = "SELECT SUM(classificacao) AS total_avaliacao
-        FROM Avaliacoes
-        WHERE id_empresa = :empresaId AND EXTRACT(MONTH FROM data) = :mes";
+        FROM Avaliacoes a
+        INNER JOIN Empresas e ON a.id_avaliacao = e.id_empresa
+        WHERE e.id_empresa = :empresaId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
@@ -276,7 +280,7 @@ function getTempoMedio($pdo, $idEmpresa)
 $diaAtual = date("j");
 $mesAtual = date("n");
 
-$itemMaisPedidoDia = getItemMaisPedidoDiario($pdo, $idEmpresa, $idEmpresa, $mesAtual);
+$itemMaisPedidoDia = getItemMaisPedidoDiario($pdo, $idEmpresa, $diaAtual, $mesAtual);
 
 $itemMaisPedidoMes = getItemMaisPedidoMensal($pdo, $idEmpresa, $mesAtual);
 
@@ -288,7 +292,7 @@ $vendasDiarias = getVendasDiarias($pdo, $idEmpresa, $diaAtual, $mesAtual);
 
 $vendasMensais = getVendasMensais($pdo, $idEmpresa, $mesAtual);
 
-$pedidosDiarios =  getPedidosDiarios($pdo, $idEmpresa, $diaAtual, $mesAtual);
+$pedidosDiarios = getPedidosDiarios($pdo, $idEmpresa, $diaAtual, $mesAtual);
 
 $pedidosMensais = getPedidosMensais($pdo, $idEmpresa, $mesAtual);
 
