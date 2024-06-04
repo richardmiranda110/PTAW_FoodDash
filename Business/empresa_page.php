@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/includes/session.php';
+require_once __DIR__ . '/includes/session.php';
 
 include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
@@ -152,14 +152,14 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                             <!-- Email -->
                             <div class="row">
                                 <div class="col-md-4">
-                                        <span>Email<span style='color:#ff0000'> *</span></span>
-                                        <div class="input-group flex-nowrap">
-                                            <input name="email" readonly type="text" class="form-control"
-                                                placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping"
-                                                value="<?php if (!empty($empresa['email']))
-                                                    echo $empresa['email']; ?>">
-                                            <span id="erroEmail" class="help-inline small" style="color:#ff0000"></span>
-                                        </div>
+                                    <span>Email<span style='color:#ff0000'> *</span></span>
+                                    <div class="input-group flex-nowrap">
+                                        <input name="email" readonly type="text" class="form-control"
+                                            placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping"
+                                            value="<?php if (!empty($empresa['email']))
+                                                echo $empresa['email']; ?>">
+                                        <span id="erroEmail" class="help-inline small" style="color:#ff0000"></span>
+                                    </div>
                                 </div>
 
                                 <!-- Tipo -->
@@ -175,6 +175,8 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- ADICIONAR COMO ESCOLHER Logotipo-->
                             </div>
                         </div>
                     </div>
@@ -240,16 +242,7 @@ include __DIR__ . "/includes/footer_business.php";
         if (telemovelInput.value.trim() === "") {
             // Verificar se o campo de telemovel contém exatamente 9 números
             erroTelemovel.textContent = "Campo obrigatório";
-        } else {
-            // verficar se o campo contém só números
-            var telemovel = telemovelInput.value.trim();
-            if (!('/^\d+$/'.test(telemovel))) {
-                erroTelemovel.textContent = "O campo só pode conter números.";
-                validacao = false; // marcar validação como falsa
-            } else if (telemovel.length !== 9) {
-                erroTelemovel.textContent = "O campo deverá só conter números";
-                validacao = false; // marcar validação como falsaz  
-            }
+            validacao = false; // marcar validação como falsaz  
         }
 
         // Verificar se o campo de e-mail está vazio

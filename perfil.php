@@ -218,12 +218,6 @@ if ($utilizadorModificado !== null) {
                 validacao = false; // marcar validação como falsa
             }
 
-            // Verificar se o campo de telefone contém exatamente 9 números
-            var telefone = telefoneInput.value.trim();
-            if (!(/^\d+$/.test(telefone)) || telefone.length !== 9) {
-                erroTelemovel.textContent = "O campo só pode conter números.";
-                validacao = false; // marcar validação como falsa
-            }
         }
 
         document.addEventListener("DOMContentLoaded", function() {

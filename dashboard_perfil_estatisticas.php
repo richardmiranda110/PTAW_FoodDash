@@ -205,7 +205,7 @@ $clienteId = $_SESSION['id_cliente'];  // ID do cliente para o qual queremos con
 
 <body>
     <?php include __DIR__ . "/includes/header_logged_in.php"; ?>
-    <?php include __DIR__."/includes/sidebar_perfil.php"; ?>
+    <?php include __DIR__ . "/includes/sidebar_perfil.php"; ?>
     <section id="pricing" class="bg-light pt-2 pb-2">
         <div class="container">
             <div class="text-start mt-1">
@@ -291,7 +291,7 @@ $clienteId = $_SESSION['id_cliente'];  // ID do cliente para o qual queremos con
             </div>
         </div>
     </section>
-    <?php include __DIR__."/includes/footer_2.php"; ?>
+    <?php include __DIR__ . "/includes/footer_2.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

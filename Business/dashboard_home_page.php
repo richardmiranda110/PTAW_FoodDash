@@ -1,10 +1,46 @@
 <?php
 require_once  __DIR__ . "/includes/session.php";
+require_once __DIR__."/../database/credentials.php";
+require_once __DIR__."/../database/db_connection.php";
 
 if (!isset($_SESSION['authenticatedB'])) {
     header("Location: /Business/login_register/login_business.php");
     exit();
 }
+
+function ObterEstatisticas()
+{
+    global $pdo;
+    $query = 'SELECT (SELECT round(sum(precototal),2) from pedidos where id_estabelecimento = :id_estabelecimento) as vendas,
+    (SELECT count(id_pedido) from pedidos where id_estabelecimento = :id_estabelecimento) as pedidos,
+   (select avg(pedidos.precototal) from pedidos 
+   inner join estabelecimentos on estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento 
+   where pedidos.id_estabelecimento = :id_estabelecimento) as precomedio;';
+    try {
+        // query
+        $stmt = 
+        $pdo->prepare($query);
+            
+        $stmt->bindValue(":id_estabelecimento",$_SESSION['id_estabelecimento']);
+        // Executar a query e verificar que não retornou false
+        if ($stmt->execute()) {
+            // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
+            $registo = $stmt->fetch();
+            // Retornar os dados
+            return $registo;
+        } else {
+            // Se a consulta falhar, retornar null
+            return null;
+        }
+    } catch (Exception $e) {
+        echo "Erro na conexão à BD: " . $e->getMessage();
+        // Se ocorrer um erro, retornar null
+        return null;
+    }
+}
+
+$estatisticas = ObterEstatisticas();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,7 +79,7 @@ if (!isset($_SESSION['authenticatedB'])) {
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Vendas</h5>
-                        <p class="card-text">469,70€</p>
+                        <p class="card-text"><?php echo ($estatisticas['vendas'] ? $estatisticas['vendas'] : 0 )?> €</p>
                     </div>
                 </div>
             </div>
@@ -53,7 +89,7 @@ if (!isset($_SESSION['authenticatedB'])) {
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Pedidos</h5>
-                        <p class="card-text">40</p>
+                        <p class="card-text"><?php echo $estatisticas['pedidos']  ?></p>
                     </div>
                 </div>
             </div>
@@ -63,7 +99,7 @@ if (!isset($_SESSION['authenticatedB'])) {
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Preço Médio de Pedidos</h5>
-                        <p class="card-text">11,74€</p>
+                        <p class="card-text"><?php echo ($estatisticas['precomedio'] ? $estatisticas['precomedio'] : 0 ) ?> €</p>
                     </div>
                 </div>
             </div>
@@ -99,12 +135,12 @@ if (!isset($_SESSION['authenticatedB'])) {
                         </a>
 
                         <!-- Ver avalições -->
-                        <button type="button" class="list-group-item list-group-item-action">
+                        <a  href="./avaliacoes.php" type="button" class="list-group-item list-group-item-action">
                             Ver avaliações
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                             </svg>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

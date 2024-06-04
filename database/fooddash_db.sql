@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
     data DATE DEFAULT NOW(),
     descricao TEXT,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
-    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
+    id_empresa INTEGER REFERENCES Emmpresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 
 -- Tabelas de Associação
@@ -135,6 +135,7 @@ CREATE TABLE IF NOT EXISTS Pedido_Itens (
     id_pedido_item SERIAL PRIMARY KEY,
     id_pedido INTEGER REFERENCES Pedidos(id_pedido) ON DELETE CASCADE NOT NULL,
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
+    id_menu INTEGER REFERENCES menus(id_menu) ON DELETE CASCADE NOT NULL,
     quantidade INTEGER DEFAULT 1
 );
 

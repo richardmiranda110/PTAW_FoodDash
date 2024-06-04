@@ -379,7 +379,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h2 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ?></p>
+                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ? $itemMaisPedidoDia : 0 ?></p>
                         </div>
                     </div>
                 </div>
@@ -449,7 +449,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h2 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoMes ?></p>
+                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ? $itemMaisPedidoDia : 0 ?></p>
                         </div>
                     </div>
                 </div>

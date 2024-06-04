@@ -44,7 +44,7 @@ $idEstabelecimento = $_SESSION['id_estabelecimento'];
                                     $statement->execute();
                                     if ($statement) {
                                         $result = $statement->fetch(PDO::FETCH_ASSOC);
-                                        echo htmlspecialchars($result["media"]);
+                                        echo htmlspecialchars($result["media"] ? $result["media"] : 0 );
                                     } else {
                                         echo "Erro ao executar a consulta.";
                                     }

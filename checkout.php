@@ -7,7 +7,9 @@
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'
         integrity='sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH' crossorigin='anonymous'>
     <link rel='stylesheet' href='assets/styles/checkout.css'>
-    <script src='assets/js/checkout.js'></script>
+    <script src='assets/js/checkout.js'> 	  
+	let opcaoSelecionada = '';
+</script>
     <title>Checkout</title>
 </head>
 
@@ -32,12 +34,13 @@
 
 	///validar id cliente por session
 	//$idCliente=$_SESSION['id_cliente'];
-	//$idCliente = 1;
+	$idCliente = 1;
 	$totalPedido = 0;
 	$idIndex=340;
 	?>
 
     <div class='container' style='max-width: 100%;'>
+    
         <div class='row justify-content-center'>
             <h1 class='checkout-title'>Checkout</h1>
         </div>
@@ -142,14 +145,18 @@ foreach ($pedidos as $rowPed) {
 						where pio.id_pedido_item = ? ";
 						
 		$stmtOpcoes = $pdo->prepare($queryItens);
-		$stmtOpcoes->execute([$rowPed['id_pedido_item']]);
+		$stmtOpcoes->execute([$rowItem['id_pedido_item']]);
 		$opcoes = $stmtOpcoes->fetchAll(PDO::FETCH_ASSOC);
 
 		if (empty($opcoes)) {
 			echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>sem opção</i></span> <br>";
 		}
 		foreach ($opcoes as $rowopcao) {
-			echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>" . htmlspecialchars($rowopcao['nome']) . " + " . $rowopcao['quantidade'] . "</i></span> ";
+			if ($rowopcao['quantidade'] == 0) {
+				echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>sem ".htmlspecialchars($rowopcao['nome'])."</i></span> ";
+			} else {
+				echo "<span style='margin-top-0.4vw; margin-bottom: 0.5vw; font-size: 0.87vw; margin-left:0.7vw'><i>".$rowopcao['quantidade']." * ".htmlspecialchars($rowopcao['nome'])."</i></span> ";
+			}
 		}
 	}
 	echo "<br>";
@@ -234,59 +241,62 @@ foreach ($pedidos as $rowPed) {
                             <hr class='linha' style='margin-top: 1.2vw;'>
                         </div>
                     </div>
-                    <div class='Pagamento'>
-                        <h4 class='pagamento' style='font-size: 1.25vw;'>Pagamento</h4>
-                        <p style='margin-top: 0.7vw; font-size: 0.87vw;'>Escolher forma de pagamento:</p>
-                        <div class='row align-items-center opcao' onclick='toggleSelection(this, "cartao")' style='padding: 0.4vw 0vh; margin: 0.75vw 0vh;'>
-                            <div class='col-auto'>
-                                <img src='assets/stock_imgs/iconCartao.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
-                            </div>
-                            <div class='col'>
-                                <p class='m-0' style='font-size: 0.82vw;'>Cartão de Crédito ou Débito</p>
-                            </div>
-                        </div>
-                        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this, "mbway")'>
-                            <div class='col-auto'>
-                                <img src='assets/stock_imgs/iconMBWAY.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
-                            </div>
-                            <div class='col'>
-                                <p class='m-0' style='font-size: 0.82vw;'>MBWAY</p>
-                            </div>
-                        </div>
-                        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this, "paypal")'>
-                            <div class='col-auto'>
-                                <img src='assets/stock_imgs/iconPaypal.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
-                            </div>
-                            <div class='col'>
-                                <p class='m-0' style='font-size: 0.82vw;'>PayPal</p>
-                            </div>
-                        </div>
-                        <div id='cartaoCampos' style='display: none;'>
-                            <div class='row'>
-                                <div class='col'>
-                                    <input type='text' class='form-control' placeholder='Nome do titular'>
-                                </div>
-                                <div class='col'>
-                                    <input type='number' class='form-control' placeholder='Numero do cartão'>
-                                </div>
-                            </div>
-                            <div class='row' style='margin-top: 0.7vw;'>
-                                <div class='col'>
-                                    <input type='date' class='form-control' placeholder='Data Validade'>
-                                </div>
-                                <div class='col'>
-                                    <input type='number' class='form-control' placeholder='CVC'>
-                                </div>
-                            </div>
-                        </div>
-                        <div id='MBWAYCampos' style='display: none;'>
-                            <div class='row'>
-                                <div class='col'>
-                                    <input type='tel' class='form-control' placeholder='Numero Telemovel'>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+
+  <div class='Pagamento'>
+        <h4 class='pagamento' style='font-size: 1.25vw;'>Pagamento</h4>
+        <p style='margin-top: 0.7vw; font-size: 0.87vw;'>Escolher forma de pagamento:</p>
+        <div class='row align-items-center opcao' onclick='toggleSelection(this, "cartao")' style='padding: 0.4vw 0vh; margin: 0.75vw 0vh;'>
+            <div class='col-auto'>
+                <img src='assets/stock_imgs/iconCartao.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
+            </div>
+            <div class='col'>
+                <p class='m-0' style='font-size: 0.82vw;'>Cartão de Crédito ou Débito</p>
+            </div>
+        </div>
+        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this, "mbway")'>
+            <div class='col-auto'>
+                <img src='assets/stock_imgs/iconMBWAY.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
+            </div>
+            <div class='col'>
+                <p class='m-0' style='font-size: 0.82vw;'>MBWAY</p>
+            </div>
+        </div>
+        <div class='row align-items-center opcao' style='margin: 0.75vw 0vh' onclick='toggleSelection(this, "paypal")'>
+            <div class='col-auto'>
+                <img src='assets/stock_imgs/iconPaypal.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
+            </div>
+            <div class='col'>
+                <p class='m-0' style='font-size: 0.82vw;'>PayPal</p>
+            </div>
+        </div>
+        <div id='cartaoCampos' style='display: none;'>
+            <div class='row'>
+                <div class='col' id="nomeTitularContainer">
+                    <input type='text' class='form-control' id="nomeTitular" placeholder='Nome do titular'>
+                </div>
+                <div class='col' id="numeroCartaoContainer">
+                    <input type='number' class='form-control' id="numeroCartao" placeholder='Numero do cartão'>
+                </div>
+            </div>
+            <div class='row' style='margin-top: 0.7vw;' id="dataValidadeContainer">
+                <div class='col'>
+                    <input type='month' class='form-control' id="dataValidade" placeholder='Data Validade'>
+                </div>
+                <div class='col' id="cvcContainer">
+                    <input type='number' class='form-control' id="cvc" placeholder='CVC'>
+                </div>
+            </div>
+        </div>
+        <div id='MBWAYCampos' id="numeroTelemovel" style='display: none;'>
+            <div class='row'>
+                <div class='col'>
+                    <input type='tel' class='form-control' id="numeroTelemovel" placeholder='Numero Telemovel'>
+                </div>
+            </div>
+        </div>
+    </div>
+
                 </div>
             </div>
 
@@ -386,6 +396,13 @@ foreach ($pedidos as $rowPed) {
 		select.addEventListener('change', updateTaxesPedido);
 	});
 
+    document.getElementById('btnConfirmPagamento').onclick = function(event) {	
+        if(!validateForm()){
+            alert(1);
+        }
+        
+        }
+
 	function updateTaxesPedido() {
 		let totalTaxaEntrega = 0;
 		// Verifique cada caixa de seleção
@@ -418,8 +435,6 @@ foreach ($pedidos as $rowPed) {
             event.preventDefault();
         }
     });
-	  
-	let opcaoSelecionada = '';
 
     function toggleSelection(element, opcao) {
         opcaoSelecionada = opcao;
@@ -431,31 +446,55 @@ foreach ($pedidos as $rowPed) {
     }
 	
 	function validarPagamento() {
+        let success = true;
         if (opcaoSelecionada === 'cartao') {
-            const nomeTitular = document.getElementById('nomeTitular').value;
-            const numeroCartao = document.getElementById('numeroCartao').value;
-            const dataValidade = document.getElementById('dataValidade').value;
-            const cvc = document.getElementById('cvc').value;
-            if (!nomeTitular || !numeroCartao || !dataValidade || !cvc) {
-                return false;
+            const nomeTitular = document.getElementById('nomeTitular');
+            const numeroCartao = document.getElementById('numeroCartao');
+            const dataValidade = document.getElementById('dataValidade');
+            const cvc = document.getElementById('cvc');
+
+
+            if (!nomeTitular.value) {
+                nomeTitular.classList.add('border-3');
+                nomeTitular.classList.add('border-danger');
+                success = false;
+            }
+
+            const regex = new RegExp('\d{16}');
+            if (!numeroCartao.value || !regex.test(numeroCartao.value)) {
+                numeroCartao.classList.add('border-3');
+                numeroCartao.classList.add('border-danger');
+                success = false;
+            }
+            
+            if (!dataValidade.value) {
+                dataValidade.classList.add('border-3');
+                dataValidade.classList.add('border-danger');
+                success = false;
+            }
+
+            const cvcRegex = new RegExp('[0-9]{3,4}');
+            if (!cvc.value || !cvcRegex.test(cvc.value)) {
+                cvc.classList.add('border-3');
+                cvc.classList.add('border-danger');
+                success = false;
             }
         } else if (opcaoSelecionada === 'mbway') {
-            const numeroTelemovel = document.getElementById('numeroTelemovel').value;
-            if (!numeroTelemovel) {
-                return false;
+            const numeroTelemovel = document.getElementById('numeroTelemovel');
+            if (!numeroTelemovel.value) {
+                numeroTelemovel.classList.add('border-3');
+                numeroTelemovel.classList.add('border-danger');
+                success = false;
             }
         }
-        return true;
+
+
+        return success;
     }
 	
-	document.getElementById('btnConfirmPagamento').addEventListener('submit', function(event) {	
-        if (!confirm('Tem certeza de que deseja confirmar o pedido?')) {
-            event.preventDefault();
-        }
-    });	
 	
 	document.getElementById('checkoutForm').addEventListener('submit', function(event) {
-		if (!validateForm()) {
+		if (!validateInput()) {
 			event.preventDefault();
 		} else if (!confirm('Tem certeza de que deseja confirmar o pedido?')) {
 			event.preventDefault();
@@ -503,7 +542,6 @@ foreach ($pedidos as $rowPed) {
             }
         }
 		
-}
     </script>
 </body>
 

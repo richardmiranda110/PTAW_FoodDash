@@ -115,18 +115,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <head>
     <title>Utilizador</title>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="assets/styles/sitecss.css">
     <link rel="stylesheet" href="assets/styles/dashboard.css">
     <link rel="stylesheet" href="assets/styles/dashboard_beatriz.css">
-	<style>
-		.chart-container {
-   width: 50vw;
-   height:310px;
-}
-	</style>
+    <style>
+        .chart-container {
+            width: 50vw;
+            height: 310px;
+        }
+    </style>
 </head>
 
 <body>
@@ -146,6 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             <div class="container ps-1 py-0">
                 <div class="dashboard texto_perfil">
                     <p class="h3 mb-4 fw-semibold">Olá, <?php echo htmlspecialchars($utilizador['nome']) ?></p>
+                    
                     <p>Esta é a tua página de perfil. Aqui podes ver as tuas informações pessoais, ver estatísticas,
                         sobre a tua
                         conta, ver os teus pedidos e acompanhar o estado dos teus pedidos em tempo real</p>
@@ -172,13 +172,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                             <span class="dados fw-bold">Email:</span>
                                             <span class="dados_utilizador">
                                                 <?php if (!empty($utilizador['email']))
-                                                    echo  str_repeat("*", strlen($utilizador['email'])-6) . substr($utilizador['email'], -8);$utilizador['email']; ?>
+                                                    echo  str_repeat("*", strlen($utilizador['email']) - 6) . substr($utilizador['email'], -8);
+                                                $utilizador['email']; ?>
                                             </span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Nº de Telemóvel:</span>
                                             <span class="dados_utilizador">
-                                                <?php echo str_repeat("*", strlen($utilizador['telemovel'])-4) . substr($utilizador['telemovel'], -4); ?>
+                                                <?php echo str_repeat("*", strlen($utilizador['telemovel']) - 4) . substr($utilizador['telemovel'], -4); ?>
                                             </span>
                                         </div>
                                     </div>
@@ -255,19 +256,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     <div class="">
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Dinheiro Total Gasto:</span>
-                                            <span class="dados_utilizador">489,27€</span>
+                                            <span class="dados_utilizador"><?php echo $estatisticas['totalgasto'] == 0 ? 0 : $estatisticas['totalgasto'] ?> €</span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Total de Pedidos Realizados:</span>
-                                            <span class="dados_utilizador">71</span>
+                                            <span class="dados_utilizador"><?php echo $estatisticas['totalpedidos'] ?></span>
                                         </div>
-                                        <div class="mb-2">
+                                        <?php
+                                        if ($estatisticas['maispedido'])
+                                            '<div class="mb-2">
                                             <span class="dados fw-bold">Restaurante Mais Pedido:</span>
-                                            <span class="dados_utilizador">McDonald's</span>
-                                        </div>
+                                            <span class="dados_utilizador">' . $estatisticas['maispedido'] . '</span>
+                                        </div>';
+                                        ?>
                                     </div>
 
-                                    <div  class="chart-container">
+                                    <div class="chart-container">
                                         <canvas id="lineChart"></canvas>
                                     </div>
                                 </div>
@@ -278,38 +282,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 </div>
                 <?php include __DIR__ . "/includes/footer_2.php"; ?>
 
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                    crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
                 <script>
                     var ctx = document.getElementById('lineChart').getContext('2d');
                     var myChart = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: ["Dez", "Jan", "Fev", "Mar"],
+                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
                             datasets: [{
-                                label: 'Total de Pedidos',
-                                data: [12, 18, 24, 30],
-                                backgroundColor: 'transparent',
-                                borderColor: '#d1c217',
-                                borderWidth: 2
+                                label: 'Vendas',
+                                data: [
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 1); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 2); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 3); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 4); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 5); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 6); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 7); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 8); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 9); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 10); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 11); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 12); ?>
+                                ],
+                                borderWidth: 5,
+                                borderColor: 'rgb(255,215,0)',
+                                backgroundColor: 'rgb(255,215,0)',
+                                tension: 1
                             }]
                         },
                         options: {
-						    responsive: true,
-							maintainAspectRatio: false,
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true,
-                                        suggestedMax: 30
-                                    }
-                                }]
-                            },
-                            title: {
-                                display: true,
-                                text: 'Total de Pedidos'
-                            }
+                            responsive: true,
+                            maintainAspectRatio: false
                         }
                     });
                 </script>

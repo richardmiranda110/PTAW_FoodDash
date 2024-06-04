@@ -1,7 +1,7 @@
   <!-- BARRA DE TIPOS DE RESTAURANTES -->
   <div class="container" style="text-align: center;">
     <div class="d-inline-flex p-2 bd-highlight">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/restaurantes_page.php?categoria=pizza">
         <img src="./assets/stock_imgs/pizza_menu_page.png" width="30" height="30" class="d-inline-block align-top" alt="">
         Pizza
       </a>

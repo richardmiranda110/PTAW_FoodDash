@@ -7,16 +7,18 @@ include __DIR__ . "/../database/db_connection.php";
 
 $Validacao = True;
 $estabelecimento = null;
+$tipoArquivo = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Atribuir os dados do formulário à variável $produto e, ao mesmo tempo, retirar carateres perigosos			
     $estabelecimento = array(
-    'nome' => htmlspecialchars(trim($_POST['nome'])),
-    'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
-    'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
-    'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
-    'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega']))
-);
+        'nome' => htmlspecialchars(trim($_POST['nome'])),
+        'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
+        'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
+        'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
+        'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
+        'imagem' =>  $tipoArquivo
+    );
 
     if ((empty($_POST['nome']))) {
         $ErroNome = "Campo obrigatório!";
@@ -50,6 +52,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ((empty($_POST['tempo_medio_entrega']))) {
         $ErroTempo = "Campo obrigatório!";
         $Validacao = False;
+    }
+
+    // Verificar se alguma imagem foi enviada
+    if (!empty($_FILES['imagem']['name'])) {
+        $formatosPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg', 'image/gif'];
+        $tipoArquivo = $_FILES['imagem']['type'];
+
+        // Verificar se o tipo do arquivo está na lista de formatos permitidos
+        if (!in_array($tipoArquivo, $formatosPermitidos)) {
+            $ErroImagem = "Formato de imagem inválido. Por favor, escolha um formato válido (PNG, JPEG, JPG, SVG, GIF).";
+            $validacao = false; // marcar validação como falsa
+        } else {
+            // Movendo o arquivo de imagem para o diretório desejado
+            $caminhoImagem = "caminho/do/seu/diretorio/" . $_FILES['imagem']['name'];
+            move_uploaded_file($_FILES['imagem']['tmp_name'], $caminhoImagem);
+        }
     }
 
     // Se não ocorreram erros de validação, inserir o produto
@@ -134,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <br>
 
                         <!-- localizacao -->
-                        <span>Localização</span>
+                        <span>Localização<span style='color:#ff0000'> *</span></span>
                         <div class="input-group flex-nowrap">
                             <input name="localizacao" type="text" class="form-control mb-4" placeholder="Localização"
                                 aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['localizacao']))
@@ -144,8 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <?php } ?>
                         </div>
 
-                        &emsp;
-                        <hr class="m-1">&emsp;
+                        <hr class="m-1"><br><br>
 
                         <!-- Telemóvel -->
                         <span>Nº de Telemóvel<span style='color:#ff0000'> *</span></span>
@@ -160,18 +177,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <br>
 
                         <!-- taxa_entrega -->
-                                <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
-                                <div class="input-group flex-nowrap">
-                                    <input name="taxa_entrega" type="text" class="form-control"
-                                        placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
-                                        aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['taxa_entrega']))
-                                            echo $estabelcimento['taxa_entrega']; ?>">
-                                    <br><br>
-                                    <?php if (!empty($ErroTaxa)) { ?>
-                                        <span class="help-block small" style="color:#ff0000">
-                                            <?php echo $ErroTaxa; ?></span>
-                                    <?php } ?>
-                                </div>
+                        <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
+                        <div class="input-group flex-nowrap">
+                            <input name="taxa_entrega" type="text" class="form-control" placeholder="Taxa de Entrega"
+                                aria-label="Taxa de Entrega" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['taxa_entrega']))
+                                    echo $estabelcimento['taxa_entrega']; ?>">
+                            <br><br>
+                            <?php if (!empty($ErroTaxa)) { ?>
+                                <span class="help-block small" style="color:#ff0000">
+                                    <?php echo $ErroTaxa; ?></span>
+                            <?php } ?>
+                        </div>
 
                         <br>
 
@@ -179,11 +195,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="col-md-4">
                             <div class="col-md-12">
                                 <div class="input-group flex-nowrap">
-                                    <label for="appt-time">Escolha o tempo médio de entrega: <span style='color:#ff0000'> *</span>
-                                    &emsp; &emsp;</label>
-                                    <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time"
-                                     value="<?php if (!empty($estabelcimento['tempo_medio_entrega']))
-                                            echo $estabelcimento['tempo_medio_entrega']; ?>">
+                                    <label for="appt-time">Escolha o tempo médio de entrega: <span
+                                            style='color:#ff0000'> *</span>
+                                        &emsp; &emsp;</label>
+                                    <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time" value="<?php if (!empty($estabelcimento['tempo_medio_entrega']))
+                                        echo $estabelcimento['tempo_medio_entrega']; ?>">
                                     <?php if (!empty($ErroTempo)) { ?>
                                         <span class="help-block small"
                                             style="color:#ff0000"><?php echo $ErroTempo; ?></span>
@@ -191,33 +207,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Imagem -->
+                        <div>
+                            <label for="inputImagem">Escolha uma imagem:</label>
+                            <input name="imagem" type="file" id="inputImagem" name="inputImagem"
+                                accept="image/png, image/jpeg, image/jpg, image/svg, image/gif">
+                            <br>
+                            <img id="preview" src="#" alt="Image preview"
+                                style="display:none; max-width:200px; max-height:200px;">
+                                <?php if (!empty($ErroImagem)) { ?>
+                                        <span class="help-block small"
+                                            style="color:#ff0000"><?php echo $ErroImagem; ?></span>
+                                    <?php } ?>
+                            <br>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-
-    <!-- The Modal -->
-    <div id="erro" class="modal1">
-        <div class="modal-content1">
-            <div class="modal-header1">
-                <span class="close1">&times;</span>
-                <h2>Adicionar Estabelecimento</h2>
-            </div>
-            <div class="modal-body1">
-                <p>
-                    <?php
-                    if (isset($_SESSION["mensagem"])) {
-                        echo $_SESSION["mensagem"];
-                    } else if (isset($_SESSION["erro"])) {
-                        echo $_SESSION["erro"];
-                    }
-                    ?>
-                </p>
-            </div>
-        </div>
-    </div>
-
+    <br><br>
 </div>
 <!--Fim do conteúdo de página-->
 <?php
@@ -227,34 +237,21 @@ include __DIR__ . "/includes/footer_business.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-
 <script>
-    // Modal
-    var modal = document.getElementById("erro");
-    var close = document.getElementsByClassName("close1")[0];
-
-    // When the user clicks on <span> (x), close the modal
-    close.onclick = function () {
-        modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+    document.getElementById('inputImagem').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.getElementById('preview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
         }
-    }
-    <?php
-    if (isset($_SESSION["mensagem"]) || isset($_SESSION["erro"])) {
-        ?>
-          modal.style.display="block";
+    });
 
-       
-      <?php
-        //unset($_SESSION["erro"]);
-        //unset($_SESSION["mensagem"]);
-    }
-    ?>
-    </script>
+</script>
 </body>
+
 </html>

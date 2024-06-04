@@ -33,14 +33,14 @@
   }else{
     include __DIR__."/includes/header_logged_in.php";
 	///validar id cliente por session
-	$idCliente=$_SESSION['id_cliente'];
+	$idCliente=(isset($_SESSION['id_cliente']) ? $_SESSION['id_cliente'] : 0);
 	$idIndex=240;
   }
   
 	include __DIR__."/includes/insertAvaliationRestaurant.php"; 
 	include __DIR__."/includes/insertPedido.php"; 
   
-  //$idCliente = 1;
+  $idCliente = 1;
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
@@ -172,7 +172,7 @@
 			INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
 			INNER JOIN empresas on empresas.id_empresa=estabelecimentos.id_empresa
 			INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
-			WHERE REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? ";
+			WHERE itens.itemsozinho=true and REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? ";
 
        $stmt = $pdo->prepare($query);
        $stmt->execute([strtolower($fRestaurante)]);
@@ -264,11 +264,13 @@
 					$stmtProd->execute([$fRestaurante]);
 					$produtos = $stmtProd->fetchAll(PDO::FETCH_ASSOC);
 			} else {
-            $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas  
+             $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas, menus.id_menu
 					FROM itens 
 					INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
 					INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
+					FULL join menus on menus.id_estabelecimento = estabelecimentos.id_estabelecimento
 					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
+					
 					
 					$stmtProd = $pdo->prepare($queryProd);
 					$stmtProd->execute([$fRestaurante,$fCat]);
@@ -306,7 +308,7 @@
                 $dados[]  = ['id' => $rowProd['id_menu'] , 'trigger' => 'liveToastBtn_'.$idCategoria.'_'.$idProd, 'toast' => 'liveToast_'.$idCategoria.'_'.$idProd];
                 //echo "<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>";
 				echo "
-				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
+				<div id='toast-container_".$idCategoria."_".$idProd."' class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
@@ -339,6 +341,15 @@
 							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
 							inner join empresas e on e.id_empresa=m.id_estabelecimento 
 							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
+							
+						$queryMenu2 = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu, opcoes.max_quantidade as max_quantidade
+							from item_menus as im
+							inner join menus m on m.id_menu=im.id_menu
+							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
+							inner join empresas e on e.id_empresa=m.id_estabelecimento 
+							inner join item_menus_opcoes on im.id_item_menu = item_menus_opcoes.id_item_menu
+							inner join opcoes on opcoes.id_opcao = item_menus_opcoes.id_opcao
+							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
 
 						$stmtMenu= $pdo->prepare($queryMenu);
 						$stmtMenu->execute([$fRestaurante]);
@@ -350,6 +361,16 @@
 							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
 							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
 					
+						$queryMenu2 = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu, opcoes.max_quantidade
+							FROM itens 
+							INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
+							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
+							inner join item_menus as im on im.id_item = itens.id_item
+							inner join item_menus_opcoes on im.id_item_menu = item_menus_opcoes.id_item_menu
+							inner join opcoes on opcoes.id_opcao = item_menus_opcoes.id_opcao
+							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
+					
+					
 						$stmtMenu= $pdo->prepare($queryMenu);
 						$stmtMenu->execute([$fRestaurante]);
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
@@ -358,12 +379,13 @@
 										
 					foreach ($itensMenus as $rowit) {
 						$idIndex++;
+						$infoToas = $idCategoria."_".$idProd;
 						echo "
 						<div class='form-check form-switch product-item' style='display: flex; '>
-							<input style=' width: 5%; height: 20px; margin-right: 15px; margin-top: -1px;' class='form-check-input' type='checkbox' name='itens[]' id='itens_".$idIndex."' value='".$idIndex."' checked>	
+							<input style=' width: 5%; height: 20px; margin-right: 15px; margin-top: -1px;' class='form-check-input' type='checkbox' name='itens[]' id='itens_".$idIndex."' value='".$idIndex."' checked onchange=updateTotalPrice('".$infoToas."')>	
 								<input type='hidden' name='itemid_".$idIndex ."' id='itemid_".$idIndex ."' value=".$rowit['id_item'] ."> 
 								<label style='font-size: 1.5vh; font-weight: bold;  width: 74%;' class='form-check-label d-flex justify-content-start' for='itens_".$idIndex."'>".$rowit['nome']."</label>													
-								<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' min='1' max='".$rowit['max_quantidade']."' value=1 >
+								<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' min='1' max='".$rowit['max_quantidade']."' value=1 onchange=updateTotalPrice('".$infoToas."')>
 								<input type='hidden' class='form-control' name='categoria_".$idIndex."' id='categoria_".$idIndex."' value='".$idCategoria."'> 
 								<input type='hidden' class='form-control' name='idmenu_".$idIndex."' id='idmenu_".$idIndex."' value='".$rowit['id_menu']."'> 
 								<input type='hidden' class='form-control price-field' name='preco_".$idIndex."' id='preco_".$idIndex."' value=".$rowit['preco']."> 
@@ -381,13 +403,13 @@
 						foreach ($opcoes as $rowop) {
 							$idIndex++;
 							echo "<div class='form-check form-switch product-item' style='display: flex; '>
-							<input type='hidden' name='opcoes[]' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."'> 
-							<input style=' width: 4%; height: 20px; margin: 0px 10px 0px 5%;'  class='form-check-input' type='checkbox' name='opcao_".$idIndex."' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."' checked>	
-								<label style='width: 74%;' class='form-check-label d-flex justify-content-start' for='opcao_".$idIndex."'>".$rowop['nome']."</label>									
-								<input type='hidden' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' value=1 >								
-								<input type='hidden' name='itemop_".$idIndex."' id='itemop_".$idIndex."' value=".$rowit['id_item']."> 
-							</div>
-							";
+								<input type='hidden' name='opcoes[]' id='opcao_hidden_".$idIndex."' value='".$idIndex."'> 
+								<input style=' width: 4%; height: 20px; margin: 0px 10px 0px 5%;'  type='checkbox'  id='checkboxop_".$idIndex."'  onchange='updateOptionValue(".$idIndex.")' checked>    
+								<label style='width: 74%;' class='form-check-label d-flex justify-content-start' for='checkbox_".$idIndex."'>".$rowop['nome']."</label>     
+								<input type='hidden' class='form-control' type='number' name='opcao_".$idIndex."' id='opcao_".$idIndex."' value='".$rowop['id_opcao']."' > 								
+								<input type='hidden' class='form-control' type='number' name='quantidadeop_".$idIndex."' id='quantidadeop_".$idIndex."' value=1 >                                
+								<input type='hidden' name='itemop_".$idIndex."' id='itemop_".$idIndex."' value='".$rowit['id_item']."'> 
+							  </div>";
 						}
 						echo "<hr>";
 					}
@@ -400,8 +422,9 @@
 								<input type='hidden' class='total-container' name='valuePedido' id='valuePedido' value='" . $rowProd['preco'] . "'>
 							<hr>
 							<input class=' btn btn-primary btn-lg' type='submit' value='Adicionar ao carrinho'>
-							</div>";
-					
+							</div>
+							</form>
+							";					
 						}
 						
 					echo "</div>
@@ -411,7 +434,7 @@
             }
 
             echo "  </div>
-			</form>
+			
             </div>
 
         </div>";
@@ -544,97 +567,98 @@
 	
 	//Adicionar/atualizar valor do pedido
 	// Adicione um ouvinte de evento para a mudança na quantidade
-	const checkboxes = document.querySelectorAll('.form-check-input');
-	const quantityFields = document.querySelectorAll('.quantity-field');
+	// Adicione um ouvinte de evento para a mudança na quantidade
+// Adicione um ouvinte de evento para a mudança na quantidade
+const checkboxes = document.querySelectorAll('.form-check-input');
+const quantityFields = document.querySelectorAll('.quantity-field');
 
-	// Adicione um ouvinte de evento para cada caixa de seleção
-	checkboxes.forEach(function (checkbox) {
-		checkbox.addEventListener('change', updateTotalPrice);
-	});
-	
-	quantityFields.forEach(function (checkbox) {
-		checkbox.addEventListener('input', updateTotalPrice);
-	});
+// Adicione um ouvinte de evento para cada caixa de seleção
+/*
+checkboxes.forEach(function (checkbox) {
+    checkbox.addEventListener('change', updateTotalPrice);
+});
 
-	function updateTotalPrice() {
+quantityFields.forEach(function (checkbox) {
+    checkbox.addEventListener('input', updateTotalPrice);
+});
+*/
+function updateTotalPrice(name) {
+    
+
+    try {
+        // Seleciona todas as caixas de seleção dentro da div com IDs iniciados por "liveToast_Acompanhamentos"
+        const checkboxes = document.querySelectorAll('[id^="liveToast_'+ name +'"] input[type="checkbox"]');
+
+		/*
 		const totalPedidoElement = document.getElementById('totalPedido');
 		const valueItemElement = document.getElementById('valueItem');
 		const valuePedidoElement = document.getElementById('valuePedido');
-		
-		if (!totalPedidoElement || !valueItemElement || !valuePedidoElement) {
-			alert("Elementos DOM necessários não encontrados");
-			return;
-		}
+*/
+		const totalPedidoElement = document.querySelector('[id^="toast-container_'+ name +'"] #totalPedido');
+		const valueItemElement = document.querySelector('[id^="toast-container_'+ name +'"] #valueItem');
+		const valuePedidoElement = document.querySelector('[id^="toast-container_'+ name +'"] #valuePedido');
 
 		const totalPedido = parseFloat(totalPedidoElement.textContent);
 		const valItem = parseFloat(valueItemElement.value);
 
-		if (isNaN(totalPedido) || isNaN(valItem)) {
-			console.error("Valores inválidos para totalPedido ou valItem");
-			return;
-		}
+		let total = 0;
 
-		let total = valItem;
-		
-		try {
-			
+        // Verifique cada caixa de seleção
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
+                const priceInput = document.querySelector('#preco_' + checkbox.value);
 
-			// Seleciona todas as caixas de seleção
-			const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-			// Verifique cada caixa de seleção
-			checkboxes.forEach(function (checkbox) {
-				if (checkbox.checked) {
-					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
-					const priceInput = document.querySelector('#preco_' + checkbox.value);
-
-					// Verifica se os elementos existem antes de acessar suas propriedades
-					if (quantityInput && priceInput) {
-						quantityInput.disabled = false;
-
-						let quantity = parseFloat(quantityInput.value);
-
-						if (quantity === 0) {
-							quantityInput.value = 1;
-							quantity = 1;
-						}
-
-						const price = parseFloat(priceInput.value);
-						if (!isNaN(quantity) && !isNaN(price)) {
-							total += (quantity * price);
-						} else {
-							console.error('Valores inválidos para quantity ou price', { quantity, price });
-						}
-						total += (quantity * price);
-					} else {
-						console.error('Erro: um ou mais elementos não encontrados', {
-							quantityInput, priceInput
-						});
+                // Verifica se os elementos existem antes de acessar suas propriedades
+                if (quantityInput && priceInput) {					
+                    quantityInput.disabled = false;
+					if(parseFloat(quantityInput.value) == 0) {
+						quantityInput.value = 1;
 					}
-				} else {
-					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
-					if (quantityInput) {
-						quantityInput.disabled = true;
-						quantityInput.value = 0;
-					}
-				}
-			});
+					
+                    let quantity = parseFloat(quantityInput.value);
+                    const price = parseFloat(priceInput.value);
 
-			// Atualize o preço total exibido
-			totalPedidoElement.textContent = ""+ total.toFixed(2);
-			valuePedidoElement.value = total.toFixed(2);
+                    if (!isNaN(quantity) && !isNaN(price)) {
+                        total += quantity * price;
+                    }
+                }
+            } else {
+                const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
+                if (quantityInput) {
+                    quantityInput.disabled = true;
+                    quantityInput.value = 0;
+                }
+            }
+        });
 
-		} catch (error) {
-			console.error('Erro durante a execução de updateTotalPrice:', error);
-		}
-	}
+        // Atualize o preço total exibido
+        totalPedidoElement.textContent = total.toFixed(2);
+        valuePedidoElement.value = total.toFixed(2);
+    } catch (error) {
+        console.error('Erro durante a execução de updateTotalPrice:', error);
+    }
+} 
+
+
 
 		
 	document.getElementById('pedidoForm').addEventListener('submit', function(event) {
-        if (!confirm('Tem certeza de que deseja excluir este pedido?')) {
+        if (!confirm('Deseja incluir este artigo no seu pedido?')) {
             event.preventDefault();
         }
     });	
+	
+	function updateOptionValue(index) {
+          const checkbox = document.getElementById('checkboxop_' + index);
+          const hiddenField = document.getElementById('quantidadeop_' + index);
+          
+          if (hiddenField.value == 0) {
+              document.getElementById('quantidadeop_' + index).value = '1';
+          } else {
+			  document.getElementById('quantidadeop_' + index).value = '0';
+		  }
+        }
   </script>
 
   <script src="./assets/js/toast.js"></script>
