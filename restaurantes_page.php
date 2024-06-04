@@ -60,12 +60,12 @@
 			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
 			,0) as taxa_entrega,
 		COALESCE ( 
-			(select avg(tempo_medio_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
+			(select avg(tempo_medio_entrega) from estabelecimentos )
 			,'00:00:00') as tempo_medio_entrega,
 			logotipo,
 		COALESCE (
 			(select sum(classificacao)/count(classificacao) from avaliacoes 
-			 where avaliacoes.id_estabelecimento=estabelecimentos.id_estabelecimento)
+			 where avaliacoes.id_empresa=empresas.id_empresa)
 			,0) as avaliacao
 		from empresas inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa";
 

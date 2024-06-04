@@ -135,6 +135,7 @@ CREATE TABLE IF NOT EXISTS Pedido_Itens (
     id_pedido_item SERIAL PRIMARY KEY,
     id_pedido INTEGER REFERENCES Pedidos(id_pedido) ON DELETE CASCADE NOT NULL,
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
+    id_menu INTEGER REFERENCES menus(id_menu) ON DELETE CASCADE NOT NULL,
     quantidade INTEGER DEFAULT 1
 );
 
