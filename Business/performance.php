@@ -4,58 +4,74 @@ require_once __DIR__ . '/includes/session.php';
 require_once __DIR__ . "/../database/credentials.php";
 require_once __DIR__ . "/../database/db_connection.php";
 
-if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     header("Location: /Business/dashboard_home_page.php");
     exit();
 }
 
 
 $idEstabelecimento = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_empresa'];
 
-function getPedidosDiarios($pdo, $idEstabelecimento, $dia)
+function getPedidosDiarios($pdo, $idEmpresa, $dia, $mes)
 {
-    $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+    $query = "SELECT COUNT(*) AS total_pedidos 
+              FROM Pedidos 
+              JOIN Estabelecimentos 
+              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              WHERE Estabelecimentos.id_empresa = :empresaId 
+              AND EXTRACT(DAY FROM Pedidos.data) = :dia AND EXTRACT(MONTH FROM Pedidos.data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $idEstabelecimento, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
-    $stmt->execute();
-    $result = $stmt->fetch();
-    return $result['total_pedidos'];
-}
-
-function getPedidosMensais($pdo, $idEstabelecimento, $mes)
-{
-    $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $idEstabelecimento, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result['total_pedidos'];
 }
 
-function getVendasDiarias($pdo, $estabelecimentoId, $dia)
+
+function getPedidosMensais($pdo, $idEmpresa, $mes)
+{
+    $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos JOIN Estabelecimentos 
+    ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+    WHERE Estabelecimentos.id_empresa = :empresaId  AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_pedidos'];
+}
+
+function getVendasDiarias($pdo, $idEmpresa, $dia, $mes)
 {
     $query = "SELECT SUM(precoTotal) AS total_dinheiro
         FROM Pedidos
-        WHERE id_estabelecimento = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+        JOIN Estabelecimentos 
+              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              WHERE Estabelecimentos.id_empresa = :empresaId 
+              AND EXTRACT(DAY FROM Pedidos.data) = :dia AND EXTRACT(MONTH FROM Pedidos.data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result['total_dinheiro'];
 }
 
 
-function getVendasMensais($pdo, $estabelecimentoId, $mes)
+function getVendasMensais($pdo, $idEmpresa, $mes)
 {
     $query = "SELECT SUM(precoTotal) AS total_dinheiro
         FROM Pedidos
-        WHERE id_estabelecimento = :estabelecimentoId
+        JOIN Estabelecimentos 
+              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              WHERE Estabelecimentos.id_empresa = :empresaId
           AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
@@ -64,10 +80,10 @@ function getVendasMensais($pdo, $estabelecimentoId, $mes)
 
 //Preço médio diário
 
-function getPrecoMedioDiario($pdo, $estabelecimentoId, $dia)
+function getPrecoMedioDiario($pdo, $idEmpresa, $dia, $mes)
 {
-    $totalVendas = getVendasDiarias($pdo, $estabelecimentoId, $dia);
-    $totalPedidos = getPedidosDiarios($pdo, $estabelecimentoId, $dia);
+    $totalVendas = getVendasDiarias($pdo, $idEmpresa, $dia, $mes);
+    $totalPedidos = getPedidosDiarios($pdo, $idEmpresa, $dia, $mes);
 
     if ($totalPedidos == 0) {
         return 0;
@@ -79,10 +95,10 @@ function getPrecoMedioDiario($pdo, $estabelecimentoId, $dia)
 
 //Preço médio mensal
 
-function getPrecoMedioMensal($pdo, $estabelecimentoId, $mes)
+function getPrecoMedioMensal($pdo, $idEmpresa, $mes)
 {
-    $totalVendas = getVendasMensais($pdo, $estabelecimentoId, $mes);
-    $totalPedidos = getPedidosMensais($pdo, $estabelecimentoId, $mes);
+    $totalVendas = getVendasMensais($pdo, $idEmpresa, $mes);
+    $totalPedidos = getPedidosMensais($pdo, $idEmpresa, $mes);
 
     if ($totalPedidos == 0) {
         return 0;
@@ -92,57 +108,31 @@ function getPrecoMedioMensal($pdo, $estabelecimentoId, $mes)
     return number_format($media, 2);
 }
 
-function getItemMaisPedidoDiario($pdo, $estabelecimentoId, $dia)
+function getItemMaisPedidoDiario($pdo, $idEmpresa, $dia, $mes)
 {
     $query = "SELECT 
-            i.nome, 
-            SUM(pi.quantidade) AS total_vendido
-        FROM 
-            Pedidos p
-        JOIN 
-            Pedido_Itens pi ON p.id_pedido = pi.id_pedido
-        JOIN 
-            Itens i ON pi.id_item = i.id_item
-        WHERE 
-            p.id_estabelecimento = :estabelecimentoId
-            AND EXTRACT(DAY FROM data) = :dia
-        GROUP BY 
-            i.nome
-        ORDER BY 
-            total_vendido DESC
-        LIMIT 1;";
+                i.nome, 
+                SUM(pi.quantidade) AS total_vendido
+              FROM 
+                Pedidos p
+              JOIN 
+                Pedido_Itens pi ON p.id_pedido = pi.id_pedido
+              JOIN 
+                Itens i ON pi.id_item = i.id_item
+              JOIN 
+                Estabelecimentos e ON p.id_estabelecimento = e.id_estabelecimento
+              WHERE 
+                e.id_empresa = :empresaId AND EXTRACT(DAY FROM p.data) = :dia
+                AND EXTRACT(MONTH FROM p.data) = :mes 
+              GROUP BY 
+                i.nome
+              ORDER BY 
+                total_vendido DESC
+              LIMIT 1;";
 
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_STR);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $result ? $result['nome'] : null;
-}
-
-function getItemMaisPedidoMensal($pdo, $estabelecimentoId, $mes)
-{
-    $query = "SELECT 
-            i.nome, 
-            SUM(pi.quantidade) AS total_vendido
-        FROM 
-            Pedidos p
-        JOIN 
-            Pedido_Itens pi ON p.id_pedido = pi.id_pedido
-        JOIN 
-            Itens i ON pi.id_item = i.id_item
-        WHERE 
-            p.id_estabelecimento = :estabelecimentoId
-            AND EXTRACT(MONTH FROM data) = :mes
-        GROUP BY 
-            i.nome
-        ORDER BY 
-            total_vendido DESC
-        LIMIT 1;";
-
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -150,38 +140,72 @@ function getItemMaisPedidoMensal($pdo, $estabelecimentoId, $mes)
     return $result ? $result['nome'] : null;
 }
 
+function getItemMaisPedidoMensal($pdo, $idEmpresa, $mes)
+{
+    $query = "SELECT 
+                i.nome, 
+                SUM(pi.quantidade) AS total_vendido
+              FROM 
+                Pedidos p
+              JOIN 
+                Pedido_Itens pi ON p.id_pedido = pi.id_pedido
+              JOIN 
+                Itens i ON pi.id_item = i.id_item
+              JOIN 
+                Estabelecimentos e ON p.id_estabelecimento = e.id_estabelecimento
+              WHERE 
+                e.id_empresa = :empresaId
+                AND EXTRACT(MONTH FROM p.data) = :mes
+              GROUP BY 
+                i.nome
+              ORDER BY 
+                total_vendido DESC
+              LIMIT 1;";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result ? $result['nome'] : null;
+}
+
+
 //Função complementar da função getAvaliacaoMediaDiaria()
-function getTodasAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
+function getTodasAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+        WHERE id_empresa = :empresaId AND EXTRACT(DAY FROM data) = :dia AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result['total_avaliacao'];
 }
 
 //Função complementar da função getAvaliacaoMediaDiaria()
-function getSomaAvaliacoesDoDia($pdo, $estabelecimentoId, $dia)
+function getSomaAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes)
 {
     $query = "SELECT SUM(classificacao) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(DAY FROM data) = :dia";
+        WHERE id_empresa = :empresaId AND EXTRACT(DAY FROM data) = :dia AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':dia', $dia, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result['total_avaliacao'];
 }
 
-function getAvaliacaoMediaDiaria($pdo, $estabelecimentoId, $dia)
+function getAvaliacaoMediaDiaria($pdo, $idEmpresa, $dia, $mes)
 {
-    $somaAvaliacoes = getSomaAvaliacoesDoDia($pdo, $estabelecimentoId, $dia);
-    $totalAvaliacoes = getTodasAvaliacoesDoDia($pdo, $estabelecimentoId, $dia);
+    $somaAvaliacoes = getSomaAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes);
+    $totalAvaliacoes = getTodasAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes);
 
     if ($totalAvaliacoes == 0) {
         return 0;
@@ -192,13 +216,13 @@ function getAvaliacaoMediaDiaria($pdo, $estabelecimentoId, $dia)
 }
 
 //Função complementar da função getAvaliacaoMediaMensal()
-function getTodasAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
+function getTodasAvaliacoesDoMes($pdo, $idEmpresa, $mes)
 {
     $query = "SELECT COUNT(*) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+        WHERE id_empresa = :empresaId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
@@ -206,23 +230,23 @@ function getTodasAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
 }
 
 //Função complementar da função getAvaliacaoMediaMensal()
-function getSomaAvaliacoesDoMes($pdo, $estabelecimentoId, $mes)
+function getSomaAvaliacoesDoMes($pdo, $idEmpresa, $mes)
 {
     $query = "SELECT SUM(classificacao) AS total_avaliacao
         FROM Avaliacoes
-        WHERE id_empresa = :estabelecimentoId AND EXTRACT(MONTH FROM data) = :mes";
+        WHERE id_empresa = :empresaId AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result['total_avaliacao'];
 }
 
-function getAvaliacaoMediaMensal($pdo, $estabelecimentoId, $mes)
+function getAvaliacaoMediaMensal($pdo, $idEmpresa, $mes)
 {
-    $somaAvaliacoes = getSomaAvaliacoesDoMes($pdo, $estabelecimentoId, $mes);
-    $totalAvaliacoes = getTodasAvaliacoesDoMes($pdo, $estabelecimentoId, $mes);
+    $somaAvaliacoes = getSomaAvaliacoesDoMes($pdo, $idEmpresa, $mes);
+    $totalAvaliacoes = getTodasAvaliacoesDoMes($pdo, $idEmpresa, $mes);
 
     if ($totalAvaliacoes == 0) {
         return 0;
@@ -232,42 +256,47 @@ function getAvaliacaoMediaMensal($pdo, $estabelecimentoId, $mes)
     return number_format($media, 2);
 }
 
-function getTempoMedio($pdo, $estabelecimentoId)
+function getTempoMedio($pdo, $idEmpresa)
 {
-    $query = "SELECT tempo_medio_entrega AS tempo_medio
-        FROM Estabelecimentos
-        WHERE id_estabelecimento = :estabelecimentoId";
+    $query = "SELECT to_char(
+                    (avg(EXTRACT(EPOCH FROM tempo_medio_entrega) * interval '1 second')),
+                    'HH24:MI:SS'
+                ) AS tempo_medio
+              FROM Estabelecimentos 
+              WHERE id_empresa = :empresaId";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':estabelecimentoId', $estabelecimentoId, PDO::PARAM_INT);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result['tempo_medio'];
 }
 
+
+
 $diaAtual = date("j");
 $mesAtual = date("n");
 
-$itemMaisPedidoDia = getItemMaisPedidoDiario($pdo, $idEstabelecimento, $diaAtual);
+$itemMaisPedidoDia = getItemMaisPedidoDiario($pdo, $idEmpresa, $idEmpresa, $mesAtual);
 
-$itemMaisPedidoMes = getItemMaisPedidoMensal($pdo, $idEstabelecimento, $mesAtual);
+$itemMaisPedidoMes = getItemMaisPedidoMensal($pdo, $idEmpresa, $mesAtual);
 
-$avaliacaoMediaDiaria = getAvaliacaoMediaDiaria($pdo, $idEstabelecimento, $diaAtual);
+$avaliacaoMediaDiaria = getAvaliacaoMediaDiaria($pdo, $idEmpresa, $diaAtual, $mesAtual);
 
-$avaliacaoMediaMensal = getAvaliacaoMediaMensal($pdo, $idEstabelecimento, $mesAtual);
+$avaliacaoMediaMensal = getAvaliacaoMediaMensal($pdo, $idEmpresa, $mesAtual);
 
-$vendasDiarias = getVendasDiarias($pdo, $idEstabelecimento, $diaAtual);
+$vendasDiarias = getVendasDiarias($pdo, $idEmpresa, $diaAtual, $mesAtual);
 
-$vendasMensais = getVendasMensais($pdo, $idEstabelecimento, $mesAtual);
+$vendasMensais = getVendasMensais($pdo, $idEmpresa, $mesAtual);
 
-$pedidosDiarios =  getPedidosDiarios($pdo, $idEstabelecimento, $diaAtual);
+$pedidosDiarios =  getPedidosDiarios($pdo, $idEmpresa, $diaAtual, $mesAtual);
 
-$pedidosMensais = getPedidosMensais($pdo, $idEstabelecimento, $mesAtual);
+$pedidosMensais = getPedidosMensais($pdo, $idEmpresa, $mesAtual);
 
-$precoMedioDiario = getPrecoMedioDiario($pdo, $idEstabelecimento, $diaAtual);
+$precoMedioDiario = getPrecoMedioDiario($pdo, $idEmpresa, $diaAtual, $mesAtual);
 
-$precoMedioMensal = getPrecoMedioMensal($pdo, $idEstabelecimento, $mesAtual);
+$precoMedioMensal = getPrecoMedioMensal($pdo, $idEmpresa, $mesAtual);
 
-$tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
+$tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
 
 ?>
 <!DOCTYPE html>
@@ -326,6 +355,8 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
             <div class="text-start mt-1">
                 <h2 class="fw-bold">Performance</h2>
                 <p class="lead text-muted fw-bold">Sumário diário.</p>
+                <p class="lead text-muted fw-bold">Id Estabelecimento: <?php echo $idEstabelecimento ?></p>
+                <p class="lead text-muted fw-bold">Id Empresa: <?php echo $idEmpresa ?></p>
             </div>
 
             <!--1ª linha-->
@@ -379,7 +410,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ? $itemMaisPedidoDia : 0 ?></p>
+                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ? $itemMaisPedidoDia : "Nenhum pedido" ?></p>
                         </div>
                     </div>
                 </div>
@@ -449,7 +480,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mt-1 mb-3">Item mais pedido</h4>
-                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoDia ? $itemMaisPedidoDia : 0 ?></p>
+                            <p class="h1 mb-3 text-secondary fw-bold"><?php echo $itemMaisPedidoMes ? $itemMaisPedidoMes : "Nenhum pedido" ?></p>
                         </div>
                     </div>
                 </div>
@@ -506,18 +537,18 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                 datasets: [{
                     label: 'Pedidos',
                     data: [
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 1) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 2) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 3) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 4) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 5) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 6) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 7) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 8) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 9) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 10) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 11) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 12) ?>
+                        <?= getPedidosMensais($pdo, $idEmpresa, 1) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 2) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 3) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 4) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 5) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 6) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 7) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 8) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 9) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 10) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 11) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 12) ?>
                     ],
                     borderWidth: 1,
                     borderColor: 'rgb(0,0,0)',
@@ -543,18 +574,18 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEstabelecimento);
                 datasets: [{
                     label: 'Vendas',
                     data: [
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 1) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 2) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 3) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 4) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 5) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 6) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 7) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 8) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 9) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 10) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 11) ?>,
-                        <?= getPedidosMensais($pdo, $idEstabelecimento, 12) ?>
+                        <?= getPedidosMensais($pdo, $idEmpresa, 1) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 2) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 3) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 4) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 5) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 6) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 7) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 8) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 9) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 10) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 11) ?>,
+                        <?= getPedidosMensais($pdo, $idEmpresa, 12) ?>
                     ],
                     borderWidth: 5,
                     borderColor: 'rgb(255,215,0)',
