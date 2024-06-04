@@ -1962,7 +1962,9 @@
 				var ul = document.createElement('ul');
 				var li = document.createElement('li');
 				var anchor = document.createElement('a');
+				ul.setAttribute('class','d-none')
 				var right = ul.cloneNode(false);
+
 
 				if ($export.pagerIncludeFirstAndLast) {
 						var pageFirst = li.cloneNode(false);

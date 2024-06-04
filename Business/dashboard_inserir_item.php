@@ -12,9 +12,9 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SES
 }
 $update = false;
 
-// set_error_handler(function() {
-//   exit("invalid item id!!");
-// });
+set_error_handler(function() {
+  exit("invalid item id!!");
+});
 
 
 if(isset($_GET['itemid'])){
@@ -265,7 +265,7 @@ if(isset($item)){
         </form>
       </div>  
 
-      <div id="modal" class="modal d-none">
+      <div id="modal" class="modal d-none w-50 justify-content-center" style="margin-left:25%">
         <div class="modal-content" id="modal-content">
           <span class="close">&times;</span>
           <p class="fw-bold mt-1 mb-2" id="modal-text"></p>
