@@ -308,7 +308,7 @@
                 $dados[]  = ['id' => $rowProd['id_menu'] , 'trigger' => 'liveToastBtn_'.$idCategoria.'_'.$idProd, 'toast' => 'liveToast_'.$idCategoria.'_'.$idProd];
                 //echo "<input type='hidden' name='idPedido' id='idPedido' value='".$idPedido."'>";
 				echo "
-				<div class='toast-container position-fixed bottom-0 end-0 p-3'>
+				<div id='toast-container_".$idCategoria."_".$idProd."' class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
@@ -379,12 +379,13 @@
 										
 					foreach ($itensMenus as $rowit) {
 						$idIndex++;
+						$infoToas = $idCategoria."_".$idProd;
 						echo "
 						<div class='form-check form-switch product-item' style='display: flex; '>
-							<input style=' width: 5%; height: 20px; margin-right: 15px; margin-top: -1px;' class='form-check-input' type='checkbox' name='itens[]' id='itens_".$idIndex."' value='".$idIndex."' checked>	
+							<input style=' width: 5%; height: 20px; margin-right: 15px; margin-top: -1px;' class='form-check-input' type='checkbox' name='itens[]' id='itens_".$idIndex."' value='".$idIndex."' checked onchange=updateTotalPrice('".$infoToas."')>	
 								<input type='hidden' name='itemid_".$idIndex ."' id='itemid_".$idIndex ."' value=".$rowit['id_item'] ."> 
 								<label style='font-size: 1.5vh; font-weight: bold;  width: 74%;' class='form-check-label d-flex justify-content-start' for='itens_".$idIndex."'>".$rowit['nome']."</label>													
-								<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' min='1' max='".$rowit['max_quantidade']."' value=1 >
+								<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' min='1' max='".$rowit['max_quantidade']."' value=1 onchange=updateTotalPrice('".$infoToas."')>
 								<input type='hidden' class='form-control' name='categoria_".$idIndex."' id='categoria_".$idIndex."' value='".$idCategoria."'> 
 								<input type='hidden' class='form-control' name='idmenu_".$idIndex."' id='idmenu_".$idIndex."' value='".$rowit['id_menu']."'> 
 								<input type='hidden' class='form-control price-field' name='preco_".$idIndex."' id='preco_".$idIndex."' value=".$rowit['preco']."> 
@@ -566,79 +567,80 @@
 	
 	//Adicionar/atualizar valor do pedido
 	// Adicione um ouvinte de evento para a mudança na quantidade
-	const checkboxes = document.querySelectorAll('.form-check-input');
-	const quantityFields = document.querySelectorAll('.quantity-field');
+	// Adicione um ouvinte de evento para a mudança na quantidade
+// Adicione um ouvinte de evento para a mudança na quantidade
+const checkboxes = document.querySelectorAll('.form-check-input');
+const quantityFields = document.querySelectorAll('.quantity-field');
 
-	// Adicione um ouvinte de evento para cada caixa de seleção
-	checkboxes.forEach(function (checkbox) {
-		checkbox.addEventListener('change', updateTotalPrice);
-	});
-	
-	quantityFields.forEach(function (checkbox) {
-		checkbox.addEventListener('input', updateTotalPrice);
-	});
+// Adicione um ouvinte de evento para cada caixa de seleção
+/*
+checkboxes.forEach(function (checkbox) {
+    checkbox.addEventListener('change', updateTotalPrice);
+});
 
-	function updateTotalPrice() {
+quantityFields.forEach(function (checkbox) {
+    checkbox.addEventListener('input', updateTotalPrice);
+});
+*/
+function updateTotalPrice(name) {
+    
+
+    try {
+        // Seleciona todas as caixas de seleção dentro da div com IDs iniciados por "liveToast_Acompanhamentos"
+        const checkboxes = document.querySelectorAll('[id^="liveToast_'+ name +'"] input[type="checkbox"]');
+
+		/*
 		const totalPedidoElement = document.getElementById('totalPedido');
 		const valueItemElement = document.getElementById('valueItem');
 		const valuePedidoElement = document.getElementById('valuePedido');
+*/
+		const totalPedidoElement = document.querySelector('[id^="toast-container_'+ name +'"] #totalPedido');
+		const valueItemElement = document.querySelector('[id^="toast-container_'+ name +'"] #valueItem');
+		const valuePedidoElement = document.querySelector('[id^="toast-container_'+ name +'"] #valuePedido');
 
 		const totalPedido = parseFloat(totalPedidoElement.textContent);
 		const valItem = parseFloat(valueItemElement.value);
 
+		let total = 0;
 
-		let total = valItem;
-		
-		try {
-			
-			// Seleciona todas as caixas de seleção
-			//const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-			// Seleciona a div com a classe "toast fade show"
-			let toastDiv = document.querySelector('.toast.fade.show');
-			if (!toastDiv) {
-				throw new Error('Div com a classe "toast fade show" não encontrada.');
-			}
+        // Verifique cada caixa de seleção
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
+                const priceInput = document.querySelector('#preco_' + checkbox.value);
 
-			// Seleciona todas as caixas de seleção dentro da div "toast fade show"
-			const checkboxes = toastDiv.querySelectorAll('input[type="checkbox"]');
-		
-			// Verifique cada caixa de seleção
-			checkboxes.forEach(function (checkbox) {
-				if (checkbox.checked) {
-					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
-					const priceInput = document.querySelector('#preco_' + checkbox.value);
-					const isMenuInput = document.querySelector('#idmenu_' + checkbox.value);
-
-					// Verifica se os elementos existem antes de acessar suas propriedades
-					if (quantityInput && priceInput) {
-						quantityInput.disabled = false;
-						let quantity = parseFloat(quantityInput.value);
-						const price = parseFloat(priceInput.value);
-						const isMenu = parseInt(isMenuInput.value);
-						
-		
-							if (!isNaN(quantity) && !isNaN(price)) {
-								total = (quantity * price);
-							}
-						
-					} 
-				} else {
-					const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
-					if (quantityInput) {
-						quantityInput.disabled = true;
-						quantityInput.value = 0;
+                // Verifica se os elementos existem antes de acessar suas propriedades
+                if (quantityInput && priceInput) {					
+                    quantityInput.disabled = false;
+					if(parseFloat(quantityInput.value) == 0) {
+						quantityInput.value = 1;
 					}
-				}
-			});
+					
+                    let quantity = parseFloat(quantityInput.value);
+                    const price = parseFloat(priceInput.value);
 
-			// Atualize o preço total exibido
-			totalPedidoElement.textContent = ""+ total.toFixed(2);
-			valuePedidoElement.value = total.toFixed(2);
+                    if (!isNaN(quantity) && !isNaN(price)) {
+                        total += quantity * price;
+                    }
+                }
+            } else {
+                const quantityInput = document.querySelector('#quantidade_' + checkbox.value);
+                if (quantityInput) {
+                    quantityInput.disabled = true;
+                    quantityInput.value = 0;
+                }
+            }
+        });
 
-		} catch (error) {
-			console.error('Erro durante a execução de updateTotalPrice:', error);
-		}
-	}
+        // Atualize o preço total exibido
+        totalPedidoElement.textContent = total.toFixed(2);
+        valuePedidoElement.value = total.toFixed(2);
+    } catch (error) {
+        console.error('Erro durante a execução de updateTotalPrice:', error);
+    }
+} 
+
+
 
 		
 	document.getElementById('pedidoForm').addEventListener('submit', function(event) {
