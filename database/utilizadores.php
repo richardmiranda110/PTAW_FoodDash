@@ -51,7 +51,7 @@ function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
     $stmt->bindValue(1, $DadosUtilizadores['nome'], PDO::PARAM_STR);
     $stmt->bindValue(2, $DadosUtilizadores['apelido'], PDO::PARAM_STR);
     $stmt->bindValue(3, $DadosUtilizadores['email'], PDO::PARAM_STR);
-    $stmt->bindValue(4, (int) $DadosUtilizadores['telemovel'], PDO::PARAM_INT);
+    $stmt->bindValue(4, $DadosUtilizadores['telemovel'], PDO::PARAM_STR);
     $stmt->bindValue(5, $DadosUtilizadores['morada'], PDO::PARAM_STR);
     $stmt->bindValue(6, $DadosUtilizadores['cidade'], PDO::PARAM_STR);
     $stmt->bindValue(7, $DadosUtilizadores['pais'], PDO::PARAM_STR);

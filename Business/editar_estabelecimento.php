@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/includes/session.php';
+require_once __DIR__ . '/includes/session.php';
 include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
@@ -8,7 +8,7 @@ $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
-} elseif(isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
+} elseif (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
     $estabelecimentoModificado = array(
         'nome' => htmlspecialchars(trim($_POST['nome'])),
         'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
@@ -61,7 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <!--Zona de Conteudo -->
 <div class="container" style="margin-top: 7vh;">
     <!-- Formulárop do Estabelecimento -->
-    <form id="estabelecimento" class="w-75 form_editar" style="margin:auto; " method="POST" action="editar_estabelecimento.php?id=<?php echo $id_estabelecimento; ?>">
+    <form id="estabelecimento" class="w-75 form_editar" style="margin:auto; " method="POST"
+        action="editar_estabelecimento.php?id=<?php echo $id_estabelecimento; ?>">
         <p class="h4 pt-4">Ver/Editar Informações do Estabelecimento</p>
 
         <div class="align-items-md-stretch">
@@ -98,58 +99,72 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <!-- localizacao -->
                             <span>Localização</span>
                             <div class="input-group flex-nowrap">
-                                <input name="localizacao" readonly type="text" class="form-control mb-4" placeholder="Localização"
-                                    aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['localizacao']))
+                                <input name="localizacao" readonly type="text" class="form-control mb-4"
+                                    placeholder="Localização" aria-label="Localização" aria-describedby="addon-wrapping"
+                                    value="<?php if (!empty($estabelecimento['localizacao']))
                                         echo $estabelecimento['localizacao']; ?>">
-                                        <span id="erroLocalizacao" class="help-inline small" style="color:#ff0000"></span>
+                                <span id="erroLocalizacao" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             &emsp;
                             <hr class="m-1">&emsp;
                             <br>
-                            <!-- taxa_entrega -->
                             <div class="row">
                                 <!-- Telemóvel -->
                                 <div class="col-md-4">
                                     <span>Nº de Telemóvel<span style='color:#ff0000'> *</span></span>
                                     <div class="input-group flex-nowrap">
                                         <input name="telemovel" readonly type="text" class="form-control"
-                                        placeholder="Telemóvel" aria-label="Telemovel" aria-describedby="addon-wrapping"
-                                        value="<?php if (!empty($estabelecimento['telemovel']))
-                                            echo $estabelecimento['telemovel']; ?>">
+                                            placeholder="Telemóvel" aria-label="Telemovel"
+                                            aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['telemovel']))
+                                                echo $estabelecimento['telemovel']; ?>">
                                         <span id="erroTelemovel" class="help-inline small" style="color:#ff0000"></span>
                                     </div>
                                 </div>
+
+                                <!-- taxa_entrega -->
                                 <div class="col-md-4">
-                                        <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
-                                        <div class="input-group flex-nowrap">
-                                            <input name="taxa_entrega" readonly type="text" class="form-control"
-                                                placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
-                                                aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['taxa_entrega']))
-                                                    echo $estabelecimento['taxa_entrega']; ?>">
-                                                    <span id="erroTaxaEntrega" class="help-inline small" style="color:#ff0000;padding-top:10px"></span>
+                                    <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
+                                    <div class="input-group flex-nowrap">
+                                        <input name="taxa_entrega" readonly type="text" class="form-control"
+                                            placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
+                                            aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['taxa_entrega']))
+                                                echo $estabelecimento['taxa_entrega']; ?>">
+                                        <span id="erroTaxaEntrega" class="help-inline small"
+                                            style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
-
                                 <!-- tempo_medio_entrega -->
                                 <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <span>Tempo médio de entrega<span style='color:#ff0000'> *</span></span>
-                                        <div class="input-group flex-nowrap">
-                                            <input name="tempo_medio_entrega" readonly type="text" class="form-control"
-                                                placeholder="Tempo médio de entrega" aria-label="Tempo médio de entrega"
-                                                aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['tempo_medio_entrega']))
-                                                    echo $estabelecimento['tempo_medio_entrega']; ?>">
-                                                    <span id="erroTempoMedioEntrega" class="help-inline small" style="color:#ff0000;padding-top:10px"></span>
-                                        </div>
+                                    <div class="input-group flex-nowrap">
+                                        <label for="appt-time">Escolha o tempo médio de entrega:
+                                            <span style='color:#ff0000'> *</span>
+                                            &emsp; &emsp;</label>
+                                        <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time"
+                                            value="<?php if (!empty($estabelecimento['tempo_medio_entrega'])) {
+                                                echo $estabelecimento['tempo_medio_entrega'];
+                                            } ?>">
+                                        <?php if (!empty($ErroTempo)) { ?>
+                                            <span class="help-block small"
+                                                style="color:#ff0000"><?php echo $ErroTempo; ?></span>
+                                        <?php } ?>
+                                        <span id="erroTempoMedioEntrega" class="help-inline small"
+                                            style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
-                                <!-- imagem -->
-                                <span style="margin-top: 2vh;">Imagem</span>
-                                <div class="input-group flex-nowrap">
-                                    <input name="imagem" readonly type="text" class="form-control mb-4" placeholder="Imagem"
-                                    aria-label="Imagem" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['imagem']))
-                                        echo $estabelecimento['imagem']; ?>">
-                                        <span id="erroImagem" class="help-inline small" style="color:#ff0000"></span>
+                                <br><br>
+                                <!-- Imagem -->
+                                <div>
+                                    <label for="inputImagem">Escolha uma imagem:</label>
+                                    <input name="imagem" type="file" id="inputImagem" name="inputImagem"
+                                        accept="image/png, image/jpeg, image/jpg, image/svg, image/gif">
+                                    <br>
+                                    <img id="preview" src="#" alt="Image preview"
+                                        style="display:none; max-width:200px; max-height:200px;">
+                                    <span id="erroImg" class="help-inline small"
+                                        style="color:#ff0000;padding-top:10px"></span>
+                                    <br>
+                                    <span id="erroImagem" class="help-inline small"
+                                        style="color:#ff0000;padding-top:10px"></span>
                                 </div>
                             </div>
                         </div>
@@ -183,6 +198,7 @@ include __DIR__ . "/includes/footer_business.php";
     var telemovelInput = document.querySelector("[name='telemovel']");
     var taxaEntregaInput = document.querySelector("[name='taxa_entrega']");
     var tempoMedioEntregaInput = document.querySelector("[name='tempo_medio_entrega']");
+    var imagemInput = document.querySelector("[name='imagem']");
 
     // variáveis se ocurrerem erro
     var erroNome = document.getElementById("erroNome");
@@ -191,7 +207,7 @@ include __DIR__ . "/includes/footer_business.php";
     var erroTaxaEntrega = document.getElementById("erroTaxaEntrega");
     var erroEmail = document.getElementById("erroEmail");
     var erroTempoMedioEntrega = document.getElementById("erroTempoMedioEntrega");
-
+    var erroImagem = document.getElementById("erroImagem");
 
     // Função para validar o formulário da estabelecimento
     function validarFormulario() {
@@ -217,19 +233,8 @@ include __DIR__ . "/includes/footer_business.php";
 
         // Verificar se o campo de Telemovel está vazio
         if (telemovelInput.value.trim() === "") {
-            // Verificar se o campo de telemovel contém exatamente 9 números
             erroTelemovel.textContent = "Campo obrigatório";
-        } else {
-            // verficar se o campo contém só números
-            var telemovel = telemovelInput.value.trim();
-            if (!(/^\d+$/.test(telemovel))) {
-                erroTelemovel.textContent = "O campo só pode conter números.";
-                validacao = false; // marcar validação como falsa
-            } else if
-                (telemovel.length !== 9){
-                erroTelemovel.textContent = "Insira um numero válido!";
-                validacao = false; // marcar validação como falsa
-            }
+            validacao = false; // marcar validação como falsa
         }
 
         // Verificar se o campo de e-mail está vazio
@@ -242,6 +247,22 @@ include __DIR__ . "/includes/footer_business.php";
         if (tempoMedioEntregaInput.value.trim() === "") {
             erroTempoMedioEntrega.textContent = "Campo obrigatório";
             validacao = false; // marcar validação como falsa
+        }
+
+        // Verificar se o campo de e-mail está vazio
+        if (imagemInput.value.trim() === "") {
+            erroImagem.textContent = "Campo obrigatório";
+            validacao = false; // marcar validação como falsa
+        }
+
+        // Verificar se algum arquivo foi selecionado para a imagem
+        const file = imagemInput.files[0];
+        if (file) {
+            const formatosPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg', 'image/gif'];
+            if (!formatosPermitidos.includes(file.type)) {
+                erroImagem.textContent = "Formato de imagem inválido. Por favor, escolha um formato válido (PNG, JPEG, JPG, SVG, GIF).";
+                validacao = false; // marcar validação como falsa
+            }
         }
     }
 

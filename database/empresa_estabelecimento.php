@@ -44,6 +44,29 @@ function EditarEmpresa($pdo, $ID, $DadosEmpresa)
     }
 }
 
+function ObterEstabelecimentosPorEmpresa($pdo, $ID)
+{
+    if ($ID != $_SESSION['id_empresa']) {
+        throw new Exception("You can't access other people's Establishment!");
+    }
+    try {
+        $id = $_SESSION['id_empresa'];
+        $sql = "SELECT Estabelecimentos.* FROM Estabelecimentos
+            INNER JOIN Empresas ON Estabelecimentos.id_empresa = Empresas.id_empresa
+            WHERE Empresas.id_empresa = ?
+            ORDER BY Estabelecimentos.id_estabelecimento";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $estabelecimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $estabelecimentos;
+    } catch (Exception $e) {
+        echo "Erro na conexão à BD: " . $e->getMessage();
+        return null;
+    }
+}
+
 function AdicionarEstabelecimento($pdo, $id_empresa, $dadosEstabelecimento)
 {
     try {
@@ -66,29 +89,6 @@ function AdicionarEstabelecimento($pdo, $id_empresa, $dadosEstabelecimento)
     } catch (PDOException $e) {
         echo "Erro ao adicionar estabelecimento: " . $e->getMessage();
         return false;
-    }
-}
-
-function ObterEstabelecimentosPorEmpresa($pdo, $ID)
-{
-    if ($ID != $_SESSION['id_empresa']) {
-        throw new Exception("You can't access other people's Establishment!");
-    }
-    try {
-        $id = $_SESSION['id_empresa'];
-        $sql = "SELECT Estabelecimentos.* FROM Estabelecimentos
-            INNER JOIN Empresas ON Estabelecimentos.id_empresa = Empresas.id_empresa
-            WHERE Empresas.id_empresa = ?
-            ORDER BY Estabelecimentos.id_estabelecimento";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $estabelecimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $estabelecimentos;
-    } catch (Exception $e) {
-        echo "Erro na conexão à BD: " . $e->getMessage();
-        return null;
     }
 }
 
