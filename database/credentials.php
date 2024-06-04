@@ -15,4 +15,4 @@ define("DBPASS","test");
 define("DBPORT","5432");
 define("DBNAME","ptaw_fooddash");
 define("DBUSER","postgres");
-define("DBPASS","2023#Univ");*/
+define("DBPASS","2023#Univ"); */
