@@ -42,15 +42,15 @@ function ObterUltimoPedido()
 
     try {
         // query
-        $stmt = 
-        $pdo->prepare(
-            'SELECT id_pedido, data, estado, cancelado, precototal, id_estabelecimento 
+        $stmt =
+            $pdo->prepare(
+                'SELECT id_pedido, data, estado, cancelado, precototal, id_estabelecimento 
             FROM pedidos 
             where id_cliente = ?
             ORDER BY id_pedido 
             DESC LIMIT 1'
-        );
-        
+            );
+
         // Executar a query e verificar que não retornou false
         if ($stmt->execute([$_SESSION['id_cliente']])) {
             // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
@@ -77,12 +77,12 @@ function ObterEstatisticas()
 
     try {
         // query
-        $stmt = 
-        $pdo->prepare(
-            'SELECT (SELECT round(avg(precototal),2) from pedidos where id_cliente = :idcliente) as totalgasto, (SELECT count(id_pedido) from pedidos where id_cliente = :idcliente) as totalpedidos,
+        $stmt =
+            $pdo->prepare(
+                'SELECT (SELECT round(avg(precototal),2) from pedidos where id_cliente = :idcliente) as totalgasto, (SELECT count(id_pedido) from pedidos where id_cliente = :idcliente) as totalpedidos,
             (select max(estabelecimentos.nome) from pedidos inner join estabelecimentos on estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento where id_cliente = :idcliente) as maispedido;'
-        );
-        $stmt->bindValue(":idcliente",$_SESSION['id_cliente']);
+            );
+        $stmt->bindValue(":idcliente", $_SESSION['id_cliente']);
         // Executar a query e verificar que não retornou false
         if ($stmt->execute()) {
             // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
@@ -100,6 +100,25 @@ function ObterEstatisticas()
     }
 }
 
+function getMesDinheiro($pdo, $clienteId, $mes)
+{
+    if ($_SESSION['id_cliente'] != $clienteId) {
+        header("Location: /index.php");
+        exit();
+    }
+
+    $query = "SELECT COALESCE(SUM(precoTotal), 0) AS total_dinheiro
+        FROM Pedidos
+        WHERE id_cliente = :clienteId
+          AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_dinheiro'];
+}
+
 $estatisticas = ObterEstatisticas();
 
 // Recebendo dados da BD
@@ -115,18 +134,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <head>
     <title>Utilizador</title>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="assets/styles/sitecss.css">
     <link rel="stylesheet" href="assets/styles/dashboard.css">
     <link rel="stylesheet" href="assets/styles/dashboard_beatriz.css">
-	<style>
-		.chart-container {
-   width: 50vw;
-   height:310px;
-}
-	</style>
+    <style>
+        .chart-container {
+            width: 50vw;
+            height: 310px;
+        }
+    </style>
 </head>
 
 <body>
@@ -146,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             <div class="container ps-1 py-0">
                 <div class="dashboard texto_perfil">
                     <p class="h3 mb-4 fw-semibold">Olá, <?php echo htmlspecialchars($utilizador['nome']) ?></p>
+                    
                     <p>Esta é a tua página de perfil. Aqui podes ver as tuas informações pessoais, ver estatísticas,
                         sobre a tua
                         conta, ver os teus pedidos e acompanhar o estado dos teus pedidos em tempo real</p>
@@ -172,13 +191,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                             <span class="dados fw-bold">Email:</span>
                                             <span class="dados_utilizador">
                                                 <?php if (!empty($utilizador['email']))
-                                                    echo  str_repeat("*", strlen($utilizador['email'])-6) . substr($utilizador['email'], -8);$utilizador['email']; ?>
+                                                    echo  str_repeat("*", strlen($utilizador['email']) - 6) . substr($utilizador['email'], -8);
+                                                $utilizador['email']; ?>
                                             </span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Nº de Telemóvel:</span>
                                             <span class="dados_utilizador">
-                                                <?php echo str_repeat("*", strlen($utilizador['telemovel'])-4) . substr($utilizador['telemovel'], -4); ?>
+                                                <?php echo str_repeat("*", strlen($utilizador['telemovel']) - 4) . substr($utilizador['telemovel'], -4); ?>
                                             </span>
                                         </div>
                                     </div>
@@ -206,11 +226,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                         </div>
                                     </div>
                                 </div>
-								
-                    <div class="pedidos">
-                        <?php 
-                        if($ultimoPedido){
-                            echo '<div class="a">
+
+                                <div class="pedidos">
+                                    <?php
+                                    if ($ultimoPedido) {
+                                        echo '<div class="a">
                                 <div class="w-100 p-3 pb-0 bg-body-tertiary border rounded-3">
                                     <div class="d-flex mb-4 justify-content-between">
                                         <p class="h4 mb-0 mt-1">Ultimo Pedido</p>
@@ -242,9 +262,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     </div>
                                 </div>
                             </div>';
-                    }
-                        ?>
-                    </div>
+                                    }
+                                    ?>
+                                </div>
                             </div>
                             <div class="col-md-7">
                                 <div class="p-3 pb-1 bg-body-tertiary border rounded-3">
@@ -255,22 +275,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     <div class="">
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Dinheiro Total Gasto:</span>
-                                            <span class="dados_utilizador"><?php echo $estatisticas['totalgasto'] == 0 ? 0: $estatisticas['totalgasto'] ?> €</span>
+                                            <span class="dados_utilizador"><?php echo $estatisticas['totalgasto'] == 0 ? 0 : $estatisticas['totalgasto'] ?> €</span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="dados fw-bold">Total de Pedidos Realizados:</span>
                                             <span class="dados_utilizador"><?php echo $estatisticas['totalpedidos'] ?></span>
                                         </div>
-                                        <?php 
-                                        if($estatisticas['maispedido'])
-                                        '<div class="mb-2">
+                                        <?php
+                                        if ($estatisticas['maispedido'])
+                                            '<div class="mb-2">
                                             <span class="dados fw-bold">Restaurante Mais Pedido:</span>
-                                            <span class="dados_utilizador">'.$estatisticas['maispedido'].'</span>
+                                            <span class="dados_utilizador">' . $estatisticas['maispedido'] . '</span>
                                         </div>';
                                         ?>
                                     </div>
 
-                                    <div  class="chart-container">
+                                    <div class="chart-container">
                                         <canvas id="lineChart"></canvas>
                                     </div>
                                 </div>
@@ -281,38 +301,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 </div>
                 <?php include __DIR__ . "/includes/footer_2.php"; ?>
 
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                    crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
                 <script>
                     var ctx = document.getElementById('lineChart').getContext('2d');
                     var myChart = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: ["Dez", "Jan", "Fev", "Mar"],
+                            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
                             datasets: [{
-                                label: 'Total de Pedidos',
-                                data: [12, 18, 24, 30],
-                                backgroundColor: 'transparent',
-                                borderColor: '#d1c217',
-                                borderWidth: 2
+                                label: 'Vendas',
+                                data: [
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 1); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 2); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 3); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 4); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 5); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 6); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 7); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 8); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 9); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 10); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 11); ?>,
+                                    <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 12); ?>
+                                ],
+                                borderWidth: 5,
+                                borderColor: 'rgb(255,215,0)',
+                                backgroundColor: 'rgb(255,215,0)',
+                                tension: 1
                             }]
                         },
                         options: {
-						    responsive: true,
-							maintainAspectRatio: false,
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true,
-                                        suggestedMax: 30
-                                    }
-                                }]
-                            },
-                            title: {
-                                display: true,
-                                text: 'Total de Pedidos'
-                            }
+                            responsive: true,
+                            maintainAspectRatio: false
                         }
                     });
                 </script>
