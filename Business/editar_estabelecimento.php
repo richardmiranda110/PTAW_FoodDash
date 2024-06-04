@@ -15,20 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
         'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
         'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
-        'imagem' => htmlspecialchars(trim($_POST['imagem']))
+        'imagem' => htmlspecialchars(trim($caminhoArquivo)) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
     );
 
     if ($estabelecimentoModificado !== null) {
         if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
-            $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
-            echo "<div class='alert alert-success' role='alert' style='margin-top: 6vh;'>
-                Dados alterados com sucesso
-            </div>";
-        } else {
-            echo "<div class='alert alert-danger' role='alert' style='margin-top: 6vh;'>
-                Ocorreu um erro ao alterar dados! Por favor, tente novamente.
-            </div>";
-        }
+            // Se for adicionado corretamente há base de dados,
+            // reencaminha para estabelecimento_page.php
+            header("Location: estabelecimento_page.php");
+            exit();
+        } 
     }
 } else {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
@@ -39,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <html>
 
 <head>
-    <title>Utilizador</title>
+    <title>ver/Editar Estabelecimento</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -71,9 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     <div class="p-3 d-flex justify-content-between">
                         <p class="h5">Informações do Estabelecimento</p>
                         <div class="d-flex justify-content-end">
-                        <a href="estabelecimento_page.php" class="btn btn-light">Voltar</a>
-                        <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
-                            value="Editar">Editar</button>
+                            <a href="estabelecimento_page.php" class="btn btn-light">Voltar</a>
+                            <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
+                                value="Editar">Editar</button>
                         </div>
                     </div>
                     <div class="card-body pt-0 pb-1  ">
@@ -100,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <br>
 
                             <!-- localizacao -->
-                            <span>Localização</span>
+                            <span>Localização<span style='color:#ff0000'> *</span></span>
                             <div class="input-group flex-nowrap">
                                 <input name="localizacao" readonly type="text" class="form-control mb-4"
                                     placeholder="Localização" aria-label="Localização" aria-describedby="addon-wrapping"
@@ -215,11 +211,13 @@ include __DIR__ . "/includes/footer_business.php";
     // Função para validar o formulário da estabelecimento
     function validarFormulario() {
         validacao = true; // resetar a validação
-        erroNome.textContent = ""; // limpar mensagem de erro
-        erroLocalizacao.textContent = ""; // limpar mensagem de erro
-        erroTelemovel.textContent = ""; // limpar mensagem de erro
-        erroTaxaEntrega.textContent = ""; // limpar mensagem de erro
-        erroTempoMedioEntrega.textContent = ""; // limpar mensagem de erro
+        // limpar mensagem de erro
+        erroNome.textContent = "";
+        erroLocalizacao.textContent = "";
+        erroTelemovel.textContent = "";
+        erroTaxaEntrega.textContent = "";
+        erroTempoMedioEntrega.textContent = "";
+        erroImagem.textContent = ""; 
 
 
         // Verificar se o campo de nome está vazio
@@ -258,14 +256,22 @@ include __DIR__ . "/includes/footer_business.php";
             validacao = false; // marcar validação como falsa
         }
 
-        // Verificar se algum arquivo foi selecionado para a imagem
+        //const file = event.target.files[0];
         const file = imagemInput.files[0];
-        if (file) {
-            const formatosPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg', 'image/gif'];
-            if (!formatosPermitidos.includes(file.type)) {
-                erroImagem.textContent = "Formato de imagem inválido. Por favor, escolha um formato válido (PNG, JPEG, JPG, SVG, GIF).";
-                validacao = false; // marcar validação como falsa
-            }
+        const formatosPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg', 'image/gif'];
+        if (!formatosPermitidos.includes(file.type)) {
+            erroImagem.textContent = "Formato de imagem inválido. Por favor, escolha um formato válido (PNG, JPEG, JPG, SVG, GIF).";
+            validacao = false; // Marcar validação como falsa
+        } else {
+            // Arquivo de imagem
+            const diretorio = "../assets/imgs/";
+            const nomeArquivo = file.name;
+            const caminhoArquivo = diretorio + nomeArquivo; // Aqui você está combinando o diretório e o nome do arquivo
+
+            // Use 'diretorio' e 'nomeArquivo' conforme necessário
+            console.log("Caminho do arquivo:", caminhoArquivo);
+
+            console.log(diretorio);
         }
     }
 
