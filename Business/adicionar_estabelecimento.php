@@ -97,9 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
-    <link rel="stylesheet" href="/../assets/styles/sitecss.css">
-    <link rel="stylesheet" href="/../assets/styles/dashboard.css">
-    <link rel="stylesheet" href="/../assets/styles/responsive_styles.css">
+    <link rel="stylesheet" href="../assets/styles/sitecss.css">
+    <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
 </head>
 
 <!--Zona do Header -->
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <!--Zona de Conteudo -->
-<div>
+<div style="margin-top: 10vh;">
     <!-- Formulárop do Estabelecimento -->
     <form id="estabelcimento" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="w-75 form_editar" style="margin:auto"
         method="POST">
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="p-3 d-flex justify-content-between">
                         <p class="h5">Informações Pessoais</p>
                         <div>
-                            <a href="adicionar_estabelecimento.php" class="btn btn-light">Voltar</a>
+                            <a href="estabelecimento_page.php" class="btn btn-light justify-content-end">Voltar</a>
                             <button id="btn_guardar" class="btn btn-success direito" style="width: auto;" type="submit"
                                 value="Guardar">Guardar</button>
                         </div>

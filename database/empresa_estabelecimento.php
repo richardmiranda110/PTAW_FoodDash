@@ -138,12 +138,23 @@ function EditarEstabelecimento($pdo, $ID, $DadosEstabelecimentos)
 
 function ApagarEstabelecimento($pdo, $id_estabelecimento)
 {
-    $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
-    
+    $id_empresa = $_SESSION['id_empresa'];
+
     try {
+        $sql = "SELECT id_estabelecimento FROM Estabelecimentos WHERE id_estabelecimento = ? AND id_empresa = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $id_estabelecimento, PDO::PARAM_INT);
+        $stmt->bindValue(2, $id_empresa, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        if ($stmt->rowCount() == 0) {
+            throw new Exception("Não podes apagar estabelecimentos de outras empresas!");
+        }
+
         $stmt = $pdo->prepare("DELETE FROM Estabelecimentos WHERE id_estabelecimento = ?");
         $stmt->bindValue(1, $id_estabelecimento, PDO::PARAM_INT);
         $stmt->execute();
+
         return true;
     } catch (PDOException $e) {
         echo "Erro ao apagar o estabelecimento: " . $e->getMessage();

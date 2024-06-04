@@ -70,8 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 <div class="card pb-2">
                     <div class="p-3 d-flex justify-content-between">
                         <p class="h5">Informações do Estabelecimento</p>
+                        <div class="d-flex justify-content-end">
+                        <a href="estabelecimento_page.php" class="btn btn-light">Voltar</a>
                         <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
                             value="Editar">Editar</button>
+                        </div>
                     </div>
                     <div class="card-body pt-0 pb-1  ">
                         <!-- Informação da existência de campos obrigatórios -->
