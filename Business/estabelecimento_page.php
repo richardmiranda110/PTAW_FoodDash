@@ -15,6 +15,7 @@ if (!$id_empresa) {
 $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 ?>
 
+
 <!DOCTYPE html>
 <html>
 

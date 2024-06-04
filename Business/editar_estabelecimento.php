@@ -9,6 +9,23 @@ $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 } elseif (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
+    
+    // Verifica se um arquivo foi enviado e está corretamente formatado
+    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+        $temp_file = $_FILES['imagem']['tmp_name'];
+        $target_file = "../assets/imgs/" . basename($_FILES['imagem']['name']);
+
+        // Move o arquivo para o diretório de destino
+        if (move_uploaded_file($temp_file, $target_file)) {
+            // Arquivo carregado com sucesso, agora você pode atualizar o caminho no banco de dados
+            $caminhoArquivo = $target_file;
+        } else {
+            // Erro ao mover o arquivo
+            echo "Ocorreu um erro ao enviar o arquivo.";
+            exit();
+        }
+    }
+
     $estabelecimentoModificado = array(
         'nome' => htmlspecialchars(trim($_POST['nome'])),
         'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
@@ -270,8 +287,6 @@ include __DIR__ . "/includes/footer_business.php";
 
             // Use 'diretorio' e 'nomeArquivo' conforme necessário
             console.log("Caminho do arquivo:", caminhoArquivo);
-
-            console.log(diretorio);
         }
     }
 
