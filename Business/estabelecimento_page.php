@@ -5,15 +5,6 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_estabelecimento'])) {
-    $id_estabelecimento = intval($_POST['id_estabelecimento']);
-    if (ApagarEstabelecimento($pdo, $id_estabelecimento)) {
-        echo "<script>alert('Estabelecimento apagado com sucesso!');</script>";
-    } else {
-        echo "<script>alert('Erro ao apagar o estabelecimento.');</script>";
-    }
-}
-
 $id_empresa = $_SESSION['id_empresa'] ?? $_GET['id_empresa'] ?? null;
 
 if (!$id_empresa) {
@@ -78,22 +69,21 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                     <div class="card mb-3 col-md-12">
                         <div class="row">
                             <div class="col-md-4">
-                                <img class="img-fluid max-img-size" src="<?php echo htmlspecialchars($estabelecimento['imagem']); ?>" class="img-fluid rounded-start" alt="<?php echo htmlspecialchars($estabelecimento['nome']); ?>">
+                                <img class="img-fluid max-img-size" src="<?php echo htmlentities($estabelecimento['imagem']); ?>" class="img-fluid rounded-start" alt="<?php echo htmlentities($estabelecimento['nome']); ?>">
                             </div>
                             <div class="col-md-8 justify-content-between">
                                 <br>
-                                <h5 class="esquerdo"><?php echo htmlspecialchars($estabelecimento['nome']); ?></h5>
+                                <h5 class="esquerdo"><?php echo htmlentities($estabelecimento['nome']); ?></h5>
                                 <div>
                                     <form id="editar_form" method="POST" action="editar_estabelecimento.php?id=<?php echo $estabelecimento['id_estabelecimento']; ?>">
-                                        <input type="hidden" name="id_estabelecimento" value="<?php echo htmlspecialchars($estabelecimento['id_estabelecimento']); ?>">
+                                        <input type="hidden" name="id_estabelecimento" value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
                                         <button id="editar_btn" class="btn btn-warning direito" style="width: auto;">
                                             Editar
                                         </button>
                                     </form>
-                                    <form id="apagar_form_<?php echo $estabelecimento['id_estabelecimento']; ?>" method="POST" action="">
-                                        <input type="hidden" name="id_estabelecimento" value="<?php echo htmlspecialchars($estabelecimento['id_estabelecimento']); ?>">
-                                        <input type="hidden" name="nome_estabelecimento" value="<?php echo htmlspecialchars($estabelecimento['nome']); ?>">
-                                        <button type="button" class="btn btn-danger direito apagar_btn" data-id="<?php echo $estabelecimento['id_estabelecimento']; ?>" data-nome="<?php echo htmlspecialchars($estabelecimento['nome']); ?>" style="width: auto;">
+                                    <form id="apagar_form" action="estabelecimento_page.php" method="post">
+                                        <input type="hidden" name="id_estabelecimento" value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
+                                        <button id="apagar_btn" class="btn btn-danger direito" style="width: auto;">
                                             Apagar
                                         </button>
                                     </form>
@@ -101,19 +91,19 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                                 <hr>
                                 <dl class="list-group list-group-flush">
                                     <dd name="id" disabled><strong>Id do estabelcimento:</strong>
-                                        <?php echo htmlspecialchars($estabelecimento['id_estabelecimento']); ?><br>
+                                        <?php echo htmlentities($estabelecimento['id_estabelecimento']); ?><br>
                                     </dd>
                                     <dd name="localizacao"><strong>Localização:</strong>
-                                        <?php echo htmlspecialchars($estabelecimento['localizacao']); ?><br>
+                                        <?php echo htmlentities($estabelecimento['localizacao']); ?><br>
                                     </dd>
                                     <dd name="telemovel"><strong>Telemóvel:</strong>
-                                        <?php echo htmlspecialchars($estabelecimento['telemovel']); ?><br>
+                                        <?php echo htmlentities($estabelecimento['telemovel']); ?><br>
                                     </dd>
                                     <dd name="taxa"><strong>Taxa de Entrega:</strong>
-                                        <?php echo htmlspecialchars($estabelecimento['taxa_entrega']); ?><br>
+                                        <?php echo htmlentities($estabelecimento['taxa_entrega']); ?><br>
                                     </dd>
                                     <dd name="tempo"><strong>Tempo Médio de Entrega:</strong>
-                                        <?php echo htmlspecialchars($estabelecimento['tempo_medio_entrega']); ?>
+                                        <?php echo htmlentities($estabelecimento['tempo_medio_entrega']); ?>
                                     </dd>
                                     <br>
                                 </dl>
@@ -136,20 +126,26 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 </body>
 
 <script>
-    document.querySelectorAll('.apagar_btn').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var estabelecimentoId = this.getAttribute('data-id');
-            var nomeEstabelecimento = this.getAttribute('data-nome');
-            var confirmar = confirm("Pretende mesmo eliminar o estabelecimento " + nomeEstabelecimento + "?");
+    document.getElementById("apagar_btn").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevenir o envio do formulário por enquanto
 
-            if (confirmar) {
-                var confirmar2 = confirm("Após eliminar, não é possível rever!");
-            }
+        var $apagarForm = document.getElementById("apagar_form")
+        var confirmar = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>?");
+        texto = "Após eliminar, não é possível reaver";
+        var confirmar2 = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>?".texto);
 
-            if (confirmar && confirmar2) {
-                document.getElementById('apagar_form_' + estabelecimentoId).submit();
+        if (confirmar) {
+            if (confirmar2) {
+                // Se confirmar, envia o formulário
+                $apagarForm.submit();
+            } else {
+                // Se não confirmar, não faz nada
+                return false;
             }
-        });
+        } else {
+            // Se não confirmar, não faz nada
+            return false;
+        }
     });
 </script>
 
