@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/includes/session.php';
 
+if (!isset($_SESSION['authenticatedB'])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+    header("Location: /Business/login_register/login_business.php");
+    exit();
+}
+
 $idEmpresa = $_SESSION['id_empresa'];
 ?>
 
