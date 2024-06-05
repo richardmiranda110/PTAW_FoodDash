@@ -32,7 +32,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="dashboard_perfil_pedidos.php" class="nav-link <?php echo UrlContains("dashboard_perfil_pedidos.php") ? "active" : "" ?>">
+					<a href="dashboard_perfil_pedidos.php" class="nav-link <?php echo UrlContains("pedido") ? "active" : "" ?>">
 						<span class="bi-card-list"></span><span class="bi has-text-grey">Pedidos</span>
 					</a>
 				</li>

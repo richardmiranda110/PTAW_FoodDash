@@ -44,10 +44,11 @@ function ObterUltimoPedido()
         // query
         $stmt = 
         $pdo->prepare(
-            'SELECT id_pedido, data, estado, cancelado, precototal, id_estabelecimento 
+            'SELECT pedidos.id_pedido as id_pedido,data, estado, cancelado, precototal, id_estabelecimento,pedido_itens.id_item as itens
             FROM pedidos 
+            FULL JOIN pedido_itens on pedidos.id_pedido = pedido_itens.id_pedido 
             where id_cliente = ?
-            ORDER BY id_pedido 
+            ORDER BY pedidos.id_pedido
             DESC LIMIT 1'
         );
         
@@ -210,7 +211,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 								
                     <div class="pedidos">
                         <?php 
+                        //data, estado, cancelado, precototal, id_estabelecimento 
                         if($ultimoPedido){
+                            $time = strtotime($ultimoPedido['data']);
+                            $date = date('F j',$time);
+                            $time = date('g:i a',$time);
+
                             echo '<div class="a">
                                 <div class="w-100 p-3 pb-0 bg-body-tertiary border rounded-3">
                                     <div class="d-flex mb-4 justify-content-between">
@@ -221,22 +227,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                         <div class="card mb-4">
                                             <div class="card-body d-flex flex-row align-items-end">
                                                 <div class="align-self-center me-auto">
-                                                    <p class="texto_pedido align-self-center m-0" style="text-align: center;">13:46</p>
-                                                    <p class="texto_pedido m-0" style="">16/03/2024</p>
+                                                    <p class="texto_pedido align-self-center m-0" style="text-align: center;">'.$time.'</p>
+                                                    <p class="texto_pedido m-0" style="">'.$date.'</p>
                                                 </div>
                                                 <div class="align-self-center me-auto">
-                                                    <p class="m-0">Menu Big King<span>(Burger King)</span></p>
-                                                    <p class="texto_pedido m-0">(Big King + Batatas Médias + Ice Tea Manga)</p>
+                                                    <p class="m-0">'.'Pedido #'. $ultimoPedido['id_pedido'] . ','. $_SESSION['name'].'</span></p>
                                                 </div>
                                                 <div class="align-self-center me-auto">
 
                                                     <div class="mb-2 align-self-center">
-                                                        <span class=" m-0 texto_pedido_negrito">Status:</span><br>
-                                                        <span class="texto_pedido m-0">Entregue</span>
+                                                        <span class=" m-0 texto_pedido_negrito">Estado:</span><br>
+                                                        <span class="texto_pedido m-0">'.$ultimoPedido['estado'].'</span>
                                                     </div>
                                                 </div>
                                                 <div class=" m-0 align-self-center me-auto" style="">
-                                                    <p class="h6 text-center">9,28€</p>
+                                                    <p class="h6 text-center">'.$ultimoPedido["precototal"].' €</p>
                                                 </div>
                                             </div>
                                         </div>
