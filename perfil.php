@@ -37,11 +37,11 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     );
 }
 
-// Se não ocorreram erros de validação, atualizar o produto
+// Se não ocorreram erros de validação, atualizar o utilizador
 if ($utilizadorModificado !== null) {
     // Editar o usuário no banco de dados
-    if (EditarUtilizador($pdo, $_SESSION['id_cliente'], $utilizadorModificado)) { // ALTERAR ID
-        $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']); // ALTERAR ID
+    if (EditarUtilizador($pdo, $_SESSION['id_cliente'], $utilizadorModificado)) { 
+        $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']); 
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";

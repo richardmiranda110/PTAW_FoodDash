@@ -5,6 +5,8 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
+$id_estabelecimento = $_POST['id_estabelecimento'] ?? null;
+
 $id_empresa = $_SESSION['id_empresa'] ?? $_GET['id_empresa'] ?? null;
 
 if (!$id_empresa) {
@@ -13,8 +15,24 @@ if (!$id_empresa) {
 }
 
 $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
-?>
 
+// Se não ocorreram erros de validação, atualizar o utilizador
+if ($id_estabelecimento !== null) {
+    // Editar o usuário no banco de dados
+    if (ApagarEstabelecimento($pdo, $id_estabelecimento)) { 
+        $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
+        echo "<div class='alert alert-success' role='alert'>
+            Dados alterados com sucesso
+        </div>";
+    } else {
+        echo "<div class='alert alert-danger' role='alert'>
+            Ocorreu um erro ao alterar dados! Por favor, tente novamente.
+        </div>";
+    }
+} else {
+$estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
+}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -82,9 +100,9 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                                             Editar
                                         </button>
                                     </form>
-                                    <form id="apagar_form" action="estabelecimento_page.php" method="post">
+                                    <form id="apagar_form" action="estabelecimento_page.php" method="post" onsubmit="return confirmDelete();">
                                         <input type="hidden" name="id_estabelecimento" value="<?php echo htmlentities($estabelecimento['id_estabelecimento']); ?>">
-                                        <button id="apagar_btn" class="btn btn-danger direito" style="width: auto;">
+                                        <button id="apagar_btn" class="btn btn-danger direito" style="width: auto;" type="submit">
                                             Apagar
                                         </button>
                                     </form>
@@ -125,29 +143,18 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 <!-- Footer-->
 <?php include __DIR__ . "/../includes/footer_2.php"; ?>
 </body>
-
 <script>
-    document.getElementById("apagar_btn").addEventListener("click", function(event) {
-        event.preventDefault(); // Prevenir o envio do formulário por enquanto
-
-        var $apagarForm = document.getElementById("apagar_form")
+    function confirmDelete() {
         var confirmar = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>?");
-        texto = "Após eliminar, não é possível reaver";
-        var confirmar2 = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>?".texto);
+        var texto = "Após eliminar, não é possível reaver";
+        var confirmar2 = confirm("Pretende mesmo eliminar o estabelecimento <?php echo htmlentities($estabelecimento['nome']); ?>? " + texto);
 
-        if (confirmar) {
-            if (confirmar2) {
-                // Se confirmar, envia o formulário
-                $apagarForm.submit();
-            } else {
-                // Se não confirmar, não faz nada
-                return false;
-            }
+        if (confirmar && confirmar2) {
+            return true;
         } else {
-            // Se não confirmar, não faz nada
             return false;
         }
-    });
+    }
 </script>
 
 </html>

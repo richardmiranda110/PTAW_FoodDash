@@ -187,6 +187,19 @@ include __DIR__ . "/includes/footer_business.php";
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 <script>
+
+    document.getElementById('inputImagem').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.getElementById('preview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
     // Obtém os elementos
     //Geral
     var inputs = document.querySelectorAll(".form-control");
@@ -261,19 +274,6 @@ include __DIR__ . "/includes/footer_business.php";
             }
         }
     }
-
-    document.getElementById('inputImagem').addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.getElementById('preview');
-                img.src = e.target.result;
-                img.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        }
-    });
 
 </script>
 </body>
