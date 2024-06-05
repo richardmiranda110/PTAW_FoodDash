@@ -5,7 +5,7 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
-$id_empresa = $_POST['id_estabelecimento'] ?? null;
+$id_estabelecimento = $_POST['id_estabelecimento'] ?? null;
 
 $id_empresa = $_SESSION['id_empresa'] ?? $_GET['id_empresa'] ?? null;
 
@@ -17,9 +17,9 @@ if (!$id_empresa) {
 $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 
 // Se não ocorreram erros de validação, atualizar o utilizador
-if ($id_empresa !== null) {
+if ($id_estabelecimento !== null) {
     // Editar o usuário no banco de dados
-    if (ApagarEstabelecimento($pdo, $id_empresa)) { 
+    if (ApagarEstabelecimento($pdo, $id_estabelecimento)) { 
         $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso

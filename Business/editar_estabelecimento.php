@@ -3,11 +3,14 @@ require_once __DIR__ . '/includes/session.php';
 include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
-//include __DIR__ . "/../uploadImagem.php";
 
+header('Content-type: application/json');
 $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $caminhoArquivo = null;
 
+function getReturnMessage($status, $message) {
+    return ["status" => $status, "message" => $message];
+}
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -50,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -209,15 +213,13 @@ include __DIR__ . "/includes/footer_business.php";
     var telemovelInput = document.querySelector("[name='telemovel']");
     var taxaEntregaInput = document.querySelector("[name='taxa_entrega']");
     var tempoMedioEntregaInput = document.querySelector("[name='tempo_medio_entrega']");
-    var imagemInput = document.querySelector("[name='imagem']");
 
     // variáveis se ocurrerem erro
     var erroNome = document.getElementById("erroNome");
     var erroLocalizacao = document.getElementById("erroLocalizacao");
     var erroTelemovel = document.getElementById("erroTelemovel");
     var erroTaxaEntrega = document.getElementById("erroTaxaEntrega");
-    var erroEmail = document.getElementById("erroEmail");
-    var erroImagem = document.getElementById("erroImagem");
+    var erroTempoMediaEntrega = document.getElementById("erroTempoMedioEntrega");
 
     // Função para validar o formulário da estabelecimento
     function validarFormulario() {
