@@ -33,7 +33,12 @@
 	}
 
 	include __DIR__ . "/includes/navbar_tipos_de_comida.php";
+	
+	function getImagePath($path, $default = './assets/stock_imgs/fd reduced logo.png') {
+		$path = "./assets/stock_imgs/".$path;
 
+		return file_exists($path) ? $path : $default;
+	}
 	?>
 
 
@@ -57,24 +62,25 @@
 	try {
 		$query = "select empresas.id_empresa, empresas.nome, empresas.morada, empresas.telemovel,
 		COALESCE ( 
-			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = estabelecimentos.id_empresa )
+			(select min(taxa_entrega) from estabelecimentos where estabelecimentos.id_empresa = empresas.id_empresa )
 			,0) as taxa_entrega,
 		COALESCE ( 
-			(select avg(tempo_medio_entrega) from estabelecimentos )
+			(select avg(tempo_medio_entrega) from estabelecimentos where estabelecimentos.id_empresa = empresas.id_empresa )
 			,'00:00:00') as tempo_medio_entrega,
-			logotipo,
+			COALESCE ( logotipo,'') logotipo,
 		COALESCE (
 			(select sum(classificacao)/count(classificacao) from avaliacoes 
-			 where avaliacoes.id_estabelecimento=estabelecimentos.id_estabelecimento)
+			 where avaliacoes.id_empresa=empresas.id_empresa)
 			,0) as avaliacao
-		from empresas inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa";
+		from empresas inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa
+		group by empresas.id_empresa, empresas.nome, empresas.morada, empresas.telemovel";
 
 		$params = [];
 		$conditions = [];
 
 		if ($_SERVER["REQUEST_METHOD"] == "GET") {
 			if (!empty($_GET["restaurante"])) {
-				$conditions[] = "lower(nome) LIKE ?";
+				$conditions[] = "lower(empresas.nome) LIKE ?";
 				$params[] = "%" . strtolower($_GET['restaurante']) . "%";
 			}
 			if (!empty($_GET["categoria"])) {
@@ -124,10 +130,11 @@
 		} else {
 			echo "<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3'> ";
 			foreach ($stmt as $row) {
+				$imagemPath = getImagePath($row['logotipo']);
 				echo "
 			<div class='col grid_restaurantes_btn'>
 			<div class='card shadow-sm' id='" . $row['nome'] . "'>
-				<img src='" . $row['logotipo'] . "' class='card-img-top' height='180' width='260' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
+				<img src='" . $imagemPath  . "' class='card-img-top' height='180' width='260' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
 				<div class='card-body'>
 					<div class='justify-content-between align-items-center'>
 						<h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>

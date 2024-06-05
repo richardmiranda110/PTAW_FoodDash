@@ -45,10 +45,11 @@
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
 
-  function getImagePath($path, $default = './assets/stock_imgs/fd reduced logo.png')
-  {
-    return file_exists($path) ? $path : $default;
-  }
+  function getImagePath($path, $default = './assets/stock_imgs/fd reduced logo.png') {
+		$path = "./assets/stock_imgs/".$path;
+
+		return file_exists($path) ? $path : $default;
+	}
 
   $fRestaurante = "%" . strtolower(str_replace(' ', '', $_GET['restaurante'])) . "%";
 
