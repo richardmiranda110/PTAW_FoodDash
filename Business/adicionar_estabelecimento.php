@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!--Zona de Conteudo -->
 <div style="margin-top: 10vh;">
     <!-- Formulárop do Estabelecimento -->
-    <form id="estabelcimento" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="w-75 form_editar" style="margin:auto"
+    <form id="estabelecimento" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="w-75 form_editar" style="margin:auto"
         method="POST">
         <p class="h4 pt-4">Informações</p>
 
@@ -90,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span>Nome<span style='color:#ff0000'> *</span></span>
                         <div class="input-group flex-nowrap">
                             <input name="nome" type="text" class="form-control" placeholder="Nome" aria-label="Nome"
-                                aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['nome']))
-                                    echo $estabelcimento['nome']; ?>">
+                                aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['nome']))
+                                    echo $estabelecimento['nome']; ?>">
                             <?php if (!empty($ErroNome)) { ?>
                                 <span class="help-block small" style="color:#ff0000"><?php echo $ErroNome; ?></span>
                             <?php } ?>
@@ -102,8 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span>Localização<span style='color:#ff0000'> *</span></span>
                         <div class="input-group flex-nowrap">
                             <input name="localizacao" type="text" class="form-control mb-4" placeholder="Localização"
-                                aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['localizacao']))
-                                    echo $estabelcimento['localizacao']; ?>">
+                                aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['localizacao']))
+                                    echo $estabelecimento['localizacao']; ?>">
                             <?php if (!empty($ErroLocalizacao)) { ?>
                                 <span class="help-block small" style="color:#ff0000"><?php echo $ErroLocalizacao; ?></span>
                             <?php } ?>
@@ -115,8 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span>Nº de Telemóvel<span style='color:#ff0000'> *</span></span>
                         <div class="input-group flex-nowrap">
                             <input name="telemovel" type="text" class="form-control" placeholder="Telemóvel"
-                                aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['telemovel']))
-                                    echo $estabelcimento['telemovel']; ?>">
+                                aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['telemovel']))
+                                    echo $estabelecimento['telemovel']; ?>">
                             <?php if (!empty($ErroTelemovel)) { ?>
                                 <span class="help-block small" style="color:#ff0000"><?php echo $ErroTelemovel; ?></span>
                             <?php } ?>
@@ -127,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
                         <div class="input-group flex-nowrap">
                             <input name="taxa_entrega" type="text" class="form-control" placeholder="Taxa de Entrega"
-                                aria-label="Taxa de Entrega" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelcimento['taxa_entrega']))
-                                    echo $estabelcimento['taxa_entrega']; ?>">
+                                aria-label="Taxa de Entrega" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['taxa_entrega']))
+                                    echo $estabelecimento['taxa_entrega']; ?>">
                             <br><br>
                             <?php if (!empty($ErroTaxa)) { ?>
                                 <span class="help-block small" style="color:#ff0000">
@@ -145,8 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <label for="appt-time">Escolha o tempo médio de entrega: <span
                                             style='color:#ff0000'> *</span>
                                         &emsp; &emsp;</label>
-                                    <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time" value="<?php if (!empty($estabelcimento['tempo_medio_entrega']))
-                                        echo $estabelcimento['tempo_medio_entrega']; ?>">
+                                    <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time" value="<?php if (!empty($estabelecimento['tempo_medio_entrega']))
+                                        echo $estabelecimento['tempo_medio_entrega']; ?>">
                                     <?php if (!empty($ErroTempo)) { ?>
                                         <span class="help-block small"
                                             style="color:#ff0000"><?php echo $ErroTempo; ?></span>
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
                         </div>
-
+                                        <br><br>
                         <!-- Imagem -->
                         <div>
                             <label for="inputImagem">Escolha uma imagem:</label>
@@ -163,9 +163,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <br>
                             <img id="preview" src="#" alt="Image preview"
                                 style="display:none; max-width:200px; max-height:200px;">
-                            <img class="img-fluid max-img-size" src="<?php if (!empty($estabelcimento['imagem']))
-                                echo $estabelcimento['imagem']; ?>" class="img-fluid rounded-start"
-                                alt="<?php echo htmlentities($estabelecimento['nome']); ?>">
                             <?php if (!empty($ErroImagem)) { ?>
                                 <span class="help-block small" style="color:#ff0000"><?php echo $ErroImagem; ?></span>
                             <?php } ?>

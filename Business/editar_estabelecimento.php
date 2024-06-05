@@ -9,107 +9,46 @@ $caminhoArquivo = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
-} elseif (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
 
-    // Verifica se um arquivo foi enviado e está corretamente formatado
-    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $temp_file = $_FILES['imagem']['tmp_name'];
-        $target_file = "../assets/imgs/" . basename($_FILES['imagem']['name']);
+        // Verifica se um arquivo foi enviado e está corretamente formatado
+        if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
+            $temp_file = $_FILES['imagem']['tmp_name'];
+            $target_file = "../assets/imgs/" . basename($_FILES['imagem']['name']);
 
-        // Move o arquivo para o diretório de destino
-        if (move_uploaded_file($temp_file, $target_file)) {
-            // Arquivo carregado com sucesso, agora você pode atualizar o caminho no banco de dados
-            $caminhoArquivo = $target_file;
-        } else {
-            // Erro ao mover o arquivo
-            echo "Ocorreu um erro ao enviar o arquivo.";
-            exit();
+            // Move o arquivo para o diretório de destino
+            if (move_uploaded_file($temp_file, $target_file)) {
+                // Arquivo carregado com sucesso, agora você pode atualizar o caminho no banco de dados
+                $caminhoArquivo = $target_file;
+            } else {
+                // Erro ao mover o arquivo
+                echo "Ocorreu um erro ao enviar o arquivo.";
+                exit();
+            }
         }
-    }
 
-    $estabelecimentoModificado = array(
-        'nome' => htmlspecialchars(trim($_POST['nome'])),
-        'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
-        'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
-        'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
-        'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
-        'imagem' => htmlspecialchars(trim($caminhoArquivo)) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
-    );
 
-    if ($estabelecimentoModificado !== null) {
-        if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
-            // Se for adicionado corretamente há base de dados,
-            // reencaminha para estabelecimento_page.php
-            //header("Location: estabelecimento_page.php");
-            //exit();
+        $estabelecimentoModificado = array(
+            'nome' => htmlspecialchars(trim($_POST['nome'])),
+            'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
+            'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
+            'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
+            'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
+            'imagem' => htmlspecialchars(trim($caminhoArquivo)) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
+        );
+
+        if ($estabelecimentoModificado !== null) {
+            if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
+                // Se for adicionado corretamente há base de dados,
+                // reencaminha para estabelecimento_page.php
+                //header("Location: estabelecimento_page.php");
+                //exit();
+            }
         }
     }
 } else {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
-}
-
-// tamanho máximo permitido, em bytes, para o imagem do qual se vai fazer o upload
-$_SESSION["tamanho_maximo"] = 1024000;
-
-// $_SESSION["sucesso_upload"] fica com valor:
-// "sucesso" se foi feito o upload de um imagem com sucesso;
-// "erro" se o upload falhou;
-// unset se não foi feita uma tentativa de upload.
-if (isset($_SESSION["sucesso_upload"])) {	// houve uma tentativa de upload de um imagem
-    if ($_SESSION["sucesso_upload"] == "sucesso") {
-        echo "<script> alert('imagem enviado com sucesso.') </script>";
-    } else {
-        echo "<script> alert('Erro no envio do imagem.') </script>";
-    }
-
-    unset($_SESSION["sucesso_upload"]);
-}
-function Uploadimagem()
-{
-    if (isset($_POST["confirma_upload_imagem"])) {
-
-        if ($_FILES["imagem"]["size"] > $_SESSION["tamanho_maximo"]) {
-            // o tamanho do imagem é maior do que o máximo permitido
-            $_SESSION["sucesso_upload"] = "erro_tamanho";
-            echo "erro_tamanho";
-            //header("Location: index.php");
-            //exit();
-        }
-
-        // verificar se o upload foi feito com sucesso por meio de um HTTP POST
-        if (is_uploaded_file($_FILES["imagem"]["tmp_name"])) {
-
-            // diretoria "./assets/imgs/", para onde se vai fazer o upload
-            $diretoria_imagem = "./assets/imgs/";
-            // nome do imagem
-            $nome_imagem = basename($_FILES["imagem"]["name"]);
-            // caminho completo do imagem no servidor
-            $caminho_imagem = $diretoria_imagem . $nome_imagem;
-
-            // mover o imagem da directoria temporária para onde foi feito o upload, para a directoria desejada;
-            // se retornar false, é porque não foi feito um upload com sucesso por meio de HTTP POST,
-            // ou ele foi feito mas não foi possível mover o imagem para o destino
-            if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminho_imagem)) {
-                //$_SESSION["sucesso_upload"] = "sucesso";
-                //$_SESSION["fich_nome"] = $nome_imagem;
-                //header("Location: index.php");
-                //exit();
-            } else {
-                echo "ERRRRRRRRO";
-                //$_SESSION["sucesso_upload"] = "erro";
-                //header("Location: index.php");
-                //exit();
-            }
-        } else {
-            echo "ERRRRRRRRO";
-            //$_SESSION["sucesso_upload"] = "erro";
-            //header("Location: index.php");
-            //exit();
-        }
-    } else {   // o utilizador não premiu o botão de upload de um imagem
-        //header("Location: index.php");
-        //exit();
-    }
 }
 ?>
 
@@ -224,11 +163,20 @@ function Uploadimagem()
                                             value="<?php if (!empty($estabelecimento['tempo_medio_entrega'])) {
                                                 echo $estabelecimento['tempo_medio_entrega'];
                                             } ?>">
+                                        <img class="img-fluid max-img-size" src="<?php if (!empty($estabelcimento['imagem'])) {
+                                            echo $estabelcimento['imagem'];
+                                        } else {
+                                            echo "";
+                                        } ?>" class="img-fluid rounded-start"
+                                            alt="<?php echo htmlentities($estabelecimento['nome']); ?>">
                                         <span id="erroTempoMedioEntrega" class="help-inline small"
                                             style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
                                 <br><br>
+                                <!-- Imagem -->
+                                <label for="imagem">Enviar Imagem:</label>
+                                <input class="btn btn-light" type="file" name="imagem" id="imagem" accept="image/*">
                             </div>
                         </div>
                     </div>
@@ -236,18 +184,7 @@ function Uploadimagem()
             </div>
         </div>
     </form>
-    <!-- Imagem -->
-    <form name="form_upload_imagem" enctype="multipart/form-data" action="" method="post">
-        <label for="inputImagem">Escolha uma imagem:</label>
-        <br>
-        <img id="preview" src="#" alt="Image preview" style="display:none; max-width:200px; max-height:200px;">
-        <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $_SESSION['tamanho_maximo']; ?>">
-        <input type="file" name="imagem" id="inputImagem" accept="image/*" onchange="valida_imagem()"> <br><br>
-        <button type="submit" name="confirma_upload_imagem" id="confirma_upload_imagem" disabled> Enviar imagem
-        </button>
-        <span id="erroImagem" class="help-inline small" style="color:#ff0000;padding-top:10px"></span>
-        <br>
-    </form>
+
 </div>
 <br><br><br>
 <!--Fim do conteúdo de página-->
@@ -259,41 +196,6 @@ include __DIR__ . "/includes/footer_business.php";
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 <script>
-
-
-    // ao carregar a imagem, poderá previzualizar
-    document.getElementById('inputImagem').addEventListener('change', function (event) {
-        const imagem = event.target.files[0];
-        if (imagem) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.getElementById('preview');
-                img.src = e.target.result;
-                img.style.display = 'block';
-            }
-            reader.readAsDataURL(imagem);
-        }
-    });
-
-    function valida_imagem() {
-        var fich_up = document.getElementById('inputImagem').files[0];  // imagem escolhido para upload
-
-        if (!fich_up) {
-            document.getElementById("confirma_upload_imagem").disabled = true;
-        }
-        else if (fich_up.size > "<?php echo $_SESSION['tamanho_maximo']; ?>")
-        {
-            document.getElementById("confirma_upload_imagem").disabled = true;
-            alert('O tamanho do imagem excede o máximo permitido.');
-        }
-        else if (fich_up.type.substring(0, 6) != "image/") {
-            alert('O imagem escolhido tem de ser uma imagem.');
-        }
-        else {
-            document.getElementById("confirma_upload_imagem").disabled = false;
-            document.getElementById('inputImagem').src = window.URL.createObjectURL(fich_up)
-        }
-    }
 
     // Obtém os elementos
     //Geral
@@ -308,7 +210,6 @@ include __DIR__ . "/includes/footer_business.php";
     var telemovelInput = document.querySelector("[name='telemovel']");
     var taxaEntregaInput = document.querySelector("[name='taxa_entrega']");
     var tempoMedioEntregaInput = document.querySelector("[name='tempo_medio_entrega']");
-    var imagemInput = document.querySelector("[name='imagem']");
 
     // variáveis se ocurrerem erro
     var erroNome = document.getElementById("erroNome");
@@ -317,7 +218,6 @@ include __DIR__ . "/includes/footer_business.php";
     var erroTaxaEntrega = document.getElementById("erroTaxaEntrega");
     var erroEmail = document.getElementById("erroEmail");
     var erroTempoMedioEntrega = document.getElementById("erroTempoMedioEntrega");
-    var erroImagem = document.getElementById("erroImagem");
 
     // Função para validar o formulário da estabelecimento
     function validarFormulario() {
@@ -328,7 +228,6 @@ include __DIR__ . "/includes/footer_business.php";
         erroTelemovel.textContent = "";
         erroTaxaEntrega.textContent = "";
         erroTempoMedioEntrega.textContent = "";
-        erroImagem.textContent = "";
 
 
         // Verificar se o campo de nome está vazio
@@ -360,28 +259,6 @@ include __DIR__ . "/includes/footer_business.php";
             erroTempoMedioEntrega.textContent = "Campo obrigatório";
             validacao = false; // marcar validação como falsa
         }
-
-        // Verificar se o campo de e-mail está vazio
-        if (imagemInput.value.trim() === "") {
-            erroImagem.textContent = "Campo obrigatório";
-            validacao = false; // marcar validação como falsa
-        }
-
-        //const file = event.target.files[0];
-        const file = imagemInput.files[0];
-        const formatosPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg', 'image/gif'];
-        if (!formatosPermitidos.includes(file.type)) {
-            erroImagem.textContent = "Formato de imagem inválido. Por favor, escolha um formato válido (PNG, JPEG, JPG, SVG, GIF).";
-            validacao = false; // Marcar validação como falsa~
-        } else {
-            // Arquivo de imagem
-            const diretorio = "../assets/imgs/";
-            const nomeArquivo = file.name;
-            const caminhoArquivo = diretorio + nomeArquivo; // Aqui você está combinando o diretório e o nome do arquivo
-
-            // Use 'diretorio' e 'nomeArquivo' conforme necessário
-            console.log("Caminho do arquivo:", caminhoArquivo);
-        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -403,9 +280,7 @@ include __DIR__ . "/includes/footer_business.php";
             else {
                 // Validar o formulário ao clicar em "Guardar"
                 validarFormulario();
-                console.log(validacao);
 
-                valida_imagem();
                 // caso não haja erros, o formulário é submetido
                 if (validacao == true) {
                     validacao = true; // resetar a validação
