@@ -22,7 +22,6 @@ if (isset($_COOKIE['remembered_email'])) {
 <body>
   <!-- Imagem no canto superior esquerdo -->
   <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
-
   <!-- Formulário de login -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 25vh;">
     <form action="loginValidation.php" method="POST" style="width: 30%;">

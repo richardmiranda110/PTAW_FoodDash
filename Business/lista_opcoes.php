@@ -5,6 +5,7 @@ require_once __DIR__."/../database/db_connection.php";
 
 // Check Authentication
 if (!isset($_SESSION["authenticatedB"])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
     header("Location: /Business/login_register/login_business.php");
 }
 
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // retrieve establishment id
-$idEstabelecimento = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_estabelecimento'];
 
 if(isset($_GET['deleteoption'])){
     $stmt = $pdo->prepare("DELETE FROM opcoes WHERE id_opcao = ?");
@@ -31,7 +32,7 @@ if(isset($_GET['deletemenu'])){
         and id_menu 
         in ( select id_menu from menus where id_estabelecimento = ?)"
         );
-    $stmt->execute([$_GET['deletemenu'],$idEstabelecimento]);
+    $stmt->execute([$_GET['deletemenu'],$idEmpresa]);
 
     $stmt = $pdo->prepare(
         "DELETE 
@@ -40,7 +41,7 @@ if(isset($_GET['deletemenu'])){
         and id_menu 
         in ( select id_menu from menus where id_estabelecimento = ?)"
         );
-    $stmt->execute([$_GET['deletemenu'],$idEstabelecimento]);
+    $stmt->execute([$_GET['deletemenu'],$idEmpresa]);
     exit();
 }
 
@@ -52,11 +53,11 @@ if(isset($_GET['deletemenuitem'])){
         and id_menu 
         in ( select id_menu from menus where id_estabelecimento = ?)
         ");
-    $stmt->execute([$_GET['deletemenuitem'],$idEstabelecimento]);
+    $stmt->execute([$_GET['deletemenuitem'],$idEmpresa]);
     exit();
 }
 
-$data = listarTodosMenus($idEstabelecimento);
+$data = listarTodosMenus($idEmpresa);
 
 //print result
 header('Content-type: application/json');

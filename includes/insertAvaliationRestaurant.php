@@ -7,9 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idForm'] == 'insertAvaliati
     $estrelas = isset($_POST['estrelas']) ? intval($_POST['estrelas']) : null;
     $comentario = isset($_POST['input_text_comentario']) ? $_POST['input_text_comentario'] : '';
     $id_cliente = isset($_POST['idCliente']) ? intval($_POST['idCliente']) : null;
-    $id_estabelecimento = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
+    $id_empresa = isset($_POST['idEmpresa']) ? intval($_POST['idEmpresa']) : null;
 
-    if ($estrelas === null || $id_cliente === null || $id_estabelecimento === null) {
+    if ($estrelas === null || $id_cliente === null || $id_empresa === null) {
         echo "<div class='alert alert-danger' role='alert'> Erro: Todos os campos obrigatórios devem ser preenchidos.
 			<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
 				<span aria-hidden='true'>&times;</span>
@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idForm'] == 'insertAvaliati
 
     try {
         // Verificar se o cliente já avaliou o estabelecimento
-        $stmt = $pdo->prepare("SELECT * FROM avaliacoes WHERE id_cliente = :id_cliente AND id_estabelecimento = :id_estabelecimento");
+        $stmt = $pdo->prepare("SELECT * FROM avaliacoes WHERE id_cliente = :id_cliente AND id_empresa = :id_estabelecimento");
         $stmt->bindParam(':id_cliente', $id_cliente);
-        $stmt->bindParam(':id_estabelecimento', $id_estabelecimento);
+        $stmt->bindParam(':id_estabelecimento', $id_empresa);
         $stmt->execute();
         $avaliacao_existente = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -35,12 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idForm'] == 'insertAvaliati
 				</div>";
         } else {
             // Insere os dados na base de dados
-            $stmt = $pdo->prepare("INSERT INTO avaliacoes (classificacao, data, descricao, id_cliente, id_estabelecimento) 
+            $stmt = $pdo->prepare("INSERT INTO avaliacoes (classificacao, data, descricao, id_cliente, id_empresa) 
             VALUES (:classificacao, now(), :descricao, :id_cliente, :id_estabelecimento)");
             $stmt->bindParam(':classificacao', $estrelas);
             $stmt->bindParam(':descricao', $comentario);
             $stmt->bindParam(':id_cliente', $id_cliente);
-            $stmt->bindParam(':id_estabelecimento', $id_estabelecimento);
+            $stmt->bindParam(':id_estabelecimento', $id_empresa);
             $stmt->execute();
 
             echo "<div class='alert alert-success' role='alert'> Avaliação Enviada.<button type='button' class='close' data-dismiss='alert' aria-label='Close'>

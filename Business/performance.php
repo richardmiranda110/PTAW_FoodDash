@@ -5,12 +5,13 @@ require_once __DIR__ . "/../database/credentials.php";
 require_once __DIR__ . "/../database/db_connection.php";
 
 if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
     header("Location: /Business/dashboard_home_page.php");
     exit();
 }
 
 
-$idEstabelecimento = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_estabelecimento'];
 $idEmpresa = $_SESSION['id_empresa'];
 
 function getPedidosDiarios($pdo, $idEmpresa, $dia, $mes)
@@ -61,7 +62,6 @@ function getVendasDiarias($pdo, $idEmpresa, $dia, $mes)
     return $result['total_dinheiro'];
 }
 
-
 function getVendasMensais($pdo, $idEmpresa, $mes)
 {
     $query = "SELECT SUM(precoTotal) AS total_dinheiro
@@ -79,7 +79,6 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
 }
 
 //Preço médio diário
-
 function getPrecoMedioDiario($pdo, $idEmpresa, $dia, $mes)
 {
     $totalVendas = getVendasDiarias($pdo, $idEmpresa, $dia, $mes);
@@ -94,7 +93,6 @@ function getPrecoMedioDiario($pdo, $idEmpresa, $dia, $mes)
 }
 
 //Preço médio mensal
-
 function getPrecoMedioMensal($pdo, $idEmpresa, $mes)
 {
     $totalVendas = getVendasMensais($pdo, $idEmpresa, $mes);
@@ -170,7 +168,6 @@ function getItemMaisPedidoMensal($pdo, $idEmpresa, $mes)
 
     return $result ? $result['nome'] : null;
 }
-
 
 //Função complementar da função getAvaliacaoMediaDiaria()
 function getTodasAvaliacoesDoDia($pdo, $idEmpresa, $dia, $mes)
@@ -275,8 +272,6 @@ function getTempoMedio($pdo, $idEmpresa)
     return $result['tempo_medio'];
 }
 
-
-
 $diaAtual = date("j");
 $mesAtual = date("n");
 
@@ -359,7 +354,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
             <div class="text-start mt-1">
                 <h2 class="fw-bold">Performance</h2>
                 <p class="lead text-muted fw-bold">Sumário diário.</p>
-                <p class="lead text-muted fw-bold">Id Estabelecimento: <?php echo $idEstabelecimento ?></p>
+                <p class="lead text-muted fw-bold">Id Estabelecimento: <?php echo $idEmpresa ?></p>
                 <p class="lead text-muted fw-bold">Id Empresa: <?php echo $idEmpresa ?></p>
             </div>
 
@@ -370,7 +365,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Vendas</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $vendasDiarias . "€" ?></p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo ($vendasDiarias == 0 ? 0 : $vendasDiarias) . "€" ?></p>
                         </div>
                     </div>
                 </div>

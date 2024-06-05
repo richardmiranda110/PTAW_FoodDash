@@ -28,7 +28,7 @@ try {
             setcookie('remembered_email', '', time() - 3600, "/");
         }
 
-        header('Location:  ../dashboard_home_page.php');
+        header('Location: '. (isset($_SESSION['last_page']) ? $_SESSION['last_page'] : '../dashboard_home_page.php'));
 
         // Alterar location depois
         // header('Location: ' . $_SERVER['HTTP_REFERER']);

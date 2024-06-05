@@ -5,6 +5,10 @@ require_once __DIR__.'/../database/db_connection.php';
 $email = $_POST['inputEmail'];
 $pass = $_POST['inputPassword'];
 
+if (isset($_SESSION['authenticated'])) {
+    header('Location: '. (isset($_SESSION['last_page']) ? $_SESSION['last_page'] : '../dashboard.php'));
+}
+
 try {
     $stmt = $pdo->prepare("SELECT * FROM clientes WHERE email = :email");
     $stmt->bindParam(':email', $email);
@@ -24,8 +28,7 @@ try {
         } else {
             setcookie('remembered_email', '', time() - 3600, "/");
         }
-
-        header('Location: ../dashboard.php');
+        header('Location: '. (isset($_SESSION['last_page']) ? $_SESSION['last_page'] : '../dashboard.php'));
         exit;
     } else if($pass != 'password' || $email != 'email') {
         $_SESSION['stats_fail'] = true;

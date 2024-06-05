@@ -5,6 +5,7 @@ require_once __DIR__."/../database/db_connection.php";
 
 // Check Authentication
 if (!isset($_SESSION["authenticatedB"])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
     header("Location: /Business/login_register/login_business.php");
 }
 
@@ -15,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // retrieve establishment id
-$idEstabelecimento = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_estabelecimento'];
 
 if(isset($_GET['delete'])){
     $stmt = $pdo->prepare("DELETE FROM itens WHERE id_item = ? and id_estabelecimento = ?");
-    $stmt->execute([$_GET['delete'],$idEstabelecimento]);
+    $stmt->execute([$_GET['delete'],$idEmpresa]);
     exit();
 }
 
@@ -27,7 +28,7 @@ if(isset($_GET['delete'])){
 if(isset($_GET['itemId'])){
  $data = listarItem($_GET['itemId']);
 }else{ // else retrieve all items
- $data = listarTodosMenus($idEstabelecimento);
+ $data = listarTodosMenus($idEmpresa);
 }
 
 //print result

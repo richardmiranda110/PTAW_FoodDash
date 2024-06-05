@@ -3,15 +3,17 @@ require_once __DIR__ . '/includes/session.php';
 require_once __DIR__ . '/../database/credentials.php';
 require_once __DIR__ . '/../database/db_connection.php';
 
-if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
     header("Location: /Business/login_register/login_business.php");
 }
 
-// if(!isset($_GET['idpedido'])){
-//     header("Location: /Business/dashboard_home_page.php");
-// }
+if(!isset($_GET['idpedido'])){
+    header("Location: /Business/dashboard_home_page.php");
+}
 
-//$idPedido = $_GET['idpedido'];
+$idPedido = $_GET['idpedido'];
+$idEstabelecimento = $_SESSION['id_estabelecimento'];
 
 try {
     $sql =
@@ -34,10 +36,9 @@ try {
     on pedido.id_cliente = cl.id_cliente
     FULL JOIN pedido_item_opcoes pio
     on itens.id_item = pio.id_pedido_item
-    where pedido.id_pedido = 1";
+    where pedido.id_pedido = ? and pedido.id_estabelecimento = ? ";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    // $stmt->execute([$idPedido]);
+    $stmt->execute([$idPedido,$idEstabelecimento]);
     $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($stmt->rowCount() == 0) {
@@ -45,10 +46,10 @@ try {
     }
 
     $query =
-        "SELECT item.nome as item_nome, item.preco as item_preco,                 -- item_nome, item_preco,
+        "SELECT item.nome as item_nome, item.preco as item_preco,         -- item_nome, item_preco,
         disponivel as item_disponivel, foto as item_foto, itemsozinho,    -- item_disponivel, item_foto
         personalizacoesativas, pi.id_pedido_item as id_item_no_pedido,    -- personalizacoesativas, id_item_no_pedido
-        pi.id_item as item_id, pi.quantidade as item_quantidade,         -- id_item_no_pedido, item_id
+        pi.id_item as item_id, pi.quantidade as item_quantidade,          -- id_item_no_pedido, item_id
         pio.id_pedido_item_opcao as id_opcao_no_item_pedido,              -- id_pedido_item_opcao
         pio.id_pedido_item as opcao_no_item_pedido,                       -- opcao_no_item_pedido
         pio.id_opcao, pio.quantidade                                      -- opcao de cada item do pedido
@@ -56,10 +57,10 @@ try {
         inner join itens item on item.id_item=pi.id_item
         inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
         full join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
-        where pedido.id_pedido = 1;--  and pedidos.id_estabelecimento = 1;";
+        where pedido.id_pedido = ? and pedidos.id_estabelecimento = ?;";
 
     $stmt = $pdo->prepare($query);
-    $stmt->execute();
+    $stmt->execute([$idPedido,$idEstabelecimento]);
     $itens = $stmt->fetchAll();
 
     $item_arr = array();
@@ -204,19 +205,20 @@ try {
                         function getItemPersonalizations($id_pedido_item)
                         {
                             global $pdo;
+                            global $idEstabelecimento;
 
                             $query =
                                 "SELECT pio.id_pedido_item as opcao_no_item_pedido,                       -- opcao_no_item_pedido
-                opcao.nome, pio.quantidade as quantidade, opcao.preco                     -- opcao de cada item do pedido
-                FROM pedido_itens pi
-                inner join itens item on item.id_item=pi.id_item
-                inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
-                full join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
-                inner join opcoes opcao on opcao.id_opcao =pio.id_opcao
-                where pio.id_pedido_item = ?; --and pedidos.id_estabelecimento = 1;";
+                                opcao.nome, pio.quantidade as quantidade, opcao.preco                     -- opcao de cada item do pedido
+                                FROM pedido_itens pi
+                                inner join itens item on item.id_item=pi.id_item
+                                inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
+                                full join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
+                                inner join opcoes opcao on opcao.id_opcao =pio.id_opcao
+                                where pio.id_pedido_item = ? and pedidos.id_estabelecimento = ?;";
 
                             $stmt = $pdo->prepare($query);
-                            $stmt->execute([$id_pedido_item]);
+                            $stmt->execute([$id_pedido_item,$idEstabelecimento]);
                             return $stmt->fetchAll();
                         }
                         ?>
@@ -374,7 +376,7 @@ try {
             $(".step02").addClass("active");
 
             $.ajax({
-                url: "//business/pedidos.php?id=<?php echo $pedido['id_pedido'] ?>&stage=2",
+                url: "/business/pedidos.php?id=<?php echo $pedido['id_pedido'] ?>&stage=2",
                 success: function(result) {
                     console.log(result);
                 }

@@ -4,9 +4,10 @@ require_once __DIR__."/../database/credentials.php";
 require_once __DIR__."/../database/db_connection.php";
 
 $idEmpresa = $_SESSION['id_empresa'];
-$idEstabelecimento = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_estabelecimento'];
 
 if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
     header("Location: /Business/login_register/login_business.php");
     exit();
 }
@@ -121,7 +122,7 @@ if(isset($item)){
   <script src="../assets/js/dable.js"></script>
   <script>
     var idEmpresa = <?php echo $idEmpresa ?>;
-    var idEstabelecimento = <?php echo $idEstabelecimento ?>;
+    var idEstabelecimento = <?php echo $idEmpresa ?>;
     <?php
       echo 'var updateMode ='.($update ? 1: 0).';';
       echo 'var updateId ='.(isset($_GET['id']) ? $_GET['id'] : -1).';';

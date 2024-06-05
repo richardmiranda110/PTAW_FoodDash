@@ -4,11 +4,11 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
-$id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$id_empresa = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $caminhoArquivo = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
+    $estabelecimento = ObterEstabelecimento($pdo, $id_empresa);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         );
 
         if ($estabelecimentoModificado !== null) {
-            if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
+            if (EditarEstabelecimento($pdo, $id_empresa, $estabelecimentoModificado)) {
                 // Se for adicionado corretamente há base de dados,
                 // reencaminha para estabelecimento_page.php
                 //header("Location: estabelecimento_page.php");
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else {
-    $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
+    $estabelecimento = ObterEstabelecimento($pdo, $id_empresa);
 }
 ?>
 
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <div class="container" style="margin-top: 7vh;">
     <!-- Formulárop do Estabelecimento -->
     <form id="estabelecimento" class="w-75 form_editar" style="margin:auto; " method="POST"
-        action="editar_estabelecimento.php?id=<?php echo $id_estabelecimento; ?>" enctype="multipart/form-data">
+        action="editar_estabelecimento.php?id=<?php echo $id_empresa; ?>" enctype="multipart/form-data">
         <p class="h4 pt-4">Ver/Editar Informações do Estabelecimento</p>
 
         <div class="align-items-md-stretch">
@@ -297,7 +297,7 @@ include __DIR__ . "/includes/footer_business.php";
                         input.setAttribute("readonly", "readonly");
                     });
                     form.method = 'POST';
-                    form.setAttribute("action", "editar_estabelecimento.php?id=<?php echo $id_estabelecimento; ?>");
+                    form.setAttribute("action", "editar_estabelecimento.php?id=<?php echo $id_empresa; ?>");
                 }
             }
         })
