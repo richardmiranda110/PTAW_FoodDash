@@ -40,8 +40,6 @@
 	include __DIR__."/includes/insertAvaliationRestaurant.php"; 
 	include __DIR__."/includes/insertPedido.php"; 
   
-  $idCliente = 1;
-
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
 

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/session.php';
 
-$idEstabelecimento = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_empresa'];
 ?>
 
 <!doctype html>
@@ -39,7 +39,7 @@ $idEstabelecimento = $_SESSION['id_estabelecimento'];
                                 <?php
 
                                 try {
-                                    $q = "SELECT ROUND(AVG(classificacao), 1) as media FROM Avaliacoes WHERE id_estabelecimento=" . $idEstabelecimento . ";";
+                                    $q = "SELECT ROUND(AVG(classificacao), 1) as media FROM Avaliacoes WHERE id_empresa=" . $idEmpresa . ";";
                                     $statement = $pdo->prepare($q);
                                     $statement->execute();
                                     if ($statement) {
@@ -65,7 +65,7 @@ $idEstabelecimento = $_SESSION['id_estabelecimento'];
                         <?php
                         try {
                             $q = "SELECT classificacao, data, descricao, nome FROM Avaliacoes 
-                            INNER JOIN Clientes ON Clientes.id_cliente = Avaliacoes.id_cliente WHERE id_estabelecimento=" . $idEstabelecimento . " ORDER BY data DESC;";
+                            INNER JOIN Clientes ON Clientes.id_cliente = Avaliacoes.id_cliente WHERE id_empresa=" . $idEmpresa . " ORDER BY data DESC;";
                             $statement = $pdo->prepare($q);
                             $statement->execute();
                             if ($statement) {
