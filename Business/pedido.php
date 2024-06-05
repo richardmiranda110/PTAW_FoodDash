@@ -8,11 +8,11 @@ if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !iss
     header("Location: /Business/login_register/login_business.php");
 }
 
-if(!isset($_GET['idpedido'])){
+if(!isset($_GET['id_pedido'])){
     header("Location: /Business/dashboard_home_page.php");
 }
 
-$idPedido = $_GET['idpedido'];
+$idPedido = $_GET['id_pedido'];
 $idEstabelecimento = $_SESSION['id_estabelecimento'];
 
 try {
@@ -42,7 +42,7 @@ try {
     $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($stmt->rowCount() == 0) {
-        exit("Pedido não encontrado");
+        exit("Pedido não encontrado ou invalido");
     }
 
     $query =

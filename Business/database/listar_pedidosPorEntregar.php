@@ -13,7 +13,7 @@ try {
     $sql = "SELECT p.id_pedido, p.data, p.estado, p.precototal
             FROM pedidos p
             INNER JOIN estabelecimentos e ON p.id_estabelecimento = e.id_estabelecimento
-            WHERE e.id_empresa = :id_empresa AND p.estado not like 'FINALIZADO'";
+            WHERE e.id_empresa = :id_empresa AND p.estado like 'EM PREPARACAO'";
             
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':id_empresa', $id_empresa, PDO::PARAM_INT);
