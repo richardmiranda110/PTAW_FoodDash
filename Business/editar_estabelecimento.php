@@ -4,13 +4,11 @@ include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
 
-header('Content-type: application/json');
+$status = "error"; // Defina o status padrão
+$message = ""; // Inicialize a mensagem vazia
 $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $caminhoArquivo = null;
 
-function getReturnMessage($status, $message) {
-    return ["status" => $status, "message" => $message];
-}
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -53,6 +51,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else {
     $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 }
+
+// Gere a resposta JSON
+$response = json_encode(getReturnMessage($status, $message));
+
+// Defina o cabeçalho JSON
+header('Content-type: application/json');
+
+// Imprima a resposta JSON
+echo $response;
+
+// Função para gerar a mensagem de retorno
+function getReturnMessage($status, $message)
+{
+    return ["status" => $status, "message" => $message];
+}
+
+// Termina a execução do script aqui para evitar a impressão do HTML abaixo
+//exit(1);
 
 ?>
 
@@ -165,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                             value="<?php if (!empty($estabelecimento['tempo_medio_entrega'])) {
                                                 echo $estabelecimento['tempo_medio_entrega'];
                                             } ?>">
-                                        <span id="erroTempoMediaEntrega" class="help-inline small"
+                                        <span id="erroTempoMedioEntrega" class="help-inline small"
                                             style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
@@ -219,7 +235,7 @@ include __DIR__ . "/includes/footer_business.php";
     var erroLocalizacao = document.getElementById("erroLocalizacao");
     var erroTelemovel = document.getElementById("erroTelemovel");
     var erroTaxaEntrega = document.getElementById("erroTaxaEntrega");
-    var erroTempoMediaEntrega = document.getElementById("erroTempoMedioEntrega");
+    var erroTempoMedioEntrega = document.getElementById("erroTempoMedioEntrega");
 
     // Função para validar o formulário da estabelecimento
     function validarFormulario() {
