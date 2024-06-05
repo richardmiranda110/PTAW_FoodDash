@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 
 // Gere a resposta JSON
-$response = json_encode(getReturnMessage($status, $message));
+$response = json_encode(getMsgImagem($status, $message));
 
 // Defina o cabeçalho JSON
 header('Content-type: application/json');
@@ -62,7 +62,7 @@ header('Content-type: application/json');
 echo $response;
 
 // Função para gerar a mensagem de retorno
-function getReturnMessage($status, $message)
+function getMsgImagem($status, $message)
 {
     return ["status" => $status, "message" => $message];
 }
