@@ -3,12 +3,13 @@ require_once __DIR__ . '/includes/session.php';
 include __DIR__ . "/../database/empresa_estabelecimento.php";
 include __DIR__ . "/../database/credentials.php";
 include __DIR__ . "/../database/db_connection.php";
+//include __DIR__ . "/../uploadImagem.php";
 
-$id_empresa = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $caminhoArquivo = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $estabelecimento = ObterEstabelecimento($pdo, $id_empresa);
+    $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
 
@@ -28,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         }
 
-
         $estabelecimentoModificado = array(
             'nome' => htmlspecialchars(trim($_POST['nome'])),
             'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         );
 
         if ($estabelecimentoModificado !== null) {
-            if (EditarEstabelecimento($pdo, $id_empresa, $estabelecimentoModificado)) {
+            if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
                 // Se for adicionado corretamente há base de dados,
                 // reencaminha para estabelecimento_page.php
                 //header("Location: estabelecimento_page.php");
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else {
-    $estabelecimento = ObterEstabelecimento($pdo, $id_empresa);
+    $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 }
 ?>
 
@@ -78,10 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <!--Zona de Conteudo -->
 <div class="container" style="margin-top: 7vh;">
     <!-- Formulárop do Estabelecimento -->
-    <form id="estabelecimento" class="w-75 form_editar" style="margin:auto; " method="POST"
-        action="editar_estabelecimento.php?id=<?php echo $id_empresa; ?>" enctype="multipart/form-data">
+    <form id="estabelecimento" class="w-75 form_editar" style="margin:auto; " method="POST" action=""
+        enctype="multipart/form-data">
         <p class="h4 pt-4">Ver/Editar Informações do Estabelecimento</p>
-
         <div class="align-items-md-stretch">
             <div>
                 <div class="card pb-2">
@@ -125,7 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                         echo $estabelecimento['localizacao']; ?>">
                                 <span id="erroLocalizacao" class="help-inline small" style="color:#ff0000"></span>
                             </div>
-                            &emsp;
                             <hr class="m-1">&emsp;
                             <br>
                             <div class="row">
@@ -163,20 +161,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                             value="<?php if (!empty($estabelecimento['tempo_medio_entrega'])) {
                                                 echo $estabelecimento['tempo_medio_entrega'];
                                             } ?>">
-                                        <img class="img-fluid max-img-size" src="<?php if (!empty($estabelcimento['imagem'])) {
-                                            echo $estabelcimento['imagem'];
-                                        } else {
-                                            echo "";
-                                        } ?>" class="img-fluid rounded-start"
-                                            alt="<?php echo htmlentities($estabelecimento['nome']); ?>">
-                                        <span id="erroTempoMedioEntrega" class="help-inline small"
+                                        <span id="erroTempoMediaEntrega" class="help-inline small"
                                             style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
                                 <br><br>
                                 <!-- Imagem -->
-                                <label for="imagem">Enviar Imagem:</label>
-                                <input class="btn btn-light" type="file" name="imagem" id="imagem" accept="image/*">
+                                <label for="imagem" class="form-label">Enviar Imagem:</label>
+                                <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
+                                    accept="image/*">
+                                <?php
+                                if (isset($_SESSION['erroImagem'])) {
+                                    echo $_SESSION['erroImagem'];
+                                    unset($_SESSION['erroImagem']);
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -210,6 +209,7 @@ include __DIR__ . "/includes/footer_business.php";
     var telemovelInput = document.querySelector("[name='telemovel']");
     var taxaEntregaInput = document.querySelector("[name='taxa_entrega']");
     var tempoMedioEntregaInput = document.querySelector("[name='tempo_medio_entrega']");
+    var imagemInput = document.querySelector("[name='imagem']");
 
     // variáveis se ocurrerem erro
     var erroNome = document.getElementById("erroNome");
@@ -217,7 +217,7 @@ include __DIR__ . "/includes/footer_business.php";
     var erroTelemovel = document.getElementById("erroTelemovel");
     var erroTaxaEntrega = document.getElementById("erroTaxaEntrega");
     var erroEmail = document.getElementById("erroEmail");
-    var erroTempoMedioEntrega = document.getElementById("erroTempoMedioEntrega");
+    var erroImagem = document.getElementById("erroImagem");
 
     // Função para validar o formulário da estabelecimento
     function validarFormulario() {
@@ -297,7 +297,7 @@ include __DIR__ . "/includes/footer_business.php";
                         input.setAttribute("readonly", "readonly");
                     });
                     form.method = 'POST';
-                    form.setAttribute("action", "editar_estabelecimento.php?id=<?php echo $id_empresa; ?>");
+                    form.setAttribute("action", "editar_estabelecimento.php?id=<?php echo $id_estabelecimento; ?>");
                 }
             }
         })

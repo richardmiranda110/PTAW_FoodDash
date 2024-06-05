@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
                         </div>
-                                        <br><br>
+                        <br><br>
                         <!-- Imagem -->
                         <div>
                             <label for="inputImagem">Escolha uma imagem:</label>
