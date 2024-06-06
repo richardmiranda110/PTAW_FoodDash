@@ -133,6 +133,7 @@ class SingleItem extends AbstractItem {
         global $pdo;
         global $idEmpresa;
         try{
+            
             if($this->item_id != -1){
                 $query =
                 "UPDATE itens

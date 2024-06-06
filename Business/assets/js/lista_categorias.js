@@ -111,7 +111,7 @@ function showTextModal(text){
 
   // Coloca Funcionalidade no botão
   btnAdd.onclick = function() {
-    //form.submit();
+    form.submit();
     spanBotaoX.click();
   }
 }

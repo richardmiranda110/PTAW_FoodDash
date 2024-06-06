@@ -836,11 +836,11 @@ async function uploadPicture(files){
   .then(answer => answer.json())
   .then(data => {
     if(data.status == "error" && data.message != "O ficheiro ja existe"){
-      displayErrorMessage(data.message);
+      console.log(data.message);
       return data;
     }
 
-    displaySuccessMessage(data.message);
+    console.log(data.message);
     //document.location.href = "./dashboard_lista_items.php";
     return data;
   });

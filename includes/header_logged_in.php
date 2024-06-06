@@ -24,13 +24,13 @@
           <!-- <a class="nav-link active" aria-current="page" href="#">Home</a> -->
         </li>
         <li class="nav-item">
-          <a class="nav-link pb-0" aria-current="page" href="../restaurantes_page.php">Restaurantes</a>
+          <a class="nav-link pb-0" aria-current="page" href="./restaurantes_page.php">Restaurantes</a>
         </li>
       </ul>
-      <a class="btn btn-default border border-white me-2" href="../dashboard.php">
+      <a class="btn btn-default border border-white me-2" href="./dashboard.php">
         <img src="./assets/imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </a>
-      <a class="btn btn-default border border-white" href="/checkout/checkout.php" >
+      <a class="btn btn-default border border-white" href="./checkout/checkout.php" >
         <img src="./assets/imgs/carrinho-de-compras.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </a>
     </div>

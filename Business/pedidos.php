@@ -29,7 +29,7 @@ if(isset($_GET['id']) && isset($_GET['stage'])){
        $data = "Error: invalid data";
     }else{
         $stmt = $pdo->prepare("UPDATE pedidos SET estado = ? WHERE id_pedido = ? and id_estabelecimento = ?");
-        $stmt->execute([$stage,$_GET['id'],$_SESSION['$id_estabelecimento']]);
+        $stmt->execute([$stage,$_GET['id'],$_SESSION['id_estabelecimento']]);
         $data = "Success!";
     }
 }

@@ -28,7 +28,7 @@ if(isset($_GET['itemid'])){
   c.nome as categoria, 
   c.id_categoria as id_categoria
   FROM public.itens item 
-  INNER JOIN categorias c 
+  FULL JOIN categorias c 
   ON item.id_categoria = c.id_categoria
   where item.id_item = ? and item.id_estabelecimento = ".$_SESSION['id_estabelecimento']."";
 
@@ -167,9 +167,8 @@ if(isset($item)){
           <?php
           try {
             $stmt = $pdo->prepare("SELECT id_categoria, nome FROM categorias WHERE id_empresa = ?");
-            $stmt->execute([$idEmpresa]);
+            $stmt->execute([$_SESSION['id_empresa']]);
             $stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
             echo "
               <div class='mb-3 col-md-3' id='categoria-container'>
                 <p class='fw-bold purple-text'>Categoria</p>
