@@ -108,8 +108,12 @@
             </div>
 
             <!-- TOAST --->
-            <button type="button" class="btn btn-primary" style="<?php echo $idCliente == 0 ? 'display: none;' : ''; ?>" id="liveToastBtn">Avaliar Empresa</button>
-			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <?php
+            if(isset($_SESSION['authenticated'])){
+              echo "<button type='button' class='btn btn-primary' style=". ($idCliente == 0 ? 'display: none;' : '')." id='liveToastBtn'>Avaliar Empresa</button>";
+            }
+            ?>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
 			  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
 				<div class="toast-header">
 				  <img src="./assets/imgs/estrela_ilustrativa.png" class="rounded me-2" alt="star" style="width: 1.5vw;">
@@ -310,7 +314,7 @@
 				<div id='toast-container_".$idCategoria."_".$idProd."' class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
 					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
-					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
+					<input type='hidden' name='idCliente' id='idCliente' value='".(isset($idCliente) ? $idCliente : -1)."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_menu']."'>
 
 					<input type='hidden' name='preco' id='preco' value='".$rowProd['preco']."'>
@@ -370,12 +374,12 @@
 							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
 					
 					
-						$stmtMenu= $pdo->prepare($queryMenu);
+						$stmtMenu= $pdo->prepare($queryMenu2);
 						$stmtMenu->execute([$fRestaurante]);
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
 					}
 					
-										
+          $idIndex = 0;			
 					foreach ($itensMenus as $rowit) {
 						$idIndex++;
 						$infoToas = $idCategoria."_".$idProd;
@@ -398,7 +402,7 @@
 						$stmtExt= $pdo->prepare($queryOp);
 						$stmtExt->execute();
 						$opcoes = $stmtExt->fetchAll(PDO::FETCH_ASSOC);
-							
+						$idIndex = 0;
 						foreach ($opcoes as $rowop) {
 							$idIndex++;
 							echo "<div class='form-check form-switch product-item' style='display: flex; '>
@@ -415,7 +419,7 @@
 		
 					echo "</div></div>
 						<div class='justify-content-center mt-2' style='text-align: center;'>";
-						if ($idCliente > 0) {
+						if ((isset($idCliente) ? $idCliente : 0) > 0) {
 					echo 	" <label'>Total Pedido: <span  id='totalPedido'>" . $rowProd['preco'] . " </span> €</label> 
 								<input type='hidden' class='total-item' name='valueItem' id='valueItem' value='" . $rowProd['preco'] . "'>
 								<input type='hidden' class='total-container' name='valuePedido' id='valuePedido' value='" . $rowProd['preco'] . "'>

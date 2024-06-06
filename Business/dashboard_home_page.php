@@ -16,7 +16,7 @@ function ObterEstatisticas()
     global $pdo;
     $query = 'SELECT (SELECT round(sum(precototal),2) from pedidos where id_estabelecimento = :id_estabelecimento) as vendas,
     (SELECT count(id_pedido) from pedidos where id_estabelecimento = :id_estabelecimento) as pedidos,
-   (select avg(pedidos.precototal) from pedidos 
+   (select round(avg(pedidos.precototal),2) from pedidos 
    inner join estabelecimentos on estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento 
    where pedidos.id_estabelecimento = :id_estabelecimento) as precomedio;';
     try {

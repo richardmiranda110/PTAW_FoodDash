@@ -354,8 +354,6 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
             <div class="text-start mt-1">
                 <h2 class="fw-bold">Performance</h2>
                 <p class="lead text-muted fw-bold">Sumário diário.</p>
-                <p class="lead text-muted fw-bold">Id Estabelecimento: <?php echo $idEmpresa ?></p>
-                <p class="lead text-muted fw-bold">Id Empresa: <?php echo $idEmpresa ?></p>
             </div>
 
             <!--1ª linha-->

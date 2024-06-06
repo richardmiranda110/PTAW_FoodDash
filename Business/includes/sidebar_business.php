@@ -36,7 +36,6 @@ function UrlContains($word){
 			<!-- Loja -->
 			<li>
 				<a href="/Business/empresa_page.php" class="nav-link <?php echo UrlContains("empresa_page.php") ? "active" : "" ?>">
-					<span class="bi-person-vcard"></span>
 					<span class="bi bi-shop">
 						Loja
 					</span>
@@ -49,6 +48,16 @@ function UrlContains($word){
 					<span class="bi-card-list"></span>
 					<span class="bi has-text-grey">
 						Pedidos
+					</span>
+				</a>
+			</li>
+
+						<!-- Menu -->
+			<li>
+				<a href="/Business/dashboard_lista_items.php" class="nav-link <?php echo UrlContains("dashboard_lista") ? "active" : "" ?>">
+					<span class="bi bi-list-task"></span>
+					<span class="bi has-text-grey">
+						Menu
 					</span>
 				</a>
 			</li>
@@ -66,32 +75,15 @@ function UrlContains($word){
 			<!-- Avaliações -->
 			<li>
 				<a href="/Business/avaliacoes.php" class="nav-link <?php echo UrlContains("avaliacoes.php") ? "active" : "" ?>">
-					<span class="bi bi-stars"></span>
+					<span class="bi bi-bookmark-star-fill"></span>
 					<span class="bi has-text-grey">
 						Avaliações
 					</span>
 				</a>
 			</li>
 
-			<!-- Menu -->
-			<li>
-				<a href="/Business/dashboard_lista_items.php" class="nav-link <?php echo UrlContains("dashboard_lista") ? "active" : "" ?>">
-					<span class=""></span>
-					<span class="bi has-text-grey">
-						Menu
-					</span>
-				</a>
-			</li>
 
-			<!-- Defenições -->
-			<li>
-				<a href="#" class="nav-link <?php echo UrlContains("#") ? "active" : "" ?>">
-					<span class="bi-gear-fill"></span>
-					<span class="bi has-text-grey">
-						Definições
-					</span>
-				</a>
-			</li>
+
 		</ul>
 		<a id="butSingOutSidebarLeft" href="<?php echo '../Business/login_register/logoutB.php' ?>" class="btn btn-dark px-3" type="button">Terminar Sessão</a>
 	</div>
