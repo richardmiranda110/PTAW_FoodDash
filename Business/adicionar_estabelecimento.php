@@ -10,8 +10,8 @@ $estabelecimento = null;
 $tipoArquivo = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])){
-        require_once '../uploadImagem.php';		
+    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])) {
+        require_once '../uploadImagem.php';
         $estabelecimento = array(
             'nome' => htmlspecialchars(trim($_POST['nome'])),
             'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
@@ -112,40 +112,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
 
                         <hr class="m-1"><br><br>
+                        <div class="row">
+                            <!-- Telemóvel -->
+                            <div class="col-md-4">
+                                <span>Nº de Telemóvel<span style='color:#ff0000'> *</span></span>
+                                <div class="input-group flex-nowrap">
+                                    <input name="telemovel" type="text" class="form-control" placeholder="Telemóvel"
+                                        aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['telemovel']))
+                                            echo $estabelecimento['telemovel']; ?>">
+                                    <?php if (!empty($ErroTelemovel)) { ?>
+                                        <span class="help-block small"
+                                            style="color:#ff0000"><?php echo $ErroTelemovel; ?></span>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <br>
 
-                        <!-- Telemóvel -->
-                        <span>Nº de Telemóvel<span style='color:#ff0000'> *</span></span>
-                        <div class="input-group flex-nowrap">
-                            <input name="telemovel" type="text" class="form-control" placeholder="Telemóvel"
-                                aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['telemovel']))
-                                    echo $estabelecimento['telemovel']; ?>">
-                            <?php if (!empty($ErroTelemovel)) { ?>
-                                <span class="help-block small" style="color:#ff0000"><?php echo $ErroTelemovel; ?></span>
-                            <?php } ?>
-                        </div>
-                        <br>
+                            <!-- taxa_entrega -->
+                            <div class="col-md-4">
+                                <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
+                                <div class="input-group flex-nowrap">
+                                    <input name="taxa_entrega" type="text" class="form-control"
+                                        placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
+                                        aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['taxa_entrega']))
+                                            echo $estabelecimento['taxa_entrega']; ?>">
+                                    <br><br>
+                                    <?php if (!empty($ErroTaxa)) { ?>
+                                        <span class="help-block small" style="color:#ff0000">
+                                            <?php echo $ErroTaxa; ?></span>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <br>
 
-                        <!-- taxa_entrega -->
-                        <span>Taxa de Entrega<span style='color:#ff0000'> *</span></span>
-                        <div class="input-group flex-nowrap">
-                            <input name="taxa_entrega" type="text" class="form-control" placeholder="Taxa de Entrega"
-                                aria-label="Taxa de Entrega" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['taxa_entrega']))
-                                    echo $estabelecimento['taxa_entrega']; ?>">
-                            <br><br>
-                            <?php if (!empty($ErroTaxa)) { ?>
-                                <span class="help-block small" style="color:#ff0000">
-                                    <?php echo $ErroTaxa; ?></span>
-                            <?php } ?>
-                        </div>
-
-                        <br>
-
-                        <!-- tempo_medio_entrega -->
-                        <div class="col-md-4">
-                            <div class="col-md-12">
+                            <!-- tempo_medio_entrega -->
+                            <div class="col-md-4">
                                 <div class="input-group flex-nowrap">
                                     <label for="appt-time">Escolha o tempo médio de entrega: <span
-                                            style='color:#ff0000'> *</span>
+                                            style='color:#ff0000'>
+                                            *</span>
                                         &emsp; &emsp;</label>
                                     <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time" value="<?php if (!empty($estabelecimento['tempo_medio_entrega']))
                                         echo $estabelecimento['tempo_medio_entrega']; ?>">
@@ -156,29 +161,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
                         </div>
-                        <br><br>
-                        <!-- Imagem -->
-                        <div>
-                            <label for="imagem" class="form-label">Enviar Imagem:
-                                <span style='color:#ff0000'> *</span>
-                            </label> 
-                            <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
-                                accept="image/*">
-                            <?php
-                            if (isset($_SESSION['erroImagem'])) {
-                                echo "<div class='alert alert-danger' role='alert'>
-                                        ". $_SESSION['erroImagem'] ."
+                    </div>
+                    <br><br>
+                    <!-- Imagem -->
+                    <div>
+                        <label for="imagem" class="form-label">Enviar Imagem:
+                            <span style='color:#ff0000'> *</span>
+                        </label>
+                        <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
+                            accept="image/*">
+                        <?php
+                        if (isset($_SESSION['erroImagem'])) {
+                            echo "<div class='alert alert-danger' role='alert'>
+                                        " . $_SESSION['erroImagem'] . "
                                     </div>";
-                                unset($_SESSION['erroImagem']);
-                            }
-                            ?>
-                        </div>
+                            unset($_SESSION['erroImagem']);
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
-    <br><br>
+</div>
+</form>
+<br><br>
 </div>
 <!--Fim do conteúdo de página-->
 <?php

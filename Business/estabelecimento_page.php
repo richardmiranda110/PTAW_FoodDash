@@ -71,6 +71,7 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 </div>
 
 <!--Zona de Conteudo -->
+<br><br>
 <div class="direita" style="margin-top: 10vh;">
     <h2 style="text-align: left;">Estabelecimentos da Empresa</h2>
     <div class="d-grid gap-2">
@@ -106,7 +107,7 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
                                 </div>
                                 <hr>
                                 <dl class="list-group list-group-flush">
-                                    <dd name="id" disabled><strong>Id do estabelcimento:</strong>
+                                    <dd name="id" hidden><strong>Id do estabelcimento:</strong>
                                         <?php echo htmlspecialchars($estabelecimento['id_estabelecimento']); ?><br>
                                     </dd>
                                     <dd name="localizacao"><strong>Localização:</strong>

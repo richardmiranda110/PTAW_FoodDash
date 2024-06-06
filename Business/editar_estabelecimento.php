@@ -13,7 +13,7 @@ if (!isset($_SESSION['id_estabelecimento'])) {
 $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])){
+    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])) {
         require_once '../uploadImagem.php';
 
         $estabelecimentoModificado = array(
@@ -28,11 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($estabelecimentoModificado !== null) {
             if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
                 $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
-                echo "<div class='alert alert-success' role='alert' style='margin-top: 6vh;'>
+                $alertMessage = "<div class='alert alert-success' role='alert' style='margin-top: 6vh;'>
                     Dados alterados com sucesso
                 </div>";
             } else {
-                echo "<div class='alert alert-danger' role='alert' style='margin-top: 6vh;'>
+                $alertMessage = "<div class='alert alert-danger' role='alert' style='margin-top: 6vh;'>
                     Ocorreu um erro ao alterar dados! Por favor, tente novamente.
                 </div>";
             }
@@ -93,6 +93,12 @@ function getMsgImagem($status, $message)
                                 value="Editar">Editar</button>
                         </div>
                     </div>
+                    <!-- Div para mensagens de sucesso ou erro -->
+                    <div id="sucesso_erro">
+                        <?php if (!empty($alertMessage)) { ?>
+                            <?php echo $alertMessage; ?></span>
+                        <?php } ?>
+                    </div>
                     <div class="card-body pt-0 pb-1  ">
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert p-0" role="alert">
@@ -110,7 +116,8 @@ function getMsgImagem($status, $message)
                             <span>Nome<span style='color:#ff0000'> *</span></span>
                             <div class="input-group flex-nowrap">
                                 <input name="nome" readonly type="text" class="form-control" placeholder="Nome"
-                                    aria-label="Nome" aria-describedby="addon-wrapping" value="<?php echo $estabelecimento['nome']; ?>">
+                                    aria-label="Nome" aria-describedby="addon-wrapping"
+                                    value="<?php echo $estabelecimento['nome']; ?>">
                                 <span id="erroNome" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <br>
@@ -165,15 +172,17 @@ function getMsgImagem($status, $message)
                                             style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
-                                <br><br>
+                                <br><br><br>
                                 <!-- Imagem -->
+                                <img src="<?php echo $estabelecimento['imagem']; ?>"
+                                    alt="<?php echo $estabelecimento['nome']; ?>" width="200" height="300">
                                 <label for="imagem" class="form-label">Enviar Imagem:</label>
                                 <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
                                     accept="image/*">
                                 <?php
                                 if (isset($_SESSION['erroImagem'])) {
                                     echo "<div class='alert alert-danger' role='alert'>
-                                            ". $_SESSION['erroImagem'] ."
+                                            " . $_SESSION['erroImagem'] . "
                                         </div>";
                                     unset($_SESSION['erroImagem']);
                                 }
