@@ -1,76 +1,44 @@
 <?php
-require_once __DIR__ . '/database/credentials.php';
-require_once __DIR__ . '/database/db_connection.php';
-session_start();
-
-header('Content-type: application/json');
-$status = "error";
-
-if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    $message = "Tipo de dados tem que ser POST";
-    echo json_encode(getMsgImagem($status, $message));
-    //header("Location: editar_estabelecimento.php");
-    exit();
-}
-
-if (!isset($_FILES['imagem']) || $_FILES['imagem']['error'] != UPLOAD_ERR_OK) {
-    $erroImagem = "Erro ao carregar o ficheiro.";
-    $_SESSION['erroImagem'] = $erroImagem;
-    //header("Location: editar_estabelecimento.php");
-    exit();
-}
-
-// Define variáveis
+// diretorio a colocar a imagem
 $target_dir = ".";
+// colocar em letras pequenas
 $imageFileType = strtolower(pathinfo($_FILES["imagem"]["name"], PATHINFO_EXTENSION));
+// colocar data á frente
 $currentTimestamp = str_replace(" ", "", date("D M j G"));
+// obter link para a imagem
 $target_file = $target_dir . '/' . $currentTimestamp . '_' . basename($_FILES["imagem"]["name"]);
+// obtem tamanho de imagem
 $checkFileSize = getimagesize($_FILES["imagem"]["tmp_name"]);
-
+// se o tamanho da imagem não for valido para o tamanho do ficheiro
 if ($checkFileSize == false) {
-    $erroImagem = getMsgImagem($status, "O Ficheiro nao é uma imagem.");
-    $_SESSION['erroImagem'] = $erroImagem['message'];
-    //header("Location: editar_estabelecimento.php");
-    exit(1);
+    $_SESSION['erroImagem'] = "O Ficheiro nao é uma imagem.";
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit();
 }
-
+// se já existe, dá o link
 if (file_exists($target_file)) {
-    $erroImagem = getMsgImagem($status, "O ficheiro já existe");
-    $_SESSION['erroImagem'] = $erroImagem['message'];
-    //header("Location: editar_estabelecimento.php");
-    exit(2);
-}
-
-if ($_FILES["imagem"]["size"] > 500000) {
-    $erroImagem = getMsgImagem($status, "Ficheiro demasiado grande.");
-    $_SESSION['erroImagem'] = $erroImagem['message'];
-    //header("Location: editar_estabelecimento.php");
-    exit(3);
-}
-
-if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
-    $erroImagem = getMsgImagem($status, "Apenas permitido ficheiros do tipo JPG, JPEG, PNG.");
-    $_SESSION['erroImagem'] = $erroImagem['message'];
-    //header("Location: editar_estabelecimento.php");
-    exit(4);
-}
-
-$moveOperationSuccess = move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file);
-if ($moveOperationSuccess == false) {
-    $erroImagem = getMsgImagem($status, "Ocorreu um erro a carregar o ficheiro.");
-    $_SESSION['erroImagem'] = $erroImagem['message'];
-    //header("Location: editar_estabelecimento.php");
-    exit(5);
-}
-
-$status = "success";
-$message = "Imagem carregada com sucesso";
-echo json_encode(getMsgImagem($status, $message, basename($target_file)));
-
-function getMsgImagem($status, $message, $extra = null) {
-    if ($extra == null) {
-        return ["status" => $status, "message" => $message];
+    $caminhoArquivo = basename($target_file);
+} else{
+    // verifica se é uma imagem demasiado grande
+    if ($_FILES["imagem"]["size"] > 500000) {
+        $_SESSION['erroImagem'] = "Ficheiro demasiado grande.";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     }
-
-    return ["status" => $status, "message" => $message, "url" => $extra];
+    // verifica o tipo de ficheiro
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+        $_SESSION['erroImagem'] = "Apenas permitido ficheiros do tipo JPG, JPEG, PNG.";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+    // move o ficheiro para o lugar certo
+    $moveOperationSuccess = move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file);
+    if ($moveOperationSuccess == false) {
+        $_SESSION['erroImagem'] = "Ocorreu um erro a carregar o ficheiro.";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
 }
+
+// coloca o link numa variavel
+$caminhoArquivo = basename($target_file);

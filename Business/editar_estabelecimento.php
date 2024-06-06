@@ -1,34 +1,20 @@
 <?php
 require_once __DIR__ . '/includes/session.php';
 include __DIR__ . "/../database/empresa_estabelecimento.php";
-include __DIR__ . "/../database/credentials.php";
-include __DIR__ . "/../database/db_connection.php";
+require_once __DIR__ . "/../database/credentials.php";
+require_once __DIR__ . "/../database/db_connection.php";
 
-$status = "error"; // Defina o status padrão
-$message = ""; // Inicialize a mensagem vazia
+if (!isset($_SESSION['id_estabelecimento'])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+    header("Location: /Business/login_register/login_business.php");
+    exit();
+}
+
 $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$caminhoArquivo = null;
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
-} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_POST['imagem'])) {
-
-        // Verifica se um arquivo foi enviado e está corretamente formatado
-        if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-            $temp_file = $_FILES['imagem']['tmp_name'];
-            $target_file = "../assets/imgs/" . basename($_FILES['imagem']['name']);
-
-            // Move o arquivo para o diretório de destino
-            if (move_uploaded_file($temp_file, $target_file)) {
-                // Arquivo carregado com sucesso, agora você pode atualizar o caminho no banco de dados
-                $caminhoArquivo = $target_file;
-            } else {
-                // Erro ao mover o arquivo
-                echo "Ocorreu um erro ao enviar o arquivo.";
-                exit();
-            }
-        }
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])) {
+        require_once '../uploadImagem.php';
 
         $estabelecimentoModificado = array(
             'nome' => htmlspecialchars(trim($_POST['nome'])),
@@ -36,30 +22,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
             'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
             'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
-            'imagem' => htmlspecialchars(trim($caminhoArquivo)) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
+            'imagem' => htmlspecialchars($caminhoArquivo) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
         );
 
         if ($estabelecimentoModificado !== null) {
             if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
-                // Se for adicionado corretamente há base de dados,
-                // reencaminha para estabelecimento_page.php
-                //header("Location: estabelecimento_page.php");
-                //exit();
+                $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
+                $alertMessage = "<div class='alert alert-success' role='alert' style='margin-top: 6vh;'>
+                    Dados alterados com sucesso
+                </div>";
+            } else {
+                $alertMessage = "<div class='alert alert-danger' role='alert' style='margin-top: 6vh;'>
+                    Ocorreu um erro ao alterar dados! Por favor, tente novamente.
+                </div>";
             }
         }
     }
-} else {
-    $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 }
 
-// Gere a resposta JSON
-$response = json_encode(getMsgImagem($status, $message));
-
-// Defina o cabeçalho JSON
-header('Content-type: application/json');
-
-// Imprima a resposta JSON
-echo $response;
+$estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
 
 // Função para gerar a mensagem de retorno
 function getMsgImagem($status, $message)
@@ -112,6 +93,12 @@ function getMsgImagem($status, $message)
                                 value="Editar">Editar</button>
                         </div>
                     </div>
+                    <!-- Div para mensagens de sucesso ou erro -->
+                    <div id="sucesso_erro">
+                        <?php if (!empty($alertMessage)) { ?>
+                            <?php echo $alertMessage; ?></span>
+                        <?php } ?>
+                    </div>
                     <div class="card-body pt-0 pb-1  ">
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert p-0" role="alert">
@@ -129,8 +116,8 @@ function getMsgImagem($status, $message)
                             <span>Nome<span style='color:#ff0000'> *</span></span>
                             <div class="input-group flex-nowrap">
                                 <input name="nome" readonly type="text" class="form-control" placeholder="Nome"
-                                    aria-label="Nome" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['nome']))
-                                        echo $estabelecimento['nome']; ?>">
+                                    aria-label="Nome" aria-describedby="addon-wrapping"
+                                    value="<?php echo $estabelecimento['nome']; ?>">
                                 <span id="erroNome" class="help-inline small" style="color:#ff0000"></span>
                             </div>
                             <br>
@@ -185,14 +172,18 @@ function getMsgImagem($status, $message)
                                             style="color:#ff0000;padding-top:10px"></span>
                                     </div>
                                 </div>
-                                <br><br>
+                                <br><br><br>
                                 <!-- Imagem -->
+                                <img src="<?php echo $estabelecimento['imagem']; ?>"
+                                    alt="<?php echo $estabelecimento['nome']; ?>" width="200" height="300">
                                 <label for="imagem" class="form-label">Enviar Imagem:</label>
                                 <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
                                     accept="image/*">
                                 <?php
                                 if (isset($_SESSION['erroImagem'])) {
-                                    echo $_SESSION['erroImagem'];
+                                    echo "<div class='alert alert-danger' role='alert'>
+                                            " . $_SESSION['erroImagem'] . "
+                                        </div>";
                                     unset($_SESSION['erroImagem']);
                                 }
                                 ?>
@@ -315,7 +306,6 @@ include __DIR__ . "/includes/footer_business.php";
                         input.setAttribute("readonly", "readonly");
                     });
                     form.method = 'POST';
-                    form.setAttribute("action", "editar_estabelecimento.php?id=<?php echo $id_estabelecimento; ?>");
                 }
             }
         })
