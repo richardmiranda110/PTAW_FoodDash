@@ -1,13 +1,15 @@
 <?php
 require_once  __DIR__ . "/includes/session.php";
-require_once __DIR__."/../database/credentials.php";
-require_once __DIR__."/../database/db_connection.php";
+require_once __DIR__ . "/../database/credentials.php";
+require_once __DIR__ . "/../database/db_connection.php";
 
-if (!isset($_SESSION['authenticatedB'])) {
+if (!isset($_SESSION['authenticatedB']) || !isset($_SESSION['id_empresa'])) {
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
     header("Location: /Business/login_register/login_business.php");
     exit();
 }
+
+$idEmpresa = $_SESSION['id_empresa'];
 
 function ObterEstatisticas()
 {
@@ -19,10 +21,10 @@ function ObterEstatisticas()
    where pedidos.id_estabelecimento = :id_estabelecimento) as precomedio;';
     try {
         // query
-        $stmt = 
-        $pdo->prepare($query);
-            
-        $stmt->bindValue(":id_estabelecimento",$_SESSION['id_estabelecimento']);
+        $stmt =
+            $pdo->prepare($query);
+
+        $stmt->bindValue(":id_estabelecimento", $_SESSION['id_estabelecimento']);
         // Executar a query e verificar que não retornou false
         if ($stmt->execute()) {
             // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
@@ -41,6 +43,22 @@ function ObterEstatisticas()
 }
 
 $estatisticas = ObterEstatisticas();
+
+function getVendasMensais($pdo, $idEmpresa, $mes)
+{
+    $query = "SELECT SUM(precoTotal) AS total_dinheiro
+        FROM Pedidos
+        JOIN Estabelecimentos 
+              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              WHERE Estabelecimentos.id_empresa = :empresaId
+          AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_dinheiro'];
+}
 
 ?>
 <!DOCTYPE html>
@@ -80,7 +98,7 @@ $estatisticas = ObterEstatisticas();
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Vendas</h5>
-                        <p class="card-text"><?php echo ($estatisticas['vendas'] ? $estatisticas['vendas'] : 0 )?> €</p>
+                        <p class="card-text"><?php echo ($estatisticas['vendas'] ? $estatisticas['vendas'] : 0) ?> €</p>
                     </div>
                 </div>
             </div>
@@ -100,7 +118,7 @@ $estatisticas = ObterEstatisticas();
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">Preço Médio de Pedidos</h5>
-                        <p class="card-text"><?php echo ($estatisticas['precomedio'] ? $estatisticas['precomedio'] : 0 ) ?> €</p>
+                        <p class="card-text"><?php echo ($estatisticas['precomedio'] ? $estatisticas['precomedio'] : 0) ?> €</p>
                     </div>
                 </div>
             </div>
@@ -136,7 +154,7 @@ $estatisticas = ObterEstatisticas();
                         </a>
 
                         <!-- Ver avalições -->
-                        <a  href="./avaliacoes.php" type="button" class="list-group-item list-group-item-action">
+                        <a href="./avaliacoes.php" type="button" class="list-group-item list-group-item-action">
                             Ver avaliações
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
@@ -160,10 +178,12 @@ $estatisticas = ObterEstatisticas();
                                 </button>
                             </div>
                         </div>
+
                         <div class="w-full h-[300px]">
                             <div style="width:100%;height:100%">
                                 <div style="position: relative;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="1050" height="300" role="application">
+                                    <canvas id="vendasChart"></canvas>
+                                    <!--<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="300" role="application">
                                         <rect width="1050" height="300" fill="transparent"></rect>
                                         <g transform="translate(40,10)">
                                             <g>
@@ -298,7 +318,7 @@ $estatisticas = ObterEstatisticas();
                                                 </rect>
                                             </g>
                                         </g>
-                                    </svg>
+                                    </svg>-->
                                 </div>
                             </div>
                         </div>
@@ -320,7 +340,41 @@ $estatisticas = ObterEstatisticas();
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const vendasChart = document.getElementById('vendasChart').getContext('2d');
 
+        new Chart(vendasChart, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Vendas',
+                    data: [
+                        <?= (getVendasMensais($pdo, $idEmpresa, 1)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 1)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 2)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 2)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 3)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 3)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 4)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 4)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 5)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 5)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 6)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 6)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 7)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 7)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 8)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 8)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 9)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 9)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 10)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 10)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 11)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 11)) ?>,
+                        <?= (getVendasMensais($pdo, $idEmpresa, 12)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 12)) ?>
+                    ],
+                    borderWidth: 5,
+                    borderColor: 'rgb(255,215,0)',
+                    backgroundColor: 'rgb(255,215,0)',
+                    tension: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
 </body>
 
 </html>

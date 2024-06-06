@@ -101,6 +101,25 @@ function ObterEstatisticas()
     }
 }
 
+function getMesDinheiro($pdo, $clienteId, $mes)
+{
+    if ($_SESSION['id_cliente'] != $clienteId) {
+        header("Location: /index.php");
+        exit();
+    }
+
+    $query = "SELECT COALESCE(SUM(precoTotal), 0) AS total_dinheiro
+        FROM Pedidos
+        WHERE id_cliente = :clienteId
+          AND EXTRACT(MONTH FROM data) = :mes";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':clienteId', $clienteId, PDO::PARAM_INT);
+    $stmt->bindParam(':mes', $mes, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result['total_dinheiro'];
+}
+
 $estatisticas = ObterEstatisticas();
 
 // Recebendo dados da BD
@@ -295,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         data: {
                             labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
                             datasets: [{
-                                label: 'Vendas',
+                                label: 'Dinheiro gasto',
                                 data: [
                                     <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 1); ?>,
                                     <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 2); ?>,

@@ -11,7 +11,7 @@ if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['id_empresa']) |
 }
 
 
-$idEmpresa = $_SESSION['id_estabelecimento'];
+//$idEmpresa = $_SESSION['id_estabelecimento'];
 $idEmpresa = $_SESSION['id_empresa'];
 
 function getPedidosDiarios($pdo, $idEmpresa, $dia, $mes)
@@ -435,7 +435,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
                     <div class="card shadow border-1">
                         <div class="card-body text-center">
                             <h4 class="card-title fw-bold mb-3">Vendas</h4>
-                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo $vendasMensais . "€" ?></p>
+                            <p class="display-5 mb-3 text-secondary fw-bold"><?php echo ($vendasMensais == 0 ? 0 : $vendasMensais) . "€" ?></p>
                         </div>
                     </div>
                 </div>
@@ -573,18 +573,18 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
                 datasets: [{
                     label: 'Vendas',
                     data: [
-                        <?= getPedidosMensais($pdo, $idEmpresa, 1) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 2) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 3) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 4) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 5) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 6) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 7) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 8) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 9) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 10) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 11) ?>,
-                        <?= getPedidosMensais($pdo, $idEmpresa, 12) ?>
+                        <?= (getVendasMensais($pdo, $idEmpresa, 1)) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 1)) ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 2) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 2))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 3) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 3))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 4) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 4))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 5) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 5))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 6) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 6))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 7) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 7))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 8) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 8))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 9) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 9))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 10) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 10))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 11) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 11))  ?>,
+                        <?= getVendasMensais($pdo, $idEmpresa, 12) == 0 ? 0 : (getVendasMensais($pdo, $idEmpresa, 12))  ?>
                     ],
                     borderWidth: 5,
                     borderColor: 'rgb(255,215,0)',

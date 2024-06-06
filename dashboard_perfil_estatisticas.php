@@ -343,7 +343,7 @@ $clienteId = $_SESSION['id_cliente'];  // ID do cliente para o qual queremos con
             data: {
                 labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
                 datasets: [{
-                    label: 'Vendas',
+                    label: 'Dinheiro gasto',
                     data: [
                         <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 1); ?>,
                         <?php echo getMesDinheiro($pdo, $_SESSION['id_cliente'], 2); ?>,
