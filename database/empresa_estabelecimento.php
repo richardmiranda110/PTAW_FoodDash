@@ -71,7 +71,7 @@ function AdicionarEstabelecimento($pdo, $id_empresa, $dadosEstabelecimento)
 {
     try {
         $sql = "INSERT INTO Estabelecimentos (nome, localizacao, telemovel, taxa_entrega, tempo_medio_entrega, imagem, id_empresa) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
+
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $dadosEstabelecimento['nome'], PDO::PARAM_STR);
         $stmt->bindValue(2, $dadosEstabelecimento['localizacao'], PDO::PARAM_STR);
@@ -80,7 +80,7 @@ function AdicionarEstabelecimento($pdo, $id_empresa, $dadosEstabelecimento)
         $stmt->bindValue(5, $dadosEstabelecimento['tempo_medio_entrega'], PDO::PARAM_STR);
         $stmt->bindValue(6, $dadosEstabelecimento['imagem'], PDO::PARAM_STR);
         $stmt->bindValue(7, $id_empresa, PDO::PARAM_INT);
-        
+
         if ($stmt->execute()) {
             return true;
         } else {
@@ -97,8 +97,7 @@ function ObterEstabelecimento($pdo, $id_estabelecimento)
     try {
         $sql = "SELECT Estabelecimentos.* FROM Estabelecimentos WHERE id_estabelecimento = ?";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $id_estabelecimento, PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt->execute([$id_estabelecimento]);
         $registo = $stmt->fetch(PDO::FETCH_ASSOC);
         return $registo;
     } catch (PDOException $e) {
@@ -111,29 +110,33 @@ function ObterEstabelecimento($pdo, $id_estabelecimento)
 function EditarEstabelecimento($pdo, $ID, $DadosEstabelecimentos)
 {
     $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
-    
+
     if ($ID != $id_estabelecimento) {
         exit("You can't edit other people's Establishment!");
     }
 
+    $id_empresa = $_SESSION['id_empresa'];
+
     $sql = "UPDATE Estabelecimentos SET nome = ?, localizacao = ?, telemovel = ?,
     taxa_entrega = ?, tempo_medio_entrega = ?, imagem = ?
-    WHERE id_estabelecimento = ?";
+    WHERE id_estabelecimento = ? AND id_empresa = ?";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $DadosEstabelecimentos['nome'], PDO::PARAM_STR);
     $stmt->bindValue(2, $DadosEstabelecimentos['localizacao'], PDO::PARAM_STR);
     $stmt->bindValue(3, $DadosEstabelecimentos['telemovel'], PDO::PARAM_STR);
-    $stmt->bindValue(4, $DadosEstabelecimentos['taxa_entrega'], PDO::PARAM_STR);
-    $stmt->bindValue(5, $DadosEstabelecimentos['tempo_medio_entrega'], PDO::PARAM_STR);
+    $stmt->bindValue(4, $DadosEstabelecimentos['taxa_entrega']);
+    $stmt->bindValue(5, $DadosEstabelecimentos['tempo_medio_entrega']);
     $stmt->bindValue(6, $DadosEstabelecimentos['imagem'], PDO::PARAM_STR);
     $stmt->bindValue(7, $ID, PDO::PARAM_INT);
-
-    if ($stmt->execute()) {
-        return true;
-    } else {
+    $stmt->bindValue(8, $id_empresa, PDO::PARAM_INT);
+    $stmt->execute();
+        
+    if ($stmt->rowCount() == 0) {
+        exit("Não podes editar estabelecimentos de outras empresas!");
         return false;
     }
+    return true;
 }
 
 function ApagarEstabelecimento($pdo, $id_estabelecimento)
@@ -146,14 +149,14 @@ function ApagarEstabelecimento($pdo, $id_estabelecimento)
         $stmt->bindValue(1, $id_estabelecimento, PDO::PARAM_INT);
         $stmt->bindValue(2, $id_empresa, PDO::PARAM_INT);
         $stmt->execute();
-        
-        if ($stmt->rowCount() == 0) {
-            throw new Exception("Não podes apagar estabelecimentos de outras empresas!");
-        }
 
         $stmt = $pdo->prepare("DELETE FROM Estabelecimentos WHERE id_estabelecimento = ?");
         $stmt->bindValue(1, $id_estabelecimento, PDO::PARAM_INT);
         $stmt->execute();
+        
+        if ($stmt->rowCount() == 0) {
+            throw new Exception("Não podes apagar estabelecimentos de outras empresas!");
+        }
 
         return true;
     } catch (PDOException $e) {

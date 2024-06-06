@@ -10,23 +10,25 @@ $estabelecimento = null;
 $tipoArquivo = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Atribuir os dados do formulário à variável $produto e, ao mesmo tempo, retirar carateres perigosos			
-    $estabelecimento = array(
-        'nome' => htmlspecialchars(trim($_POST['nome'])),
-        'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
-        'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
-        'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
-        'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
-        'imagem' => $tipoArquivo
-    );
+    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])){
+        require_once '../uploadImagem.php';		
+        $estabelecimento = array(
+            'nome' => htmlspecialchars(trim($_POST['nome'])),
+            'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
+            'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
+            'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
+            'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
+            'imagem' => htmlspecialchars($caminhoArquivo) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
+        );
 
-    // Se não ocorreram erros de validação, inserir o produto
-    if ($Validacao == true) {
-        if (AdicionarEstabelecimento($pdo, $_SESSION['id_empresa'], $estabelecimento)) {
-            // Se for adicionado corretamente há base de dados,
-            // reencaminha para estabelecimento_page.php
-            header("Location: estabelecimento_page.php");
-            exit();
+        // Se não ocorreram erros de validação, inserir o produto
+        if ($Validacao == true) {
+            if (AdicionarEstabelecimento($pdo, $_SESSION['id_empresa'], $estabelecimento)) {
+                // Se for adicionado corretamente há base de dados,
+                // reencaminha para estabelecimento_page.php
+                header("Location: estabelecimento_page.php");
+                exit();
+            }
         }
     }
 }
@@ -60,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div style="margin-top: 10vh;">
     <!-- Formulárop do Estabelecimento -->
     <form id="estabelecimento" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="w-75 form_editar" style="margin:auto"
-        method="POST">
+        method="POST" enctype="multipart/form-data">
         <p class="h4 pt-4">Informações</p>
 
         <div class="align-items-md-stretch">
@@ -157,16 +159,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <br><br>
                         <!-- Imagem -->
                         <div>
-                            <label for="inputImagem">Escolha uma imagem:</label>
-                            <input name="imagem" type="file" id="inputImagem" name="inputImagem"
-                                accept="image/png, image/jpeg, image/jpg, image/svg, image/gif">
-                            <br>
-                            <img id="preview" src="#" alt="Image preview"
-                                style="display:none; max-width:200px; max-height:200px;">
-                            <?php if (!empty($ErroImagem)) { ?>
-                                <span class="help-block small" style="color:#ff0000"><?php echo $ErroImagem; ?></span>
-                            <?php } ?>
-                            <br>
+                            <label for="imagem" class="form-label">Enviar Imagem:
+                                <span style='color:#ff0000'> *</span>
+                            </label> 
+                            <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
+                                accept="image/*">
+                            <?php
+                            if (isset($_SESSION['erroImagem'])) {
+                                echo "<div class='alert alert-danger' role='alert'>
+                                        ". $_SESSION['erroImagem'] ."
+                                    </div>";
+                                unset($_SESSION['erroImagem']);
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -185,18 +190,6 @@ include __DIR__ . "/includes/footer_business.php";
     crossorigin="anonymous"></script>
 <script>
 
-    document.getElementById('inputImagem').addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.getElementById('preview');
-                img.src = e.target.result;
-                img.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        }
-    });
     // Obtém os elementos
     //Geral
     var inputs = document.querySelectorAll(".form-control");
@@ -259,16 +252,6 @@ include __DIR__ . "/includes/footer_business.php";
         if (tempoMedioEntregaInput.value.trim() === "") {
             erroTempoMedioEntrega.textContent = "Campo obrigatório";
             validacao = false; // marcar validação como falsa
-        }
-
-        // Verificar se algum arquivo foi selecionado para a imagem
-        const file = imagemInput.files[0];
-        if (file) {
-            const formatosPermitidos = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg', 'image/gif'];
-            if (!formatosPermitidos.includes(file.type)) {
-                erroImagem.textContent = "Formato de imagem inválido. Por favor, escolha um formato válido (PNG, JPEG, JPG, SVG, GIF).";
-                validacao = false; // marcar validação como falsa
-            }
         }
     }
 
