@@ -2,7 +2,7 @@ var dable = new Dable();
 var rows = [];
 var list_columns = [ '', '','', '','' ];
 var items = [];
-const response = fetch('./lista_opcoes.php')
+const response = fetch('http://localhost/business/lista_opcoes.php')
   .then(response => response.json())
   .then(data => {
     for(item of data.itens){
@@ -62,7 +62,7 @@ function performDelete(element){
   const cellValue =  element.getAttribute("cellValue");
   console.log(cellValue);
   const rownumber =  element.getAttribute("data-rownumber");
-  const request = fetch("./lista_opcoes.php?deletemenu="+cellValue);
+  const request = fetch("/Business/lista_opcoes.php?deletemenu="+cellValue);
   request.then(reply => {
     console.log(reply);
     dable.DeleteRow(rownumber);
@@ -80,6 +80,6 @@ function editItem(element) {
   var rowNumber = element.getAttribute('data-rownumber');
 
   const item = items[rowNumber];
-  window.open(`./dashboard_inserir_item.php?menuid=${item.id}`);
+  window.open(`/Business/dashboard_inserir_item.php?menuid=${item.id}`);
 
 }

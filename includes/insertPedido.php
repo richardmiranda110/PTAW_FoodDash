@@ -8,7 +8,7 @@ try {
 		$idProd = isset($_POST['idProd']) ? intval($_POST['idProd']) : null;
 		$totalPedido = isset($_POST['valuePedido']) ? floatval($_POST['valuePedido']) : null;
 		$idCliente = isset($_POST['idCliente']) ? intval($_POST['idCliente']) : null;
-		$idEstabelecimento = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
+		$idEmpresa = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
 		$idEntregador = isset($_POST['idEntregador']) ? intval($_POST['idEntregador']) : 1;
 
 
@@ -21,7 +21,7 @@ try {
         $opcoes = isset($_POST['opcoes']) ? $_POST['opcoes'] : [];
 		$totalPedido = isset($_POST['valuePedido']) ? floatval($_POST['valuePedido']) : null;
         $idCliente = isset($_POST['idCliente']) ? intval($_POST['idCliente']) : null;
-        $idEstabelecimento = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
+        $idEmpresa = isset($_POST['idEstabelecimento']) ? intval($_POST['idEstabelecimento']) : null;
         $idEntregador = isset($_POST['idEntregador']) ? intval($_POST['idEntregador']) : 1;
 
         // Atualiza os dados na base de dados
@@ -33,7 +33,7 @@ try {
             $stmt->bindParam(':preco', $totalPedido);
             $stmt->bindParam(':idCliente', $idCliente);
             $stmt->bindParam(':idEntregador', $idEntregador);
-            $stmt->bindParam(':idEstabelecimento', $idEstabelecimento);
+            $stmt->bindParam(':idEstabelecimento', $idEmpresa);
 
             $stmt->execute();
 

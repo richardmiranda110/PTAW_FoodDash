@@ -38,11 +38,9 @@ if(isset($_GET['delete'])){
 }
 
 $query =  
-"SELECT categorias.nome, categorias.id_categoria,
-COUNT(itens.id_item) AS count FROM  categorias
-LEFT JOIN itens ON categorias.id_categoria = itens.id_categoria
-where id_empresa = ? GROUP BY categorias.id_categoria, categorias.nome
-ORDER BY categorias.id_categoria;;";
+"SELECT nome,categorias.id_categoria as id,count(item_categorias.id_item) as count FROM categorias
+full join item_categorias on categorias.id_categoria = item_categorias.id_categoria
+where id_empresa = ? group by categorias.id_categoria;";
 
 $stmt = $pdo->prepare($query);
 $stmt->execute([$idEmpresa]);

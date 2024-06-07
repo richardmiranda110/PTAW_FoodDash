@@ -4,23 +4,25 @@ require_once __DIR__.'/database/db_connection.php';
 require_once __DIR__.'/session.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
+  $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
   header("Location: /dashboard.php");
   exit();
 }
 
 $query = 
   "SELECT pedido.data as data,
+  pedido.id_cliente as id_cliente,
   pedido.id_pedido as id,
   cliente.nome as cliente,
   pedido.estado as status,
   pedido.precototal as preco,
   est.nome as estabelecimento
   FROM public.pedido_itens 
-  INNER JOIN itens item on pedido_itens.id_item = item.id_item
-  INNER JOIN pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
-  INNER JOIN estabelecimentos est on pedido.id_estabelecimento = est.id_estabelecimento
-  INNER JOIN clientes cliente ON pedido.ID_CLIENTE = cliente.id_cliente
-  INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
+  FULL JOIN itens item on pedido_itens.id_item = item.id_item
+  RIGHT JOIN pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
+  FULL JOIN estabelecimentos est on pedido.id_estabelecimento = est.id_estabelecimento
+  FULL JOIN clientes cliente ON pedido.ID_CLIENTE = cliente.id_cliente
+  FULL JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
   where pedido.id_cliente = ?;";
 
 try {
@@ -68,12 +70,14 @@ echo "Erro na conexão: " . $e->getMessage();
 
             foreach($pedidos as &$pedido){
               if($pedido['id_cliente'] != $_SESSION['id_cliente']){
-                header("Location: /index.php");
+                exit('Algum erro ocorreu');
               }
-              
+              $time = strtotime($pedido['data']);
+              $date = date('F j, Y',$time);
+              $time = date('g:i a',$time);
               echo'
                 <div id="ticket-info" class="row border border-2 border-secondary rounded my-3">
-                  <div class="col-sm-1 text-center align-self-center py-2 fs-6 "><span>13:46</span><br><span>'.$pedido['data'].'</span></div>
+                  <div class="col-sm-1 text-center align-self-center py-2 fs-6 "><span>'.$date.'<br>'.$time.'</span></div>
                     <div class="col-sm-5 rounded-left rounded-right align-self-center py-2 px-5 fs-6">
                         <strong>Pedido #'.$pedido['id'].', '.$pedido['cliente'].'</span> em <span></strong>'.$pedido['estabelecimento'].'<br>
                         <small></small>
@@ -88,7 +92,7 @@ echo "Erro na conexão: " . $e->getMessage();
                       </a>
                     </div>
                   </div>
-                </div>';
+                ';
             };
             ?>  
           </div>          

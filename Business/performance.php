@@ -11,7 +11,6 @@ if (!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['id_empresa']) |
 }
 
 
-
 //$idEmpresa = $_SESSION['id_estabelecimento'];
 $idEmpresa = $_SESSION['id_empresa'];
 
@@ -338,15 +337,6 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
     <link rel="stylesheet" href="../assets/styles/sitecss.css">
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
     <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
-    <style>
-        h4{
-            font-size:  3vh!important;;
-        }
-
-        p{
-            font-size:  4vh!important;;
-        }
-    </style>
 </head>
 
 <body>
@@ -354,8 +344,8 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
     <!--Zona do Header -->
 
     <!-- Top/Menu da Página -->
-    <?php include "./includes/header_business_logged.php"; ?>
-    <?php include "./includes/sidebar_business.php"; ?>
+    <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
+    <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
 
 
     <!--Zona de Conteudo -->

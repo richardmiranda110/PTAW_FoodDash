@@ -1,9 +1,9 @@
 <?php
-require_once './includes/session.php';
+require_once __DIR__ . '/includes/session.php';
 
-include  "../database/empresa_estabelecimento.php";
-include  "../database/credentials.php";
-include  "../database/db_connection.php";
+include __DIR__ . "/../database/empresa_estabelecimento.php";
+include __DIR__ . "/../database/credentials.php";
+include __DIR__ . "/../database/db_connection.php";
 
 if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
@@ -18,7 +18,7 @@ $empresaModificado = null;
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados da empresa
-    $empresa = ObterEmpresaLocal();
+    $empresa = ObterEmpresa($pdo, $_SESSION['id_empresa']); // ALTERAR O ID
 }
 // Enviando dados para a BD, ao editar dados de um determinado «empresa
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -32,12 +32,13 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'tipo' => htmlentities(trim($_POST['tipo'])),
         'logotipo' => htmlentities(trim($_POST['logotipo']))
     );
+}
 
 // Se não ocorreram erros de validação, e se a empresa e o emprestimo tiver null
 if ($Validacao == true && ($empresaModificado !== null)) {
     // Editar a empresa na base de dados
-    if (EditarEmpresa($empresaModificado)) { // ALTERAR ID
-        $empresa = ObterEmpresaLocal(); // ALTERAR ID
+    if (EditarEmpresa($pdo, $_SESSION['id_empresa'], $empresaModificado)) { // ALTERAR ID
+        $empresa = ObterEmpresa($pdo, $_SESSION['id_empresa']); // ALTERAR ID
         echo "<div class='alert alert-success' role='alert'>
             Dados alterados com sucesso
         </div>";
@@ -50,8 +51,7 @@ if ($Validacao == true && ($empresaModificado !== null)) {
     }
     // Se ocurrem erros 
 } else {
-    $empresa = ObterEmpresaLocal();
-}
+    $empresa = ObterEmpresa($pdo, $_SESSION['id_empresa']);
 }
 ?>
 
@@ -67,11 +67,11 @@ if ($Validacao == true && ($empresaModificado !== null)) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
-    <link rel="stylesheet" href="../assets/styles/sitecss.css">
-    <link rel="stylesheet" href="../assets/styles/dashboard.css">
-    <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
+    <link rel="stylesheet" href="/../assets/styles/sitecss.css">
+    <link rel="stylesheet" href="/../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="/../assets/styles/responsive_styles.css">
 </head>
-<body style="min-height:84vh">
+
 <!--Zona do Header -->
 <div id="topHeader" class="container-xxl">
     <!-- Top/Menu da Página -->
@@ -81,19 +81,22 @@ if ($Validacao == true && ($empresaModificado !== null)) {
 
 <!--Zona de Conteudo -->
 <div>
+    <h3><strong>Loja</strong></h3>
+
+
     <!-- Empresa -->
-    <form id="empresa" class="w-75 form_editar" style="margin:auto;min-height: 59.8vh!important;" method="GET">
-        <p class="mt-3 h3 pt-5 fw-bold">Informações</p>
+    <form id="empresa" class="w-75 form_editar" style="margin:auto" method="GET">
+        <p class="mt-5 h3 fw-bold">Informações</p>
 
         <div class="align-items-md-stretch">
             <div>
-                <div class="card pb-0 mb-4">
+                <div class="card pb-0 mb-2">
                     <div class="p-3 d-flex justify-content-between">
                         <h5 class="esquerdo">Informações</h5>
                         <button id="btn_editar" class="btn btn-warning direito" style="width: auto;" type="button"
                             value="Editar">Editar</button>
                     </div>
-                    <div class="card-body pt-0 mb-0 pb-0">
+                    <div class="card-body pt-0 mb-2 pb-0">
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert" role="alert">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -126,6 +129,15 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                             </div>
                             <br>
 
+                            <!--Mapa-->
+                            <div>
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18906.129712753736!2d6.722624160288201!3d60.12672284414915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463e997b1b6fc09d%3A0x6ee05405ec78a692!2sJ%C4%99zyk%20trola!5e0!3m2!1spl!2spl!4v1672239918130!5m2!1spl!2spl"
+                                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+
+                            <hr>&emsp;
 
                             <!-- Telemóvel -->
                             <span>Nº de Telemóvel<span style='color:#ff0000'> *</span></span>
@@ -166,22 +178,6 @@ if ($Validacao == true && ($empresaModificado !== null)) {
                                 </div>
 
                                 <!-- ADICIONAR COMO ESCOLHER Logotipo-->
-                                <div class="my-3">
-                                    <label for="imagem" class="form-label">Imagem:
-                                        <span style='color:#ff0000'> *</span>
-                                    </label>
-                                    <br>
-                                    <input type="file" class="btn btn-light form-control w-50" name="imagem" id="imagem" file=""
-                                        accept="image/*">
-                                    <?php
-                                    if (isset($_SESSION['erroImagem'])) {
-                                        echo "<div class='alert alert-danger' role='alert'>
-                                                    " . $_SESSION['erroImagem'] . "
-                                                </div>";
-                                    unset($_SESSION['erroImagem']);
-                                    }
-                                    ?>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -295,6 +291,7 @@ include __DIR__ . "/includes/footer_business.php";
                         input.setAttribute("readonly", "readonly");
                     });
                     form.method = 'POST';
+                    form.setAttribute("action", "perfil.php");
                 }
             }
         })

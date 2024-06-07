@@ -2,10 +2,6 @@
 <?php
 require_once __DIR__.'/../session.php';
 
-if(isset($_SESSION['authenticated'])){
-  header('Location: ./~ptaw-2024-gr2/dashboard.php');
-}
-
 $email = '';
 if (isset($_COOKIE['remembered_email'])) {
     $email = $_COOKIE['remembered_email'];
@@ -20,13 +16,12 @@ if (isset($_COOKIE['remembered_email'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="../assets/styles/sitecss.css">
-  <title>FoodDashBoas</title>
+  <title>FoodDash</title>
 </head>
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="/~ptaw-2024-gr2/assets/imgs/fooddash%20logo%20image.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
-
+  <img src="../assets/imgs/fooddash.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
   <!-- Formulário de login -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 25vh;">
     <form action="loginValidation.php" method="POST" style="width: 30%;">
@@ -137,7 +132,7 @@ if (isset($_COOKIE['remembered_email'])) {
     }
 
     document.getElementById('logo_fooddash').addEventListener('click', function() {
-      window.location.href = '/~ptaw-2024-gr2/index.php';
+      window.location.href = '../index.php';
     });
 
     $('#error-message-login').toast('show');

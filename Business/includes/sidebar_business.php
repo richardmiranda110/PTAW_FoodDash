@@ -21,10 +21,10 @@ function UrlContains($word){
 <body>
 	<div id="sideBarLeft" class="col-md-2 z-index-n1">
 	<div class="d-flex flex-column" id="sidebar">
-		<ul class="nav nav-pills flex-column mb-auto nav-item-container " style="text-align:left">
+		<ul class="nav nav-pills flex-column mb-auto nav-item-container ">
 			<!-- Home -->
 			<li class="nav-item">
-				<a href="./dashboard_home_page.php" class="nav-link <?php echo UrlContains("dashboard_home_page.php") ? "active" : "" ?>" aria-current="page">
+				<a href="/Business/dashboard_home_page.php" class="nav-link <?php echo UrlContains("dashboard_home_page.php") ? "active" : "" ?>" aria-current="page">
 					<span class="bi bi-house-door-fill">
 						<?php ?>
 						Home
@@ -35,24 +35,16 @@ function UrlContains($word){
 
 			<!-- Loja -->
 			<li>
-				<a href="./empresa_page.php" style="" class="nav-link row <?php echo UrlContains("empresa_page.php") ? "active" : "" ?>">
-					<span class="bi bi-building-fill col">
-						Empresa
-					</span>
-				</a>
-			</li>
-
-			<li>
-				<a href="./estabelecimento_page.php" style="font-size: 0.9418em;" class="nav-link <?php echo UrlContains("estabelecimento_page.php") ? "active" : "" ?>">
+				<a href="/Business/empresa_page.php" class="nav-link <?php echo UrlContains("empresa_page.php") ? "active" : "" ?>">
 					<span class="bi bi-shop">
-						Estabelecimento
+						Loja
 					</span>
 				</a>
 			</li>
 
 			<!-- Pedidos -->
 			<li>
-				<a href="./listapedidos.php" class="nav-link <?php echo UrlContains("listapedidos.php") ? "active" : "" ?>">
+				<a href="/Business/listapedidos.php" class="nav-link <?php echo UrlContains("listapedidos.php") ? "active" : "" ?>">
 					<span class="bi-card-list"></span>
 					<span class="bi has-text-grey">
 						Pedidos
@@ -62,7 +54,7 @@ function UrlContains($word){
 
 						<!-- Menu -->
 			<li>
-				<a href="./dashboard_lista_items.php" class="nav-link <?php echo UrlContains("dashboard_lista") ? "active" : "" ?>">
+				<a href="/Business/dashboard_lista_items.php" class="nav-link <?php echo UrlContains("dashboard_lista") ? "active" : "" ?>">
 					<span class="bi bi-list-task"></span>
 					<span class="bi has-text-grey">
 						Menu
@@ -72,7 +64,7 @@ function UrlContains($word){
 
 			<!-- Performance -->
 			<li>
-				<a href="./performance.php" class="nav-link <?php echo UrlContains("performance.php") ? "active" : "" ?>">
+				<a href="/Business/performance.php" class="nav-link <?php echo UrlContains("performance.php") ? "active" : "" ?>">
 					<span class="bi-graph-up"></span>
 					<span class="bi has-text-grey">
 						Performance
@@ -82,7 +74,7 @@ function UrlContains($word){
 
 			<!-- Avaliações -->
 			<li>
-				<a href="./avaliacoes.php" class="nav-link <?php echo UrlContains("avaliacoes.php") ? "active" : "" ?>">
+				<a href="/Business/avaliacoes.php" class="nav-link <?php echo UrlContains("avaliacoes.php") ? "active" : "" ?>">
 					<span class="bi bi-bookmark-star-fill"></span>
 					<span class="bi has-text-grey">
 						Avaliações

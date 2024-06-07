@@ -145,11 +145,10 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
     classificacao INTEGER CHECK (
         classificacao BETWEEN 1 AND 5
     ),
-    /* autor VARCHAR(100), */
     data DATE DEFAULT NOW(),
     descricao TEXT,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
-    id_empresa INTEGER REFERENCES Emmpresas(id_empresa) ON DELETE CASCADE NOT NULL
+    id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 -- Tabelas de Associação
 -- Tabela Pedido_Item
@@ -157,7 +156,7 @@ CREATE TABLE IF NOT EXISTS Pedido_Itens (
     id_pedido_item SERIAL PRIMARY KEY,
     id_pedido INTEGER REFERENCES Pedidos(id_pedido) ON DELETE CASCADE NOT NULL,
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
-    id_menu INTEGER REFERENCES menus(id_menu) ON DELETE CASCADE NOT NULL,
+    id_menu INTEGER REFERENCES menus(id_menu) ON DELETE CASCADE,
     quantidade INTEGER DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS Pedido_Item_Opcoes (
@@ -196,13 +195,13 @@ ADD CONSTRAINT check_estado_valido CHECK (
         )
     );
 /* ###### TRIGGERS ###### */
--- trigger para verificar se já existe uma avaliação do mesmo cliente para o mesmo estabelecimento, porque um cliente só pode avaliar um estabelecimento uma vez
+-- trigger para verificar se já existe uma avaliação do mesmo cliente para a mesma empresa, porque um cliente só pode avaliar uma empresa uma vez
 CREATE OR REPLACE FUNCTION verificar_avaliacao_duplicada() RETURNS TRIGGER AS $$ BEGIN IF EXISTS (
         SELECT 1
         FROM Avaliacoes
         WHERE id_cliente = NEW.id_cliente
-            AND id_estabelecimento = NEW.id_estabelecimento
-    ) THEN RAISE EXCEPTION 'Cliente já avaliou este estabelecimento.';
+            AND id_empresa = NEW.id_empresa
+    ) THEN RAISE EXCEPTION 'Cliente já avaliou esta empresa.';
 END IF;
 RETURN NEW;
 END;

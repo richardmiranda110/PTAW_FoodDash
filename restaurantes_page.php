@@ -72,32 +72,32 @@
 			(select sum(classificacao)/count(classificacao) from avaliacoes 
 			 where avaliacoes.id_empresa=empresas.id_empresa)
 			,0) as avaliacao
-		from empresas inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa ";
-		
+		from empresas inner join estabelecimentos on estabelecimentos.id_empresa = empresas.id_empresa
+		";
 
 		$params = [];
 		$conditions = [];
 
 		if ($_SERVER["REQUEST_METHOD"] == "GET") {
 			if (!empty($_GET["restaurante"])) {
-				$conditions[] = "lower(empresas.nome) LIKE ?";
+				$conditions[] = " lower(empresas.nome) LIKE ?";
 				$params[] = "%" . strtolower($_GET['restaurante']) . "%";
 			}
 			if (!empty($_GET["categoria"])) {
-				$conditions[] = "lower(replace(tipo,' ','')) = ?";
+				$conditions[] = " lower(replace(tipo,' ','')) = ?";
 				$params[] = $_GET['categoria'];
 			}
 		}
 
 		if (count($conditions) > 0) {
 			$query .= " WHERE " . implode(" AND ", $conditions);
+			$query .= " group by empresas.id_empresa, empresas.nome, empresas.morada, empresas.telemovel";
 		}
-		
-		$query .= " group by empresas.id_empresa, empresas.nome, empresas.morada, empresas.telemovel";
 
 		// Contar total de registros para a paginação
 		$total_query = "SELECT COUNT(*) FROM ($query) AS subquery";
 		$stmt = $pdo->prepare($total_query);
+
 		$stmt->execute($params);
 		$nRegistos = $stmt->fetchColumn();
 		$totalPages = ceil($nRegistos / $itemPorPagina);

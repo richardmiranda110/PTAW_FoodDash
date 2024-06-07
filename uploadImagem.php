@@ -1,6 +1,6 @@
 <?php
 // diretorio a colocar a imagem
-$target_dir = '/home/ptaw-2024-gr2/public_html';
+$target_dir = ".";
 // colocar em letras pequenas
 $imageFileType = strtolower(pathinfo($_FILES["imagem"]["name"], PATHINFO_EXTENSION));
 // colocar data á frente
@@ -31,17 +31,14 @@ if (file_exists($target_file)) {
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
-    ini_set("display_errors", "1");
-    error_reporting(E_ALL);
     // move o ficheiro para o lugar certo
     $moveOperationSuccess = move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file);
-
     if ($moveOperationSuccess == false) {
-        $_SESSION['erroImagem'] = "Ocorreu um erro a carregar o ficheiro.  ".  $_FILES["imagem"]["tmp_name"];
-        ini_set("display_errors", "1");
-        error_reporting(E_ALL);
+        $_SESSION['erroImagem'] = "Ocorreu um erro a carregar o ficheiro.";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
-    // coloca o link numa variavel
-    $caminhoArquivo = basename($target_file);
 }
+
+// coloca o link numa variavel
+$caminhoArquivo = basename($target_file);
