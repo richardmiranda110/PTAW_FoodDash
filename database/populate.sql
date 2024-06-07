@@ -50,6 +50,13 @@ INSERT INTO Itens (nome, preco, descricao, disponivel, foto, itemSozinho, person
 ('Sushis de Todos os Tipos', 14.99, 'Uma embalagem de sushis aleatórios.', TRUE, 'random_sushi.jpg', TRUE, FALSE, 7, 3),
 ('Bucket of Hot Chicken Wings', 10.00, 'Balde de asas de frango picantes HOT HOT HOT', TRUE, 'wings_bucket.jpg', TRUE, FALSE, 8, 5);
 
+/* INSERT INTO Personalizacoes (nome, id_item) VALUES 
+('Bebida', 1),
+('Acompanhamento', 1),
+('Bebida', 4),
+('Acompanhamento', 4),
+('Extras', 5); */
+
 INSERT INTO Opcoes (nome, preco, id_item) VALUES 
 ('Gelo', 0, 1), 
 ('Sal', 0, 2),
@@ -97,7 +104,7 @@ INSERT INTO Pedido_Item_Opcoes (id_pedido_item, id_opcao, quantidade) VALUES
 (7, 7, 0),
 (7, 7, 1);
 
-INSERT INTO Avaliacoes (classificacao, descricao, id_cliente, id_empresa) VALUES 
+INSERT INTO Avaliacoes (classificacao, descricao, id_cliente, id_estabelecimento) VALUES 
 (5, 'Excelente serviço e comida deliciosa.', 1, 1),
 (4, 'Ambiente agradável e atendimento bom.', 2, 1),
 (3, 'Comida boa, mas o atendimento pode melhorar.', 3, 1),
@@ -112,27 +119,43 @@ INSERT INTO Avaliacoes (classificacao, descricao, id_cliente, id_empresa) VALUES
 (5, 'Ambiente aconchegante e atendimento muito bom. Uma noite para lembrar!', 3, 4),
 (3, 'A comida era boa, mas o atendimento deixou a desejar. Pode melhorar.', 1, 5),
 (3, 'O lugar é lindo, mas a comida estava fria. Fiquei desapontada.', 2, 5),
-(1, 'Que decepção! O serviço foi péssimo e a comida não estava boa. Não recomendo.', 3, 5);
+(1, 'Que decepção! O serviço foi péssimo e a comida não estava boa. Não recomendo.', 3, 5),
+(5, 'Simplesmente maravilhoso! Adorei cada detalhe e com certeza voltarei!', 1, 1),
+(4, 'A comida estava decente.', 2, 1),
+(5, 'Ótimo custo-benefício e o atendimento foi rápido e eficiente. Vale a pena!', 3, 1),
+(2, 'Esperava mais pelo preço que paguei. Foi um pouco decepcionante.', 1, 2),
+(1, 'Mau serviço e comida abaixo do esperado.', 2, 2),
+(4, 'Ótimo custo-benefício.', 3, 2),
+(5, 'Uma experiência fantástica! A comida estava sublime e o serviço foi impecável.', 1, 3),
+(5, 'Ambiente acolhedor e atendimento excelente. Uma noite inesquecível!', 2, 3),
+(5, 'Simplesmente maravilhoso! Amei cada pormenor e vou voltar com certeza!', 3, 3),
+(5, 'Ótima relação qualidade-preço e o atendimento foi rápido e eficiente.', 1, 4),
+(4, 'A comida estava aceitável, nada de especial, mas o ambiente era agradável.', 2, 4),
+(5, 'Uma noite perfeita, desde a entrada até à sobremesa. Parabéns ao chef!', 3, 4),
+(5, 'O atendimento foi impecável e a comida deliciosa.', 1, 5),
+(3, 'O ambiente é ótimo, mas a comida não me impressionou. Há opções melhores.', 2, 5),
+(4, 'Fiquei satisfeito com a comida.', 3, 5),
+(4, 'A comida estava excelente, mas o serviço foi um pouco lento. Precisa de melhorias.', 1, 2),
+(5, 'Gostei do ambiente e a comida estava deliciosa. Vou recomendar aos meus amigos!', 2, 2),
+(4, 'Serviço amigável e comida saborosa. Uma boa escolha para um jantar descontraído.', 3, 2);
 
 
 
 
 
 /*
-DROP TABLE IF EXISTS 
-action_logger,
+DROP TABLE IF EXISTS action_logger,
 avaliacoes,
+avaliacoesitens,
 categorias,
 clientes,
 empresas,
 entregadores,
 estabelecimentos,
 item_categorias,
-item_menus,
-item_menus_opcoes,
 itens,
-menus,
 opcoes,
 pedido_itens,
 pedido_item_opcoes,
-pedidos CASCADE;*/
+pedidos,
+personalizacoes CASCADE;*/

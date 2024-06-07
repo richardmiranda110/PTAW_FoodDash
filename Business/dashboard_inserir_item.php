@@ -8,14 +8,14 @@ $idEmpresa = $_SESSION['id_estabelecimento'];
 
 if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-    header("Location: /Business/login_register/login_business.php");
+    header("Location: .z/login_register/login_business.php");
     exit();
 }
 $update = false;
 
-set_error_handler(function() {
-  exit("invalid item id!!");
-});
+// set_error_handler(function() {
+//   exit("invalid item id!!");
+// });
 
 
 if(isset($_GET['itemid'])){
@@ -28,7 +28,7 @@ if(isset($_GET['itemid'])){
   c.nome as categoria, 
   c.id_categoria as id_categoria
   FROM public.itens item 
-  FULL JOIN categorias c 
+   JOIN categorias c 
   ON item.id_categoria = c.id_categoria
   where item.id_item = ? and item.id_estabelecimento = ".$_SESSION['id_estabelecimento']."";
 
@@ -36,7 +36,7 @@ if(isset($_GET['itemid'])){
   $stmt->execute([$_GET['itemid']]);
   $item = $stmt->fetch(PDO::FETCH_ASSOC);
 
-  $type = "item";
+  $type = trim('item');
   if( $item["personalizacoesativas"] ){
     $type = $type.'-personalizado';
   }
@@ -89,6 +89,7 @@ if(isset($_GET['itemid'])){
   }
 
 if(isset($item)){
+  echo $item['id_categoria'];
   $final_item = array(
     "id" => (isset($item["id_item"]) ? $item["id_item"] : $item["id_menu"] ),
     "tipo" => $type,
@@ -118,7 +119,7 @@ if(isset($item)){
   <link rel="stylesheet" href="../assets/styles/sitecss.css">
   <link rel="stylesheet" href="../assets/styles/dashboard.css">
   <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
-  <link rel="stylesheet" href="../Business/assets/styles/adicionar.css">
+  <link rel="stylesheet" href="./assets/styles/adicionar.css">
   <script src="../assets/js/dable.js"></script>
   <script>
     var idEmpresa = <?php echo $idEmpresa ?>;
@@ -275,10 +276,10 @@ if(isset($item)){
   </main>
 
   <footer class="container">
-    <?php include __DIR__."/includes/footer_business.php"; ?>
+    <?php include "./includes/footer_business.php"; ?>
   </footer>
 
-  <script src="./assets/js/adicionar_pedido.js"></script>
+  <script src="./assets/js/inserir_item.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

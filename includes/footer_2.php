@@ -16,15 +16,15 @@
 
 <script>
   document.getElementById('logo_fooddash_f2').addEventListener('click', function() {
-    window.location.href = '../index.php';
+    window.location.href = '/~ptaw-2024-gr2/index.php';
   });
   document.getElementById('home_btn_f2').addEventListener('click', function() {
-    window.location.href = '../index.php';
+    window.location.href = '/~ptaw-2024-gr2/index.php';
   });
   document.getElementById('restaurantes_btn_f2').addEventListener('click', function() {
-    window.location.href = '../restaurantes_page.php';
+    window.location.href = '/~ptaw-2024-gr2/restaurantes_page.php';
   });
   document.getElementById('btn_business_f2').addEventListener('click', function() {
-    window.location.href = '../Business/home_page.php';
+    window.location.href = '/~ptaw-2024-gr2/Business/home_page.php';
   });
 </script>

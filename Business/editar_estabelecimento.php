@@ -13,8 +13,14 @@ if (!isset($_SESSION['id_estabelecimento'])) {
 $id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])) {
-        require_once '../uploadImagem.php';
+    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega'])) {
+        
+    require_once '../uploadImagem.php';
+
+
+// coloca o link numa variavel
+$caminhoArquivo = basename($target_file);
+
 
         $estabelecimentoModificado = array(
             'nome' => htmlspecialchars(trim($_POST['nome'])),
@@ -26,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
 
         if ($estabelecimentoModificado !== null) {
-            if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
-                $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
+            if (EditarEstabelecimento($id_estabelecimento, $estabelecimentoModificado)) {
+                $estabelecimento = ObterEstabelecimento($id_estabelecimento);
                 $alertMessage = "<div class='alert alert-success' role='alert' style='margin-top: 6vh;'>
                     Dados alterados com sucesso
                 </div>";
@@ -40,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
+$estabelecimento = ObterEstabelecimento($id_estabelecimento);
 
 // Função para gerar a mensagem de retorno
 function getMsgImagem($status, $message)
@@ -174,7 +180,7 @@ function getMsgImagem($status, $message)
                                 </div>
                                 <br><br><br>
                                 <!-- Imagem -->
-                                <img src="<?php echo $estabelecimento['imagem']; ?>"
+                                <img src= "../<?php echo $estabelecimento['imagem']; ?>"
                                     alt="<?php echo $estabelecimento['nome']; ?>" width="200" height="300">
                                 <label for="imagem" class="form-label">Enviar Imagem:</label>
                                 <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""

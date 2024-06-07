@@ -126,7 +126,7 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
 
         <div class="row">
             <div class="col-md-3">
-                <div class="m-5">
+                <div class="m-5 ml-1">
                     <h2 class="text-xl font-semibold mb-4">Ações Rápidas</h2>
                     <div class="list-group list-group-flush">
                         <!-- Ver todo o estabelecimento -->
@@ -167,22 +167,23 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
                 <div class="bg-white p-6 rounded-lg shadow-md flex flex-col space-y-6">
                     <!-- Gráfico -->
                     <div class="m-5">
-                        <div class="flex justify-between items-center mb-4">
+                        <div class="flex justify-between items-center mb-0">
                             <h2 class="text-xl font-semibold">Vendas</h2>
-                            <div class="flex space-x-2">
-                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-3 py-1 text-sm">
-                                    Month
-                                </button>
-                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-3 py-1 text-sm">
-                                    Week
-                                </button>
-                            </div>
                         </div>
+                        <style>
+                            .chart {
+                                max-width:68%; 
+                                min-height: 450px;
+                            }
+                            .row {
+                                margin:0 !important;
+                            }
+                        </style>
 
                         <div class="w-full h-[300px]">
                             <div style="width:100%;height:100%">
                                 <div style="position: relative;">
-                                    <canvas id="vendasChart"></canvas>
+                                    <canvas id="vendasChart" class="chart"></canvas>
                                     <!--<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="300" role="application">
                                         <rect width="1050" height="300" fill="transparent"></rect>
                                         <g transform="translate(40,10)">
@@ -336,7 +337,7 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
     </div>
     <!--Fim do conteúdo de página-->
     <?php
-    include __DIR__ . "/includes/footer_business.php";
+    include __DIR__ . "./includes/footer_business.php";
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

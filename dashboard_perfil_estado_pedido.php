@@ -4,47 +4,42 @@ require_once __DIR__.'/database/credentials.php';
 require_once __DIR__.'/database/db_connection.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
-  $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
   header("Location: /index.php");
   exit();
 }
 
 $PEDIDO_ID = $_GET['id'];
 
-$query = "SELECT clientes.morada as morada,clientes.nome as cliente,pedido.id_pedido as id, pedido.data as data, pedido.estado as estado, pedido.cancelado, pedido.precototal, pedido.id_cliente as id_cliente, pedido.id_entregador, id_estabelecimento
+$query = "SELECT clientes.morada as morada,clientes.nome as cliente,pedido.id_pedido as id, pedido.data as data, pedido.estado as estado, pedido.cancelado, pedido.precototal, pedido.id_cliente, pedido.id_entregador, id_estabelecimento
 FROM pedidos pedido 
-FULL JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
+INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
 INNER JOIN CLIENTES ON pedido.ID_CLIENTE = CLIENTES.ID_CLIENTE
-WHERE pedido.id_pedido = ? and pedido.id_cliente = ?;";
+WHERE pedido.id_pedido = ?;";
 
 try {
 $stmt = $pdo->prepare($query);
-$stmt->execute([$PEDIDO_ID,$_SESSION['id_cliente']]);
+$stmt->execute([$PEDIDO_ID]);
 $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
 echo "Erro na conexão: " . $e->getMessage();
 }
 
-$query = "SELECT item.nome as nome,pi.quantidade as qtd, pedido.id_cliente as id_cliente
+$query = "SELECT item.nome as nome,pi.quantidade as qtd
 FROM public.pedido_itens 
 inner join itens item on pedido_itens.id_item = item.id_item
 inner join pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
 INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido
-WHERE pedido.id_pedido = ? and pedido.id_cliente = ?";
+WHERE pedido.id_pedido = ?";
 
 try {
 $stmts = $pdo->prepare($query);
-$stmt->execute([$PEDIDO_ID,$_SESSION['id_cliente']]);
+$stmt->execute([$PEDIDO_ID]);
+$stmts->execute();
 $items = $stmts->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
 echo "Erro na conexão: " . $e->getMessage();
 }
-
 $item_arr = array();
-
-if($stmt->rowCount() == 0){
-  exit("not found!");
-}
 
 foreach($items as &$item){
   $result = $item['nome'].' ('.$item['qtd'].'x)';
@@ -53,8 +48,11 @@ foreach($items as &$item){
 
 $result = implode(' + ',$item_arr);
 
-echo $pedido['id_cliente'];
+echo $result;
 
+// if($pedido['id_cliente'] != $_SESSION['id_cliente']){
+//   header("Location: /index.php");
+// }
 ?>
 
 <!doctype html>
@@ -66,7 +64,6 @@ echo $pedido['id_cliente'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/styles/sitecss.css">
 	<link rel="stylesheet" href="assets/styles/dashboard.css">
-  <link rel="stylesheet" href="./Business/assets/styles/pedido_page.css" />
 
   </head>
   <body>
@@ -83,23 +80,20 @@ echo $pedido['id_cliente'];
 
     <!--Zona de Conteudo da Página -->
     <div id="contentDiv" class="col-md-10">
-      <div class="container ps-3 py-3  mt-0 pt-0" style="min-height: 77vh;">
-
-        <div class="container pt-0 mt-0">
-                <div class="row border my-3 mt-0 py-2 ">
+      <div class="container ps-3 py-3">
+        <div class="row">
+        <h1 class="text title">Pedidos</h1>
+            <p class="text subtitle">Esta é a tua página de pedidos. Aqui podes ver o teu histórico de pedidos feitos, ver o estado dos pedidos, etc.</p>
+        </div>
+        <div class="container ">
+                <div class="row border my-3 py-2">
                   <div class="col-sm-1 fs-1 ">
                   <a href="dashboard_perfil_pedidos.php">
                       <i style="cursor:pointer;" class="bi bi-arrow-left-short border border-2 rounded bg-light"></i>
                   </a>
                   </div>
                   <div class=" rounded-left rounded-right align-self-center py-2 fs-6" style="margin-left:3vw">
-                      <p class="title display-6 fw-bold"><span><?php echo 'Pedido #'.$pedido['id'].', '.$pedido['cliente']?></span> em <span>
-                        <?php
-                                      $time = strtotime($pedido['data']);
-                                      $date = date('j F',$time);
-                                      $time = date('g:i',$time);  
-                        echo $date.' ás '. $time;
-                        ?></span></p>
+                      <p class="title display-6 fw-bold"><span><?php echo 'Pedido #'.$pedido['id'].', '.$pedido['cliente']?></span> em <span><?php echo $pedido['data'] ?></span></p>
                       <p class="text"><?php echo $result ?></p>
                       <p class="text">Status do pedido: <span><?php echo $pedido['estado'] ?></span></p>
                       <p class="text">Morada: <span><?php echo $pedido['morada'] ?></span></p>
@@ -108,82 +102,28 @@ echo $pedido['id_cliente'];
                   <div class="container mt-5 mx-4 px-5 ">
                     <div class="d-flex justify-content-center align-items-center">
 
-                    <?php
-                switch ($pedido['estado']) {
-                    case 'EFETUADO':
-                        $step1 = 'active';
-                        $step2 = '';
-                        $step3 = '';
-                        $step4 = '';
-                        $width = '3%';
-                        break;
-                    case 'EM PREPARACAO':
-                        $step1 = 'active';
-                        $step2 = 'active';
-                        $step3 = '';
-                        $step4 = '';
-                        $width = '33%';
-                        break;
-                    case 'A CAMINHO':
-                        $step1 = 'active';
-                        $step2 = 'active';
-                        $step3 = 'active';
-                        $step4 = '';
-                        $width = '66%';
-                        break;
-                    case 'FINALIZADO':
-                    case 'ENTREGUE':
-                        $step1 = 'active';
-                        $step2 = 'active';
-                        $step3 = 'active';
-                        $step4 = 'active';
-                        $width = '100%';
-                        break;
-                    default:
-                        exit('Algo de errado aconteceu');
-                }
-                ?>
-
-                <div class="process-wrapper mb-3 w-100">
-                    <div id="progress-bar-container">
-                        <ul>
-                            <li class="step step01 <?php echo $step1 ?>">
-                                <div class="step-inner <?php echo $step1 ?>">PEDIDO EFETUADO</div>
-                            </li>
-                            <li class="step step02 <?php echo $step2 ?>">
-                                <div class="step-inner <?php echo $step2 ?>">PREPARAÇÃO</div>
-                            </li>
-                            <li class="step step03 <?php echo $step3 ?>">
-                                <div class="step-inner <?php echo $step3 ?>">VIAGEM ATÉ DESTINO</div>
-                            </li>
-                            <li class="step step04 <?php echo $step4 ?>">
-                                <div class="step-inner <?php echo $step4 ?>">ENTREGUE</div>
-                            </li>
-                        </ul>
-                        <div id="line">
-                            <div id="line-progress" style="width:<?php echo $width ?>;"></div>
-                        </div>
+                        <div class="circle ">1</div>
+                        <div class="line flex-grow-1 <?php echo (($pedido['estado'] == 'EFETUADO') == 1 ? "gradient-line" : "") ?>"></div>
+                        <div class="circle <?php echo (($pedido['estado'] == 'EFETUADO') == 1 ? "black-circle text-light" : "") ?>" >2</div>
+                        <div class="line flex-grow-1 <?php echo ($pedido['estado'] == 'EM PREPARACAO' ? " gradient-line" : "") ?>"></div>
+                        <div class="circle <?php echo ($pedido['estado'] == 'EM PREPARACAO' ? "black-circle" : "") ?>">3</div>
+                        <div class="line flex-grow-1 <?php echo ($pedido['estado'] == 'A CAMINHO' ? " gradient-line" : "") ?>"></div>
+                        <div class="circle <?php echo ($pedido['estado'] == 'A CAMINHO' ? "black-circle text-light" : "") ?>">4</div>
+                        <div class="line flex-grow-1 <?php echo ($pedido['estado'] == 'FINALIZADO' ? " gradient-line" : "") ?>"></div>
+                        <div style="margin-right:5vw;" class="circle <?php echo ($pedido['estado'] == 'FINALIZADO' ? "black-circle text-light" : "") ?>">5</div>
                     </div>
-                    <div id="progress-content-section">
-                        <div class="section-content efetuacao-pedido <?php echo $pedido['estado'] == 'EFETUADO' ? 'active' : '' ?>">
-                            <h2>Efetuação do Pedido</h2>
-                            <p>O pedido foi efetuado.</p>
-                        </div>
-                        <div class="section-content preparacao  <?php echo $pedido['estado'] == 'EM PREPARACAO' ? 'active' : '' ?>">
-                            <h2>Preparação</h2>
-                            <p>O pedido está em fase de preparação. Assim que o pedido estiver pronto para entrega dê-o ao seu entregador e carregue no botão abaixo para iniciar a fase entrega.</p>
-                        </div>
-                        <div class="section-content viagem <?php echo $pedido['estado'] == 'A CAMINHO' ? 'active' : '' ?>">
-                            <h2>Viagem até ao Destino</h2>
-                            <p>O pedido está a caminho do seu cliente.</p>
-                        </div>
-                        <div class="section-content entregue <?php echo $pedido['estado'] == 'ENTREGUE' ? 'active' : '' ?>">
-                            <h2>Entregue</h2>
-                            <p>O pedido foi entregue com sucesso. Parabéns. Muito obrigado.</p>
-                        </div>
-                    </div>
+                    <div class="d-flex justify-content-left align-items-left mb-4">
+                      <div class="roadmap-item ten-percent-to-left align-items-top text-center"><span>Efetuação<br> do Pedido</span></div>
+                      <div class="roadmap-item flex-grow-1"></div>
+                      <div class="roadmap-item align-items-top text-center"><span>Recebimento<br> do Pedido</span></div>
+                      <div class="roadmap-item flex-grow-1"></div>
+                      <div class="roadmap-item ten-percent-to-left align-items-top text-center"><span>Em Preparação</span></div>
+                      <div class="roadmap-item flex-grow-1"></div>
+                      <div class="roadmap-item ten-percent-to-left align-items-top text-center"><span>Viagem Até<br> Sua Casa</span></div>
+                      <div class="roadmap-item flex-grow-1"></div>
+                      <div style="margin-right:5vw;" class="roadmap-item ten-percent-to-right align-items-top text-center"><span>Entregue</span></div>
+                  </div>
                 </div>
-
         </div>
     </div>
   </div>

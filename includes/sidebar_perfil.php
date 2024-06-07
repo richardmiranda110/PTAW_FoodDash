@@ -13,31 +13,27 @@
 
 <body>
 	<?php
-	function UrlContains($word){
-		return str_contains($_SERVER['REQUEST_URI'],$word);
-	}
-	
 	?>
 	<div id="sideBarLeft" class="col-md-2 z-index-n1">
 		<div class="d-flex flex-column" id="sidebar">
 			<ul class="nav nav-pills flex-column mb-auto nav-item-container ">
 				<li class="nav-item">
-					<a href="dashboard.php" class="nav-link <?php echo UrlContains("dashboard.php") ? "active" : "" ?>" aria-current="page">
+					<a href="dashboard.php" class="nav-link active" aria-current="page">
 						<span class="bi bi-speedometer">Dashboard</span>
 					</a>
 				</li>
 				<li>
-					<a href="perfil.php" class="nav-link <?php echo UrlContains("perfil.php") ? "active" : "" ?>">
+					<a href="perfil.php" class="nav-link">
 						<span class="bi-person-vcard"></span><span class="bi has-text-grey">Perfil de Utilizador</span>
 					</a>
 				</li>
 				<li>
-					<a href="dashboard_perfil_pedidos.php" class="nav-link <?php echo UrlContains("pedido") ? "active" : "" ?>">
+					<a href="./~ptaw-2024-gr2/dashboard_perfil_pedidos.php" class="nav-link">
 						<span class="bi-card-list"></span><span class="bi has-text-grey">Pedidos</span>
 					</a>
 				</li>
 				<li>
-					<a href="dashboard_perfil_estatisticas.php" class="nav-link <?php echo UrlContains("dashboard_perfil_estatisticas.php") ? "active" : "" ?>">
+					<a href="dashboard_perfil_estatisticas.php" class="nav-link">
 						<span class="bi-graph-up"></span><span class="bi has-text-grey">Estatísticas</span>
 					</a>
 				</li>

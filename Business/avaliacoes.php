@@ -17,7 +17,7 @@ $idEmpresa = $_SESSION['id_empresa'];
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FoodDash Business</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../business/styles/adicionar.css">
     <link rel="stylesheet" href="../../assets/styles/sitecss.css">
     <link rel="stylesheet" href="../../assets/styles/dashboard.css">
@@ -28,12 +28,13 @@ $idEmpresa = $_SESSION['id_empresa'];
 <body>
 
     <?php
-    require_once "./../database/db_connection.php";
+    require_once "../database/db_connection.php";
     ?>
 
     <!--Zona do Header -->
 
-    <div class="container mt-5">
+    <div class="container mt-5 bi bi-arrow-left">
+        
         <div class="card p-4">
             <h1>Avaliações</h1>
             <div class="d-flex justify-content-center">

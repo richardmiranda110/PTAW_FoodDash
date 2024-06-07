@@ -1,32 +1,28 @@
 <?php
-require_once __DIR__ . '/includes/session.php';
+require_once './includes/session.php';
 
-include __DIR__ . "/../database/empresa_estabelecimento.php";
-include __DIR__ . "/../database/credentials.php";
-include __DIR__ . "/../database/db_connection.php";
+include  "../database/empresa_estabelecimento.php";
+include  "./database/credentials.php";
+include  "./database/db_connection.php";
 
-$id_estabelecimento = $_POST['id_estabelecimento'] ?? null;
+// if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+//     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+//     header("Location: ./Business/login_register/login_business.php");
+//     exit();
+// }
 
-$id_empresa = $_SESSION['id_empresa'] ?? $_GET['id_empresa'] ?? null;
+$id_estabelecimento = $_POST['id_estabelecimento'];
 
-if (!$id_empresa) {
-    echo "No company ID provided!";
-    exit();
-}
-
-$estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
+// $estabelecimentos = ObterEstabelecimentosEmpresaLocal();
 
 // Se não ocorreram erros de validação, atualizar o utilizador
 if ($id_estabelecimento !== null) {
     // Editar o usuário no banco de dados
-    if (ApagarEstabelecimento($pdo, $id_estabelecimento)) {
-        $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
+    if (ApagarEstabelecimento($id_estabelecimento)) {
         echo "<script>alert('Estabelecimento apagado com sucesso!');</script>";
     } else {
         echo "<script>alert('Erro ao apagar o estabelecimento.');</script>";
     }
-} else {
-$estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 }
 ?>
 
@@ -66,8 +62,8 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 <!--Zona do Header -->
 <div id="topHeader" class="container-xxl">
     <!-- Top/Menu da Página -->
-    <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
-    <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
+    <?php include "./includes/header_business_logged.php"; ?>
+    <?php include "./includes/sidebar_business.php"; ?>
 </div>
 
 <!--Zona de Conteudo -->
@@ -139,7 +135,7 @@ $estabelecimentos = ObterEstabelecimentosPorEmpresa($pdo, $id_empresa);
 <!--Fim do conteúdo de página-->
 <br><br><br><br><br><br>
 <!-- Footer-->
-<?php include __DIR__ . "/../includes/footer_2.php"; ?>
+<?php require_once "./includes/footer_2.php"; ?>
 </body>
 <script>
     document.querySelectorAll('.apagar_btn').forEach(function(button) {

@@ -28,24 +28,24 @@
 
 <script>
   document.getElementById('logo_fooddash').addEventListener('click', function() {
-    window.location.href = 'index.php';
+    window.location.href = '/~ptaw-2024-gr2/index.php';
   });
   document.getElementById('home_btn').addEventListener('click', function() {
-    window.location.href = 'index.php';
+    window.location.href = '/~ptaw-2024-gr2/index.php';
   });
   document.getElementById('restaurantes_btn').addEventListener('click', function() {
-    window.location.href = 'restaurantes_page.php';
+    window.location.href = '/~ptaw-2024-gr2/restaurantes_page.php';
   });
   document.getElementById('btn_login_footer').addEventListener('click', function() {
-    window.location.href = 'login_register/login.php';
+    window.location.href = '/~ptaw-2024-gr2/login_register/login.php';
   });
   document.getElementById('btn_register_footer').addEventListener('click', function() {
-    window.location.href = 'login_register/register.php';
+    window.location.href = '/~ptaw-2024-gr2/login_register/register.php';
   });
   document.getElementById('btn_our_story_footer').addEventListener('click', function() {
-    window.location.href = 'our_story.php';
+    window.location.href = '/~ptaw-2024-gr2/our_story.php';
   });
   document.getElementById('btn_team_footer').addEventListener('click', function() {
-    window.location.href = 'team.php';
+    window.location.href = '/~ptaw-2024-gr2/team.php';
   });
 </script>

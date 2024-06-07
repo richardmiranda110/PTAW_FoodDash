@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/includes/session.php';
+require_once __DIR__ . './includes/session.php';
 
-include __DIR__ . "/../database/empresa_estabelecimento.php";
-include __DIR__ . "/../database/credentials.php";
-include __DIR__ . "/../database/db_connection.php";
+include __DIR__ . "../database/empresa_estabelecimento.php";
+include __DIR__ . "../database/credentials.php";
+include __DIR__ . "../database/db_connection.php";
 
 $Validacao = True;
 $estabelecimento = null;
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Se não ocorreram erros de validação, inserir o produto
         if ($Validacao == true) {
-            if (AdicionarEstabelecimento($pdo, $_SESSION['id_empresa'], $estabelecimento)) {
+            if (AdicionarEstabelecimento($estabelecimento)) {
                 // Se for adicionado corretamente há base de dados,
                 // reencaminha para estabelecimento_page.php
                 header("Location: estabelecimento_page.php");
@@ -63,20 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Formulárop do Estabelecimento -->
     <form id="estabelecimento" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="w-75 form_editar" style="margin:auto"
         method="POST" enctype="multipart/form-data">
-        <p class="h4 pt-4">Informações</p>
+        <p class="h4 pt-3">Informações</p>
 
         <div class="align-items-md-stretch">
             <div>
-                <div class="card pb-2">
+                <div class="card pb-2 mb-5 mt-2">
                     <div class="p-3 d-flex justify-content-between">
                         <p class="h5">Informações Pessoais</p>
                         <div>
                             <a href="estabelecimento_page.php" class="btn btn-light justify-content-end">Voltar</a>
                             <button id="btn_guardar" class="btn btn-success direito" style="width: auto;" type="submit"
-                                value="Guardar">Guardar</button>
+                                value="Guardar">Adicionar</button>
                         </div>
                     </div>
-                    <div class="card-body pt-0 pb-1  ">
+                    <div class="card-body pt-0 pb-0 ">
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert p-0" role="alert">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -111,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <?php } ?>
                         </div>
 
-                        <hr class="m-1"><br><br>
                         <div class="row">
                             <!-- Telemóvel -->
                             <div class="col-md-4">
@@ -143,11 +142,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php } ?>
                                 </div>
                             </div>
-                            <br>
+
 
                             <!-- tempo_medio_entrega -->
-                            <div class="col-md-4">
-                                <div class="input-group flex-nowrap">
+                            <div class="">
+                                <div class="input-group flex-nowrap my-3">
                                     <label for="appt-time">Escolha o tempo médio de entrega: <span
                                             style='color:#ff0000'>
                                             *</span>
@@ -162,13 +161,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                     </div>
-                    <br><br>
                     <!-- Imagem -->
-                    <div>
+                    <div class="mx-3">
                         <label for="imagem" class="form-label">Enviar Imagem:
                             <span style='color:#ff0000'> *</span>
                         </label>
-                        <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
+                        <br>
+                        <input type="file" class="btn btn-light form-control w-50" name="imagem" id="imagem" file=""
                             accept="image/*">
                         <?php
                         if (isset($_SESSION['erroImagem'])) {
@@ -184,7 +183,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
 </div>
 </form>
-<br><br>
 </div>
 <!--Fim do conteúdo de página-->
 <?php
