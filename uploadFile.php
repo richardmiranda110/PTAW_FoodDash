@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 }
 
 // define variaveis 
-$target_dir = ".";
+$target_dir = "/home/ptaw-2024-gr2/public_html";
 // coloca o nome do ficheiro em minusculas
 $imageFileType = strtolower(pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION));
 $currentTimestamp = str_replace(" ", "",date("D M j G")); 
@@ -51,9 +51,11 @@ if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpe
 $moveOperationSuccess = move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file);
 // se não foi possivel mover o ficheiro
 if ($moveOperationSuccess == false) {
-    $message = "Ocorreu um erro a carregar o ficheiro.";
-    echo json_encode(getReturnMessage($status,$message));
-    exit(5);
+    ini_set("display_errors", "1");
+    error_reporting(E_ALL);
+    // $message = "Ocorreu um erro a carregar o ficheiro.";
+    // echo json_encode(getReturnMessage($status,$message));
+    // exit(5);
 }
 
 $status = "success";

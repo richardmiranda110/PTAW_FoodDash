@@ -1,6 +1,7 @@
 <?php
-function criarConta($pdo, $nome, $email, $morada, $telemovel, $password)
+function criarConta($nome, $email, $morada, $telemovel, $password)
 {
+    global $pdo;
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $sql = "INSERT INTO Clientes (nome, apelido, email, telemovel, morada, password)
         VALUES (?, ?, ?, ?, ?, ?)";
@@ -8,11 +9,10 @@ function criarConta($pdo, $nome, $email, $morada, $telemovel, $password)
     $stmt->execute([$nome, $email, $morada, $telemovel, $hash]);
 }
 
-function ObterUmUtilizador($pdo, $ID)
+function ObterUtilizadorLocal()
 {
-    if($ID != $_SESSION['id_cliente']){
-        exit("You cant edit other people's Data!");
-    }
+    global $pdo;
+    $ID = $_SESSION['id_cliente'];
 
     try {
         $sql = "SELECT * FROM Clientes WHERE id_cliente = ?";
@@ -37,14 +37,14 @@ function ObterUmUtilizador($pdo, $ID)
 }
 
 // Altera os dados do utilizador, mas não a password
-function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
+function EditarUtilizadorLocal($DadosUtilizadores)
 {
-    if($ID != $_SESSION['id_cliente']){
-        exit("You cant edit other people's Data!");
-    }
+    global $pdo;
+    $ID = $_SESSION['id_cliente'];
+
 
     $sql = "UPDATE Clientes SET nome = ?, apelido = ?, email = ?,
-    telemovel = ?, morada = ?, cidade = ?, pais = ?, CodPostal = ?
+    telemovel = ?, morada = ?, cidade = ?, pais = ?, codpostal = ?
     WHERE id_cliente = ?";
 
     $stmt = $pdo->prepare($sql);
@@ -55,23 +55,16 @@ function EditarUtilizador($pdo, $ID, $DadosUtilizadores)
     $stmt->bindValue(5, $DadosUtilizadores['morada'], PDO::PARAM_STR);
     $stmt->bindValue(6, $DadosUtilizadores['cidade'], PDO::PARAM_STR);
     $stmt->bindValue(7, $DadosUtilizadores['pais'], PDO::PARAM_STR);
-    $stmt->bindValue(8, $DadosUtilizadores['CodPostal'], PDO::PARAM_STR);
-    $stmt->bindValue(9, $ID, PDO::PARAM_INT);
+    $stmt->bindValue(8, $DadosUtilizadores['codpostal'], PDO::PARAM_STR);
+    $stmt->bindValue(9, $ID);
 
     // Executar a query e verificar que não retornou false
-    if ($stmt->execute()) {
-        // A operação foi executada com sucesso
-        $sucesso = True;
-    } else {
-        // A operação foi executada sem sucesso
-        $sucesso = False;
-    }
-
-    return $sucesso;
+    return $stmt->execute();
 }
 
-function iniciarSessao($pdo, $email, $password)
+function iniciarSessao($email, $password)
 {
+    global $pdo;
     $sql = "SELECT * FROM Clientes WHERE email = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$email]);

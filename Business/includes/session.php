@@ -1,12 +1,13 @@
 <?php
-
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('session.use_cookies', '1');
 if (!isset($_SESSION))
   {
     session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
     'domain' => $_SERVER['HTTP_HOST'],
-    'secure' => true,
     'httponly' => true,
     'samesite' => 'Strict' // Helps mitigate CSRF attacks
     ]);

@@ -65,6 +65,7 @@ function getTotalDinheiro($pdo, $clienteId)
     return $result['total_dinheiro'] == NULL ? 0 : $result['total_dinheiro'];
 }
 
+
 function getRestauranteMaisPedido($clienteId)
 {
     global $pdo;
@@ -99,7 +100,7 @@ function getRestauranteMaisPedido($clienteId)
 function getMesDinheiro($pdo, $clienteId, $mes)
 {
     if ($_SESSION['id_cliente'] != $clienteId) {
-        header("Location: /index.php");
+        header("Location: ./index.php");
         exit();
     }
 
@@ -120,7 +121,7 @@ function getMesDinheiro($pdo, $clienteId, $mes)
 function getMediaCustoPedidos($pdo, $clienteId)
 {
     if ($_SESSION['id_cliente'] != $clienteId) {
-        header("Location: /index.php");
+        header("Location: ./index.php");
         exit();
     }
 
@@ -145,7 +146,7 @@ $clienteId = $_SESSION['id_cliente'];  // ID do cliente para o qual queremos con
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grid com Bootstrap</title>
+    <title>Estatísticas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/styles/sitecss.css">
     <link rel="stylesheet" href="assets/styles/dashboard.css">
@@ -190,15 +191,15 @@ $clienteId = $_SESSION['id_cliente'];  // ID do cliente para o qual queremos con
         }
 
         .grafico {
-            height: 1000px;
+            max-width: 30vw;
             /* Altura mínima dos gráficos */
-            max-height: 1000px;
+            height: 100px;
             /* Altura máxima dos gráficos */
         }
 
         .grafico canvas {
-            max-width: 100%;
-            height: 100%;
+            max-width: 30vw;
+            height: 100px;
             /* Faz o canvas ocupar toda a altura do contêiner pai */
         }
     </style>
@@ -257,16 +258,7 @@ $clienteId = $_SESSION['id_cliente'];  // ID do cliente para o qual queremos con
                             </div>
                         </div>
                     </div>
-                    <div class="row bg-light">
-                        <div class="col">
-                            <div class="card shadow border-1">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title fw-bold mb-3">Tempo médio de entrega</h4>
-                                    <p class="display-5 mb-3 text-secondary fw-bold">10:15</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 <!-- Coluna 2 com 2 linhas -->
                 <div class="col-12 col-md-6 col-lg-8">

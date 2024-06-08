@@ -35,7 +35,7 @@ var list_columns = [ 'Nome', 'Itens',''];
 var items = [];
 
 
-const response = fetch('http://localhost/business/lista_categorias.php')
+const response = fetch('./lista_categorias.php')
   .then(response => response.json())
   .then(data => {
     for(let item of data){
@@ -51,7 +51,7 @@ const response = fetch('http://localhost/business/lista_categorias.php')
 	  dable.SetColumnNames(list_columns);
 
     dable.columnData[2].CustomRendering = function (_cellValue, rowNumber) {
-      return '<button> <img width="30" class="bg-white deleteRow" cellValue='+_cellValue+'  src="../business/assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+      return '<button> <img width="30" class="bg-white deleteRow" cellValue='+_cellValue+'  src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
     };
 
 	  dable.BuildAll("DefaultDable"); 
@@ -67,7 +67,7 @@ document.addEventListener('click', event => {
 function performDelete(element){
   const cellValue =  element.getAttribute("cellValue");
   const rownumber =  element.getAttribute("data-rownumber");
-  const request = fetch("/Business/lista_categorias.php?delete="+cellValue);
+  const request = fetch("./lista_categorias.php?delete="+cellValue);
   request.then(_ => {
     dable.DeleteRow(rownumber);
   });
@@ -88,7 +88,7 @@ function editItem(element) {
   var rowNumber = element.getAttribute('data-rownumber');
 
   const item = items[rowNumber];
-  window.open(`../dashboard_adicionar_pedido.php?id=${item.id_item}`);
+  window.open(`./dashboard_adicionar_pedido.php?id=${item.id_item}`);
 
 }
 

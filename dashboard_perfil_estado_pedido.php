@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__.'/session.php';
-require_once __DIR__.'/database/credentials.php';
-require_once __DIR__.'/database/db_connection.php';
+require_once './session.php';
+require_once './database/credentials.php';
+require_once './database/db_connection.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
   $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-  header("Location: /index.php");
+  header("Location: ./index.php");
   exit();
 }
 
@@ -53,7 +53,7 @@ foreach($items as &$item){
 
 $result = implode(' + ',$item_arr);
 
-echo $pedido['id_cliente'];
+// echo $pedido['id_cliente'];
 
 ?>
 
@@ -64,8 +64,8 @@ echo $pedido['id_cliente'];
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FoodDash</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/styles/sitecss.css">
-	<link rel="stylesheet" href="assets/styles/dashboard.css">
+    <link rel="stylesheet" href="./assets/styles/sitecss.css">
+	<link rel="stylesheet" href="./assets/styles/dashboard.css">
   <link rel="stylesheet" href="./Business/assets/styles/pedido_page.css" />
 
   </head>
@@ -108,56 +108,20 @@ echo $pedido['id_cliente'];
                   <div class="container mt-5 mx-4 px-5 ">
                     <div class="d-flex justify-content-center align-items-center">
 
-                    <?php
-                switch ($pedido['estado']) {
-                    case 'EFETUADO':
-                        $step1 = 'active';
-                        $step2 = '';
-                        $step3 = '';
-                        $step4 = '';
-                        $width = '3%';
-                        break;
-                    case 'EM PREPARACAO':
-                        $step1 = 'active';
-                        $step2 = 'active';
-                        $step3 = '';
-                        $step4 = '';
-                        $width = '33%';
-                        break;
-                    case 'A CAMINHO':
-                        $step1 = 'active';
-                        $step2 = 'active';
-                        $step3 = 'active';
-                        $step4 = '';
-                        $width = '66%';
-                        break;
-                    case 'FINALIZADO':
-                    case 'ENTREGUE':
-                        $step1 = 'active';
-                        $step2 = 'active';
-                        $step3 = 'active';
-                        $step4 = 'active';
-                        $width = '100%';
-                        break;
-                    default:
-                        exit('Algo de errado aconteceu');
-                }
-                ?>
-
                 <div class="process-wrapper mb-3 w-100">
                     <div id="progress-bar-container">
                         <ul>
-                            <li class="step step01 <?php echo $step1 ?>">
-                                <div class="step-inner <?php echo $step1 ?>">PEDIDO EFETUADO</div>
+                            <li class="step step01">
+                                <div class="step-inner>">PEDIDO EFETUADO</div>
                             </li>
-                            <li class="step step02 <?php echo $step2 ?>">
-                                <div class="step-inner <?php echo $step2 ?>">PREPARAÇÃO</div>
+                            <li class="step step02">
+                                <div class="step-inner">PREPARAÇÃO</div>
                             </li>
-                            <li class="step step03 <?php echo $step3 ?>">
-                                <div class="step-inner <?php echo $step3 ?>">VIAGEM ATÉ DESTINO</div>
+                            <li class="step step03">
+                                <div class="step-inner">VIAGEM ATÉ DESTINO</div>
                             </li>
-                            <li class="step step04 <?php echo $step4 ?>">
-                                <div class="step-inner <?php echo $step4 ?>">ENTREGUE</div>
+                            <li class="step step04">
+                                <div class="step-inner">ENTREGUE</div>
                             </li>
                         </ul>
                         <div id="line">
@@ -165,19 +129,19 @@ echo $pedido['id_cliente'];
                         </div>
                     </div>
                     <div id="progress-content-section">
-                        <div class="section-content efetuacao-pedido <?php echo $pedido['estado'] == 'EFETUADO' ? 'active' : '' ?>">
+                        <div class="section-content efetuacao-pedido">
                             <h2>Efetuação do Pedido</h2>
                             <p>O pedido foi efetuado.</p>
                         </div>
-                        <div class="section-content preparacao  <?php echo $pedido['estado'] == 'EM PREPARACAO' ? 'active' : '' ?>">
+                        <div class="section-content preparacao">
                             <h2>Preparação</h2>
                             <p>O pedido está em fase de preparação. Assim que o pedido estiver pronto para entrega dê-o ao seu entregador e carregue no botão abaixo para iniciar a fase entrega.</p>
                         </div>
-                        <div class="section-content viagem <?php echo $pedido['estado'] == 'A CAMINHO' ? 'active' : '' ?>">
+                        <div class="section-content viagem">
                             <h2>Viagem até ao Destino</h2>
                             <p>O pedido está a caminho do seu cliente.</p>
                         </div>
-                        <div class="section-content entregue <?php echo $pedido['estado'] == 'ENTREGUE' ? 'active' : '' ?>">
+                        <div class="section-content entregue">
                             <h2>Entregue</h2>
                             <p>O pedido foi entregue com sucesso. Parabéns. Muito obrigado.</p>
                         </div>
@@ -195,6 +159,93 @@ echo $pedido['id_cliente'];
   <div class="container">
     <?php include __DIR__."/includes/footer_2.php"; ?>
   </div>
+
+  <script>
+    let eSource = new EventSource("./seguir_pedido.php?id=<?php echo $PEDIDO_ID ?>");
+    let lastState = "";
+    const lineprogress = document.querySelector("#line-progress");
+
+    const step1 = document.querySelector(".step01");
+    const efetuacao = document.querySelector(".efetuacao-pedido ");
+
+    const step2 = document.querySelector(".step02");
+    const preparacao = document.querySelector(".preparacao");
+
+    const step3 = document.querySelector(".step03");
+    const viagem = document.querySelector(".viagem");
+
+    const step4 = document.querySelector(".step04");
+    const entregue = document.querySelector(".entregue");
+
+    eSource.onmessage = function(e) {
+      if(e.data != lastState.data){
+        stateChanged(e.data);
+      }
+      lastState = e;
+    };
+
+    function stateChanged(newState){
+      console.log("new state: "+newState);
+      changeState(newState);
+    }
+
+    function changeState(newState)
+    {
+      switch (newState) {
+                    case 'EFETUADO':
+                        step1.classList.add('active');
+                        step2.classList.remove('active');
+                        step3.classList.remove('active');
+                        step4.classList.remove('active');
+                        lineprogress.style.width = '3%';
+                
+                        efetuacao.classList.add('active')
+                        preparacao.classList.remove('active')
+                        viagem.classList.remove('active')
+                        entregue.classList.remove('active')
+                        break;
+                    case 'EM PREPARACAO':
+                        step1.classList.add('active');
+                        step2.classList.add('active');
+                        step3.classList.remove('active');
+                        step4.classList.remove('active');
+                        lineprogress.style.width = '33%';
+                
+                        efetuacao.classList.remove('active')
+                        preparacao.classList.add('active')
+                        viagem.classList.remove('active')
+                        entregue.classList.remove('active')
+                        break;
+                    case 'A CAMINHO':
+                        step1.classList.add('active');
+                        step2.classList.add('active');
+                        step3.classList.add('active');
+                        step4.classList.remove('active');
+                        lineprogress.style.width = '66%';
+                        efetuacao.classList.remove('active')
+                        preparacao.classList.remove('active')
+                        viagem.classList.add('active')
+                        entregue.classList.remove('active')
+                        break;
+                    case 'FINALIZADO':
+                    case 'ENTREGUE':
+                        step1.classList.add('active');
+                        step2.classList.add('active');
+                        step3.classList.add('active');
+                        step4.classList.add('active');
+                        lineprogress.style.width = '100%';
+                        efetuacao.classList.remove('active')
+                        preparacao.classList.remove('active')
+                        viagem.classList.remove('active')
+                        entregue.classList.add('active')
+                        break;
+                    default:
+                        alert("erro inesperado!");
+                        eSource.close()
+                }
+    }
+
+  </script>
 
   </body>
 </html>

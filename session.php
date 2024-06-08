@@ -6,8 +6,7 @@ if (!isset($_SESSION))
     'lifetime' => 0,
     'path' => '/',
     'domain' => $_SERVER['HTTP_HOST'],
-    'secure' => true,
-    'httponly' => true,
+    'httponly' => false,
     'samesite' => 'Strict' // Helps mitigate CSRF attacks
     ]);
     session_start();

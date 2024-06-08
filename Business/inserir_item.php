@@ -1,17 +1,17 @@
 <?php
 
-require_once __DIR__.'/includes/session.php';
-require_once __DIR__.'/../database/credentials.php';
-require_once __DIR__.'/../database/db_connection.php';
+require_once '/includes/session.php';
+require_once '/../database/credentials.php';
+require_once '/../database/db_connection.php';
 
 if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-    header("Location: /Business/dashboard_home_page.php");
+    header("Location: ./dashboard_home_page.php");
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    header("Location: /Business/dashboard_home_page.php");
+    header("Location: ./dashboard_home_page.php");
 }
 
 $json = json_decode(file_get_contents('php://input'),true);
@@ -28,6 +28,7 @@ if($data['idEstabelecimento'] != $_SESSION['id_estabelecimento']){
 }
 
 try{
+  
     $item = ItemFactory::createItem($data['tipo'],$data['dados']);
     $item->createDatabaseEntry();
 
@@ -36,6 +37,7 @@ try{
 } catch (Exception $e) {
     $status = 'error';
     $message = $e;
+
 }
 
 header('Content-type: application/json');
@@ -60,7 +62,7 @@ class ItemFactory{
                 $item = new ItemPersonalized($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['opcoes'],$id);
             break;
             case 'menu':
-                $item = new Bundle($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['categoria'],$dados['itens'],$id);
+                $item = new Bundle($dados['nome'],$dados['preco'],$dados['descricao'],$dados['disponivel'],$dados['foto'],$dados['itens'],$id);
             break;
             default:
                 throw new Exception('Invalid Object');
@@ -171,13 +173,6 @@ class SingleItem extends AbstractItem {
                 $this->categoria, $_SESSION['id_estabelecimento']]);
 
                 $this->item_id = $this->getId();
-
-                $query = "INSERT INTO item_categorias(id_item, id_categoria)
-                    VALUES (?,?)";
-
-                $stmt = $pdo->prepare($query);
-                $stmt->execute([
-                $this->item_id,$this->categoria]);
             }
             if($this->item_id == -1)
                 $this->item_id = $this->getId();
@@ -287,8 +282,9 @@ class ItemPersonalized extends AbstractItem {
 
 class Bundle extends AbstractItem {
     var $itens = array();
-    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$itens,$id) {
-        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,$categoria,$id);
+    public function __construct($nome,$preco,$descricao,$disponivel,$foto,$itens,$id) {
+        parent::__construct($nome,$preco,$descricao,$disponivel,$foto,1,$id);
+
         foreach($itens['items'] as $item){
             array_push($this->itens,$item);
         }
@@ -314,7 +310,8 @@ class Bundle extends AbstractItem {
 
             $this->item_id = $this->getId();
             foreach($this->itens as &$item){
-                $this->createBundleItemEntry($item['id']);
+                $this->createBundleItemEntry($item['id_item']);
+
             }
         } catch(PDOException $e) {
             $pdo->rollBack();
@@ -323,17 +320,16 @@ class Bundle extends AbstractItem {
     }
 
     private function createBundleItemEntry($new_item_id){
+        try{
         global $pdo;
         global $idEmpresa;
-        
-        if($this->item_id == -1){
+        if($this->item_id == null){
             $this->item_id = $this->getId();
         }
 
         if($this->checkBundleItemExistence($new_item_id) == true){
             return;
         }
-        
         $query =
         "INSERT INTO item_menus
             (id_item, id_menu)
@@ -341,6 +337,9 @@ class Bundle extends AbstractItem {
 
         $stmt = $pdo->prepare($query);
         $stmt->execute([$new_item_id,$this->item_id]);
+    }catch(Exception $e){
+        echo $e;
+    }
     }
 
     protected function checkExistence(){

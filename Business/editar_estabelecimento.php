@@ -1,33 +1,45 @@
 <?php
-require_once __DIR__ . '/includes/session.php';
-include __DIR__ . "/../database/empresa_estabelecimento.php";
-require_once __DIR__ . "/../database/credentials.php";
-require_once __DIR__ . "/../database/db_connection.php";
+require_once './includes/session.php';
+include      "../database/empresa_estabelecimento.php";
+require_once "../database/credentials.php";
+require_once "../database/db_connection.php";
 
 if (!isset($_SESSION['id_estabelecimento'])) {
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-    header("Location: /Business/login_register/login_business.php");
+    header("Location: ./login_register/login_business.php");
     exit();
 }
 
-$id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
+$id_estabelecimento = isset($_GET['id']) ? intval($_GET['id']) : $_SESSION['id_estabelecimento'];
+$estabelecimento = ObterEstabelecimento($id_estabelecimento);
+if($estabelecimento == false){
+    exit("Restaurante Invalido");
+}
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])) {
+    if (
+        isset($_POST['nome']) 
+        && isset($_POST['localizacao']) 
+        && isset($_POST['telemovel']) 
+        && isset($_POST['taxa_entrega']) 
+        && isset($_POST['tempo_medio_entrega'])) {
+        $isImageAttached = $_FILES['imagem']['name'] != '';
+        
+        if($isImageAttached == true)
         require_once '../uploadImagem.php';
-
+    
+        $caminhoArquivo = basename($target_file);
         $estabelecimentoModificado = array(
             'nome' => htmlspecialchars(trim($_POST['nome'])),
             'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
             'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
             'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
             'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
-            'imagem' => htmlspecialchars($caminhoArquivo) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
+            'imagem' => htmlspecialchars( $isImageAttached ? $caminhoArquivo : $estabelecimento['imagem']) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
         );
 
         if ($estabelecimentoModificado !== null) {
-            if (EditarEstabelecimento($pdo, $id_estabelecimento, $estabelecimentoModificado)) {
-                $estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
+            if (EditarEstabelecimento($id_estabelecimento, $estabelecimentoModificado)) {
+                $estabelecimento = ObterEstabelecimento($id_estabelecimento);
                 $alertMessage = "<div class='alert alert-success' role='alert' style='margin-top: 6vh;'>
                     Dados alterados com sucesso
                 </div>";
@@ -40,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$estabelecimento = ObterEstabelecimento($pdo, $id_estabelecimento);
+
 
 // Função para gerar a mensagem de retorno
 function getMsgImagem($status, $message)
@@ -79,7 +91,7 @@ function getMsgImagem($status, $message)
 <!--Zona de Conteudo -->
 <div class="container" style="margin-top: 7vh;">
     <!-- Formulárop do Estabelecimento -->
-    <form id="estabelecimento" class="w-75 form_editar" style="margin:auto; " method="POST" action=""
+    <form id="estabelecimento" class="w-75 form_editar" type="hidden" style="margin:auto; " method="POST" action=""
         enctype="multipart/form-data">
         <p class="h4 pt-4">Ver/Editar Informações do Estabelecimento</p>
         <div class="align-items-md-stretch">
@@ -174,9 +186,9 @@ function getMsgImagem($status, $message)
                                 </div>
                                 <br><br><br>
                                 <!-- Imagem -->
-                                <img src="<?php echo $estabelecimento['imagem']; ?>"
-                                    alt="<?php echo $estabelecimento['nome']; ?>" width="200" height="300">
-                                <label for="imagem" class="form-label">Enviar Imagem:</label>
+                                <img src= "../<?php echo $estabelecimento['imagem']; ?>"
+                                    alt="<?php echo htmlspecialchars($estabelecimento['nome']); ?>" style="margin:10px;width:10vh;height:10vh" >
+                                <label for="imagem" class="form-label">Alterar Imagem:</label>
                                 <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
                                     accept="image/*">
                                 <?php

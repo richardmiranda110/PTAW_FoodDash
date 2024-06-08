@@ -1,58 +1,23 @@
 <?php
-//include __DIR__ . "/database/db_connection.php";
-//$pdo = include __DIR__ . "/database/db_connection.php";
-require_once __DIR__ . '/session.php';
-include __DIR__ . "/database/utilizadores.php";
+    require_once './session.php';
+    require_once "./database/utilizadores.php";
 
-if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
-    header("Location: /index.php");
-    exit();
-}
-
-
-require './database/credentials.php';
-require './database/db_connection.php';
-
-// cria o o atributo $Validacao com o valor true, pois não existem falhas
-$utilizadorModificado = null;
-
-// Recebendo dados da BD de um determinado utilizador
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Obter os dados do utilizador
-    $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']); // ALTERAR O ID
-}
-// Enviando dados para a BD, ao editar dados de um determinado utilizador
-elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
-    // retirar carateres perigosos
-    $utilizadorModificado = array(
-        'nome' => htmlentities(trim($_POST['nome'])),
-        'apelido' => htmlentities(trim($_POST['apelido'])),
-        'email' => htmlentities(trim($_POST['email'])),
-        'telemovel' => htmlentities(trim($_POST['telemovel'])),
-        'morada' => htmlentities(trim($_POST['morada'])),
-        'cidade' => htmlentities(trim($_POST['cidade'])),
-        'pais' => htmlentities(trim($_POST['pais'])),
-        'CodPostal' => htmlentities(trim($_POST['CodPostal']))
-    );
-}
-
-// Se não ocorreram erros de validação, atualizar o utilizador
-if ($utilizadorModificado !== null) {
-    // Editar o usuário no banco de dados
-    if (EditarUtilizador($pdo, $_SESSION['id_cliente'], $utilizadorModificado)) { 
-        $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']); 
-        echo "<div class='alert alert-success' role='alert'>
-            Dados alterados com sucesso
-        </div>";
-    } else {
-        echo "<div class='alert alert-danger' role='alert'>
-            Ocorreu um erro ao alterar dados! Por favor, tente novamente.
-        </div>";
+    if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
+        header("Location: /index.php");
+        exit();
     }
-} else {
-    $utilizador = ObterUmUtilizador($pdo, $_SESSION['id_cliente']);
-}
+
+    require './database/credentials.php';
+    require './database/db_connection.php';
+
+    // cria o o atributo $Validacao com o valor true, pois não existem falhas
+    $utilizadorModificado = null;
+
+    // Recebendo dados da BD de um determinado utilizador
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        // Obter os dados do utilizador
+        $utilizador = ObterUtilizadorLocal(); // ALTERAR O ID
+    }
 ?>
 
 <!DOCTYPE html>
@@ -79,14 +44,55 @@ if ($utilizadorModificado !== null) {
     include __DIR__ . "/includes/sidebar_perfil.php";
     ?>
 
+    <?php 
+    
+    // Enviando dados para a BD, ao editar dados de um determinado utilizador
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    try{
+        // Atribuir os dados do formulário à variável $utilizador e, ao mesmo tempo,
+        // retirar carateres perigosos
+    
+        $utilizadorModificado = array(
+            'nome' => htmlentities(trim($_POST['nome'])),
+            'apelido' => htmlentities(trim($_POST['apelido'])),
+            'email' => htmlentities(trim($_POST['email'])),
+            'telemovel' => htmlentities(trim($_POST['telemovel'])),
+            'morada' => htmlentities(trim($_POST['morada'])),
+            'cidade' => htmlentities(trim($_POST['cidade'])),
+            'pais' => htmlentities(trim($_POST['pais'])),
+            'codpostal' => htmlentities(trim($_POST['codpostal']))
+        );
+    
+    // Se não ocorreram erros de validação, atualizar o utilizador
+    if ($utilizadorModificado !== null) {
+        // Editar o usuário no banco de dados
+        if (EditarUtilizadorLocal($utilizadorModificado)) { 
+            $utilizador = ObterUtilizadorLocal(); 
+            echo "<div class='alert alert-success' role='alert'>
+                Dados alterados com sucesso
+            </div>";
+        } else {
+            echo "<div class='alert alert-danger' role='alert'>
+                Ocorreu um erro ao alterar dados! Por favor, tente novamente.
+            </div>";
+        }
+    }
+}catch(Exception $e){
+    echo $e;
+    exit();
+}
+}
+    ?>
+
     <!-- Div element where PHP value is set -->
     <div id="valid" style="display: none;"><?php echo $_SESSION['authenticated'];
                                             //var_dump($Validacao); 
                                             ?></div>
 
-    <form class="p-4 pb-0" style="width: 90%;padding: 5px;margin:auto" method="GET">
+    <form class="p-4 pb-0" style="width: 90%;padding: 5px;margin:auto" method="POST">
         <h3>Perfil do Utilizador</h3>
-        <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las</p>
+        <p>Esta é a tua página de perfil de utilizador. Aqui podes ver as tuas informações pessoais e editá-las.</p>
 
         <div class="align-items-md-stretch">
             <div>
@@ -168,7 +174,7 @@ if ($utilizadorModificado !== null) {
                                     <span>País</span>
                                     <div class="input-group flex-nowrap">
                                         <input name="pais" readonly type="text" class="form-control" placeholder="País" aria-label="País" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['pais']))
-                                                                                                                                                                                        echo $utilizador['pais']; ?>">
+                                                                                                                                                      echo $utilizador['pais']; ?>">
                                     </div>
                                 </div>
                             </div>
@@ -178,8 +184,8 @@ if ($utilizadorModificado !== null) {
                                     <!-- Código Postal -->
                                     <span>Código-Postal</span>
                                     <div class="input-group flex-nowrap">
-                                        <input name="CodPostal" readonly type="text" class="form-control" placeholder="Código Postal" aria-label="Código Postal" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['CodPostal']))
-                                                                                                                                                                                                                echo $utilizador['CodPostal']; ?>">
+                                        <input name="codpostal" readonly type="text" class="form-control" placeholder="Código Postal" aria-label="Código Postal" aria-describedby="addon-wrapping" value="<?php if (!empty($utilizador['codpostal']))
+                                                                                                                                                                                                                echo $utilizador['codpostal']; ?>">
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +260,7 @@ if ($utilizadorModificado !== null) {
                             input.setAttribute("readonly", "readonly");
                         });
                         form.method = 'POST';
-                        form.setAttribute("action", "perfil.php");
+                        // form.setAttribute("action", "perfil.php");
                     }
                 }
             })

@@ -4,7 +4,7 @@ require_once __DIR__ . '/database/credentials.php';
 require_once __DIR__ . '/database/db_connection.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
-    header("Location: /index.php");
+    header("Location: /~ptaw-2024-gr2/index.php");
     exit();
 }
 
@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <html>
 
 <head>
-    <title>Utilizador</title>
+    <title>Dashboard</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -167,16 +167,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     <p class="h3 mb-4 fw-semibold">Olá, <?php echo htmlspecialchars($utilizador['nome']) ?></p>
                     
                     <p>Esta é a tua página de perfil. Aqui podes ver as tuas informações pessoais, ver estatísticas,
-                        sobre a tua
-                        conta, ver os teus pedidos e acompanhar o estado dos teus pedidos em tempo real</p>
+                        sobre a tua conta, ver os teus pedidos e acompanhar o estado dos teus pedidos em tempo real.</p>
 
                     <div class="d-flex flex-column">
                         <div class="row align-items-md-stretch mb-4">
                             <div class="col-md-5">
                                 <div class="p-3 bg-body-tertiary border rounded-3">
                                     <div class="d-flex mb-3 justify-content-between">
-                                        <h4 style="float:left">Perfil do utilizador</h4>
-                                        <a class="btn btn-warning" href="/perfil.php"> Editar </a>
+                                        <h4 style="float:left">Perfil do Utilizador</h4>
+                                        <a class="btn btn-warning" href="./perfil.php"> Editar </a>
                                     </div>
                                     <div>
                                         <div class="mb-2">

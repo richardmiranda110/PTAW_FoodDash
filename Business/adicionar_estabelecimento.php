@@ -1,35 +1,47 @@
 <?php
-require_once __DIR__ . '/includes/session.php';
+require_once  './includes/session.php';
 
-include __DIR__ . "/../database/empresa_estabelecimento.php";
-include __DIR__ . "/../database/credentials.php";
-include __DIR__ . "/../database/db_connection.php";
+include  "../database/empresa_estabelecimento.php";
+include  "../database/credentials.php";
+include  "../database/db_connection.php";
 
-$Validacao = True;
-$estabelecimento = null;
-$tipoArquivo = null;
+$estabelecimento = isset($_GET['id']) ? ObterEstabelecimento($_GET['id']) : null;
+$updateMode = ($estabelecimento != null);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega']) && isset($_FILES['imagem'])) {
-        require_once '../uploadImagem.php';
+    if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega'])) {
+        
+        if($_FILES['imagem']['name'] != '')
+            require_once '../uploadImagem.php';
+        
+        $nome = htmlspecialchars(trim($_POST['nome']));
+        $localizacao = htmlspecialchars(trim($_POST['localizacao']));
+        $telemovel = htmlspecialchars(trim($_POST['telemovel']));
+        $taxa_entrega = htmlspecialchars(trim($_POST['taxa_entrega']));
+        $tempo_medio_entrega = htmlspecialchars(trim($_POST['tempo_medio_entrega']));
+        $imagem = isset($caminhoArquivo) ? $caminhoArquivo : 'fd_logo_blackWhite.png'; // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
+
+        $idExistente = VerificarEstabExistente($nome, $localizacao);
+
+        if($idExistente) {
+            header("Location: editar_estabelecimento.php?id=" . $idExistente);
+            exit();
+        }
+
         $estabelecimento = array(
-            'nome' => htmlspecialchars(trim($_POST['nome'])),
-            'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
-            'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
-            'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
-            'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
-            'imagem' => htmlspecialchars($caminhoArquivo) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
+            'nome' => $nome,
+            'localizacao' => $localizacao,
+            'telemovel' => $telemovel,
+            'taxa_entrega' => $taxa_entrega,
+            'tempo_medio_entrega' => $tempo_medio_entrega,
+            'imagem' => $imagem
         );
 
-        // Se não ocorreram erros de validação, inserir o produto
-        if ($Validacao == true) {
-            if (AdicionarEstabelecimento($pdo, $_SESSION['id_empresa'], $estabelecimento)) {
-                // Se for adicionado corretamente há base de dados,
-                // reencaminha para estabelecimento_page.php
-                header("Location: estabelecimento_page.php");
-                exit();
-            }
+        if(AdicionarEstabelecimento($estabelecimento)) {
+            header("Location: estabelecimento_page.php");
+            exit();
         }
+        
     }
 }
 ?>
@@ -54,29 +66,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!--Zona do Header -->
 <div id="topHeader" class="container-xxl">
     <!-- Top/Menu da Página -->
-    <?php include __DIR__ . "/includes/header_business_logged.php"; ?>
-    <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
+    <?php include "./includes/header_business_logged.php"; ?>
+    <?php include "./includes/sidebar_business.php"; ?>
 </div>
 
 <!--Zona de Conteudo -->
 <div style="margin-top: 10vh;">
     <!-- Formulárop do Estabelecimento -->
-    <form id="estabelecimento" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="w-75 form_editar" style="margin:auto"
+    <form id="estabelecimento" action="" class="w-75 form_editar" style="margin:auto"
         method="POST" enctype="multipart/form-data">
-        <p class="h4 pt-4">Informações</p>
+        <p class="h4 pt-3">Informações</p>
 
         <div class="align-items-md-stretch">
             <div>
-                <div class="card pb-2">
+                <div class="card pb-2 mb-5 mt-2">
                     <div class="p-3 d-flex justify-content-between">
                         <p class="h5">Informações Pessoais</p>
                         <div>
                             <a href="estabelecimento_page.php" class="btn btn-light justify-content-end">Voltar</a>
                             <button id="btn_guardar" class="btn btn-success direito" style="width: auto;" type="submit"
-                                value="Guardar">Guardar</button>
+                                value="Guardar">Adicionar</button>
                         </div>
                     </div>
-                    <div class="card-body pt-0 pb-1  ">
+                    <div class="card-body pt-0 pb-0 ">
                         <!-- Informação da existência de campos obrigatórios -->
                         <div class="alert p-0" role="alert">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -93,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="input-group flex-nowrap">
                             <input name="nome" type="text" class="form-control" placeholder="Nome" aria-label="Nome"
                                 aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['nome']))
-                                    echo $estabelecimento['nome']; ?>">
+                                    echo $estabelecimento['nome']; ?>" required>
                             <?php if (!empty($ErroNome)) { ?>
                                 <span class="help-block small" style="color:#ff0000"><?php echo $ErroNome; ?></span>
                             <?php } ?>
@@ -105,13 +117,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="input-group flex-nowrap">
                             <input name="localizacao" type="text" class="form-control mb-4" placeholder="Localização"
                                 aria-label="Localização" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['localizacao']))
-                                    echo $estabelecimento['localizacao']; ?>">
+                                    echo $estabelecimento['localizacao']; ?>" required>
                             <?php if (!empty($ErroLocalizacao)) { ?>
                                 <span class="help-block small" style="color:#ff0000"><?php echo $ErroLocalizacao; ?></span>
                             <?php } ?>
                         </div>
 
-                        <hr class="m-1"><br><br>
                         <div class="row">
                             <!-- Telemóvel -->
                             <div class="col-md-4">
@@ -119,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="input-group flex-nowrap">
                                     <input name="telemovel" type="text" class="form-control" placeholder="Telemóvel"
                                         aria-label="Telemovel" aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['telemovel']))
-                                            echo $estabelecimento['telemovel']; ?>">
+                                            echo $estabelecimento['telemovel']; ?>" required>
                                     <?php if (!empty($ErroTelemovel)) { ?>
                                         <span class="help-block small"
                                             style="color:#ff0000"><?php echo $ErroTelemovel; ?></span>
@@ -135,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <input name="taxa_entrega" type="text" class="form-control"
                                         placeholder="Taxa de Entrega" aria-label="Taxa de Entrega"
                                         aria-describedby="addon-wrapping" value="<?php if (!empty($estabelecimento['taxa_entrega']))
-                                            echo $estabelecimento['taxa_entrega']; ?>">
+                                            echo $estabelecimento['taxa_entrega']; ?>" required>
                                     <br><br>
                                     <?php if (!empty($ErroTaxa)) { ?>
                                         <span class="help-block small" style="color:#ff0000">
@@ -143,17 +154,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php } ?>
                                 </div>
                             </div>
-                            <br>
+
 
                             <!-- tempo_medio_entrega -->
-                            <div class="col-md-4">
-                                <div class="input-group flex-nowrap">
+                            <div class="">
+                                <div class="input-group flex-nowrap my-3">
                                     <label for="appt-time">Escolha o tempo médio de entrega: <span
                                             style='color:#ff0000'>
                                             *</span>
                                         &emsp; &emsp;</label>
                                     <input name="tempo_medio_entrega" id="appt-time" type="time" name="appt-time" value="<?php if (!empty($estabelecimento['tempo_medio_entrega']))
-                                        echo $estabelecimento['tempo_medio_entrega']; ?>">
+                                        echo $estabelecimento['tempo_medio_entrega']; ?>" required>
                                     <?php if (!empty($ErroTempo)) { ?>
                                         <span class="help-block small"
                                             style="color:#ff0000"><?php echo $ErroTempo; ?></span>
@@ -162,13 +173,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                     </div>
-                    <br><br>
                     <!-- Imagem -->
-                    <div>
+                    <div class="mx-3">
                         <label for="imagem" class="form-label">Enviar Imagem:
                             <span style='color:#ff0000'> *</span>
                         </label>
-                        <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
+                        <br>
+                        <input type="file" class="btn btn-light form-control w-50" name="imagem" id="imagem" file=""
                             accept="image/*">
                         <?php
                         if (isset($_SESSION['erroImagem'])) {
@@ -184,7 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
 </div>
 </form>
-<br><br>
 </div>
 <!--Fim do conteúdo de página-->
 <?php

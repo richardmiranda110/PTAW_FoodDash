@@ -3,7 +3,7 @@ require_once  __DIR__."/includes/session.php";
 
 if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
   $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-  header("Location: /Business/login_register/login_business.php");
+  header("Location: ./login_register/login_business.php");
   exit();
 }
 ?>
@@ -16,9 +16,9 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
     <title>FoodDash</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/styles/adicionar.css">
-    <link rel="stylesheet" href="../../assets/styles/sitecss.css">
-    <link rel="stylesheet" href="../../assets/styles/dashboard.css">
-    <script src="../../assets/js/dable.js"></script>
+    <link rel="stylesheet" href="./../assets/styles/sitecss.css">
+    <link rel="stylesheet" href="./../assets/styles/dashboard.css">
+    <script src="./../assets/js/dable.js"></script>
     <?php echo '<script>var idEmpresa="'.$_SESSION['id_empresa'].'"</script>' ?>
   </head>
   <body class="d-flex flex-column min-vh-100">
@@ -33,13 +33,13 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
           <div class="collapse navbar-collapse" style="width: 15vw;" id="navbarNav">
               <ul class="navbar-nav">
                   <li class="nav-item">
-                      <a class="nav-link nav" href="http://localhost/business/dashboard_lista_menus.php#">Menus</a>
+                      <a class="nav-link nav" href="./dashboard_lista_menus.php#">Menus</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link nav" style="border-bottom: 1vh solid black;" href="http://localhost/business/dashboard_lista_categorias.php#">Categorias</a>
+                      <a class="nav-link nav" style="border-bottom: 1vh solid black;" href="./dashboard_lista_categorias.php#">Categorias</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link nav" href="http://localhost/business/dashboard_lista_items.php#">Itens</a>
+                      <a class="nav-link nav" href="./dashboard_lista_items.php#">Itens</a>
                   </li>
               </ul>
           </div>
@@ -63,7 +63,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
 
     <!--Zona do Footer -->
     <footer class="container">
-      <?php include __DIR__."../../business/includes/footer_business.php"; ?>
+      <?php include "./includes/footer_business.php"; ?>
     </footer>
 
     <script src="./assets/js/lista_categorias.js"></script>

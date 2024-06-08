@@ -5,9 +5,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/assets/styles/sitecss.css">
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="-/assets/styles/sitecss.css">
+	<link rel="stylesheet" href="./assets/styles/dashboard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
@@ -27,17 +28,7 @@
     <div class="bg-custom px-4 py-5 text-left">
       <h1 class="display-6 fw-bold text-body-primary" style="color: white;">Peça uma entrega perto de si</h1>
       <br>
-      <div class="row justify-content-left align-items-center">
-        <div class="col-md-3">
-          <div class="form-floating">
-            <input type="text" class="form-control form-control-sm" id="input_codigo_postal" placeholder="XXXX-YY">
-            <label for="floatingInput">Introduza um codigo postal</label>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-primary btn-lg px-3" id="btn_procurar_codigo_postal">Procurar</button>
-        </div>
-      </div>
+
     </div>
   </div>
 
@@ -182,16 +173,16 @@
   <!-- SCRIPT -->
   <script>
     document.getElementById('btn_business_account').addEventListener('click', function() {
-      window.location.href = './business/home_page.php';
+      window.location.href = './Business/home_page.php';
     });
     document.getElementById('btn_business_account1').addEventListener('click', function() {
-      window.location.href = './business/home_page.php';
+      window.location.href = './Business/home_page.php';
     });
     document.getElementById('btn_business_account2').addEventListener('click', function() {
-      window.location.href = './business/home_page.php';
+      window.location.href = './Business/home_page.php';
     });
     document.getElementById('btn_business_account3').addEventListener('click', function() {
-      window.location.href = './business/home_page.php';
+      window.location.href = './Business/home_page.php';
     });
   </script>
   <script src="./assets/js/index_landing_page_script.js"></script>

@@ -6,8 +6,10 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'
         integrity='sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH' crossorigin='anonymous'>
-    <link rel='stylesheet' href='assets/styles/checkout.css'>
-    <script src='assets/js/checkout.js'> 	  
+    <link rel='stylesheet' href='./assets/styles/checkout.css'>
+    <link rel="stylesheet" href="./assets/styles/sitecss.css">
+	<link rel="stylesheet" href="./assets/styles/dashboard.css">
+    <script src='./assets/js/checkout.js'> 	  
 	let opcaoSelecionada = '';
 </script>
     <title>Checkout</title>
@@ -40,7 +42,7 @@
 	?>
 
     <div class='container' style='max-width: 100%;'>
-    
+    <?php include "./includes/sidebar_perfil.php"; ?>
         <div class='row justify-content-center'>
             <h1 class='checkout-title'>Checkout</h1>
         </div>
@@ -74,7 +76,7 @@ foreach ($pedRestaurantes as $rowRestaurantes) {
 		</div><br>
 		";
 try {
-$queryPedidos = "select p.id_pedido, p.data, p.precototal, 
+$queryPedidos = "select p.id_pedido, p.data, p.precototal,  c.morada as morada,
 			c.nome, e.nome as nomeEmpresa, e.logotipo, e.id_empresa
 			from pedidos as p
 			inner join clientes as c on c.id_cliente=p.id_cliente
@@ -174,8 +176,8 @@ foreach ($pedidos as $rowPed) {
 	<input type='hidden' name='pedidosRestaurante_".$idIndex."' id='pedidosRestaurante_".$idIndex."' value='".$pedRest."'>	
 
 	<label for='estabelecimento'>Restaurante Pedido:</label>
-	'<select class='form-select' name='estabelecimento_".$idIndex."' id='estabelecimento_".$idIndex."'>
-		<option  value='0' data-taxa-entrega=0> Escolha o Restaurante pretendido...</option>";
+	<select class='form-select' name='estabelecimento_".$idIndex."' id='estabelecimento_".$idIndex."'>
+		<option  value='0' data-taxa-entrega=0> Escolha o restaurante pretendido...</option>";
 	foreach ($restaurantes as $rowRest) {
 		echo "<option value='".$rowRest['id_estabelecimento']."' data-taxa-entrega=".$rowRest['taxa_entrega'].">".$rowRest['nome']." - ".$rowRest['localizacao']."</option>";
 	}
@@ -195,7 +197,17 @@ foreach ($pedidos as $rowPed) {
                                 <img src='assets/stock_imgs/iconLocalizacao.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
                             </div>
                             <div id='morada' class='col' style='margin-top: 0.65vw;'>
-                                <p id='textoMorada' class='m-0' contenteditable='false' style='font-size: 0.87vw;'>Rua exemplo, Nº1, Aveiro</p>
+                                <p id='textoMorada' class='m-0' contenteditable='false' style='font-size: 0.87vw;'>
+                                <?php 
+                                	$queryRest = "select morada
+                                    from clientes
+                                    where id_cliente = ? ";
+                                        
+                                    $stmtRest = $pdo->prepare($queryRest);
+                                    $stmtRest->execute([$_SESSION['id_cliente']]);
+                                    echo $stmtRest->fetchColumn();
+                                ?>
+                                </p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.65vw;'>
                                 <button type='button' class='btn btn-primary' id='btnMorada' onclick='editarMorada()'>Editar</button>
@@ -353,17 +365,6 @@ foreach ($pedidos as $rowPed) {
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
                                 <h4 class='m-0' style='font-weight: bold; font-size: 1.25vw;' id='totalPedido'>0€</h4>
-                            </div>
-                        </div>
-                        <div class='row align-items-center' style='margin-top: 1vw;'>
-                            <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <img src='assets/stock_imgs/iconPromotion.png' alt='Imagem Exemplo' class='img-fluid' style='width: 1.6vw;'>
-                            </div>
-                            <div class='col' style='margin-top: 0.6vw;'>
-                                <p class='m-0' style='font-size: 0.87vw;'>Adicionar código promocional</p>
-                            </div>
-                            <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <button type='button' class='btn btn-primary' id='btnCodigo' onclick='adicionarPromoCode()'>Adicionar</button>
                             </div>
                         </div>
                         <div id='addPromoCode' style='display: none;'>

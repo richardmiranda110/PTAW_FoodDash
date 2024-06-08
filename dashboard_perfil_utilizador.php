@@ -2,7 +2,6 @@
 require_once __DIR__.'/session.php';
 
 if(!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
-  $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
   header("Location: /index.php");
   exit();
 }
