@@ -4,7 +4,6 @@ require_once __DIR__."/../database/credentials.php";
 require_once __DIR__."/../database/db_connection.php";
 
 $idEmpresa = $_SESSION['id_empresa'];
-$idEmpresa = $_SESSION['id_estabelecimento'];
 
 if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
@@ -30,7 +29,7 @@ if(isset($_GET['itemid'])){
   FROM public.itens item 
    JOIN categorias c 
   ON item.id_categoria = c.id_categoria
-  where item.id_item = ? and item.id_estabelecimento = ".$_SESSION['id_estabelecimento']."";
+  where item.id_item = ? and item.id_empresa = ".$_SESSION['id_empresa']."";
 
   $stmt = $pdo->prepare($query);
   $stmt->execute([$_GET['itemid']]);
@@ -46,10 +45,10 @@ if(isset($_GET['itemid'])){
     "SELECT opcao.id_opcao as id, opcao.nome as nome, opcao.max_quantidade , opcao.preco
     FROM public.opcoes opcao 
     INNER JOIN itens item ON opcao.id_item = item.id_item
-	  where item.id_item = ? and item.id_estabelecimento = ?";
+	  where item.id_item = ? and item.id_empresa = ?";
   
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$_GET['itemid'],$_SESSION['id_estabelecimento']]);
+    $stmt->execute([$_GET['itemid'],$_SESSION['id_empresa']]);
   
     $personalizacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
@@ -61,10 +60,10 @@ if(isset($_GET['itemid'])){
     "SELECT id_menu, nome, preco,
     descricao, disponivel, foto
     FROM menus menu 
-    where menu.id_menu = ? and menu.id_estabelecimento = ?";
+    where menu.id_menu = ? and menu.id_empresa = ?";
   
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$_GET['menuid'],$_SESSION['id_estabelecimento']]);
+    $stmt->execute([$_GET['menuid'],$_SESSION['id_empresa']]);
   
     $item = $stmt->fetch(PDO::FETCH_ASSOC);
   
@@ -77,12 +76,12 @@ if(isset($_GET['itemid'])){
       on im.id_item = item.id_item
       inner join categorias
       on categorias.id_categoria = item.id_categoria
-      where menu.id_menu = ? and menu.id_estabelecimento = ?";
+      where menu.id_menu = ? and menu.id_empresa = ?";
     
       $stmt = $pdo->prepare($query);
       $stmt->execute(
         [$_GET['menuid'],
-        $_SESSION['id_estabelecimento']
+        $_SESSION['id_empresa']
       ]);
     
       $menuitems = $stmt->fetchAll(PDO::FETCH_ASSOC); 
@@ -93,7 +92,7 @@ if(isset($item)){
   $final_item = array(
     "id" => (isset($item["id_item"]) ? $item["id_item"] : $item["id_menu"] ),
     "tipo" => $type,
-    "idEstabelecimento" => $_SESSION['id_estabelecimento'],
+    "idEmpresa" => $_SESSION['id_empresa'],
     "dados" => array(
       "disponivel" => $item["disponivel"],
       "nome" => $item["nome"],
@@ -123,7 +122,6 @@ if(isset($item)){
   <script src="../assets/js/dable.js"></script>
   <script>
     var idEmpresa = <?php echo $idEmpresa ?>;
-    var idEstabelecimento = <?php echo $idEmpresa ?>;
     <?php
       echo 'var updateMode ='.($update ? 1: 0).';';
       echo 'var updateId ='.(isset($_GET['id']) ? $_GET['id'] : -1).';';
@@ -276,7 +274,7 @@ if(isset($item)){
   </main>
 
   <footer class="container">
-    <?php include "./includes/footer_business.php"; ?>
+    <?php include "./includes/footer_business_2.php"; ?>
   </footer>
 
   <script src="./assets/js/inserir_item.js"></script>

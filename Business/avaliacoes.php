@@ -18,14 +18,20 @@ $idEmpresa = $_SESSION['id_empresa'];
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FoodDash Business</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../../business/styles/adicionar.css">
-    <link rel="stylesheet" href="../../assets/styles/sitecss.css">
-    <link rel="stylesheet" href="../../assets/styles/dashboard.css">
-    <link rel="stylesheet" href="./assets/styles/pedido_page.css">
-    <script src="../../assets/js/dable.js"></script>
+    <link rel="stylesheet" href="../business/styles/adicionar.css">
+    <link rel="stylesheet" href="../assets/styles/sitecss.css">
+    <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="../assets/styles/pedido_page.css">
+    <script src="../assets/js/dable.js"></script>
 </head>
 
 <body>
+    <!--Zona do Header -->
+<div id="topHeader" class="container-xxl">
+    <!-- Top/Menu da Página -->
+    <?php include "./includes/header_business_logged.php"; ?>
+    <?php include "./includes/sidebar_business.php"; ?>
+</div>
 
     <?php
     require_once "../database/db_connection.php";
@@ -33,7 +39,7 @@ $idEmpresa = $_SESSION['id_empresa'];
 
     <!--Zona do Header -->
 
-    <div class="container mt-5 bi bi-arrow-left">
+    <div class="container mt-5">
         
         <div class="card p-4">
             <h1>Avaliações</h1>
@@ -102,7 +108,9 @@ $idEmpresa = $_SESSION['id_empresa'];
     <br><br><br><br>
 
     <!--Zona do Footer -->
-    <?php include __DIR__ . "../../includes/footer_2.php"; ?>
+    <?php
+    include "./includes/footer_business_2.php";
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 

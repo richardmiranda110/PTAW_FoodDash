@@ -1,6 +1,6 @@
 "use strict";
 
-const dataSource = './lista_items.php?idEstabelecimento='+idEstabelecimento;
+const dataSource = './lista_items.php?idEmpresa='+idEmpresa;
 
 // Container complementos
 let complementoContainer = document.querySelector("#complement-section");
@@ -602,7 +602,7 @@ function generateItemData(foto_url,id){
     const item = itemFactory.createItem(itemType,isPersonalized,foto_url);
  
     let result = { 
-      "idEstabelecimento": idEstabelecimento,
+      "idEmpresa": idEmpresa,
       tipo:itemType,
       id: id,
       dados: item

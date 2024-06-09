@@ -67,7 +67,7 @@
 		COALESCE ( 
 			(select avg(tempo_medio_entrega) from estabelecimentos where estabelecimentos.id_empresa = empresas.id_empresa )
 			,'00:00:00') as tempo_medio_entrega,
-			COALESCE ( logotipo,'') logotipo,
+		COALESCE ( logotipo,'') logotipo,
 		COALESCE (
 			(select sum(classificacao)/count(classificacao) from avaliacoes 
 			 where avaliacoes.id_empresa=empresas.id_empresa)
@@ -131,12 +131,13 @@
 		";
 		} else {
 			echo "<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3'> ";
+			
 			foreach ($stmt as $row) {
 				$imagemPath = getImagePath($row['logotipo']);
 				echo "
 			<div class='col grid_restaurantes_btn'>
 			<div class='card shadow-sm' id='" . $row['nome'] . "'>
-				<img src='" . $imagemPath  . "' class='card-img-top' height='180' width='260' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
+				<img src='" . $imagemPath  . "' class='card-img-top' height='180' width='240' alt='" . $row['nome'] . "' style='border-radius: 5.5px;'>
 				<div class='card-body'>
 					<div class='justify-content-between align-items-center'>
 						<h5 class='mb-0' style='height:2.8rem;'>" . $row['nome'] . "</h5>

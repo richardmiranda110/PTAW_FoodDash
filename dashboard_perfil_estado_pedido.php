@@ -11,7 +11,7 @@ if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SES
 
 $PEDIDO_ID = $_GET['id'];
 
-$query = "SELECT clientes.morada as morada,clientes.nome as cliente,pedido.id_pedido as id, pedido.data as data, pedido.estado as estado, pedido.cancelado, pedido.precototal, pedido.id_cliente as id_cliente, pedido.id_entregador, id_estabelecimento
+$query = "SELECT clientes.morada as morada,clientes.nome as cliente,pedido.id_pedido as id, pedido.data as data, pedido.estado as estado, pedido.cancelado, pedido.precototal, pedido.id_cliente as id_cliente, pedido.id_entregador, id_empresa
 FROM pedidos pedido 
 FULL JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
 INNER JOIN CLIENTES ON pedido.ID_CLIENTE = CLIENTES.ID_CLIENTE
@@ -98,7 +98,7 @@ $result = implode(' + ',$item_arr);
                                       $time = strtotime($pedido['data']);
                                       $date = date('j F',$time);
                                       $time = date('g:i',$time);  
-                        echo $date.' ás '. $time;
+                        echo $date.' às '. $time;
                         ?></span></p>
                       <p class="text"><?php echo $result ?></p>
                       <p class="text">Status do pedido: <span><?php echo $pedido['estado'] ?></span></p>

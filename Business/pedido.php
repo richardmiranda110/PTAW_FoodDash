@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__.'/session.php';
-require_once __DIR__.'/database/credentials.php';
-require_once __DIR__.'/database/db_connection.php';
+require_once './session.php';
+require_once './database/credentials.php';
+require_once './database/db_connection.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
   $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
-  header("Location: /index.php");
+  header("Location: ./index.php");
   exit();
 }
 
@@ -157,7 +157,7 @@ $result = implode(' + ',$item_arr);
 
   <!--Zona do Footer -->
   <div class="container">
-    <?php include __DIR__."/includes/footer_2.php"; ?>
+    <?php include "./includes/footer_2.php"; ?>
   </div>
 
   <script>

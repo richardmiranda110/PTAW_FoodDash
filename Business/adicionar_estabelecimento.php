@@ -6,7 +6,6 @@ include  "../database/credentials.php";
 include  "../database/db_connection.php";
 
 $estabelecimento = isset($_GET['id']) ? ObterEstabelecimento($_GET['id']) : null;
-$updateMode = ($estabelecimento != null);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['nome']) && isset($_POST['localizacao']) && isset($_POST['telemovel']) && isset($_POST['taxa_entrega']) && isset($_POST['tempo_medio_entrega'])) {
@@ -198,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 <!--Fim do conteúdo de página-->
 <?php
-include __DIR__ . "/includes/footer_business.php";
+include "./includes/footer_business_2.php";
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

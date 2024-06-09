@@ -11,7 +11,7 @@
           <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="./dashboard.php">
-        <img src="assets/imgs/fooddash_logo_white.png" alt="" srcset="">
+        <img src="./assets/stock_imgs/fooddash_logo_white.png" alt="" srcset="">
     </a>
     <div class="collapse navbar-collapse" id="navbarsExample02">
       <ul class="navbar-nav me-auto">
@@ -23,10 +23,10 @@
         </li>
       </ul>
       <a class="btn btn-default border border-white me-2" href="./dashboard.php">
-        <img src="./assets/imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
+        <img src="./assets/stock_imgs/icon-perfil.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </a>
       <a class="btn btn-default border border-white" href="./checkout.php" >
-        <img src="./assets/imgs/carrinho-de-compras.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
+        <img src="./assets/stock_imgs/carrinho-de-compras.png" width="30vw" /> <!-- remover ./. quando colocar na página -->
       </a>
     </div>
   </div>

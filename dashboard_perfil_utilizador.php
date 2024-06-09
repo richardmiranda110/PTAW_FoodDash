@@ -51,7 +51,7 @@ if(!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESS
                          <span><strong>Status do pedido:</strong> Pedido em Processamento</span></small>
                   </div>
                   <div class="col-sm-1 text-center align-self-center fs-4 py-4 "><strong>9,28€</strong></div>
-                  <div class="col-sm-1 align-self-center text-center h-60"><strong><img class="img-fluid p-3" src="/assets/imgs/icon_info.jpg" alt="" srcset=""></strong></div>
+                  <div class="col-sm-1 align-self-center text-center h-60"><strong><img class="img-fluid p-3" src="/assets/stock_imgs/icon_info.jpg" alt="" srcset=""></strong></div>
                 </div>
         </div>
     </div>

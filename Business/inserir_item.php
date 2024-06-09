@@ -1,10 +1,15 @@
 <?php
 
-require_once '/includes/session.php';
-require_once '/../database/credentials.php';
-require_once '/../database/db_connection.php';
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-if(!isset($_SESSION['id_estabelecimento']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+require_once './includes/session.php';
+require_once '../database/credentials.php';
+require_once '../database/db_connection.php';
+
+if(!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
     header("Location: ./dashboard_home_page.php");
     exit();
@@ -17,18 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 $json = json_decode(file_get_contents('php://input'),true);
 
 $data = [
-    "idEstabelecimento" => $json['idEstabelecimento'],
+    "idEmpresa" => $json['idEmpresa'],
     "tipo" => $json['tipo'],
     "id" => $json['id'],
     "dados" => $json['dados'],
  ];
 
-if($data['idEstabelecimento'] != $_SESSION['id_estabelecimento']){
+if($data['idEmpresa'] != $_SESSION['id_empresa']){
     exit("you cant add items to other stores!");
 }
 
 try{
-  
     $item = ItemFactory::createItem($data['tipo'],$data['dados']);
     $item->createDatabaseEntry();
 
@@ -110,13 +114,13 @@ abstract class AbstractItem {
         where nome = ?
         and preco = ? and descricao = ?
         and disponivel = ? and foto = ?
-        and id_categoria = ? and id_estabelecimento = ?";
+        and id_categoria = ? and id_empresa = ?";
 
         $stmt = $pdo->prepare($id_query);
         $stmt->execute([
             $this->nome,$this->preco,
             $this->descricao,$this->disponivel,
-            $this->foto, $this->categoria, $_SESSION['id_estabelecimento']]);
+            $this->foto, $this->categoria, $_SESSION['id_empresa']]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $result['id_item'];
@@ -162,7 +166,7 @@ class SingleItem extends AbstractItem {
                     nome, preco,
                     descricao, disponivel, foto,
                     itemsozinho, personalizacoesativas,
-                    id_categoria, id_estabelecimento)
+                    id_categoria, id_empresa)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 $stmt = $pdo->prepare($query);
@@ -170,7 +174,7 @@ class SingleItem extends AbstractItem {
                 $this->nome,$this->preco,
                 $this->descricao,$this->disponivel ? 1:0,
                 $this->foto,1, 0,
-                $this->categoria, $_SESSION['id_estabelecimento']]);
+                $this->categoria, $_SESSION['id_empresa']]);
 
                 $this->item_id = $this->getId();
             }
@@ -206,7 +210,7 @@ class ItemPersonalized extends AbstractItem {
                     nome, preco,
                     descricao, disponivel, foto,
                     itemsozinho, personalizacoesativas,
-                    id_categoria, id_estabelecimento)
+                    id_categoria, id_empresa)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 $stmt = $pdo->prepare($query);
@@ -214,7 +218,7 @@ class ItemPersonalized extends AbstractItem {
                 $this->nome,$this->preco,
                 $this->descricao,$this->disponivel == "true" ? 1:0 ,
                 $this->foto,1, 1,
-                $this->categoria, $_SESSION['id_estabelecimento']]);
+                $this->categoria, $_SESSION['id_empresa']]);
             }
 
             $this->id_item = $this->getId();
@@ -297,7 +301,7 @@ class Bundle extends AbstractItem {
 
         try{
             $query = "INSERT INTO menus(
-                nome, preco, descricao, disponivel, foto, id_estabelecimento)
+                nome, preco, descricao, disponivel, foto, id_empresa)
                 VALUES ( ?, ?, ?, ?, ?, ?)";
 
             if ($this->checkExistence() == false) {
@@ -305,12 +309,12 @@ class Bundle extends AbstractItem {
                 $stmt->execute(
                     [$this->nome,$this->preco,
                     $this->descricao,$this->disponivel == "true" ? 1:0,
-                    $this->foto,$_SESSION['id_estabelecimento']]);
+                    $this->foto,$_SESSION['id_empresa']]);
             }
 
             $this->item_id = $this->getId();
             foreach($this->itens as &$item){
-                $this->createBundleItemEntry($item['id_item']);
+                $this->createBundleItemEntry($item['id']);
 
             }
         } catch(PDOException $e) {
@@ -346,8 +350,8 @@ class Bundle extends AbstractItem {
         global $pdo;
 
         $stmt = $pdo->prepare("SELECT count(*)
-        FROM menus where nome = ? and preco = ? and foto = ? and descricao = ? and id_estabelecimento = ?;");
-        $stmt->execute([$this->nome,$this->preco,$this->foto,$this->descricao,$_SESSION['id_estabelecimento']]);
+        FROM menus where nome = ? and preco = ? and foto = ? and descricao = ? and id_empresa = ?;");
+        $stmt->execute([$this->nome,$this->preco,$this->foto,$this->descricao,$_SESSION['id_empresa']]);
         $count = $stmt->fetchColumn();
 
         return $count > 0;
@@ -372,13 +376,13 @@ class Bundle extends AbstractItem {
         where nome = ?
         and preco = ? and descricao = ?
         and disponivel = ? and foto = ?
-        and id_estabelecimento = ?";
+        and id_empresa = ?";
 
         $stmt = $pdo->prepare($id_query);
         $stmt->execute([
             $this->nome,$this->preco,
             $this->descricao,$this->disponivel == 'true' ? true :false,
-            $this->foto, $_SESSION['id_estabelecimento']]);
+            $this->foto, $_SESSION['id_empresa']]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $result['id_menu'];

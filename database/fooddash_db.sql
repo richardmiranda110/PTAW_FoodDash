@@ -37,6 +37,9 @@ CREATE TABLE IF NOT EXISTS Clientes (
     password VARCHAR(255) NOT NULL
 );
 
+------------------------------------------------------------------
+-- Tabela 'ptaw-gr2-2024' Entregadores - 2ª tabela a ser criada --
+------------------------------------------------------------------
 -- Tabela Entregador
 CREATE TABLE IF NOT EXISTS Entregadores (
     id_entregador SERIAL PRIMARY KEY,
@@ -44,6 +47,10 @@ CREATE TABLE IF NOT EXISTS Entregadores (
     veiculo VARCHAR(100),
     disponivel boolean default true not null
 );
+
+-----------------------------------------------------------------------
+-- Tabela 'ptaw-gr2-2024' ACTION_LOGGER - XXXXXª tabela a ser criada --
+-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS ACTION_LOGGER (
     id SERIAL PRIMARY KEY,
     AFFECTED_ID INT NOT NULL,
@@ -100,7 +107,7 @@ CREATE TABLE IF NOT EXISTS Pedidos (
     precoTotal DECIMAL(10, 2) NOT NULL,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
     id_entregador INTEGER REFERENCES Entregadores(id_entregador) ON DELETE CASCADE NOT NULL,
-    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
+    id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 -- Tabela Categoria
 CREATE TABLE IF NOT EXISTS Categorias (
@@ -119,7 +126,7 @@ CREATE TABLE IF NOT EXISTS Itens (
     itemSozinho BOOLEAN DEFAULT FALSE,
     personalizacoesAtivas BOOLEAN DEFAULT FALSE,
     id_categoria INTEGER NOT NULL REFERENCES Categorias(id_categoria) ON DELETE CASCADE NOT NULL,
-    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
+    id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 -- Tabela Menu
 CREATE TABLE IF NOT EXISTS Menus (
@@ -129,7 +136,7 @@ CREATE TABLE IF NOT EXISTS Menus (
     descricao VARCHAR(100) DEFAULT 'Nenhuma descrição.',
     disponivel boolean DEFAULT TRUE,
     foto VARCHAR(255),
-    id_estabelecimento INTEGER REFERENCES Estabelecimentos(id_estabelecimento) ON DELETE CASCADE NOT NULL
+    id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 -- Tabela Opcao
 CREATE TABLE IF NOT EXISTS Opcoes (
@@ -145,11 +152,10 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
     classificacao INTEGER CHECK (
         classificacao BETWEEN 1 AND 5
     ),
-    /* autor VARCHAR(100), */
     data DATE DEFAULT NOW(),
     descricao TEXT,
     id_cliente INTEGER REFERENCES Clientes(id_cliente) ON DELETE CASCADE NOT NULL,
-    id_empresa INTEGER REFERENCES Emmpresas(id_empresa) ON DELETE CASCADE NOT NULL
+    id_empresa INTEGER REFERENCES Empresas(id_empresa) ON DELETE CASCADE NOT NULL
 );
 -- Tabelas de Associação
 -- Tabela Pedido_Item
@@ -157,7 +163,7 @@ CREATE TABLE IF NOT EXISTS Pedido_Itens (
     id_pedido_item SERIAL PRIMARY KEY,
     id_pedido INTEGER REFERENCES Pedidos(id_pedido) ON DELETE CASCADE NOT NULL,
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
-    id_menu INTEGER REFERENCES menus(id_menu) ON DELETE CASCADE NOT NULL,
+    id_menu INTEGER REFERENCES menus(id_menu) ON DELETE CASCADE,
     quantidade INTEGER DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS Pedido_Item_Opcoes (
@@ -178,13 +184,7 @@ CREATE TABLE IF NOT EXISTS Item_Menus (
     id_item INTEGER REFERENCES Itens(id_item) ON DELETE CASCADE NOT NULL,
     id_menu INTEGER REFERENCES Menus(id_menu) ON DELETE CASCADE NOT NULL
 );
--- Tabela Item Menus Opções
-CREATE TABLE IF NOT EXISTS Item_Menus_Opcoes (
-    id_opcao_menu SERIAL PRIMARY KEY,
-    id_item_menu INTEGER REFERENCES Item_Menus(id_item_menu) ON DELETE CASCADE NOT NULL,
-    id_opcao INTEGER REFERENCES Opcoes(id_opcao) ON DELETE CASCADE,
-    quantidade INTEGER DEFAULT 1
-);
+
 ALTER TABLE Pedidos
 ADD CONSTRAINT check_estado_valido CHECK (
         estado IN (
@@ -201,8 +201,8 @@ CREATE OR REPLACE FUNCTION verificar_avaliacao_duplicada() RETURNS TRIGGER AS $$
         SELECT 1
         FROM Avaliacoes
         WHERE id_cliente = NEW.id_cliente
-            AND id_estabelecimento = NEW.id_estabelecimento
-    ) THEN RAISE EXCEPTION 'Cliente já avaliou este estabelecimento.';
+            AND id_empresa = NEW.id_empresa
+    ) THEN RAISE EXCEPTION 'Cliente já avaliou esta empresa.';
 END IF;
 RETURN NEW;
 END;
@@ -214,7 +214,7 @@ CREATE OR REPLACE FUNCTION inserir_pedido(
         p_id_prod INTEGER,
         p_value_pedido INTEGER,
         p_id_cliente INTEGER,
-        p_id_estabelecimento INTEGER,
+        p_id_empresa INTEGER,
         p_id_entregador INTEGER,
         p_opcoes JSONB
     ) RETURNS INTEGER AS $$
@@ -230,7 +230,7 @@ INSERT INTO pedidos (
         precototal,
         id_cliente,
         id_entregador,
-        id_estabelecimento
+        id_empresa
     )
 VALUES (
         NOW(),
@@ -239,7 +239,7 @@ VALUES (
         p_value_pedido,
         p_id_cliente,
         p_id_entregador,
-        p_id_estabelecimento
+        p_id_empresa
     )
 RETURNING id_pedido INTO v_id_pedido;
 ELSE
@@ -269,34 +269,34 @@ END;
 $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION ADICIONAR_MENU() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
 INSERT INTO ACTION_LOGGER(AFFECTED_ID, AFFECTED_COMPANY, ACTION_TYPE)
-VALUES (NEW.id_menu, NEW.id_estabelecimento, 'ADDED MENU');
+VALUES (NEW.id_menu, NEW.id_empresa, 'ADDED MENU');
 RETURN NEW;
 END;
 $$;
 CREATE OR REPLACE FUNCTION REMOVER_MENU() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
 INSERT INTO ACTION_LOGGER(AFFECTED_ID, AFFECTED_COMPANY, ACTION_TYPE)
 VALUES (
-        NEW.id_menu,
-        NEW.id_estabelecimento,
+        OLD.id_menu,
+        OLD.id_empresa,
         'DELETED MENU'
     );
-RETURN NEW;
+RETURN OLD;
 END;
 $$;
 CREATE OR REPLACE FUNCTION ADICIONAR_ITEM() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
 INSERT INTO ACTION_LOGGER(AFFECTED_ID, AFFECTED_COMPANY, ACTION_TYPE)
-VALUES (NEW.id_item, NEW.id_estabelecimento, 'ADDED ITEM');
+VALUES (NEW.id_item, NEW.id_empresa, 'ADDED ITEM');
 RETURN NEW;
 END;
 $$;
 CREATE OR REPLACE FUNCTION REMOVER_ITEM() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
 INSERT INTO ACTION_LOGGER(AFFECTED_ID, AFFECTED_COMPANY, ACTION_TYPE)
 VALUES (
-        NEW.id_item,
-        NEW.id_estabelecimento,
+        OLD.id_item,
+        OLD.id_empresa,
         'DELETED ITEM'
     );
-RETURN NEW;
+RETURN OLD;
 END;
 $$;
 CREATE OR REPLACE FUNCTION ADICIONAR_CATEGORIA() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
@@ -308,11 +308,11 @@ $$;
 CREATE OR REPLACE FUNCTION REMOVER_CATEGORIA() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
 INSERT INTO ACTION_LOGGER(AFFECTED_ID, AFFECTED_COMPANY, ACTION_TYPE)
 VALUES (
-        NEW.id_categoria,
-        NEW.id_empresa,
+        OLD.id_categoria,
+        OLD.id_empresa,
         'DELETED CATEGORY'
     );
-RETURN NEW;
+RETURN OLD;
 END;
 $$;
 CREATE OR REPLACE FUNCTION ADICIONAR_MENU_ITENS() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
@@ -323,24 +323,19 @@ END;
 $$;
 CREATE OR REPLACE FUNCTION REMOVER_MENU_ITENS() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$ BEGIN
 INSERT INTO ACTION_LOGGER(AFFECTED_ID, AFFECTED_COMPANY, ACTION_TYPE)
-VALUES (NEW.id_item, NEW.id_menu, 'DELETED MENU ITEM');
-RETURN NEW;
+VALUES (OLD.id_item, OLD.id_menu, 'DELETED MENU ITEM');
+RETURN OLD;
 END;
 $$;
 -- TRIGGERS
-CREATE TRIGGER ADICIONAR_MENU
-AFTER
-INSERT ON Menus FOR EACH ROW EXECUTE FUNCTION ADICIONAR_MENU();
+CREATE TRIGGER ADICIONAR_MENU AFTER INSERT ON Menus FOR EACH ROW EXECUTE FUNCTION ADICIONAR_MENU();
 CREATE TRIGGER REMOVER_MENU BEFORE DELETE ON Menus FOR EACH ROW EXECUTE FUNCTION REMOVER_MENU();
-CREATE TRIGGER ADICIONAR_ITEM
-AFTER
-INSERT ON Itens FOR EACH ROW EXECUTE FUNCTION ADICIONAR_ITEM();
+
+CREATE TRIGGER ADICIONAR_ITEM AFTER INSERT ON Itens FOR EACH ROW EXECUTE FUNCTION ADICIONAR_ITEM();
 CREATE TRIGGER REMOVER_ITEM BEFORE DELETE ON Itens FOR EACH ROW EXECUTE FUNCTION REMOVER_ITEM();
-CREATE TRIGGER ADICIONAR_CATEGORIA
-AFTER
-INSERT ON Categorias FOR EACH ROW EXECUTE FUNCTION ADICIONAR_CATEGORIA();
+
+CREATE TRIGGER ADICIONAR_CATEGORIA AFTER INSERT ON Categorias FOR EACH ROW EXECUTE FUNCTION ADICIONAR_CATEGORIA();
 CREATE TRIGGER REMOVER_CATEGORIA BEFORE DELETE ON Categorias FOR EACH ROW EXECUTE FUNCTION REMOVER_CATEGORIA();
-CREATE TRIGGER ADICIONAR_MENU_ITENS
-AFTER
-INSERT ON Item_Menus FOR EACH ROW EXECUTE FUNCTION ADICIONAR_MENU_ITENS();
+
+CREATE TRIGGER ADICIONAR_MENU_ITENS AFTER INSERT ON Item_Menus FOR EACH ROW EXECUTE FUNCTION ADICIONAR_MENU_ITENS();
 CREATE TRIGGER REMOVER_MENU_ITENS BEFORE DELETE ON Item_Menus FOR EACH ROW EXECUTE FUNCTION REMOVER_MENU_ITENS();

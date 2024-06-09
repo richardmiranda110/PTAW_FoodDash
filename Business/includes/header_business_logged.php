@@ -17,5 +17,5 @@ require_once   "./includes/session.php";
     </a>
 
   </div>
-  <p class="fw-bold text-light" style="margin-right: 2vw;margin-top:1.5vh;margin-bottom:0" id="item-name-label"><?php echo $_SESSION['nome']; ?></p>
+  <p class="fw-bold text-light" style="margin-right: 2vw;margin-top:0;margin-bottom:0; min-width: 10vw; text-align: center;" id="item-name-label"><?php echo $_SESSION['nome']; ?></p>
 </nav>

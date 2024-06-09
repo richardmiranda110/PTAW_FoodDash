@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         $stmt = $pdo->prepare("INSERT INTO categorias(nome, id_empresa) VALUES (?, ?);");
         $stmt->execute([$_POST["category-input"],$idEmpresa]);
-        header('Location: /business/dashboard_lista_categorias.php');
+        header('Location: ./dashboard_lista_categorias.php');
         exit();
     } catch(PDOException $e) {
         echo "Erro ao inserir registo: " . $e->getMessage();
@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if(isset($_GET['delete'])){
+    echo $_GET['delete'].' HI';
     $stmt = $pdo->prepare("DELETE FROM categorias WHERE id_categoria = ? and id_empresa = ?");
     $stmt->execute([$_GET['delete'],$idEmpresa]);
     echo "Success :D";  
@@ -41,8 +42,9 @@ $query =
 "SELECT categorias.nome, categorias.id_categoria,
 COUNT(itens.id_item) AS count FROM  categorias
 LEFT JOIN itens ON categorias.id_categoria = itens.id_categoria
-where id_empresa = ? GROUP BY categorias.id_categoria, categorias.nome
-ORDER BY categorias.id_categoria;;";
+where categorias.id_empresa = ? 
+GROUP BY categorias.id_categoria, categorias.nome
+ORDER BY categorias.id_categoria;";
 
 $stmt = $pdo->prepare($query);
 $stmt->execute([$idEmpresa]);

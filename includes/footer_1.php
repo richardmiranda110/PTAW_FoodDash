@@ -3,7 +3,7 @@
     <h1 style="text-align: left; font-weight: bolder; color: white;">FoodDash</h1>
     <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-2 border-top border-bottom">
       <div class="col mb-3">
-        <img src="./assets/imgs/fd_logo_blackWhite.png" alt="Bootstrap" width="190" height="110">
+        <img src="./assets/stock_imgs/fd_logo_blackWhite.png" alt="Bootstrap" width="190" height="110">
       </div>
       <div class="col mb-3"></div>
       <div class="col mb-3"></div>

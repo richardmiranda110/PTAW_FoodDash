@@ -39,28 +39,28 @@
     <div class="row g-4 pt-5 row-cols-1 row-cols-lg-4">
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="./assets/imgs/location.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assets/stock_imgs/location.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Escolha localização</h3>
         <p>Escolha a localização onde a sua comida será entregue.</p>
       </div>
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="./assets/imgs/escolha_comida_burger_drink.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assets/stock_imgs/escolha_comida_burger_drink.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Escolha comida</h3>
         <p>Escolha entre diversos tipos de restaurantes e comidas deliciosas disponíveis.</p>
       </div>
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="./assets/imgs/pague_online_money_euro.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assets/stock_imgs/pague_online_money_euro.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Pague online</h3>
         <p>Pague de maneira rápida, simples e segura. Escolha entre diversos meios de pagamento.</p>
       </div>
       <div class="feature col" style="text-align: center;">
         <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3">
-          <img src="./assets/imgs/desfrute_smileFace.png" alt="Ícone de localização" width="160" height="160">
+          <img src="./assets/stock_imgs/desfrute_smileFace.png" alt="Ícone de localização" width="160" height="160">
         </div>
         <h3 class="fs-2 text-body-emphasis">Desfrute</h3>
         <p>A comida é feita e entregue diretamente onde estás.</p>
@@ -72,12 +72,12 @@
   <div class="container px-4 py-4" id="custom-cards">
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('./assets/imgs/descontos_20.jpg'); background-size: cover;">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('./assets/stock_imgs/descontos_20.jpg'); background-size: cover;">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Descontos nos melhores restaurantes</h3>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="me-auto">
-                <img src="./assets/imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
+                <img src="./assets/stock_imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
               </li>
             </ul>
           </div>
@@ -85,12 +85,12 @@
       </div>
 
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('./assets/imgs/live_tracking.jpg'); background-size: cover;">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('./assets/stock_imgs/live_tracking.jpg'); background-size: cover;">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Acompanhamento em tempo real</h3>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="me-auto">
-                <img src="./assets/imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
+                <img src="./assets/stock_imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
               </li>
             </ul>
           </div>
@@ -98,12 +98,12 @@
       </div>
 
       <div class="col">
-        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('./assets/imgs/fast_delivery.jpg'); background-size: cover;">
+        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('./assets/stock_imgs/fast_delivery.jpg'); background-size: cover;">
           <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Entregas rápidas</h3>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="me-auto">
-                <img src="./assets/imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
+                <img src="./assets/stock_imgs/fd reduced logo.png" alt="Bootstrap" width="32" height="20">
               </li>
             </ul>
           </div>

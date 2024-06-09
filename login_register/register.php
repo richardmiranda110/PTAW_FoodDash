@@ -21,7 +21,7 @@ if (isset($_SESSION['authenticated'])) {
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="../assets/imgs/FoodDash.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
+  <img src="../assets/stock_imgs/FoodDash.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
 
   <!-- Formulário de registo -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 10vh;">

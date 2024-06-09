@@ -25,7 +25,7 @@ if (isset($_COOKIE['remembered_email'])) {
 
 <body>
   <!-- Imagem no canto superior esquerdo -->
-  <img src="/~ptaw-2024-gr2/assets/imgs/fooddash%20logo%20image.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
+  <img src="/~ptaw-2024-gr2/assets/stock_imgs/fooddash%20logo%20image.png" alt="FoodDash Logo" id="logo_fooddash" style="position: absolute; top: 8%; left: 4%; width: 15%; height: auto; cursor: pointer;">
 
   <!-- Formulário de login -->
   <div class="container d-flex align-items-center justify-content-center" style="margin-top: 25vh;">

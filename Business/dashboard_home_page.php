@@ -14,17 +14,17 @@ $idEmpresa = $_SESSION['id_empresa'];
 function ObterEstatisticas()
 {
     global $pdo;
-    $query = 'SELECT (SELECT round(sum(precototal),2) from pedidos where id_estabelecimento = :id_estabelecimento) as vendas,
-    (SELECT count(id_pedido) from pedidos where id_estabelecimento = :id_estabelecimento) as pedidos,
+    $query = 'SELECT (SELECT round(sum(precototal),2) from pedidos where id_empresa = :id_empresa) as vendas,
+    (SELECT count(id_pedido) from pedidos where id_empresa = :id_empresa) as pedidos,
    (select round(avg(pedidos.precototal),2) from pedidos 
-   inner join estabelecimentos on estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento 
-   where pedidos.id_estabelecimento = :id_estabelecimento) as precomedio;';
+   inner join estabelecimentos on estabelecimentos.id_empresa = pedidos.id_empresa 
+   where pedidos.id_empresa= :id_empresa) as precomedio;';
     try {
         // query
         $stmt =
             $pdo->prepare($query);
 
-        $stmt->bindValue(":id_estabelecimento", $_SESSION['id_estabelecimento']);
+        $stmt->bindValue(":id_empresa", $_SESSION['id_empresa']);
         // Executar a query e verificar que não retornou false
         if ($stmt->execute()) {
             // Fetch retorna um único resultado, então usamos fetch() e não fetchAll()
@@ -49,7 +49,7 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
     $query = "SELECT SUM(precoTotal) AS total_dinheiro
         FROM Pedidos
         JOIN Estabelecimentos 
-              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              ON Pedidos.id_empresa = Estabelecimentos.id_empresa 
               WHERE Estabelecimentos.id_empresa = :empresaId
           AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
@@ -71,6 +71,7 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="./assets/imgs/t_fd_logo_tab_icon.png">
     <link rel="stylesheet" href="../assets/styles/sitecss.css">
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
     <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
@@ -86,13 +87,13 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
     </div>
 
     <!--Zona de Conteudo -->
-    <div id="contentPage" class="container-xxl mt-5">
+    <div id="contentPage" class="container-xxl mt-5" style="margin: auto !important; width: 80vw;">
 
         <!--Zona de Conteudo da Página -->
         <p class="ml-4 mt-4 mb-0 text-white"> a</p>
         <p class=" h3 ml-4 mt-3 mb-0"><strong>Sumário de Hoje</strong></>
 
-        <div class="row row-cols-1 row-cols-md-3 g-4 ml-2 mt-2 mr-2 w-75">
+        <div class="row row-cols-1 row-cols-md-3 g-4 ml-2 mt-2 mr-2 w-100">
             <!-- Vendas -->
             <div class="col ">
                 <div class="card">
@@ -124,14 +125,16 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
             </div>
         </div>
 
-        <div class="row">
+
+        <!-- Ações rápidas -->
+        <div class="row" style="margin: auto !important">
             <div class="col-md-3">
                 <div class="m-5 ml-1">
-                    <h2 class="text-xl font-semibold mb-4">Ações Rápidas</h2>
-                    <div class="list-group list-group-flush">
+                    <h2 class="text-xl font-semibold mb-4" style="width: 15vw">Ações Rápidas</h2>
+                    <div class="list-group list-group-flush" style="width: 15vw">
                         <!-- Ver todo o estabelecimento -->
-                        <a href="./performance.php" type="button" class="list-group-item list-group-item-action" aria-current="true">
-                            Ver todo o estabelecimento
+                        <a href="./empresa_page.php" type="button" class="list-group-item list-group-item-action" aria-current="true">
+                            Ver info empresa
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                             </svg>
@@ -139,7 +142,7 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
 
                         <!-- Ver Itens -->
                         <a href="./dashboard_lista_items.php" type="button" class="list-group-item list-group-item-action">
-                            Ver Itens
+                            Ver itens
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                             </svg>
@@ -172,8 +175,8 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
                         </div>
                         <style>
                             .chart {
-                                max-width:68%; 
-                                min-height: 450px;
+                                max-width:100%; 
+                                min-height: 400px;
                             }
                             .row {
                                 margin:0 !important;
@@ -184,142 +187,6 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
                             <div style="width:100%;height:100%">
                                 <div style="position: relative;">
                                     <canvas id="vendasChart" class="chart"></canvas>
-                                    <!--<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="300" role="application">
-                                        <rect width="1050" height="300" fill="transparent"></rect>
-                                        <g transform="translate(40,10)">
-                                            <g>
-                                                <line opacity="1" x1="0" x2="0" y1="0" y2="250" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="200" x2="200" y1="0" y2="250" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="400" x2="400" y1="0" y2="250" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="600" x2="600" y1="0" y2="250" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="800" x2="800" y1="0" y2="250" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="1000" x2="1000" y1="0" y2="250" stroke="#f3f4f6" stroke-width="1"></line>
-                                            </g>
-                                            <g>
-                                                <line opacity="1" x1="0" x2="1000" y1="250" y2="250" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="0" x2="1000" y1="189" y2="189" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="0" x2="1000" y1="127" y2="127" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="0" x2="1000" y1="66" y2="66" stroke="#f3f4f6" stroke-width="1"></line>
-                                                <line opacity="1" x1="0" x2="1000" y1="5" y2="5" stroke="#f3f4f6" stroke-width="1"></line>
-                                            </g>
-                                            <g transform="translate(0,250)">
-                                                <g transform="translate(0,0)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="text-before-edge" text-anchor="middle" transform="translate(0,16) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        Jan
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(200,0)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="text-before-edge" text-anchor="middle" transform="translate(0,16) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        Feb
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(400,0)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="text-before-edge" text-anchor="middle" transform="translate(0,16) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        Mar
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(600,0)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="text-before-edge" text-anchor="middle" transform="translate(0,16) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        Apr
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(800,0)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="text-before-edge" text-anchor="middle" transform="translate(0,16) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        May
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(1000,0)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="text-before-edge" text-anchor="middle" transform="translate(0,16) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        Jun
-                                                    </text>
-                                                </g>
-                                                <line x1="0" x2="1000" y1="0" y2="0" style="stroke: transparent; stroke-width: 1;"></line>
-                                            </g>
-                                            <g transform="translate(0,0)">
-                                                <g transform="translate(0,250)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="central" text-anchor="end" transform="translate(-16,0) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        0
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(0,189)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="central" text-anchor="end" transform="translate(-16,0) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        50
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(0,127)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="central" text-anchor="end" transform="translate(-16,0) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        100
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(0,66)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="central" text-anchor="end" transform="translate(-16,0) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        150
-                                                    </text>
-                                                </g>
-                                                <g transform="translate(0,5)" style="opacity: 1;">
-                                                    <line x1="0" x2="0" y1="0" y2="0" style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
-                                                    <text dominant-baseline="central" text-anchor="end" transform="translate(-16,0) rotate(0)" style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
-                                                        200
-                                                    </text>
-                                                </g>
-                                                <line x1="0" x2="0" y1="0" y2="250" style="stroke: transparent; stroke-width: 1;"></line>
-                                            </g>
-                                            <path d="M0,176C66.66666666666667,183.5,133.33333333333331,191,200,191C266.6666666666667,191,333.3333333333333,33,400,33C466.6666666666667,33,533.3333333333334,154,600,154C666.6666666666666,154,733.3333333333334,146.66666666666666,800,132C866.6666666666666,117.33333333333333,933.3333333333334,58.66666666666667,1000,0" fill="none" stroke-width="2" stroke="#e11d48"></path>
-                                            <path d="M0,197C66.66666666666667,139.5,133.33333333333331,82,200,82C266.6666666666667,82,333.3333333333333,175,400,175C466.6666666666667,175,533.3333333333334,72,600,72C666.6666666666666,72,733.3333333333334,218,800,218C866.6666666666666,218,933.3333333333334,139.5,1000,61" fill="none" stroke-width="2" stroke="#2563eb"></path>
-                                            <g>
-                                                <g transform="translate(1000, 0)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(800, 132)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(600, 154)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(400, 33)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(200, 191)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(0, 176)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(1000, 61)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(800, 218)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(600, 72)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(400, 175)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(200, 82)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                                <g transform="translate(0, 197)" style="pointer-events: none;">
-                                                    <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0" style="pointer-events: none;"></circle>
-                                                </g>
-                                            </g>
-                                            <g>
-                                                <rect width="1000" height="250" fill="red" opacity="0" style="cursor: auto;">
-                                                </rect>
-                                            </g>
-                                        </g>
-                                    </svg>-->
                                 </div>
                             </div>
                         </div>
@@ -327,17 +194,12 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
                 </div>
             </div>
         </div>
-
-
-
-
-
-        <!-- Ações rápidas -->
-
     </div>
+
     <!--Fim do conteúdo de página-->
+
     <?php
-    include __DIR__ . "/includes/footer_business.php";
+    include "./includes/footer_business_2.php";
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

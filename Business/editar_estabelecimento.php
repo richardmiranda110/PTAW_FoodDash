@@ -15,6 +15,7 @@ $estabelecimento = ObterEstabelecimento($id_estabelecimento);
 if($estabelecimento == false){
     exit("Restaurante Invalido");
 }
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (
         isset($_POST['nome']) 
@@ -26,15 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if($isImageAttached == true)
         require_once '../uploadImagem.php';
-    
-        $caminhoArquivo = basename($target_file);
+
         $estabelecimentoModificado = array(
             'nome' => htmlspecialchars(trim($_POST['nome'])),
             'localizacao' => htmlspecialchars(trim($_POST['localizacao'])),
             'telemovel' => htmlspecialchars(trim($_POST['telemovel'])),
             'taxa_entrega' => htmlspecialchars(trim($_POST['taxa_entrega'])),
             'tempo_medio_entrega' => htmlspecialchars(trim($_POST['tempo_medio_entrega'])),
-            'imagem' => htmlspecialchars( $isImageAttached ? $caminhoArquivo : $estabelecimento['imagem']) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
+            'imagem' => htmlspecialchars( $isImageAttached == 1 ? $caminhoArquivo : $estabelecimento['imagem']) // $caminhoArquivo contém o caminho completo do arquivo de imagem no servidor
         );
 
         if ($estabelecimentoModificado !== null) {
@@ -186,7 +186,7 @@ function getMsgImagem($status, $message)
                                 </div>
                                 <br><br><br>
                                 <!-- Imagem -->
-                                <img src= "../<?php echo $estabelecimento['imagem']; ?>"
+                                <img src= "../assets/stock_imgs/<?php echo $estabelecimento['imagem']; ?>"
                                     alt="<?php echo htmlspecialchars($estabelecimento['nome']); ?>" style="margin:10px;width:10vh;height:10vh" >
                                 <label for="imagem" class="form-label">Alterar Imagem:</label>
                                 <input type="file" class="btn btn-light form-control" name="imagem" id="imagem" file=""
@@ -211,7 +211,7 @@ function getMsgImagem($status, $message)
 <br><br><br>
 <!--Fim do conteúdo de página-->
 <?php
-include __DIR__ . "/includes/footer_business.php";
+include __DIR__ . "/includes/footer_business_2.php";
 ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

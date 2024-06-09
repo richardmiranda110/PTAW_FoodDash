@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // retrieve establishment id
-$idEmpresa = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_empresa'];
 
 if(isset($_GET['deleteoption'])){
     $stmt = $pdo->prepare("DELETE FROM opcoes WHERE id_opcao = ?");
@@ -30,7 +30,7 @@ if(isset($_GET['deletemenu'])){
         FROM menus 
         WHERE id_menu = ? 
         and id_menu 
-        in ( select id_menu from menus where id_estabelecimento = ?)"
+        in ( select id_menu from menus where id_empresa = ?)"
         );
     $stmt->execute([$_GET['deletemenu'],$idEmpresa]);
 
@@ -39,7 +39,7 @@ if(isset($_GET['deletemenu'])){
         FROM item_menus 
         WHERE id_menu = ? 
         and id_menu 
-        in ( select id_menu from menus where id_estabelecimento = ?)"
+        in ( select id_menu from menus where id_empresa = ?)"
         );
     $stmt->execute([$_GET['deletemenu'],$idEmpresa]);
     exit();
@@ -51,7 +51,7 @@ if(isset($_GET['deletemenuitem'])){
         FROM item_menus 
         WHERE id_item = ? 
         and id_menu 
-        in ( select id_menu from menus where id_estabelecimento = ?)
+        in ( select id_menu from menus where id_empresa = ?)
         ");
     $stmt->execute([$_GET['deletemenuitem'],$idEmpresa]);
     exit();
@@ -73,7 +73,7 @@ function listarTodosMenus($idEmpresa){
     on mi.id_item = item.id_item
     LEFT JOIN menus menu 
     on menu.id_menu = mi.id_menu
-    where menu.id_estabelecimento = ?
+    where menu.id_empresa = ?
     GROUP BY menu.nome,menu.id_menu,menu.disponivel,menu.preco,menu.descricao,menu.foto
     ";
     
@@ -97,7 +97,7 @@ function listarTodosMenus($idEmpresa){
     }
     
     $data = array(
-            "id_estabelecimento" => $idEmpresa,
+            "id_empresa" => $idEmpresa,
             "itens" => $items
     );
     return $data;

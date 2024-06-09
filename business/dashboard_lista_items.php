@@ -50,7 +50,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
       </div>
     </nav>
 
-    <span class="float:left fw-bold h2 m-3 mb-0 text-left">Items</span> 
+    <span class="float:left fw-bold h2 m-3 mb-0 text-left">Itens</span> 
     <button class="float-end btn btn-custom fw-bold mt-1 " style="margin-right:4.5vw" onclick="window.open('./dashboard_inserir_item.php')">+ Novo Item</button>
     <div id="DefaultDable" ></div>
   </div>
@@ -70,7 +70,9 @@ $idEmpresa = 1;
 
 </div>
   <!--Zona do Footer -->
-  <?php include "./includes/footer_business.php"; ?>
+  <?php
+    include "./includes/footer_business_2.php";
+  ?>
   <script src="./assets/js/lista_items.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>

@@ -14,50 +14,13 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SES
 // cria o o atributo $Validacao com o valor true, pois não existem falhas
 $Validacao = true;
 $empresaModificado = null;
-
+$empresa = ObterEmpresaLocal();
 // Recebendo dados da BD de um determinado utilizador
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Obter os dados da empresa
     $empresa = ObterEmpresaLocal();
 }
-// Enviando dados para a BD, ao editar dados de um determinado «empresa
-else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    require_once '../uploadImagem.php';
-    // coloca o link numa variavel
 
-    $caminhoArquivo = basename($target_file);
-
-    // Atribuir os dados do formulário à variável $empresa
-    // e, ao mesmo tempo, retirar carateres perigosos
-    $empresaModificado = array(
-        'nome' => htmlentities(trim($_POST['nome'])),
-        'morada' => htmlentities(trim($_POST['morada'])),
-        'telemovel' => htmlentities(trim($_POST['telemovel'])),
-        'email' => htmlentities(trim($_POST['email'])),
-        'tipo' => htmlentities(trim($_POST['tipo'])),
-        'logotipo' => $caminhoArquivo
-    );
-
-// Se não ocorreram erros de validação, e se a empresa e o emprestimo tiver null
-if ($Validacao == true && ($empresaModificado !== null)) {
-    // Editar a empresa na base de dados
-    if (EditarEmpresa($empresaModificado)) { // ALTERAR ID
-        $empresa = ObterEmpresaLocal(); // ALTERAR ID
-        echo "<div class='alert alert-success' role='alert'>
-            Dados alterados com sucesso
-        </div>";
-
-        // Ocorreu um erro na alteração de dados
-    } else {
-        echo "<div class='alert alert-danger' role='alert'>
-            Ocorreu um erro ao alterar dados! Por favor, tente novamente.
-        </div>";
-    }
-    // Se ocurrem erros 
-} else {
-    $empresa = ObterEmpresaLocal();
-}
-}
 ?>
 
 <!DOCTYPE html>
@@ -86,11 +49,52 @@ if ($Validacao == true && ($empresaModificado !== null)) {
 
 <!--Zona de Conteudo -->
 <div style="margin-top: 5vh;">
+
     <!-- Empresa -->
     <form id="empresa" class="w-75 form_editar" style="margin:auto;min-height: 59.8vh!important;" method="POST" enctype="multipart/form-data">
         <p class="mt-3 h3 pt-5 fw-bold">Informações</p>
 
         <div class="align-items-md-stretch">
+        <?php
+
+// Enviando dados para a BD, ao editar dados de um determinado «empresa
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $isImageAttached = $_FILES['imagem']['name'] != '';
+        
+    if($isImageAttached == true)
+    require_once '../uploadImagem.php';
+
+    // Atribuir os dados do formulário à variável $empresa
+    // e, ao mesmo tempo, retirar carateres perigosos
+    $empresaModificado = array(
+        'nome' => htmlentities(trim($_POST['nome'])),
+        'morada' => htmlentities(trim($_POST['morada'])),
+        'telemovel' => htmlentities(trim($_POST['telemovel'])),
+        'email' => htmlentities(trim($_POST['email'])),
+        'tipo' => htmlentities(trim($_POST['tipo'])),
+        'logotipo' => htmlspecialchars( $isImageAttached == 1 ? $caminhoArquivo : $empresa['logotipo']) 
+    );
+
+    // Se não ocorreram erros de validação, e se a empresa e o emprestimo tiver null
+    if ($Validacao == true && ($empresaModificado !== null)) {
+        // Editar a empresa na base de dados
+        if (EditarEmpresa($empresaModificado)) { // ALTERAR ID
+            $empresa = ObterEmpresaLocal(); // ALTERAR ID
+            echo "<div class='alert alert-success' role='alert'>
+                Dados alterados com sucesso
+            </div>";
+
+            // Ocorreu um erro na alteração de dados
+        } else {
+            echo "<div class='alert alert-danger' role='alert'>
+                Ocorreu um erro ao alterar dados! Por favor, tente novamente.
+            </div>";
+        }
+        // Se ocurrem erros 
+    } 
+}
+
+?>
             <div>
                 <div class="card pb-0 mb-4">
                     <div class="p-3 d-flex justify-content-between">
@@ -196,7 +200,7 @@ if ($Validacao == true && ($empresaModificado !== null)) {
 </div>
 <!--Fim do conteúdo de página-->
 <?php
-include __DIR__ . "/includes/footer_business.php";
+    include "./includes/footer_business_2.php";
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

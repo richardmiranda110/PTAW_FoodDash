@@ -343,7 +343,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
             font-size:  3vh!important;;
         }
 
-        p{
+        #pricing p{
             font-size:  4vh!important;;
         }
     </style>
@@ -527,7 +527,7 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
     </section>
     <!--Fim do conteúdo de página-->
     <?php
-    include __DIR__ . "/includes/footer_business.php";
+    include "./includes/footer_business_2.php";
     ?>
 
     <!-- Scripts -->

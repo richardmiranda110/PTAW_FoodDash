@@ -12,7 +12,7 @@ $id_empresa = $_SESSION['id_empresa'];
 try {
     $sql = "SELECT p.id_pedido, p.data, p.estado, p.precototal
             FROM pedidos p
-            INNER JOIN estabelecimentos e ON p.id_estabelecimento = e.id_estabelecimento
+            INNER JOIN estabelecimentos e ON p.id_empresa = e.id_empresa
             WHERE e.id_empresa = :id_empresa";
 
     $stmt = $pdo->prepare($sql);

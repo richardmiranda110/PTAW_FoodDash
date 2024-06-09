@@ -36,7 +36,7 @@ function UrlContains($word){
 			<!-- Loja -->
 			<li>
 				<a href="./empresa_page.php" style="" class="nav-link row <?php echo UrlContains("empresa_page.php") ? "active" : "" ?>">
-					<span class="bi bi-building-fill col">
+					<span class="bi bi-building-fill">
 						Empresa
 					</span>
 				</a>
@@ -45,7 +45,7 @@ function UrlContains($word){
 			<li>
 				<a href="./estabelecimento_page.php" style="font-size: 0.9418em;" class="nav-link <?php echo UrlContains("estabelecimento_page.php") ? "active" : "" ?>">
 					<span class="bi bi-shop">
-						Estabelecimento
+						Estabelecimentos
 					</span>
 				</a>
 			</li>

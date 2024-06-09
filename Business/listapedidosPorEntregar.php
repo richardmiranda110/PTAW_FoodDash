@@ -2,6 +2,12 @@
 require_once __DIR__.'/includes/session.php';
 require_once __DIR__.'/../database/credentials.php';
 require_once __DIR__.'/../database/db_connection.php';
+
+if(!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SESSION['authenticatedB'])) {
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+    header("Location: /Business/dashboard_home_page.php");
+    exit();
+}
 ?>
 
 <!doctype html>
@@ -85,9 +91,9 @@ require_once __DIR__.'/../database/db_connection.php';
     </div>
 
   <!--FOOTER -->
-  <footer class="d-flex flex-wrap justify-content-end" style="margin-bottom: 0vh;">
-  <p style="margin-bottom: 0vh; font-size: 0.9vw;">© 2024<p style="margin-bottom: 0vh; margin-left: 0.2vw; color: #FEBB41; font-size: 0.9vw;">Food</p><p style="margin-bottom: 0vh; font-size: 0.9vw;">Dash</p></p>
-  </footer>
+  <?php
+    include "./includes/footer_business_2.php";
+  ?>
 
   </body>
 </html>

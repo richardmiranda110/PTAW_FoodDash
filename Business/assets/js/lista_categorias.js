@@ -9,7 +9,7 @@ const modalText = document.getElementById("modal-text");
 
 const btnNovaOpcao = document.querySelector("#btnNovoItemCategoria");
 
-const form = document.querySelector("#category-input");
+const form = document.querySelector("#category-form");
 
 // Botão de fechar a caixa
 const spanBotaoX = document.querySelectorAll(".close")[0];
@@ -41,7 +41,7 @@ const response = fetch('./lista_categorias.php')
     for(let item of data){
       console.log(item);
       items.push(item);
-      rows.push([ item.nome,item.count + (item.count == 1 ? " item" : " itens"),item.id]);
+      rows.push([ item.nome,item.count + (item.count == 1 ? " item" : " itens"),item]);
     }
     return rows;
   })
@@ -51,7 +51,7 @@ const response = fetch('./lista_categorias.php')
 	  dable.SetColumnNames(list_columns);
 
     dable.columnData[2].CustomRendering = function (_cellValue, rowNumber) {
-      return '<button> <img width="30" class="bg-white deleteRow" cellValue='+_cellValue+'  src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+      return '<button> <img width="30" class="bg-white deleteRow" cellValue='+_cellValue.id_categoria+'  src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
     };
 
 	  dable.BuildAll("DefaultDable"); 

@@ -14,11 +14,11 @@ $query =
   cliente.nome as cliente,
   pedido.estado as status,
   pedido.precototal as preco,
-  est.nome as estabelecimento
+  emp.nome as empresa
   FROM public.pedido_itens 
   INNER JOIN itens item on pedido_itens.id_item = item.id_item
   LEFT JOIN pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
-  INNER JOIN estabelecimentos est on pedido.id_estabelecimento = est.id_estabelecimento
+  INNER JOIN empresas emp on pedido.id_empresa = emp.id_empresa
   INNER JOIN clientes cliente ON pedido.ID_CLIENTE = cliente.id_cliente
   INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
   where pedido.id_cliente = ?;";
@@ -75,7 +75,7 @@ echo "Erro na conexão: " . $e->getMessage();
                 <div id="ticket-info" class="row border border-2 border-secondary rounded my-3">
                   <div class="col-sm-1 text-center align-self-center py-2 fs-6 "><span>13:46</span><br><span>'.$pedido['data'].'</span></div>
                     <div class="col-sm-5 rounded-left rounded-right align-self-center py-2 px-5 fs-6">
-                        <strong>Pedido #'.$pedido['id'].', '.$pedido['cliente'].'</span> em <span></strong>'.$pedido['estabelecimento'].'<br>
+                        <strong>Pedido #'.$pedido['id'].', '.$pedido['cliente'].'</span> em <span></strong>'.$pedido['empresa'].'<br>
                         <small></small>
                     </div>
                   <div class="col-sm-4 align-self-center py-2">

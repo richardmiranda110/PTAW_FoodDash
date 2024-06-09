@@ -11,17 +11,15 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome']) || !isset($_SES
     exit();
 }
 
-$id_estabelecimento = $_POST['id_estabelecimento'];
-
 $estabelecimentos = ObterEstabelecimentosEmpresaLocal();
 if($estabelecimentos == false){
     exit("Algo de errado aconteceu");
 }
 
 // Se não ocorreram erros de validação, atualizar o utilizador
-if ($id_estabelecimento !== null) {
+if (isset($_POST['id_estabelecimento']) != false) {
     // Editar o usuário no banco de dados
-    if (ApagarEstabelecimento($id_estabelecimento)) {
+    if (ApagarEstabelecimento($_POST['id_estabelecimento'] )) {
         echo "<script>alert('Estabelecimento apagado com sucesso!');</script>";
     } else {
         echo "<script>alert('Erro ao apagar o estabelecimento.');</script>";
@@ -45,7 +43,6 @@ if ($id_estabelecimento !== null) {
     <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
 
     <style>
-        /* Define a classe .container-75 com uma largura de 75% */
         .container {
             width: 75%;
             margin: 0 auto;
@@ -53,7 +50,6 @@ if ($id_estabelecimento !== null) {
             flex-wrap: wrap;
         }
 
-        /* Define a classe .max-img-size com a largura e altura máximas desejadas */
         .max-img-size {
             max-width: 100%;
             height: auto;
@@ -70,7 +66,6 @@ if ($id_estabelecimento !== null) {
 </div>
 
 <!--Zona de Conteudo -->
-<br><br>
 <div class="direita" style="margin-top: 10vh;">
     <h2 style="text-align: left;">Estabelecimentos da Empresa</h2>
     <div class="d-grid gap-2">
@@ -84,7 +79,7 @@ if ($id_estabelecimento !== null) {
                     <div class="card mb-3 col-md-12">
                         <div class="row">
                             <div class="col-md-4">
-                                <img class="img-fluid max-img-size" src="<?php echo htmlspecialchars($estabelecimento['imagem']); ?>" class="img-fluid rounded-start" alt="<?php echo htmlspecialchars($estabelecimento['nome']); ?>">
+                                <img class="img-fluid max-img-size" src="../assets/stock_imgs/<?php echo htmlspecialchars($estabelecimento['imagem']); ?>" class="img-fluid rounded-start" alt="<?php echo htmlspecialchars($estabelecimento['nome']); ?>">
                             </div>
                             <div class="col-md-8 justify-content-between">
                                 <br>
@@ -135,12 +130,9 @@ if ($id_estabelecimento !== null) {
     </div>
 </div>
 
-
-<!--Fim do conteúdo de página-->
-<br><br><br><br><br><br>
-<!-- Footer-->aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+<!-- Footer-->
 <?php
-include __DIR__ . "/includes/footer_business.php";
+    include "./includes/footer_business_2.php";
 ?>
 </body>
 <script>

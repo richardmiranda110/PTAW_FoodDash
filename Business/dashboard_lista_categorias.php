@@ -54,7 +54,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
     <div id="modal" class="modal d-none">
       <div class="modal-content" id="modal-content">
       <p class="fw-bold mt-1 mb-2" id="modal-text"></p>
-        <form id="category-input"  action='./lista_categorias.php' method="post">
+        <form id="category-form"  action='./lista_categorias.php' method="post">
           <input type="text" name ="category-input" class="mb-2 form-control" id="category-input">
         </form>
         <span class="close">&times;</span>
@@ -63,7 +63,7 @@ if (!isset($_SESSION['id_empresa']) || !isset($_SESSION['nome'])) {
 
     <!--Zona do Footer -->
     <footer class="container">
-      <?php include "./includes/footer_business.php"; ?>
+      <?php include "./includes/footer_business_2.php"; ?>
     </footer>
 
     <script src="./assets/js/lista_categorias.js"></script>

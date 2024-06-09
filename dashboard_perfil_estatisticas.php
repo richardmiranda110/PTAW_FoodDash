@@ -75,13 +75,13 @@ function getRestauranteMaisPedido($clienteId)
     }
 
     $query = "
-    SELECT estabelecimento,nome, count
+    SELECT empresa,nome, count
     FROM (
-        SELECT estabelecimentos.id_estabelecimento as estabelecimento,estabelecimentos.nome AS nome, COUNT(estabelecimentos.id_estabelecimento) AS count
+        SELECT empresas.id_empresa as empresa,empresas.nome AS nome, COUNT(empresas.id_empresa) AS count
         FROM pedidos
-        INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento
+        INNER JOIN empresas ON empresas.id_empresa = pedidos.id_empresa
         where pedidos.id_cliente = ?
-        GROUP BY estabelecimentos.nome,estabelecimento
+        GROUP BY empresas.nome,empresa
     ) AS counts
     ORDER BY count DESC
     LIMIT 1;

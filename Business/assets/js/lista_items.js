@@ -17,7 +17,7 @@ const response = fetch('./lista_items.php')
     dable.style = 'CulpaDoRichard';
 	  dable.SetColumnNames(list_columns);
     dable.columnData[0].CustomRendering = function(cellValue, rowNumber) {
-			return '<img src="../'+cellValue+'" alt="'+cellValue+'" width="70" height="70"  data-rownumber="' + rowNumber + '">';
+			return '<img src="../assets/stock_imgs/'+cellValue+'" alt="'+cellValue+'" width="70" height="70"  data-rownumber="' + rowNumber + '">';
 		};
 
     dable.columnData[1].CustomRendering = function(cellValue, rowNumber) {

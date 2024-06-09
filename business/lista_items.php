@@ -16,10 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // retrieve establishment id
-$idEmpresa = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_empresa'];
 
 if(isset($_GET['delete'])){
-    $stmt = $pdo->prepare("DELETE FROM itens WHERE id_item = ? and id_estabelecimento = ?");
+    $stmt = $pdo->prepare("DELETE FROM itens WHERE id_item = ? and id_empresa = ?");
     $stmt->execute([$_GET['delete'],$idEmpresa]);
     exit();
 }
@@ -45,11 +45,11 @@ function listarTodosMenus($idEmpresa){
     foto, itemsozinho, 
     personalizacoesativas,
     c.nome as categoria, 
-    c.id_categoria as categoria_id, id_estabelecimento
+    c.id_categoria as categoria_id, item.id_empresa
     FROM public.itens item 
     INNER JOIN categorias c 
     ON item.id_categoria = c.id_categoria
-    where id_estabelecimento = ? and itemsozinho = true ";
+    where item.id_empresa = ? and itemsozinho = true ";
     
     if(isset($_GET['categoria'])){
         $query = $query."and c.nome like ?";
@@ -82,7 +82,7 @@ function listarTodosMenus($idEmpresa){
     }
     
     $data = array(
-            "id_estabelecimento" => $idEmpresa,
+            "id_empresa" => $idEmpresa,
             "itens" => $items
     );
     return $data;
@@ -101,7 +101,6 @@ function getMenus($id_item){
 
 function listarItem($idItem){
     global $pdo;
-    echo 'hi :'.$_SESSION['id_estabelecimento'];
     $query =  
     "SELECT id_item, item.nome, preco, 
     descricao, disponivel, 
@@ -115,7 +114,7 @@ function listarItem($idItem){
     ON item.id_categoria = c.id_categoria
     INNER JOIN menu_items mi on mi.id_item = item.id_item
     INNER JOIN menus on menu.id_menu = mi.id_menu
-    where item.id_item = ? and item.id_estabelecimento = ".$_SESSION['id_estabelecimento']."";
+    where item.id_item = ? and item.id_empresa = ".$_SESSION['id_empresa']."";
     
     $stmt = $pdo->prepare($query);
     $stmt->execute([$idItem]);
@@ -137,7 +136,7 @@ function listarItem($idItem){
     );
     
     $data = array(
-            "id_estabelecimento" => $_SESSION['id_estabelecimento'],
+            "id_empresa" => $_SESSION['id_empresa'],
             "itens" => $final_item
     );
     return $data;

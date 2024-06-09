@@ -99,7 +99,7 @@
           <p class='mb-0'>Taxa de Entrega: a partir de " . $infoRest['taxa_entrega'] . "€</p>
         </div>
         <div class='col-lg-4 text-center'>
-          <img src='".$infoRest['logotipo']."' alt='" . $infoRest['nome'] . "' style='max-width: 20vw;'>
+          <img src='"."./assets/stock_imgs/".$infoRest['logotipo']."' alt='" . $infoRest['nome'] . "' style='max-width: 20vw;'>
         </div>
 		";
           ?>
@@ -173,8 +173,7 @@
    $query = "SELECT 'Menus' as nome 
 			union
 			SELECT DISTINCT categorias.nome FROM itens
-			INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento
-			INNER JOIN empresas on empresas.id_empresa=estabelecimentos.id_empresa
+			INNER JOIN empresas on empresas.id_empresa=itens.id_empresa
 			INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
 			WHERE itens.itemsozinho=true and REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? ";
 
@@ -245,15 +244,9 @@
 
 			$queryProd = "select m.id_menu, m.nome, m.descricao, m.preco, m.foto, false itemsozinho, true personalizacoesativas
 					from menus m 
-					inner join empresas e on e.id_empresa=m.id_estabelecimento  
+					inner join empresas e on e.id_empresa=m.id_empresa  
 					and REPLACE(LOWER(e.nome), ' ', '') LIKE ? ";
 			
-            $queryProdOld = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas  
-					FROM itens 
-					INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
-					INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
-					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ?";
-					//? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
 
             $idCategoria = str_replace(' ', '', $fCategoria);
             $fCat = "%" . strtolower(str_replace(' ', '', $fCategoria)) . "%";
@@ -261,7 +254,7 @@
             if (strtolower($idCategoria) == 'menus') {
 			$queryProd = "select m.id_menu, m.nome, m.descricao, m.preco, m.foto, false itemsozinho, true personalizacoesativas
 					from menus m 
-					inner join empresas e on e.id_empresa=m.id_estabelecimento  
+					inner join empresas e on e.id_empresa=m.id_empresa  
 					and REPLACE(LOWER(e.nome), ' ', '') LIKE ? ";
 					
 					$stmtProd = $pdo->prepare($queryProd);
@@ -270,10 +263,10 @@
 			} else {
              $queryProd = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itens.itemsozinho, itens.personalizacoesativas, menus.id_menu
 					FROM itens 
-					INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
+					inner join empresas on empresas.id_empresa = itens.id_empresa
 					INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
-					FULL join menus on menus.id_estabelecimento = estabelecimentos.id_estabelecimento
-					WHERE itens.disponivel=true and REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
+					FULL join menus on menus.id_empresa = empresas.id_empresa
+					WHERE itens.disponivel=true and REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? AND REPLACE(LOWER(categorias.nome), ' ', '') LIKE ? ";
 					
 					
 					$stmtProd = $pdo->prepare($queryProd);
@@ -314,7 +307,7 @@
 				echo "
 				<div id='toast-container_".$idCategoria."_".$idProd."' class='toast-container position-fixed bottom-0 end-0 p-3'>
 				<form method='POST'  enctype='multipart/form-data' action='' id='pedidoForm'>
-					<input type='hidden' name='idEstabelecimento' id='idEstabelecimento' value='".$idEmpresa."'>
+					<input type='hidden' name='idEmpresa' id='idEmpresa' value='".$idEmpresa."'>
 					<input type='hidden' name='idCliente' id='idCliente' value='".$idCliente."'>
 					<input type='hidden' name='idProd' id='idProd' value='".$rowProd['id_menu']."'>
 
@@ -343,17 +336,10 @@
 							from item_menus as im
 							inner join menus m on m.id_menu=im.id_menu
 							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
-							inner join empresas e on e.id_empresa=m.id_estabelecimento 
+							inner join empresas e on e.id_empresa=m.id_empresa 
 							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
 							
-						$queryMenu2 = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu, opcoes.max_quantidade as max_quantidade
-							from item_menus as im
-							inner join menus m on m.id_menu=im.id_menu
-							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
-							inner join empresas e on e.id_empresa=m.id_estabelecimento 
-							inner join item_menus_opcoes on im.id_item_menu = item_menus_opcoes.id_item_menu
-							inner join opcoes on opcoes.id_opcao = item_menus_opcoes.id_opcao
-							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
+
 
 						$stmtMenu= $pdo->prepare($queryMenu);
 						$stmtMenu->execute([$fRestaurante]);
@@ -361,18 +347,10 @@
 					} else {
 						$queryMenu = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu
 							FROM itens 
-							INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
+							INNER JOIN empresas ON empresas.id_empresa = itens.id_empresa 
 							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
-							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
+							WHERE REPLACE(LOWER(empresas.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
 					
-						$queryMenu2 = "SELECT itens.id_item, itens.nome, itens.descricao, itens.preco, itens.foto, itemsozinho, personalizacoesativas, 0 id_menu, opcoes.max_quantidade
-							FROM itens 
-							INNER JOIN estabelecimentos ON estabelecimentos.id_estabelecimento = itens.id_estabelecimento 
-							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
-							inner join item_menus as im on im.id_item = itens.id_item
-							inner join item_menus_opcoes on im.id_item_menu = item_menus_opcoes.id_item_menu
-							inner join opcoes on opcoes.id_opcao = item_menus_opcoes.id_opcao
-							WHERE REPLACE(LOWER(estabelecimentos.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
 					
 					
 						$stmtMenu= $pdo->prepare($queryMenu);
