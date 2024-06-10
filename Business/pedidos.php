@@ -5,10 +5,9 @@ require_once __DIR__.'/../database/credentials.php';
 require_once __DIR__.'/../database/db_connection.php';
 
 // retrieve establishment id
-$idEmpresa = $_SESSION['id_estabelecimento'];
+$idEmpresa = $_SESSION['id_empresa'];
 
 if(isset($_GET['id']) && isset($_GET['stage'])){
-    echo $_GET['id'].' '.$_GET['stage'];
     switch($_GET['stage']){
         case 1:
             $stage = 'EFETUADO';
@@ -28,8 +27,8 @@ if(isset($_GET['id']) && isset($_GET['stage'])){
     if($stage == null){
        $data = "Error: invalid data";
     }else{
-        $stmt = $pdo->prepare("UPDATE pedidos SET estado = ? WHERE id_pedido = ? and id_estabelecimento = ?");
-        $stmt->execute([$stage,$_GET['id'],$_SESSION['id_estabelecimento']]);
+        $stmt = $pdo->prepare("UPDATE pedidos SET estado = ? WHERE id_pedido = ? and id_empresa = ?");
+        $stmt->execute([$stage,$_GET['id'],$idEmpresa]);
         $data = "Success!";
     }
 }

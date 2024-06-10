@@ -20,7 +20,7 @@ function getPedidosDiarios($pdo, $idEmpresa, $dia, $mes)
     $query = "SELECT COUNT(*) AS total_pedidos 
               FROM Pedidos 
               JOIN Estabelecimentos 
-              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              ON Pedidos.id_empresa = Estabelecimentos.id_empresa 
               WHERE Estabelecimentos.id_empresa = :empresaId 
               AND EXTRACT(DAY FROM Pedidos.data) = :dia AND EXTRACT(MONTH FROM Pedidos.data) = :mes";
     $stmt = $pdo->prepare($query);
@@ -36,7 +36,7 @@ function getPedidosDiarios($pdo, $idEmpresa, $dia, $mes)
 function getPedidosMensais($pdo, $idEmpresa, $mes)
 {
     $query = "SELECT COUNT(*) AS total_pedidos FROM Pedidos JOIN Estabelecimentos 
-    ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+    ON Pedidos.id_empresa = Estabelecimentos.id_empresa 
     WHERE Estabelecimentos.id_empresa = :empresaId  AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':empresaId', $idEmpresa, PDO::PARAM_INT);
@@ -51,7 +51,7 @@ function getVendasDiarias($pdo, $idEmpresa, $dia, $mes)
     $query = "SELECT SUM(precoTotal) AS total_dinheiro
         FROM Pedidos
         JOIN Estabelecimentos 
-              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              ON Pedidos.id_empresa = Estabelecimentos.id_empresa 
               WHERE Estabelecimentos.id_empresa = :empresaId 
               AND EXTRACT(DAY FROM Pedidos.data) = :dia AND EXTRACT(MONTH FROM Pedidos.data) = :mes";
     $stmt = $pdo->prepare($query);
@@ -68,7 +68,7 @@ function getVendasMensais($pdo, $idEmpresa, $mes)
     $query = "SELECT SUM(precoTotal) AS total_dinheiro
         FROM Pedidos
         JOIN Estabelecimentos 
-              ON Pedidos.id_estabelecimento = Estabelecimentos.id_estabelecimento 
+              ON Pedidos.id_empresa = Estabelecimentos.id_empresa 
               WHERE Estabelecimentos.id_empresa = :empresaId
           AND EXTRACT(MONTH FROM data) = :mes";
     $stmt = $pdo->prepare($query);
@@ -119,7 +119,7 @@ function getItemMaisPedidoDiario($pdo, $idEmpresa, $dia, $mes)
               JOIN 
                 Itens i ON pi.id_item = i.id_item
               JOIN 
-                Estabelecimentos e ON p.id_estabelecimento = e.id_estabelecimento
+                Estabelecimentos e ON p.id_empresa = e.id_empresa
               WHERE 
                 e.id_empresa = :empresaId AND EXTRACT(DAY FROM p.data) = :dia
                 AND EXTRACT(MONTH FROM p.data) = :mes 
@@ -151,7 +151,7 @@ function getItemMaisPedidoMensal($pdo, $idEmpresa, $mes)
               JOIN 
                 Itens i ON pi.id_item = i.id_item
               JOIN 
-                Estabelecimentos e ON p.id_estabelecimento = e.id_estabelecimento
+                Estabelecimentos e ON p.id_empresa = e.id_empresa
               WHERE 
                 e.id_empresa = :empresaId
                 AND EXTRACT(MONTH FROM p.data) = :mes
@@ -303,7 +303,6 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
 <html>
 
 <head>
-    <title>Utilizador</title>
     <style>
         section {
             padding: 8px;
@@ -335,9 +334,11 @@ $tempoMedioEntrega = getTempoMedio($pdo, $idEmpresa);
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./assets/styles/adicionar.css">
+    <link rel="icon" type="image/x-icon" href="../assets/stock_imgs/t_fd_logo_tab_business_icon.png">
     <link rel="stylesheet" href="../assets/styles/sitecss.css">
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
     <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
+    <title>Performance</title>
     <style>
         h4{
             font-size:  3vh!important;;

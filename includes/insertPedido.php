@@ -34,7 +34,6 @@ try {
             $stmt->bindParam(':idCliente', $idCliente);
             $stmt->bindParam(':idEntregador', $idEntregador);
             $stmt->bindParam(':idEmpresa', $idEmpresa);
-
             $stmt->execute();
 
             // Obter o ID do registro inserido
@@ -54,14 +53,23 @@ try {
 				$itemid = $_POST['itemid_'. $id_item];
 				$quantidade = $_POST['quantidade_'. $id_item];
 				$preco = $_POST['preco_'. $id_item];
-				$idmenu = $_POST['idmenu_'. $id_item];
+				$idmenu = isset($_POST['idmenu_'. $id_item]) ? $_POST['idmenu_'. $id_item] : null;
 				
-				$stmt = $pdo->prepare("INSERT INTO pedido_itens (id_pedido, id_item, quantidade, id_menu)
+				if ($id_menu == 0 ) {
+					$stmt = $pdo->prepare("INSERT INTO pedido_itens (id_pedido, id_item, quantidade)
+									   VALUES (:idpedido, :idProd, :quantidade) RETURNING id_pedido_item");
+					$stmt->bindParam(':idpedido', $idPedido);
+					$stmt->bindParam(':idProd', $itemid);
+					$stmt->bindParam(':quantidade', $quantidade);
+				} else {
+						$stmt = $pdo->prepare("INSERT INTO pedido_itens (id_pedido, id_item, quantidade, id_menu)
 									   VALUES (:idpedido, :idProd, :quantidade, :idmenu) RETURNING id_pedido_item");
-				$stmt->bindParam(':idpedido', $idPedido);
-				$stmt->bindParam(':idProd', $itemid);
-				$stmt->bindParam(':quantidade', $quantidade);
-				$stmt->bindParam(':idmenu', $idmenu);
+						$stmt->bindParam(':idpedido', $idPedido);
+						$stmt->bindParam(':idProd', $itemid);
+						$stmt->bindParam(':quantidade', $quantidade);
+						$stmt->bindParam(':idmenu', $idmenu);
+				}
+				
 				
 				$stmt->execute();
 
@@ -75,7 +83,6 @@ try {
 						$idOpcao = intval($_POST['opcao_'. $id_opcao]);
 						$qtdOpcao = intval($_POST['quantidadeop_'. $id_opcao]);
 
-						echo $qtdOpcao;
 						$stmt = $pdo->prepare("INSERT INTO pedido_item_opcoes (id_pedido_item, id_opcao, quantidade)
 											   VALUES (:idPedidoItem, :id_opcao, :qtd)");
 						$stmt->bindParam(':idPedidoItem', $idPedidoItem);

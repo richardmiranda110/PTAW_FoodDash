@@ -1,58 +1,70 @@
 <?php
-declare(strict_types=1);
+header('Content-Type: application/json');
+
 require_once './database/credentials.php';
 require_once './database/db_connection.php';
 require_once './session.php';
 
-header('Content-Type: text/event-stream');
-header('Cache-Control: no-cache');
-
-if(!isset($_GET['id'])){
+if (!isset($_GET['id'])) {
     exit('no id!');
 }
- 
-$id_cliente = $_SESSION['id_cliente'];
-session_write_close(); 
 
-$query = "SELECT pedido.estado as estado
-FROM pedidos pedido 
-FULL JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
-INNER JOIN CLIENTES ON pedido.ID_CLIENTE = CLIENTES.ID_CLIENTE
-WHERE pedido.id_pedido = ? and pedido.id_cliente = ?";
+$query = "SELECT pedidos.estado as estado
+FROM pedidos
+FULL JOIN pedido_itens pi on pedidos.id_pedido = pi.id_pedido 
+INNER JOIN CLIENTES ON pedidos.ID_CLIENTE = CLIENTES.ID_CLIENTE
+WHERE pedidos.id_pedido = ?";
 
 $updateQuery = "UPDATE pedidos
-SET pedidos.estado = 'FINALIZADO'
-WHERE pedido.id_pedido = ? and pedido.id_cliente = ?";
+SET estado = 'FINALIZADO'
+WHERE id_pedido = ?";
+try {
+    $stmt = $pdo->prepare($query);
+    $updstmt = $pdo->prepare($updateQuery);
 
-$stmt = $pdo->prepare($query);
 
-while(1){
-    $stmt->execute([$_GET['id'],$id_cliente]);
+    $stmt->execute([$_GET['id']]);
     $estado = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    $status ="error";
+    $message = 'Error executing query';
+    echo json_encode(getReturnMessage($status,$message,$time_passed));
+    exit();
+}
 
-    echo 'data: '. $estado;
-    echo "\n\n";
+$status = "success";
+$time_passed = null;
 
-    if($estado == 'A CAMINHO'){
-        sleep(5);
-        $updstmt = $pdo->prepare($updateQuery);
-        $updstmt->execute([$_GET['id'],$id_cliente]);
-    }else if($estado == 'FINALIZADO'){
+switch($estado){
+    case 'EFETUADO':
+    case 'EM PREPARACAO':
+    case 'FINALIZADO':
+    case 'ENTREGUE':
+        $message = $estado;
         break;
+    case 'A CAMINHO':
+        if(!isset($_SESSION['last_update']))
+            $SESSION['last_update'] = time();
+
+        $message = $estado;
+        $time_passed = time() - $_SESSION['last_update'];
+
+        if($time_passed >= 60){
+            $updstmt->execute([$_GET['id']]);
+        }
+        $message = $estado;
+        break;
+    default:
+    $status ="error";
+    $message = "algo inesperado aconteceu!";
+}
+
+echo json_encode(getReturnMessage($status,$message,$time_passed));
+
+function getReturnMessage($status,$message,$extra = null){
+    if($extra == null){
+        return ["status" => $status, "message" => $message];
     }
 
-    sleep(1);
-
-    // shout out ciro, ganda codigo
-
-    // flush the output buffer and send echoed messages to the browser
-    while (ob_get_level() > 0) {
-        ob_end_flush();
-    }
-
-    flush();
-
-    // break the loop if the client aborted the connection (closed the page)
-    if (connection_aborted())
-        break;
+    return ["status" => $status, "message" => $message, "time_passed" => $extra];
 }

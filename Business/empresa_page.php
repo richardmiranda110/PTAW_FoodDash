@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <html>
 
 <head>
-    <title>Utilizador</title>
+    <title>Empresa</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
         rel="stylesheet">
     <link rel="stylesheet" href="../assets/styles/sitecss.css">
+    <link rel="icon" type="image/x-icon" href="../assets/stock_imgs/t_fd_logo_tab_business_icon.png">
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
     <link rel="stylesheet" href="../assets/styles/responsive_styles.css">
 </head>

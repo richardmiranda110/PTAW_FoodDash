@@ -37,6 +37,7 @@ if (isset($_POST['id_estabelecimento']) != false) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../assets/stock_imgs/t_fd_logo_tab_business_icon.png">
     <link rel="stylesheet" href="../assets/styles/dashboard_beatriz.css">
     <link rel="stylesheet" href="../assets/styles/sitecss.css">
     <link rel="stylesheet" href="../assets/styles/dashboard.css">

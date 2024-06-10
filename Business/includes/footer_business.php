@@ -3,7 +3,7 @@
     <h1 style="text-align: left; font-weight: bolder; color: white;">FoodDash</h1>
     <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-2 mx-0 border-top border-bottom" style="color: white;">
       <div class="col ">
-        <a href="/business/dashboard_home_page.php"><img id="logo_fooddash" src="../assets/imgs/fd_logo_blackWhite.png" alt="reduced_logo_fd" width="190" height="110"></a>
+        <a href="/business/dashboard_home_page.php"><img id="logo_fooddash" src="../assets/stock_imgs/fd_logo_blackWhite.png" alt="reduced_logo_fd" width="190" height="110"></a>
       </div>
       <div class="col"></div>
       <div class="col"></div>

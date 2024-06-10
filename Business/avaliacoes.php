@@ -16,13 +16,13 @@ $idEmpresa = $_SESSION['id_empresa'];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FoodDash Business</title>
+    <title>FoodDash Avaliações</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="../assets/stock_imgs/t_fd_logo_tab_business_icon.png">
     <link rel="stylesheet" href="../business/styles/adicionar.css">
     <link rel="stylesheet" href="../assets/styles/sitecss.css">
     <link rel="stylesheet" href="../assets/styles/dashboard.css">
     <link rel="stylesheet" href="../assets/styles/pedido_page.css">
-    <script src="../assets/js/dable.js"></script>
 </head>
 
 <body>

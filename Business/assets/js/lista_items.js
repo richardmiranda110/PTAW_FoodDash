@@ -30,10 +30,10 @@ const response = fetch('./lista_items.php')
       </div>`;
 		};
     dable.columnData[4].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button> <img width="30" class="bg-white editRow" src="./assets/imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button> <img width="30" class="bg-white editRow" src="./../assets/stock_imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
   };
     dable.columnData[5].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button type="button"> <img width="30" class="bg-white deleteRow" cellValue="'+_cellValue+'" src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button type="button"> <img width="30" class="bg-white deleteRow" cellValue="'+_cellValue+'" src="./../assets/stock_imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 	dable.BuildAll("DefaultDable"); 
   }).catch((error) => console.error('Error:', error));

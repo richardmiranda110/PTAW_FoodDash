@@ -27,7 +27,7 @@ require_once __DIR__ . "/database/db_connection.php";
   ?>
 
   <div class="content_our_story">
-    <img src="./assets/imgs/FoodDash.png" alt="FoodDash Logo" class="fooddash_logo">
+    <img src="./assets/stock_imgs/FoodDash.png" alt="FoodDash Logo" class="fooddash_logo">
 
     <h1>Equipa</h1>
     <div class="conteudo">

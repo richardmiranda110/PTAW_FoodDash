@@ -51,7 +51,7 @@ const response = fetch('./lista_categorias.php')
 	  dable.SetColumnNames(list_columns);
 
     dable.columnData[2].CustomRendering = function (_cellValue, rowNumber) {
-      return '<button> <img width="30" class="bg-white deleteRow" cellValue='+_cellValue.id_categoria+'  src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+      return '<button> <img width="30" class="bg-white deleteRow" cellValue='+_cellValue.id_categoria+'  src="./../assets/stock_imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
     };
 
 	  dable.BuildAll("DefaultDable"); 

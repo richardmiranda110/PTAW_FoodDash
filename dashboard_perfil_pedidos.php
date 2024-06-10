@@ -9,7 +9,7 @@ if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SES
 }
 
 $query = 
-  "SELECT pedido.data as data,
+  "SELECT distinct pedido.data as data,
   pedido.id_pedido as id,
   cliente.nome as cliente,
   pedido.estado as status,
@@ -20,7 +20,6 @@ $query =
   LEFT JOIN pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
   INNER JOIN empresas emp on pedido.id_empresa = emp.id_empresa
   INNER JOIN clientes cliente ON pedido.ID_CLIENTE = cliente.id_cliente
-  INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido 
   where pedido.id_cliente = ?;";
 
 try {
@@ -37,10 +36,11 @@ echo "Erro na conexão: " . $e->getMessage();
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FoodDash</title>
+    <title>FoodDash - Pedidos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link rel="stylesheet" href="./assets/styles/sitecss.css">
 	<link rel="stylesheet" href="./assets/styles/dashboard.css">
+  <link rel="icon" type="image/x-icon" href="./assets/stock_imgs/t_fd_logo_tab_icon.png">
   </head>
   <body>
   <!--Zona do Header -->
@@ -71,9 +71,13 @@ echo "Erro na conexão: " . $e->getMessage();
                 header("Location: /index.php");
               }
               
+              $time = strtotime($pedido['data']);
+              $date = date('j F',$time);
+              $time = date('g:i',$time); 
+
               echo'
                 <div id="ticket-info" class="row border border-2 border-secondary rounded my-3">
-                  <div class="col-sm-1 text-center align-self-center py-2 fs-6 "><span>13:46</span><br><span>'.$pedido['data'].'</span></div>
+                  <div class="col-sm-1 text-center align-self-center py-2 fs-6 "><span>'.$time.'</span><br><span>'.$date.'</span></div>
                     <div class="col-sm-5 rounded-left rounded-right align-self-center py-2 px-5 fs-6">
                         <strong>Pedido #'.$pedido['id'].', '.$pedido['cliente'].'</span> em <span></strong>'.$pedido['empresa'].'<br>
                         <small></small>
@@ -81,14 +85,13 @@ echo "Erro na conexão: " . $e->getMessage();
                   <div class="col-sm-4 align-self-center py-2">
                         <span><strong>Status do pedido:</strong> '.$pedido['status'].'</span></small>
                   </div>
-                  <div class="col-sm-1 text-center align-self-center fs-4 py-4 "><strong>'.$pedido['preco'].'</strong></div>
+                  <div class="col-sm-1 text-center align-self-center fs-4 py-4 "><strong>'.$pedido['preco'].' €</strong></div>
                     <div class="col-sm-1 align-self-center text-center h-60">
                       <a href="dashboard_perfil_estado_pedido.php?id='.$pedido['id'].'">
                         <i class="bi bi-eye"></i>
                       </a>
                     </div>
-                  </div>
-                </div>';
+                  </div>';
             };
             ?>  
           </div>          

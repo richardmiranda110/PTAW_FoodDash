@@ -357,7 +357,7 @@ function configureProductDable(dable,rowArray,columnArray){
   dable.SetColumnNames(columnArray);
 
   dable.columnData[1].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button type="button"> <img width="30" cellValue="'+_cellValue.id_item+'" class="bg-white deleteRow" dable-id='+dable.id+' src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button type="button"> <img width="30" cellValue="'+_cellValue.id_item+'" class="bg-white deleteRow" dable-id='+dable.id+' src="./../assets/stock_imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 }
 var costumizationColumns = [ 'Nome', ''];
@@ -456,7 +456,7 @@ function showImportModal(text,categoria,dable){
   modalContent.appendChild(defaultDable);
 
   importDable.columnData[4].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button type="button" > <img width="30" class="bg-white addRow" dable-id='+dable.id+' src="./assets/imgs/add.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button type="button" > <img width="30" class="bg-white addRow" dable-id='+dable.id+' src="./../assets/stock_imgs/add.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 
   // espera o resultado do servidor e popula tabela

@@ -44,7 +44,7 @@ function ObterUltimoPedido()
         // query
         $stmt = 
         $pdo->prepare(
-            'SELECT pedidos.id_pedido as id_pedido,data, estado, cancelado, precototal, id_estabelecimento,pedido_itens.id_item as itens
+            'SELECT pedidos.id_pedido as id_pedido,data, estado, cancelado, precototal, id_empresa,pedido_itens.id_item as itens
             FROM pedidos 
             FULL JOIN pedido_itens on pedidos.id_pedido = pedido_itens.id_pedido 
             where id_cliente = ?
@@ -81,7 +81,7 @@ function ObterEstatisticas()
         $stmt = 
         $pdo->prepare(
             'SELECT (SELECT round(avg(precototal),2) from pedidos where id_cliente = :idcliente) as totalgasto, (SELECT count(id_pedido) from pedidos where id_cliente = :idcliente) as totalpedidos,
-            (select max(estabelecimentos.nome) from pedidos inner join estabelecimentos on estabelecimentos.id_estabelecimento = pedidos.id_estabelecimento where id_cliente = :idcliente) as maispedido;'
+            (select max(estabelecimentos.nome) from pedidos inner join estabelecimentos on estabelecimentos.id_empresa = pedidos.id_empresa where id_cliente = :idcliente) as maispedido;'
         );
         $stmt->bindValue(":idcliente",$_SESSION['id_cliente']);
         // Executar a query e verificar que não retornou false
@@ -140,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="assets/styles/sitecss.css">
     <link rel="stylesheet" href="assets/styles/dashboard.css">
     <link rel="stylesheet" href="assets/styles/dashboard_beatriz.css">
+    <link rel="icon" type="image/x-icon" href="./assets/stock_imgs/t_fd_logo_tab_icon.png">
     <style>
         .chart-container {
             width: 50vw;

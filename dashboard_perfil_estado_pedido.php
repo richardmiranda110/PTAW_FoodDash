@@ -25,16 +25,15 @@ $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
 echo "Erro na conexão: " . $e->getMessage();
 }
 
-$query = "SELECT item.nome as nome,pi.quantidade as qtd, pedido.id_cliente as id_cliente
-FROM public.pedido_itens 
-inner join itens item on pedido_itens.id_item = item.id_item
-inner join pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
-INNER JOIN pedido_itens pi on pedido.id_pedido = pi.id_pedido
+$query2 = "SELECT item.nome as nome,pi.quantidade as qtd, pedido.id_cliente as id_cliente
+FROM public.pedido_itens pi 
+inner join itens item on pi.id_item = item.id_item
+inner join pedidos pedido on pedido.id_pedido = pi.id_pedido 
 WHERE pedido.id_pedido = ? and pedido.id_cliente = ?";
 
 try {
-$stmts = $pdo->prepare($query);
-$stmt->execute([$PEDIDO_ID,$_SESSION['id_cliente']]);
+$stmts = $pdo->prepare($query2);
+$stmts->execute([$PEDIDO_ID,$_SESSION['id_cliente']]);
 $items = $stmts->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
 echo "Erro na conexão: " . $e->getMessage();
@@ -53,7 +52,6 @@ foreach($items as &$item){
 
 $result = implode(' + ',$item_arr);
 
-// echo $pedido['id_cliente'];
 
 ?>
 
@@ -67,6 +65,7 @@ $result = implode(' + ',$item_arr);
     <link rel="stylesheet" href="./assets/styles/sitecss.css">
 	<link rel="stylesheet" href="./assets/styles/dashboard.css">
   <link rel="stylesheet" href="./Business/assets/styles/pedido_page.css" />
+  <link rel="icon" type="image/x-icon" href="./assets/stock_imgs/t_fd_logo_tab_icon.png">
 
   </head>
   <body>
@@ -101,7 +100,7 @@ $result = implode(' + ',$item_arr);
                         echo $date.' às '. $time;
                         ?></span></p>
                       <p class="text"><?php echo $result ?></p>
-                      <p class="text">Status do pedido: <span><?php echo $pedido['estado'] ?></span></p>
+                      <p class="text" id="status">Status do pedido: <span><?php echo $pedido['estado'] ?></span></p>
                       <p class="text">Morada: <span><?php echo $pedido['morada'] ?></span></p>
                       <p class="text">Preço: <span><?php echo $pedido['precototal'] ?></span>€</p>
                   </div>  
@@ -161,8 +160,8 @@ $result = implode(' + ',$item_arr);
   </div>
 
   <script>
-    let eSource = new EventSource("./seguir_pedido.php?id=<?php echo $PEDIDO_ID ?>");
-    let lastState = "";
+    const status = document.querySelector("#status");
+
     const lineprogress = document.querySelector("#line-progress");
 
     const step1 = document.querySelector(".step01");
@@ -176,13 +175,20 @@ $result = implode(' + ',$item_arr);
 
     const step4 = document.querySelector(".step04");
     const entregue = document.querySelector(".entregue");
+    
+    let lastState = "";
+    setInterval(async () => 
+      await fetch(`./seguir_pedido.php?id=<?php echo $PEDIDO_ID ?>`)
+      .then(answer => answer.json())
+      .then(reply => {
+        if(reply != lastState){
+          stateChanged(reply.message);
+        }
 
-    eSource.onmessage = function(e) {
-      if(e.data != lastState.data){
-        stateChanged(e.data);
-      }
-      lastState = e;
-    };
+        lastState = reply.message;
+      })
+    , "1000");
+
 
     function stateChanged(newState){
       console.log("new state: "+newState);
@@ -193,6 +199,7 @@ $result = implode(' + ',$item_arr);
     {
       switch (newState) {
                     case 'EFETUADO':
+                        
                         step1.classList.add('active');
                         step2.classList.remove('active');
                         step3.classList.remove('active');
@@ -240,8 +247,8 @@ $result = implode(' + ',$item_arr);
                         entregue.classList.add('active')
                         break;
                     default:
+                        console.log(newState);
                         alert("erro inesperado!");
-                        eSource.close()
                 }
     }
 

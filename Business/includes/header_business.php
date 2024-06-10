@@ -5,7 +5,7 @@
           <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="#">
-      <img src="./assets/imgs/logo.png" alt="Logo FoodDash" id="logo_fooddash" style="height: 6vh;">
+      <img src="../assets/stock_imgs/logo.png" alt="Logo FoodDash" id="logo_fooddash" style="height: 6vh;">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

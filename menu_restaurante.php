@@ -8,10 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="/assets/styles/sitecss.css">
-  <link rel="stylesheet" href="/assets/styles/restaurants.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./assets/styles/sitecss.css">
+    <link rel="icon" type="image/x-icon" href="./assets/stock_imgs/t_fd_logo_tab_icon.png">
+	<link rel="stylesheet" href="./assets/styles/dashboard.css">
+	<link rel="stylesheet" href="/assets/styles/restaurants.css">
   <link rel="stylesheet" href="./assets/styles/rating_menu_restaurant.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -39,8 +41,6 @@
   
 	include __DIR__."/includes/insertAvaliationRestaurant.php"; 
 	include __DIR__."/includes/insertPedido.php"; 
-  
-  $idCliente = 1;
 
   require_once 'database/credentials.php';
   require_once 'database/db_connection.php';
@@ -85,6 +85,9 @@
   } catch (PDOException $e) {
     echo "Erro na conexão: " . $e->getMessage();
   }
+  
+
+   include __DIR__ . "/includes/sidebar_perfil.php";
   ?>
 
   <!-- IDENTIFICAÇÃO DO RESTAURANTE -->
@@ -93,6 +96,7 @@
       <div class="row">
         <div class="col-lg-4 px-0">
           <?php
+		  
 		  $idEmpresa = $infoRest['id_empresa'] ;
           echo "<h3 class='display-6' style='font-weight: bolder;'>" . $infoRest['nome'] . "</h3>
           <h5 class='mb-0'>" . $infoRest['avaliacao'] . "★</h5>
@@ -117,7 +121,7 @@
 			<div class="toast-container position-fixed bottom-0 end-0 p-3">
 			  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
 				<div class="toast-header">
-				  <img src="./assets/imgs/estrela_ilustrativa.png" class="rounded me-2" alt="star" style="width: 1.5vw;">
+				  <img src="./assets/stock_imgs/estrela_ilustrativa.png" class="rounded me-2" alt="star" style="width: 1.5vw;">
 				  <strong class="me-auto">Avaliar Empresa</strong>
 				  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 				</div>
@@ -286,7 +290,7 @@
                     <div class='card shadow-sm' id='" . $idProd . "' style='width:18%; margin: 0px 0.5% 1% 0.5%; float:left; min-width: 150px;'>
                     <div class='card-body'>
                         <div class='image-overlay' style='position: relative; border-radius: 5.5px; overflow: hidden;'>
-                            <img src='" . $imagemPath . "' class='card-img-top' alt='" . $idProd . "' style='border-radius: 5.5px;'>
+                            <img src='" . $imagemPath . "' class='card-img-top' alt='" . $idProd . "' style='border-radius: 5.5px; height: 15vh;width: auto;'>
                             <div class='icon-overlay' id='liveToastBtn_".$idCategoria."_".$idProd. "' style='position: absolute; bottom: 10px; right: 10px;'>
                                 <img src='./assets/stock_imgs/mais.png' id='iconAddItem' alt='Ícone de adição' style='width: 35px; height: 35px; transition: transform 0.3s, box-shadow 0.3s;'>
                             </div>
@@ -364,7 +368,7 @@
 						$infoToas = $idCategoria."_".$idProd;
 						echo "
 						<div class='form-check form-switch product-item' style='display: flex; '>
-							<input style=' width: 5%; height: 20px; margin-right: 15px; margin-top: -1px;' class='form-check-input' type='checkbox' name='itens[]' id='itens_".$idIndex."' value='".$idIndex."' checked onchange=updateTotalPrice('".$infoToas."')>	
+							<input style=' width: 5%; height: 20px; margin-right: 15px; margin-top: -1px;' class='form-check-input' type='checkbox' name='itens[]' id='itens_".$idIndex."' value='".$idIndex."' checked onchange=updateTotalPrice('".$infoToas."') onclick='preventCheck(event)' >	
 								<input type='hidden' name='itemid_".$idIndex ."' id='itemid_".$idIndex ."' value=".$rowit['id_item'] ."> 
 								<label style='font-size: 1.5vh; font-weight: bold;  width: 74%;' class='form-check-label d-flex justify-content-start' for='itens_".$idIndex."'>".$rowit['nome']."</label>													
 								<input style=' width: 10%; margin-top:-5px; height: 30px' class='form-control quantity-field' type='number' name='quantidade_".$idIndex."' id='quantidade_".$idIndex."' min='1' max='".$rowit['max_quantidade']."' value=1 onchange=updateTotalPrice('".$infoToas."')>
@@ -584,7 +588,7 @@ function updateTotalPrice(name) {
 		const valItem = parseFloat(valueItemElement.value);
 
 		let total = 0;
-
+		total += valItem;
         // Verifique cada caixa de seleção
         checkboxes.forEach(function (checkbox) {
             if (checkbox.checked) {
@@ -602,7 +606,7 @@ function updateTotalPrice(name) {
                     const price = parseFloat(priceInput.value);
 
                     if (!isNaN(quantity) && !isNaN(price)) {
-                        total += quantity * price;
+                        total += (quantity-1) * price;
                     }
                 }
             } else {
@@ -641,8 +645,21 @@ function updateTotalPrice(name) {
 			  document.getElementById('quantidadeop_' + index).value = '0';
 		  }
         }
+		
+	function preventCheck(event) {
+		event.preventDefault();
+	  }
   </script>
+<style>
+.card-body {
+  transition: background-color 0.3s;
+}
 
+.card-body:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+</style>
   <script src="./assets/js/toast.js"></script>
 </body>
 

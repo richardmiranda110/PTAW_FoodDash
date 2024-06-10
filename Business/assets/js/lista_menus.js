@@ -37,10 +37,10 @@ const response = fetch('./lista_opcoes.php')
       </div>`;
 		};
     dable.columnData[3].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button> <img width="30" class="bg-white editRow img-fuid" src="./assets/imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button> <img width="30" class="bg-white editRow img-fuid" src="./../assets/stock_imgs/edit.png" data-rownumber="' + rowNumber + '" /></button>';
   };
     dable.columnData[4].CustomRendering = function (_cellValue, rowNumber) {
-    return '<button type="button"> <img width="30" class="img-fuid bg-white deleteRow" cellValue="'+_cellValue+'" src="./assets/imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
+    return '<button type="button"> <img width="30" class="img-fuid bg-white deleteRow" cellValue="'+_cellValue+'" src="./../assets/stock_imgs/delete.png" data-rownumber="' + rowNumber + '" /></button>';
   };
 	dable.BuildAll("DefaultDable"); 
   }).catch((error) => console.error('Error:', error));

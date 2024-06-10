@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FoodDash</title>
+  <title>Home - FoodDash</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="icon" type="image/x-icon" href="../assets/stock_imgs/t_fd_logo_tab_business_icon.png">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/styles/homepage.css">
@@ -20,7 +21,7 @@
 
   <!-- IMAGEM COM BTN LOGIN E REGISTO -->
   <div class="d-flex" style="max-width: 100%; padding: 0vw 0vh; height: 85vh;">
-    <img id="imgEmpresas" src="./assets/imgs/empresas.png" class="w-100">
+    <img id="imgEmpresas" src="./../assets/stock_imgs/empresas.png" class="w-100">
     <div class="col-12 overlay">
       <h1 style="margin-top: 5vh; margin-left: 5vw; font-size: 2.1vw; font-weight: bold;">Faça crescer o seu negócio com a <span style="color: #FEBB41;">Food</span>Dash</h1>
       <div class="text-center" style="margin-top: 17vh;">
@@ -51,19 +52,19 @@
     <div class="row row-cols-6 justify-content-center" style="padding: 0vw 0vh; margin: 0vw 0vh; margin-top: 7vh;">
       <div class="col">
         <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-size: cover;">
-          <img src="./assets/imgs/exemplo1.png" alt="Bootstrap">
+          <img src="./../assets/stock_imgs/exemplo1.png" alt="Bootstrap">
         </div>
       </div>
 
       <div class="col">
         <div class="card card-cover h-auto w-auto overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-size: cover;">
-          <img src="./assets/imgs/exemplo2.png" alt="Bootstrap">
+          <img src="./../assets/stock_imgs/exemplo2.png" alt="Bootstrap">
         </div>
       </div>
 
       <div class="col">
         <div class="card card-cover h-auto overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-size: cover;">
-          <img src="./assets/imgs/exemplo3.png" alt="Bootstrap">
+          <img src="./../assets/stock_imgs/exemplo3.png" alt="Bootstrap">
         </div>
       </div>
     </div>

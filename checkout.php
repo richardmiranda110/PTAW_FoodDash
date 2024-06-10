@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel='stylesheet' href='./assets/styles/checkout.css'>
+    <link rel="icon" type="image/x-icon" href="./assets/stock_imgs/t_fd_logo_tab_icon.png">
     <link rel="stylesheet" href="./assets/styles/sitecss.css">
 	<link rel="stylesheet" href="./assets/styles/dashboard.css">
     	  
@@ -33,9 +34,14 @@
 	include __DIR__."/includes/deletePedido.php";
 	include __DIR__."/includes/confirmPedido.php";
 
+	function getImagePath($path, $default = './assets/stock_imgs/fd reduced logo.png') {
+		$path = "./assets/stock_imgs/".$path;
+
+		return file_exists($path) ? $path : $default;
+	}
+	
 	///validar id cliente por session
-	//$idCliente=$_SESSION['id_cliente'];
-	$idCliente = 1;
+	$idCliente=$_SESSION['id_cliente'];
 	$totalPedido = 0;
 	$idIndex=340;
 	?>
@@ -59,7 +65,7 @@ try {
 $queryPedRestaurantes = "select distinct e.nome as nomeEmpresa, e.logotipo, e.id_empresa
 			from pedidos as p
 			inner join clientes as c on c.id_cliente=p.id_cliente
-			inner join empresas as e on e.id_empresa = p.id_estabelecimento
+			inner join empresas as e on e.id_empresa = p.id_empresa
 			where p.estado ='EM CHECKOUT'  and p.id_cliente = ? ";
 			
 $stmtPedRestaurantes = $pdo->prepare($queryPedRestaurantes);
@@ -67,19 +73,30 @@ $stmtPedRestaurantes->execute([$idCliente]);
 $pedRestaurantes = $stmtPedRestaurantes->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
 	echo "Erro na conexão: " . $e->getMessage();
-}					
+}
+
+$queryRest = "select taxa_entrega 
+from estabelecimentos
+where id_empresa = ? ";
+
+$stmtRest = $pdo->prepare($queryRest);
+$stmtRest->execute([$pedRestaurantes[0]['id_empresa']]);
+
+$taxa_entrega = $stmtRest->fetchColumn();
+
 foreach ($pedRestaurantes as $rowRestaurantes) {
+	$imagemPath = getImagePath(htmlspecialchars($rowRestaurantes['logotipo']));
 	echo "<div class='d-flex flex-row align-items-center' style='border: solid 1px #000000;border-radius: 5px;padding: 15px;background-color: #000000;color: #ffffff;'>
-			<img src='" . htmlspecialchars($rowRestaurantes['logotipo']) . "' alt='" . htmlspecialchars($rowRestaurantes['nomeempresa']). "' style='width: 7%; height: auto;'>
+			<img src='" . $imagemPath . "' alt='" . htmlspecialchars($rowRestaurantes['nomeempresa']). "' style='width: 7%; height: auto;'>
 			<p class='resumo-pedido' class='burger-king-title' style='font-size: 1vw;margin-bottom: 0px; margin-left:3%; width:80%'>" .htmlspecialchars($rowRestaurantes['nomeempresa']). "</p>
 		</div><br>
 		";
 try {
-$queryPedidos = "select p.id_pedido, p.data, p.precototal,  c.morada as morada,
+$queryPedidos = "select p.id_pedido, TO_CHAR( p.data, 'DD/MM/YYYY') data, p.precototal,  c.morada as morada,
 			c.nome, e.nome as nomeEmpresa, e.logotipo, e.id_empresa
 			from pedidos as p
 			inner join clientes as c on c.id_cliente=p.id_cliente
-			inner join empresas as e on e.id_empresa = p.id_estabelecimento
+			inner join empresas as e on e.id_empresa = p.id_empresa
 			where p.estado ='EM CHECKOUT'  and p.id_cliente = ? and e.id_empresa = ?";
 			
 $stmtPed = $pdo->prepare($queryPedidos);
@@ -115,7 +132,7 @@ foreach ($pedidos as $rowPed) {
 			<span class='resumo-pedido' class='burger-king-title' style='font-size: 1vw;margin-bottom: 0px;'>" .$rowPed['precototal']. " €</span>
 		</div>
 		<button type='button' class='btn btn-outline-danger' style='float:right;' onclick='deletePedido(".$rowPed['id_pedido'].")'>
-			<i class='bi bi-trash'></i>X
+			<i class='bi bi-trash'></i>
 		</button>
 		<div style='float:none;'></div>
 	</div><br>
@@ -169,11 +186,12 @@ foreach ($pedidos as $rowPed) {
 	$stmtRest->execute([$rowPed['id_empresa']]);
 	$restaurantes = $stmtRest->fetchAll(PDO::FETCH_ASSOC);
 }			
+
 	$idIndex++;
 	echo "<br>
 	<input type='hidden' name='restaurantes[]' id='restaurante_".$idIndex."' value='".$idIndex."'>	
 	<input type='hidden' name='pedidosRestaurante_".$idIndex."' id='pedidosRestaurante_".$idIndex."' value='".$pedRest."'>	
-
+	<input type='hidden' name='idRestaurante_".$idIndex."' id='idRestaurante_".$idIndex."' value='".$rowPed['id_empresa']."'>
 	<label for='estabelecimento'>Restaurante Pedido:</label>
 	<select class='form-select' name='estabelecimento_".$idIndex."' id='estabelecimento_".$idIndex."'>
 		<option  value='0' data-taxa-entrega=0> Escolha o restaurante pretendido...</option>";
@@ -334,7 +352,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <p class='m-0' style='font-weight: bold; font-size: 0.87vw;' data-taxa-servico='0,99' id='taxaServico'>0.99€</p>
+                                <p class='m-0' style='font-weight: bold; font-size: 0.87vw;' data-taxa-servico='0,99' id='taxaServico'><?php echo $taxa_entrega ? $taxa_entrega : 0 ?> €</p>
                             </div>
                         </div>
                         <div class='row align-items-center'>
@@ -345,7 +363,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <p class='m-0' id='totalTaxaEntrega' style='font-weight: bold; font-size: 0.87vw;'>0€</p>
+                                <p class='m-0' id='totalTaxaEntrega' style='font-weight: bold; font-size: 0.87vw;'>0 €</p>
                             </div>
                         </div>
                     </div>
@@ -363,7 +381,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <h4 class='m-0' style='font-weight: bold; font-size: 1.25vw;' id='totalPedido'>0€</h4>
+                                <h4 class='m-0' style='font-weight: bold; font-size: 1.25vw;' id='totalPedido'><?php echo number_format((float)$totalPedido + $taxa_entrega, 2); ?> €</h4>
                             </div>
                         </div>
                         <div id='addPromoCode' style='display: none;'>

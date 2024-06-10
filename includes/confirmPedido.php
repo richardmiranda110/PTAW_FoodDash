@@ -57,12 +57,13 @@ try {
         }
 	
 		foreach ($restaurantes as $rest) {
-			$isRest = $_POST['estabelecimento_'. $rest];
+			//$isRest = $_POST['estabelecimento_'. $rest];
+			$isRest = $_POST['idRestaurante_'. $rest];
 			$idPedidos = $_POST['pedidosRestaurante_'. $rest];
 			$array = explode('||', $idPedidos);
 			
 			foreach ($array as $idpedido) {
-				$stmt = $pdo->prepare("UPDATE pedidos SET id_estabelecimento = :idEmpresa WHERE id_pedido = :idpedido");
+				$stmt = $pdo->prepare("UPDATE pedidos SET id_empresa = :idEmpresa WHERE id_pedido = :idpedido");
 				$stmt->bindParam(':idpedido', $idPedido); 
 				$stmt->bindParam(':idEmpresa', $isRest); 				
 				$stmt->execute();

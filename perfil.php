@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="./assets/styles/dashboard.css">
     <link rel="stylesheet" href="./assets/styles/responsive_styles.css">
     <link rel="stylesheet" href="./assets/styles/sitecss.css">
+    <link rel="icon" type="image/x-icon" href="./assets/stock_imgs/t_fd_logo_tab_icon.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
