@@ -4,6 +4,7 @@ require_once __DIR__.'/database/db_connection.php';
 require_once __DIR__.'/session.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
+  $_SESSION['last_pagec'] = $_SERVER['REQUEST_URI'];
   header("Location: /dashboard.php");
   exit();
 }
@@ -20,7 +21,8 @@ $query =
   LEFT JOIN pedidos pedido on pedido.id_pedido = pedido_itens.id_pedido 
   INNER JOIN empresas emp on pedido.id_empresa = emp.id_empresa
   INNER JOIN clientes cliente ON pedido.ID_CLIENTE = cliente.id_cliente
-  where pedido.id_cliente = ?;";
+  where pedido.id_cliente = ?
+  order by pedido.id_pedido desc;";
 
 try {
 $stmt = $pdo->prepare($query);

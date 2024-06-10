@@ -4,7 +4,7 @@ require_once __DIR__ . '/database/credentials.php';
 require_once __DIR__ . '/database/db_connection.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
-    $_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+    $_SESSION['last_pagec'] = $_SERVER['REQUEST_URI'];
     header("Location: /index.php");
     exit();
 }

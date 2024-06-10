@@ -138,7 +138,7 @@ foreach ($pedidos as $rowPed) {
 	</div><br>
 	";
 
-	$queryItens = "select pi.id_pedido_item, i.nome, i.descricao, pi.quantidade, coalesce(m.nome,'') menu
+	$queryItens = "select pi.id_pedido_item, i.nome, i.descricao, pi.quantidade, coalesce(m.nome,'') menu,m.id_menu
 					from pedido_itens as pi
 					inner join itens as i on i.id_item=pi.id_item
 					left join menus as m on m.id_menu=pi.id_menu
@@ -153,7 +153,7 @@ foreach ($pedidos as $rowPed) {
 	foreach ($items as $rowItem) {
 		if ($printMenu == 0 && !empty($rowItem['menu'])) {
 			$printMenu++;
-			echo "<span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>Menu: " . htmlspecialchars($rowItem['menu']) . " </span> <br>";
+			echo "<span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>Menu: " . htmlspecialchars($rowItem['menu']) . " </span><br>";
 		}
 		echo "<span style='font-weight: bold; margin-top: 1vw; font-size: 0.87vw;'>" . $rowItem['quantidade'] . " * " . htmlspecialchars($rowItem['nome']) . " : </span> <br>";
 

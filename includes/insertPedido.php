@@ -53,9 +53,9 @@ try {
 				$itemid = $_POST['itemid_'. $id_item];
 				$quantidade = $_POST['quantidade_'. $id_item];
 				$preco = $_POST['preco_'. $id_item];
-				$idmenu = isset($_POST['idmenu_'. $id_item]) ? $_POST['idmenu_'. $id_item] : null;
+				$idmenu = isset($_POST['idmenu_'. $id_item]) ? $_POST['idmenu_'. $id_item] : 0;
 				
-				if ($id_menu == 0 ) {
+				if ($_POST['idmenu_'. $id_item] == 0 ) {
 					$stmt = $pdo->prepare("INSERT INTO pedido_itens (id_pedido, id_item, quantidade)
 									   VALUES (:idpedido, :idProd, :quantidade) RETURNING id_pedido_item");
 					$stmt->bindParam(':idpedido', $idPedido);

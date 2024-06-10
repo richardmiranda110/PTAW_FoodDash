@@ -36,7 +36,6 @@ if ($stmt->rowCount() == 0) {
 $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Pedido
-
     $sql ="SELECT
         pedido.id_pedido as id_pedido,
         pedido.data as data, pedido.estado as estado,
@@ -55,35 +54,47 @@ $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 // Itens
 
     $query =
-        "SELECT item.nome as item_nome, item.preco as item_preco,         -- item_nome, item_preco,
-        disponivel as item_disponivel, foto as item_foto, itemsozinho,    -- item_disponivel, item_foto
-        personalizacoesativas, pi.id_pedido_item as id_item_no_pedido,    -- personalizacoesativas, id_item_no_pedido
-        pi.id_item as item_id, pi.quantidade as item_quantidade,          -- id_item_no_pedido, item_id
-        pio.id_pedido_item_opcao as id_opcao_no_item_pedido,              -- id_pedido_item_opcao
-        pio.id_pedido_item as opcao_no_item_pedido,                       -- opcao_no_item_pedido
-        pio.id_opcao, pio.quantidade                                      -- opcao de cada item do pedido
+        "SELECT distinct pi.id_pedido_item,id_menu,
+        item.nome as item_nome, item.preco as item_preco,         
+        personalizacoesativas, pi.quantidade as item_quantidade     
         FROM pedido_itens pi
         inner join itens item on item.id_item=pi.id_item
         inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
-        full join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
-        where pedido.id_pedido = ? and pedido.id_empresa = ?;";
+        left join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
+        where pedido.id_pedido = ? and pedido.id_empresa = ? and pi.id_menu is null;";
+
     $stmt = $pdo->prepare($query);
     $stmt->execute([$idPedido,$idEmpresa]);
     $itens = $stmt->fetchAll();
+
+    // Item Array
     $item_arr = array();
+
     foreach ($itens as &$item) {
         array_push($item_arr, $item['item_nome']);
     }
+
+    $menusInOrder = "SELECT distinct pi.id_menu,menus.nome,menus.preco FROM pedido_itens pi
+    	inner join menus on menus.id_menu = pi.id_menu
+        inner join pedidos pedido on pedido.id_pedido = pi.id_pedido
+        where pedido.id_pedido = ? and pedido.id_empresa = ?";
+
+    $stmt = $pdo->prepare($menusInOrder);
+    $stmt->execute([$idPedido,$idEmpresa]);
+    $menusIdInOrder = $stmt->fetchAll();
+
     $descricao = implode(' + ', $item_arr);
+
 } catch (PDOException $e) {
     echo 'Erro: ' . $e->getMessage();
 }
 function getItemOptions($id_pedido_item){
     global $pdo;
 
-    $optionsQuery = "SELECT opcao.nome, pio.quantidade                                      -- opcao de cada item do pedido
+    $optionsQuery = "SELECT opcao.nome, pio.quantidade,menu.preco                                   -- opcao de cada item do pedido
     FROM pedido_itens pi
     inner join itens item on item.id_item=pi.id_item
+    inner join menus menu on pi.id_menu = menu.id_menu
     inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
     full join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
     inner join opcoes opcao on pio.id_opcao=opcao.id_opcao
@@ -128,7 +139,7 @@ function getItemOptions($id_pedido_item){
         <?php include __DIR__ . "/includes/sidebar_business.php"; ?>
     </div>
     <!--Zona de Conteudo -->
-    <div class="container" style="margin-top: 15vh;">
+    <div class="container" style="margin-top: 10vh;">
         <div class="card shadow-sm py-1" style="width: 115vh !important;max-width:100vw;margin: 0 auto;">
             <div class="container">
                 <div class="card-body">
@@ -179,6 +190,54 @@ function getItemOptions($id_pedido_item){
                                 </div>
                             </div> -->
                         <?php
+                        foreach($menusIdInOrder as &$menuInOrder){
+                            echo '
+                            <div class="g-col-4 card p-0 rounded-3 shadow-sm mb-2">
+                                <div class="card-header py-3">
+                                    <p class=" h4 my-0 card-header-text">' . $menuInOrder['nome'] . '</p>
+                                </div>';
+
+                            $Menuquery =
+                            "SELECT distinct pi.id_pedido_item,
+                            item.nome as item_nome, item.preco as item_preco,         
+                            personalizacoesativas, pi.quantidade as item_quantidade     
+                            FROM pedido_itens pi
+                            inner join itens item on item.id_item=pi.id_item
+                            inner join pedidos pedido on pedido.id_pedido=pi.id_pedido
+                            left join pedido_item_opcoes pio on pio.id_pedido_item = pi.id_pedido_item
+                            where pedido.id_pedido = ? and pedido.id_empresa = ? and id_menu = ?;";
+                            
+                            echo  '<div class="card-body"> <p class=" h6 card-title card-body-big-text pricing-card-title">' . $menuInOrder['preco'] . ' €</p></div>';
+                        
+                            $stmt = $pdo->prepare($Menuquery);
+                            $stmt->execute([$idPedido,$idEmpresa,$menuInOrder['id_menu']]);
+                            $menus = $stmt->fetchAll();
+
+                            foreach ($menus as &$menu) {
+                                        echo '<div class="card-body">
+                                            <p class="h6">' . $menu['item_nome'] . '</h6>';
+
+                                if ($menu['personalizacoesativas']) {
+                                    echo
+                                    '<div class="div_personalizacoes mr-2">
+                                        <p class="h5 card-body-huge-text">Personalizações:</p>';
+
+                                    $options = getItemOptions($menu['id_pedido_item']);
+                                    echo '
+                                        <div>
+                                            <p class="h6 card-body-text" style="margin-bottom: 0.5vh;">' . $menu['item_nome'] . '</p>
+                                            <ul style="margin: 0;">';
+                                    foreach ($options as &$option) {
+                                        // if ($option['quantidade'] == 0)
+                                            echo ' <li class="card-body-small-text" style="padding: 0.2vh">' . ($option['quantidade'] == 0 ? 'Sem ' : 'Com ') . $option['nome'] . '</li>';
+                                    }
+                                    echo '</ul>
+                                        </div>';
+                                }
+                                echo  '</div></div>';
+                            } 
+                        }
+
                         foreach ($itens as &$item) {
                             /*
                             -- item_nome, item_preco,
@@ -190,7 +249,6 @@ function getItemOptions($id_pedido_item){
                             -- opcao de cada item do pedido
                             */
                             echo '
-                                <!-- SEGUNDO CARALHO -->
                                 <div class="g-col-4 card p-0 rounded-3 shadow-sm">
                                     <div class="card-header py-3">
                                         <p class=" h4 my-0 card-header-text">' . $item['item_nome'] . '</p>
@@ -198,14 +256,13 @@ function getItemOptions($id_pedido_item){
                                     <div class="card-body">
                                         <p class=" h6 card-title card-body-big-text pricing-card-title">' . $item['item_preco'] . ' €</p>
                                         <p class="h6">' . $item['item_nome'] . '</h6>';
+                                        // echo var_dump($item);
                             if ($item['personalizacoesativas']) {
                                 echo
                                 '<div class="div_personalizacoes mr-2">
                                     <p class="h5 card-body-huge-text">Personalizações:</p>';
-                                if ($item['itemsozinho'] == false) {
-                                    echo $descricao;
-                                } else {
-                                    $options = getItemOptions($item['id_item_no_pedido']);
+ {
+                                    $options = getItemOptions($item['id_pedido_item']);
                                     echo '
                                         <div>
                                             <p class="h6 card-body-text" style="margin-bottom: 0.5vh;">' . $item['item_nome'] . '</p>
@@ -297,15 +354,8 @@ function getItemOptions($id_pedido_item){
                         <div class="section-content preparacao  <?php echo $pedido['estado'] == 'EM PREPARACAO' ? 'active' : '' ?>">
                             <h2>Preparação</h2>
                             <p>O pedido está em fase de preparação. Assim que o pedido estiver pronto para entrega dê-o ao seu entregador e carregue no botão abaixo para iniciar a fase entrega.</p>
-                            <label for="entregadores">Escolha um Zé disponível para entregar o pedido:</label><br>
-                            <select name="entregadores" id="entregadores">
-                                <option value="1">Zé 1</option>
-                                <option value="2">Zé 2</option>
-                                <option value="3">Zé 3</option>
-                                <option value="4">Zé 4</option>
-                            </select>
                             <?php
-                            /* $query = "SELECT id_entregador, nome, veiculo FROM Entregadores WHERE disponivel = TRUE";
+                             $query = "SELECT id_entregador, nome, veiculo FROM Entregadores WHERE disponivel = TRUE";
                             $stmt = $pdo->prepare($query);
                             $stmt->execute();
                             $entregadoresDisponiveis = $stmt->fetchAll();
@@ -316,7 +366,7 @@ function getItemOptions($id_pedido_item){
                                 array_push($entregadores_arr, $entregador['id_entregador'], $entregador['nome'], $entregador['veiculo']);
                                 echo '<option value="' . $entregador['id_entregador'] . '">' . $entregador['nome'] . ' ' . $entregador['veiculo'] . '</option>';
                             }
-                            echo '</select>'; */
+                            echo '</select>';
                             ?>
                             <div class="d-flex justify-content-center mt-4 mb-4">
                                 <button class="btn btn-outline-warning btn-block" id="btn_pedido_pronto" style="color: #343a40;">Pedido Pronto</button>
@@ -454,6 +504,7 @@ function changeState(newState)
             $("#line-progress").css("width", "33%");
             $(".preparacao").addClass("active").siblings().removeClass("active");
             $(".step02").addClass("active");
+            
             $.ajax({
                 url: "./pedidos.php?id=<?php echo $pedido['id_pedido'] ?>&stage=2",
                 success: function(result) {
@@ -468,8 +519,9 @@ function changeState(newState)
             $("#line-progress").css("width", "66%");
             $(".viagem").addClass("active").siblings().removeClass("active");
             $(".step03").addClass("active");
+            const deliveryman = parseInt(document.querySelector("#entregadores").options[document.querySelector("#entregadores").selectedIndex].value);
             $.ajax({
-                url: "./pedidos.php?id=<?php echo $pedido['id_pedido'] ?>&stage=3",
+                url: "./pedidos.php?id=<?php echo $pedido['id_pedido'] ?>&stage=3&deliveryman="+deliveryman,
                 success: function(result) {
                     console.log(result);
                 }

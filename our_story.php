@@ -47,7 +47,7 @@ require_once __DIR__ . "/database/db_connection.php";
       <h5>Data de Começo do Projeto:</h5>
       <p>03-03-2024</p>
       <h5>Data de Deploy do Projeto:</h5>
-      <p>DD-MM-YYYY</p>
+      <p>10-06-2024</p>
     </div>
     <div class="texto">
       <h5>História:</h5>

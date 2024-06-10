@@ -28,7 +28,7 @@ try {
         } else {
             setcookie('remembered_email', '', time() - 3600, "/");
         }
-        header('Location: '. (isset($_SESSION['last_page']) ? $_SESSION['last_page'] : '../dashboard.php'));
+        header('Location: '. (isset($_SESSION['last_pagec']) ? $_SESSION['last_pagec'] : '../dashboard.php'));
         exit;
     } else if($pass != 'password' || $email != 'email') {
         $_SESSION['stats_fail'] = true;

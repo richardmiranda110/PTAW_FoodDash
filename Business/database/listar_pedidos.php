@@ -13,7 +13,8 @@ try {
     $sql = "SELECT p.id_pedido, p.data, p.estado, p.precototal
             FROM pedidos p
             INNER JOIN estabelecimentos e ON p.id_empresa = e.id_empresa
-            WHERE e.id_empresa = :id_empresa";
+            WHERE e.id_empresa = :id_empresa
+            order by p.id_pedido";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':id_empresa', $id_empresa, PDO::PARAM_INT);

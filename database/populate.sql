@@ -59,15 +59,6 @@ INSERT INTO Opcoes (nome, preco, id_item) VALUES
 ('Extra Molho Shoyu', 0.20, 6),
 ('Extra Picante', 0.30, 7);
 
-INSERT INTO Item_Categorias (id_item, id_categoria) VALUES 
-(1, 1),
-(2, 6),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 7),
-(7, 8);
-
 INSERT INTO Pedidos (estado, precoTotal, id_cliente, id_entregador, id_empresa) VALUES 
 ('EFETUADO', 5.59, 1, 1, 1),  -- MCDonalds
 ('EFETUADO', 5.99, 1, 2, 2),  -- Burger King

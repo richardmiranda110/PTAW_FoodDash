@@ -88,6 +88,7 @@
   
 
    include __DIR__ . "/includes/sidebar_perfil.php";
+
   ?>
 
   <!-- IDENTIFICAÇÃO DO RESTAURANTE -->
@@ -116,7 +117,7 @@
             <!-- TOAST --->
             <?php
             if(isset($_SESSION['authenticated']))
-            echo '<button type="button" class="btn btn-primary" style='.($idCliente == 0 ? 'display: none;' : '').' id="liveToastBtn">Avaliar Empresa</button>';
+            echo '<button type="button" class="btn btn-primary"  id="liveToastBtn">Avaliar Empresa</button>';
           ?>
 			<div class="toast-container position-fixed bottom-0 end-0 p-3">
 			  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
@@ -256,7 +257,7 @@
             $fCat = "%" . strtolower(str_replace(' ', '', $fCategoria)) . "%";
 
             if (strtolower($idCategoria) == 'menus') {
-			$queryProd = "select m.id_menu, m.nome, m.descricao, m.preco, m.foto, false itemsozinho, true personalizacoesativas
+			    $queryProd = "select m.id_menu, m.nome, m.descricao, m.preco, m.foto, false itemsozinho, true personalizacoesativas
 					from menus m 
 					inner join empresas e on e.id_empresa=m.id_empresa  
 					and REPLACE(LOWER(e.nome), ' ', '') LIKE ? ";
@@ -334,17 +335,15 @@
 						<div>	
 						<h5>Personaliza o teu " . htmlspecialchars($rowProd['nome']). "</h5>
 						";
-					
+
 					if (strtolower($idCategoria) == 'menus') {
-						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu
+						$queryMenu = "select i.id_item, i.nome, i.descricao, i.preco, i.foto, i.itemsozinho, i.personalizacoesativas, m.id_menu as id_menu
 							from item_menus as im
 							inner join menus m on m.id_menu=im.id_menu
 							inner join itens i on i.id_item=im.id_item and i.itemsozinho = true
 							inner join empresas e on e.id_empresa=m.id_empresa 
 							and REPLACE(LOWER(e.nome), ' ', '') LIKE LOWER(?) and m.id_menu=".$rowProd['id_menu'];
-							
-
-
+              
 						$stmtMenu= $pdo->prepare($queryMenu);
 						$stmtMenu->execute([$fRestaurante]);
 						$itensMenus = $stmtMenu->fetchAll(PDO::FETCH_ASSOC);
@@ -354,7 +353,6 @@
 							INNER JOIN empresas ON empresas.id_empresa = itens.id_empresa 
 							INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria 
 							WHERE REPLACE(LOWER(empresas.nome), ' ', '') LIKE LOWER(?) and itens.id_item=".$rowProd['id_item'];
-					
 					
 					
 						$stmtMenu= $pdo->prepare($queryMenu);
@@ -658,6 +656,9 @@ function updateTotalPrice(name) {
 .card-body:hover {
   cursor: pointer;
   opacity: 0.5;
+}
+.container {
+    max-width: 98% !important;
 }
 </style>
   <script src="./assets/js/toast.js"></script>

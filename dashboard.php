@@ -4,7 +4,8 @@ require_once __DIR__ . '/database/credentials.php';
 require_once __DIR__ . '/database/db_connection.php';
 
 if (!isset($_SESSION['id_cliente']) || !isset($_SESSION['name']) || !isset($_SESSION['authenticated'])) {
-    header("Location: /~ptaw-2024-gr2/index.php");
+    $_SESSION['last_pagec'] = $_SERVER['REQUEST_URI'];
+    header("Location: ./index.php");
     exit();
 }
 
