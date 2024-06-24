@@ -38,6 +38,7 @@ $time_passed = null;
 switch($estado){
     case 'EFETUADO':
     case 'EM PREPARACAO':
+    case 'EM CHECKOUT':
     case 'FINALIZADO':
     case 'ENTREGUE':
         $message = $estado;
@@ -48,10 +49,12 @@ switch($estado){
 
         $message = $estado;
         $time_passed = time() - $_SESSION['last_update'];
+        $SESSION['last_update'] = time();
 
-        if($time_passed >= 60){
+        if($time_passed >= 10000){
             $updstmt->execute([$_GET['id']]);
-        }
+            $SESSION['last_update'] = 99999;
+        }       
         $message = $estado;
         break;
     default:

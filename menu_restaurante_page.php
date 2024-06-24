@@ -106,8 +106,13 @@ include __DIR__."/includes/insertPedido.php";
           ?>
           <div class="col-lg-4 px-4">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Procurar item" id="inputPesquisarRestaurante">
-              <button class="btn btn-outline-primary" type="button" id="buttonPesquisarRestaurante">Procurar</button>
+              <input type="text" class="form-control" placeholder="Procurar item" id="inputPesquisarItem">
+			  
+			  <form class="input-group container mb-5 w-50" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+					<input type="text" class="form-control" placeholder="Procurar item" name="item" id="item">
+					<button class="btn btn-outline-primary" type="button" id="buttonPesquisarItem">Procurar</button>
+				</form>
+			  
             </div>
 
             <!-- TOAST --->
@@ -178,6 +183,10 @@ include __DIR__."/includes/insertPedido.php";
 			INNER JOIN empresas on empresas.id_empresa=itens.id_empresa
 			INNER JOIN categorias ON categorias.id_categoria = itens.id_categoria
 			WHERE itens.itemsozinho=true and REPLACE(LOWER(empresas.nome), ' ', '') LIKE ? ";
+			
+			if (!empty($_GET["item"])) {
+				$query += " and itens.nome like '%" + $_GET["item"] + "%' ";
+			}
 
        $stmt = $pdo->prepare($query);
        $stmt->execute([strtolower($fRestaurante)]);
@@ -504,7 +513,6 @@ include __DIR__."/includes/insertPedido.php";
         });
         <?php endforeach; ?>
 
-    document.querySelector("button#buttonPesquisarRestaurante").addEventListener("click", procurarRestaurante)
 
 	function closeOtherToasts() {
 		//para simplificar fexar todos os toast antes de abrir o que se pretende
@@ -680,6 +688,12 @@ function updateTotalPrice(name) {
 			  document.getElementById('quantidadeop_' + index).value = '0';
 		  }
         }
+		
+	document.getElementById("buttonPesquisarItem").addEventListener("click", function() {
+			var form = document.querySelector("form");
+			form.submit();
+		});
+
   </script>
 
   <script src="./assets/js/toast.js"></script>

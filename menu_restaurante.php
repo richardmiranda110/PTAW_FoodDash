@@ -104,7 +104,7 @@
           <p class='mb-0'>Taxa de Entrega: a partir de " . $infoRest['taxa_entrega'] . "€</p>
         </div>
         <div class='col-lg-4 text-center'>
-          <img src='"."./assets/stock_imgs/".$infoRest['logotipo']."' alt='" . $infoRest['nome'] . "' style='max-width: 20vw;'>
+          <img src='"."./assets/stock_imgs/".$infoRest['logotipo']."' alt='" . $infoRest['nome'] . "' style='max-width: 20vw; border-radius: 0.5vw'>
         </div>
 		";
           ?>
@@ -436,10 +436,9 @@
   </div>
   </div> 
 
-
   <!-- Footer -->
   <?php
-  include __DIR__ . "/includes/footer_1.php";
+  include __DIR__ . "/includes/footer_2.php";
   ?>
 
 

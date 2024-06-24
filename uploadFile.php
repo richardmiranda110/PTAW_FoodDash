@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 }
 
 // define variaveis 
-$target_dir = "/home/ptaw-2024-gr2/public_html/assets/stock_imgs";
+$target_dir = "/home/ptaw-2024-gr1/public_html/CodeWave";
 // coloca o nome do ficheiro em minusculas
 $imageFileType = strtolower(pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION));
 $currentTimestamp = str_replace(" ", "",date("D M j G")); 

@@ -134,15 +134,15 @@ $result = implode(' + ',$item_arr);
                         </div>
                         <div class="section-content preparacao">
                             <h2>Preparação</h2>
-                            <p>O pedido está em fase de preparação. Assim que o pedido estiver pronto para entrega dê-o ao seu entregador e carregue no botão abaixo para iniciar a fase entrega.</p>
+                            <p>O pedido está em fase de preparação.</p>
                         </div>
                         <div class="section-content viagem">
                             <h2>Viagem até ao Destino</h2>
-                            <p>O pedido está a caminho do seu cliente.</p>
+                            <p>O pedido está a caminho. O entregador chegará à sua localização em breve.</p>
                         </div>
                         <div class="section-content entregue">
                             <h2>Entregue</h2>
-                            <p>O pedido foi entregue com sucesso. Parabéns. Muito obrigado.</p>
+                            <p>O seu pedido foi entregue com sucesso. Muito obrigado.</p>
                         </div>
                     </div>
                 </div>
@@ -191,6 +191,7 @@ $result = implode(' + ',$item_arr);
 
 
     function stateChanged(newState){
+      document.querySelector("#status").innerHTML =  "Status do pedido: " + newState;
       console.log("new state: "+newState);
       changeState(newState);
     }
@@ -198,8 +199,8 @@ $result = implode(' + ',$item_arr);
     function changeState(newState)
     {
       switch (newState) {
+                    case 'EM CHECKOUT':
                     case 'EFETUADO':
-                        
                         step1.classList.add('active');
                         step2.classList.remove('active');
                         step3.classList.remove('active');
@@ -210,7 +211,7 @@ $result = implode(' + ',$item_arr);
                         preparacao.classList.remove('active')
                         viagem.classList.remove('active')
                         entregue.classList.remove('active')
-                        break;
+                        break;  
                     case 'EM PREPARACAO':
                         step1.classList.add('active');
                         step2.classList.add('active');

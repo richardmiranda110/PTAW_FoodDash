@@ -352,7 +352,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <p class='m-0' style='font-weight: bold; font-size: 0.87vw;' data-taxa-servico='0,99' id='taxaServico'><?php echo $taxa_entrega ? $taxa_entrega : 0 ?> €</p>
+                                <p class='m-0' style='font-weight: bold; font-size: 0.87vw;' data-taxa-servico='0,99' id='taxaServico'>1.00€</p>
                             </div>
                         </div>
                         <div class='row align-items-center'>
@@ -363,7 +363,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <p class='m-0' id='totalTaxaEntrega' style='font-weight: bold; font-size: 0.87vw;'>0 €</p>
+                                <p class='m-0' style='font-weight: bold; font-size: 0.87vw;' data-taxa-servico='0,99' id='taxaServico'><?php echo $taxa_entrega ? $taxa_entrega : 0 ?> €</p>
                             </div>
                         </div>
                     </div>
@@ -381,7 +381,7 @@ foreach ($pedidos as $rowPed) {
                                 <p class='m-0'></p>
                             </div>
                             <div class='col-auto' style='margin-top: 0.6vw;'>
-                                <h4 class='m-0' style='font-weight: bold; font-size: 1.25vw;' id='totalPedido'><?php echo number_format((float)$totalPedido + $taxa_entrega, 2); ?> €</h4>
+                                <h4 class='m-0' style='font-weight: bold; font-size: 1.25vw;' id='totalPedido'><?php echo number_format((float)$totalPedido + 1 + $taxa_entrega , 2); ?> €</h4>
                             </div>
                         </div>
                         <div id='addPromoCode' style='display: none;'>
